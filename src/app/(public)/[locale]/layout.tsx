@@ -7,6 +7,7 @@ import {notFound} from 'next/navigation';
 import {Toaster} from 'sonner';
 import {routing} from '@/i18n/routing';
 import {SITE_URL} from '@/lib/site';
+import RealtimeRefresh from '@/components/realtime-refresh';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import {HeaderModeProvider} from '@/components/header-mode';
@@ -57,6 +58,7 @@ export default async function LocaleLayout({
             <SiteFooter />
             <Toaster richColors position="top-center" />
             <ServiceWorker />
+            <RealtimeRefresh />
           </HeaderModeProvider>
         </NextIntlClientProvider>
       </body>

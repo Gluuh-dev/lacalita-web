@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import {Geist} from 'next/font/google';
 import {Toaster} from 'sonner';
+import RealtimeRefresh from '@/components/realtime-refresh';
 import '../../globals.css';
 
 const sans = Geist({variable: '--font-geist', subsets: ['latin']});
@@ -17,6 +18,7 @@ export default function AdminLayout({children}: {children: React.ReactNode}) {
       <body className="min-h-full bg-bg font-sans text-ink">
         {children}
         <Toaster richColors position="top-center" />
+        <RealtimeRefresh />
       </body>
     </html>
   );
