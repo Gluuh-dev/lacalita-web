@@ -58,13 +58,13 @@ export default function ProductItem({
         </span>
       </button>
       <div className="flex min-w-0 flex-1 flex-col sm:p-4">
-        <button onClick={() => setOpen(item)} className="min-w-0 text-left">
+        <div role="button" tabIndex={0} onClick={() => setOpen(item)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setOpen(item)} className="min-w-0 cursor-pointer text-left">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="truncate font-serif text-base font-semibold sm:whitespace-normal sm:text-lg">{item.name}</h3>
             {item.price != null && <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(item.price, locale)}</span>}
           </div>
           {item.desc && <p className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-ink-2">{item.desc}</p>}
-        </button>
+        </div>
         <div className="mt-2 flex items-center gap-2 sm:mt-3">
           <button
             onClick={() => toggleFav(item)}
