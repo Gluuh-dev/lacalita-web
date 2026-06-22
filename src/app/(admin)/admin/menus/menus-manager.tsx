@@ -6,6 +6,7 @@ import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
 import MenuForm from './menu-form';
 import {deleteMenu} from './actions';
+import EmptyState from '@/components/admin/empty-state';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 
@@ -20,6 +21,7 @@ export default function MenusManager({menus}: {menus: Menu[]}) {
           Nueva carta
         </button>
       </div>
+      {menus.length === 0 && <EmptyState text="Aún no hay cartas." />}
       <ul className="space-y-2">
         {menus.map((m) => (
           <li key={m.id} className={`${card} flex items-center justify-between gap-3`}>

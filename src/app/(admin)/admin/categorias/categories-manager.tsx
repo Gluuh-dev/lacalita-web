@@ -6,6 +6,7 @@ import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
 import CategoryForm from './category-form';
 import {deleteCategory} from './actions';
+import EmptyState from '@/components/admin/empty-state';
 import {tx} from '@/lib/localize';
 import type {Category, Menu} from '@/lib/queries';
 
@@ -28,6 +29,7 @@ export default function CategoriesManager({
           Nueva categoría
         </button>
       </div>
+      {categories.length === 0 && <EmptyState text="Aún no hay categorías." />}
       <ul className="space-y-2">
         {categories.map((c) => (
           <li key={c.id} className={`${card} flex items-center justify-between gap-3`}>

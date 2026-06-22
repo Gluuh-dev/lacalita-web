@@ -14,9 +14,12 @@ export async function generateMetadata({
   const {locale, menu} = await params;
   const data = await getMenu(menu);
   if (!data) return {};
+  const title = `${tx(data.name, locale)} · La Calita`;
+  const description = data.subtitle ? tx(data.subtitle, locale) : undefined;
   return {
-    title: `${tx(data.name, locale)} · La Calita`,
-    description: data.subtitle ? tx(data.subtitle, locale) : undefined
+    title,
+    description,
+    openGraph: {title, description, images: data.header_image ? [data.header_image] : undefined}
   };
 }
 

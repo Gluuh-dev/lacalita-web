@@ -4,6 +4,7 @@ import {getSettings, getUpcomingEvents} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
 import {tx} from '@/lib/localize';
 import {normalizeHours, formatRanges} from '@/lib/hours';
+import {SITE_URL} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import HeroCarousel from '@/components/hero-carousel';
 import Reveal from '@/components/reveal';
@@ -35,8 +36,31 @@ export default async function Home({
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
   const hours = normalizeHours(settings?.hours);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    name: 'La Calita Beach Club',
+    servesCuisine: 'Mediterránea',
+    priceRange: '€€',
+    url: SITE_URL,
+    telephone: settings?.phone || undefined,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: settings?.address || 'C. Pº Marítimo, s/n',
+      addressLocality: 'Salobreña',
+      addressRegion: 'Granada',
+      postalCode: '18680',
+      addressCountry: 'ES'
+    },
+    sameAs: [settings?.social?.instagram, settings?.social?.facebook].filter(Boolean)
+  };
+
   return (
     <main className="flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
+      />
       <HeroCarousel
         slides={heroSlides}
         tagline={t('home.tagline')}

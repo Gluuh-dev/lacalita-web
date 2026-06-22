@@ -5,6 +5,7 @@ import {tx, euro} from '@/lib/localize';
 import {btn, card} from '@/components/admin/ui';
 import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
+import EmptyState from '@/components/admin/empty-state';
 import ProductForm from './product-form';
 import {deleteProduct} from './actions';
 import type {Product, Menu, Allergen} from '@/lib/queries';
@@ -67,6 +68,7 @@ export default function ProductsTable({
         </button>
       </div>
 
+      {products.length === 0 && <EmptyState text="Aún no hay productos. Crea el primero." />}
       {groups.map((g) => (
         <div key={g.label} className="mb-6">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-3">{g.label}</h2>

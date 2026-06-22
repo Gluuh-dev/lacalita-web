@@ -14,7 +14,13 @@ export async function generateMetadata({
   const {locale, id} = await params;
   const event = await getPublicEvent(id);
   if (!event) return {};
-  return {title: `${tx(event.title, locale)} · La Calita`};
+  const title = `${tx(event.title, locale)} · La Calita`;
+  const img = event.image || event.images?.[0];
+  return {
+    title,
+    description: event.description ? tx(event.description, locale) : undefined,
+    openGraph: {title, images: img ? [img] : undefined}
+  };
 }
 
 export default async function EventoDetalle({

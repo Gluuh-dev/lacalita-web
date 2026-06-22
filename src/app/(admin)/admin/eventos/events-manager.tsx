@@ -6,6 +6,7 @@ import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
 import EventForm from './event-form';
 import {deleteEvent} from './actions';
+import EmptyState from '@/components/admin/empty-state';
 import {tx} from '@/lib/localize';
 import type {EventRow} from '@/lib/queries';
 
@@ -20,6 +21,7 @@ export default function EventsManager({events}: {events: EventRow[]}) {
           Nuevo evento
         </button>
       </div>
+      {events.length === 0 && <EmptyState text="Aún no hay eventos. Crea el primero." />}
       <ul className="space-y-2">
         {events.map((e) => (
           <li key={e.id} className={`${card} flex items-center justify-between gap-3`}>

@@ -6,6 +6,7 @@ import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {Toaster} from 'sonner';
 import {routing} from '@/i18n/routing';
+import {SITE_URL} from '@/lib/site';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import {HeaderModeProvider} from '@/components/header-mode';
@@ -16,9 +17,16 @@ const sans = Geist({variable: '--font-geist', subsets: ['latin']});
 const serif = Playfair_Display({variable: '--font-playfair', subsets: ['latin']});
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'La Calita Beach Club',
   description: 'Beach Club, restaurante y cafetería en Salobreña, Granada.',
-  icons: {icon: '/icon.svg'}
+  icons: {icon: '/icon.svg'},
+  openGraph: {
+    type: 'website',
+    siteName: 'La Calita Beach Club',
+    title: 'La Calita Beach Club',
+    description: 'Beach Club, restaurante y cafetería en Salobreña, Granada.'
+  }
 };
 
 export function generateStaticParams() {

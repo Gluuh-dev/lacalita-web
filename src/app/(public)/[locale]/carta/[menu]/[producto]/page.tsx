@@ -27,9 +27,12 @@ export async function generateMetadata({
   const data = await getMenu(menu);
   const product = data ? findProduct(data.categories, producto) : null;
   if (!product) return {};
+  const title = `${tx(product.name, locale)} · La Calita`;
+  const description = product.description ? tx(product.description, locale) : undefined;
   return {
-    title: `${tx(product.name, locale)} · La Calita`,
-    description: product.description ? tx(product.description, locale) : undefined
+    title,
+    description,
+    openGraph: {title, description, images: product.image ? [product.image] : undefined}
   };
 }
 
