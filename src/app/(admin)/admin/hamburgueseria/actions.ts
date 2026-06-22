@@ -14,6 +14,11 @@ export type SlideInput = {
   image: string | null;
   position: number;
   active: boolean;
+  title_font: string;
+  title_color: string;
+  title_behind: boolean;
+  bg_effect: string;
+  bg_image: string | null;
 };
 export type OfferInput = {
   title: I18nMap;

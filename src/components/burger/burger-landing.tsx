@@ -46,7 +46,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
   const favorites = [...products].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).filter((p) => p.featured || (p.votes ?? 0) > 0).slice(0, 3);
   // Hero: diapositivas configuradas en el admin; si no hay, derivar de productos nuevos/destacados.
-  const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale)}));
+  const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale), font: s.title_font, color: s.title_color, behind: s.title_behind, bgEffect: s.bg_effect, bgImage: s.bg_image}));
   const heroPool = (products.filter((p) => p.is_new || p.featured).length ? products.filter((p) => p.is_new || p.featured) : products).slice(0, 6);
   const heroSlides = fromSlides.length ? fromSlides : heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? 'Nuevo' : p.tag || 'De siempre'}));
   const hero = heroSlides.length ? heroSlides : [{image: null, name: 'La Calita Burger', price: null, eyebrow: 'Próximamente'}];

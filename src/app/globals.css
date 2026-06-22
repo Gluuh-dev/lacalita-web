@@ -336,6 +336,11 @@
   .lc-slide-top { animation-name: lc-slide-left; }
   .lc-slide-bot { animation-name: lc-slide-right; }
 }
+/* Efectos de fondo del hero hamburguesería */
+@keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }
+.lc-smoke { animation: lc-smoke 14s ease-in-out infinite; }
+@keyframes lc-ember { 0% { transform: translateY(0) scale(1); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(-78vh) scale(0.3); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .lc-smoke { animation: none; } .lc-ember-dot { display: none; } }
 @keyframes lc-bfade { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 .lc-bfade { animation: lc-bfade 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) { .lc-slide-top, .lc-slide-bot, .lc-bfade { animation: none; } }

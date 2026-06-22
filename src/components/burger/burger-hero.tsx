@@ -6,9 +6,27 @@ import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
 
-export type HeroSlide = {image: string | null; name: string; price: number | null; eyebrow: string};
+export type HeroSlide = {
+  image: string | null;
+  name: string;
+  price: number | null;
+  eyebrow: string;
+  font?: string;
+  color?: string;
+  behind?: boolean;
+  bgEffect?: string;
+  bgImage?: string | null;
+};
 
 const GOLD = '#e9ae74';
+
+const BURGER_FONT: Record<string, string> = {
+  eight: "'Eight One', sans-serif",
+  display: 'var(--font-playfair), serif',
+  modern: "'Modern Romance', serif",
+  adam: "'Adam', sans-serif",
+  sans: 'var(--font-geist), sans-serif'
+};
 
 function Rings() {
   const tr = Array.from({length: 34}, (_, k) => 100 + k * 34);
@@ -45,6 +63,25 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       style={{background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}
     >
+      {/* Efecto de fondo configurable */}
+      {cur?.bgEffect === 'image' && cur.bgImage && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cur.bgImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{filter: 'brightness(.42) saturate(1.05)'}} />
+          <div className="absolute inset-0" style={{background: 'linear-gradient(90deg, rgba(20,16,10,.88) 0%, rgba(20,16,10,.4) 55%, rgba(20,16,10,.62) 100%)'}} />
+        </>
+      )}
+      {cur?.bgEffect === 'smoke' && (
+        <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 62% 42%, rgba(225,225,225,.10), transparent 70%), radial-gradient(40% 50% at 45% 62%, rgba(200,200,200,.07), transparent 72%)', filter: 'blur(6px)'}} />
+      )}
+      {cur?.bgEffect === 'embers' && (
+        <>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 62% 100%, rgba(242,107,33,.28), transparent 68%)'}} />
+          {Array.from({length: 14}).map((_, k) => (
+            <span key={k} className="lc-ember-dot pointer-events-none absolute bottom-0 size-1 rounded-full" style={{left: `${(k * 67) % 100}%`, background: k % 3 ? '#f6a04a' : '#f26b21', animation: `lc-ember ${5 + (k % 4)}s linear ${(k % 5) * 0.7}s infinite`}} />
+          ))}
+        </>
+      )}
       <Rings />
       {/* Destellos fríos (azulados) */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(86,140,205,.16), transparent 62%)'}} />
@@ -115,8 +152,17 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </div>
               <h1
                 key={'n' + i}
-                className="lc-bfade pointer-events-none absolute left-0 right-0 top-[9%] z-[3] m-0 text-center font-eight font-extrabold uppercase text-white"
-                style={{fontSize: 'clamp(3rem,9.5vw,7.2rem)', lineHeight: 0.82, letterSpacing: '0.01em', textShadow: '0 10px 40px rgba(0,0,0,.7)', animationDelay: '0.08s'}}
+                className="lc-bfade pointer-events-none absolute left-0 right-0 top-[9%] m-0 text-center font-extrabold uppercase"
+                style={{
+                  fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
+                  color: cur.color || '#ffffff',
+                  zIndex: cur.behind ? 1 : 3,
+                  fontSize: 'clamp(3rem,9.5vw,7.2rem)',
+                  lineHeight: 0.82,
+                  letterSpacing: '0.01em',
+                  textShadow: '0 10px 40px rgba(0,0,0,.7)',
+                  animationDelay: '0.08s'
+                }}
               >
                 {cur.name}
               </h1>

@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Link} from '@/i18n/navigation';
 import {Settings, Globe, Menu, X} from 'lucide-react';
 
@@ -12,8 +12,15 @@ const NAV = [
 
 export default function BurgerHeader({locale}: {locale: string}) {
   const [open, setOpen] = useState(false);
+  const [solid, setSolid] = useState(false);
+  useEffect(() => {
+    const on = () => setSolid(window.scrollY > 40);
+    window.addEventListener('scroll', on, {passive: true});
+    on();
+    return () => window.removeEventListener('scroll', on);
+  }, []);
   return (
-    <header className="absolute inset-x-0 top-0 z-40">
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${solid ? 'border-b border-white/10 bg-[#14100a]/85 backdrop-blur-md' : ''}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
         <Link href="/hamburgueseria" aria-label="La Calita Burger">
           {/* eslint-disable-next-line @next/next/no-img-element */}
