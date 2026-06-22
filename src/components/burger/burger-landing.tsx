@@ -7,7 +7,7 @@ import BurgerHero from './burger-hero';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
-  bg: '#1c160e',
+  bg: '#14100a',
   ink: '#f4ede2',
   muted: 'rgba(244,237,226,.62)',
   orange: '#f26b21',
@@ -89,9 +89,9 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       <BurgerHero slides={hero} locale={locale} />
 
       {/* ---- Marquesinas cruzadas (X), de lado a lado ---- */}
-      <div className="relative h-44 overflow-hidden md:h-56" style={{background: C.bg}}>
+      <div className="relative h-52 overflow-hidden md:h-64" style={{background: C.bg}}>
         {/* Banda 2 (debajo, marrón, sentido contrario) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[240%] items-center overflow-hidden py-3.5" style={{background: '#2a1709', transform: 'translate(-50%,-50%) rotate(-9deg)'}}>
+        <div className="absolute left-1/2 top-1/2 flex w-[260%] items-center overflow-hidden py-3.5" style={{background: '#2a1709', transform: 'translate(-50%,-50%) rotate(-5deg)'}}>
           <div className="lc-mq rev" style={{animationDuration: '40s'}}>
             {[0, 1].map((k) => (
               <span key={k} className="flex shrink-0 items-center font-eight text-xl md:text-2xl" style={{color: '#e7b46a'}}>
@@ -103,7 +103,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           </div>
         </div>
         {/* Banda 1 (encima, naranja) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[240%] items-center overflow-hidden py-3.5" style={{background: C.orange, transform: 'translate(-50%,-50%) rotate(9deg)'}}>
+        <div className="absolute left-1/2 top-1/2 flex w-[260%] items-center overflow-hidden py-3.5" style={{background: C.orange, transform: 'translate(-50%,-50%) rotate(5deg)'}}>
           <div className="lc-mq" style={{animationDuration: '36s'}}>
             {[0, 1].map((k) => (
               <span key={k} className="flex shrink-0 items-center font-eight text-xl text-[#2a1709] md:text-2xl">
