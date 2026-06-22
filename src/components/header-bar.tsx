@@ -23,7 +23,22 @@ export default function HeaderBar({
   const isAdmin = useIsAdmin();
   const pathname = usePathname();
   const cartaMatch = pathname.match(/^\/carta\/([^/]+)/);
-  const cartaLabel = cartaMatch ? CARTA_LABELS[cartaMatch[1]] ?? null : null;
+  const currentCarta = cartaMatch ? cartaMatch[1] : null;
+  const cartaLabel = currentCarta ? CARTA_LABELS[currentCarta] ?? null : null;
+
+  const menuLinks = cartaLabel
+    ? [
+        {href: '/', label: 'Inicio', active: false},
+        {href: '/carta/desayunos', label: 'Desayunos', active: currentCarta === 'desayunos'},
+        {href: '/carta/restaurante', label: 'Restaurante', active: currentCarta === 'restaurante'},
+        {href: '/carta/hamburgueseria', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
+      ]
+    : [
+        {href: '/carta', label: labels.menu, active: false},
+        {href: '/eventos', label: labels.events, active: false},
+        {href: '/#info', label: labels.location, active: false}
+      ];
+  const overlayLinks = [...menuLinks, ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -60,7 +75,7 @@ export default function HeaderBar({
         <Link href="/" aria-label="La Calita" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/logo-texto-derecha.svg"
+            src="/brand/logo-solo.svg"
             alt="La Calita"
             className={cn('h-8 w-auto transition sm:h-9', light && 'brightness-0 invert')}
           />
@@ -107,23 +122,18 @@ export default function HeaderBar({
         <div className="fixed inset-0 z-50 flex flex-col bg-black/45 text-white backdrop-blur-2xl sm:hidden">
           <div className="flex h-14 items-center justify-between px-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/logo-texto-derecha.svg" alt="La Calita" className="h-8 w-auto brightness-0 invert" />
+            <img src="/brand/logo-solo.svg" alt="La Calita" className="h-8 w-auto brightness-0 invert" />
             <button type="button" onClick={() => setOpen(false)} aria-label="Cerrar" className="rounded-md p-1">
               <X className="size-7" />
             </button>
           </div>
-          <nav className="flex flex-1 flex-col items-center justify-center gap-8">
-            {[
-              {href: '/carta', label: labels.menu},
-              {href: '/eventos', label: labels.events},
-              {href: '/#info', label: labels.location},
-              ...(isAdmin ? [{href: '/admin', label: 'Admin'}] : [])
-            ].map((f) => (
+          <nav className="flex flex-1 flex-col items-center justify-center gap-7">
+            {overlayLinks.map((f) => (
               <Link
                 key={f.href}
                 href={f.href}
                 onClick={() => setOpen(false)}
-                className="font-adam text-5xl capitalize tracking-wide"
+                className={cn('font-adam text-4xl capitalize tracking-wide transition', f.active ? 'text-brand' : 'text-white')}
               >
                 {f.label}
               </Link>

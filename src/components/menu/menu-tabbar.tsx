@@ -6,6 +6,7 @@ import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} 
 import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
+import LangSwitcher from '@/components/lang-switcher';
 import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useMenuStore, type MenuItem} from './store';
 
@@ -23,6 +24,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
   const listItems = Object.values(s.list).filter((x) => x.item.menuSlug === menuSlug);
   const favCount = favs.length;
   const listCount = listItems.reduce((n, x) => n + x.qty, 0);
+  const activeKey = view === 'none' ? 'menu' : view;
 
   const tabs = [
     {key: 'menu', label: 'Menú', Icon: UtensilsCrossed, onClick: () => setView('none'), badge: 0},
@@ -34,21 +36,22 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
   return (
     <>
       <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-line bg-surface/95 px-2 py-2 backdrop-blur md:inset-x-auto md:bottom-5 md:left-1/2 md:-translate-x-1/2 md:gap-1 md:rounded-full md:border md:px-3 md:shadow-lg">
-        {tabs.map((tb) => (
-          <button
-            key={tb.key}
-            onClick={tb.onClick}
-            className={`relative flex flex-1 flex-col items-center gap-0.5 rounded-xl px-3 py-1 text-[0.62rem] font-medium transition md:flex-row md:gap-1.5 md:text-xs ${view === tb.key ? 'text-brand-deep' : 'text-ink-2'}`}
-          >
-            <tb.Icon className="size-5 md:size-4" />
-            <span>{tb.label}</span>
-            {tb.badge > 0 && (
-              <span className="absolute right-1 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[0.6rem] font-bold text-on-primary md:static md:ml-1">
-                {tb.badge}
+        {tabs.map((tb) => {
+          const active = tb.key === activeKey;
+          return (
+            <button key={tb.key} onClick={tb.onClick} className="relative flex flex-1 flex-col items-center gap-0.5 px-2 py-1 text-[0.62rem] font-medium md:flex-row md:gap-1.5 md:text-xs">
+              <span className={`flex size-9 items-center justify-center rounded-full transition md:size-auto md:bg-transparent ${active ? 'bg-brand text-on-primary md:text-brand-deep' : 'text-ink-2'}`}>
+                <tb.Icon className="size-5 md:size-4" />
               </span>
-            )}
-          </button>
-        ))}
+              <span className={active ? 'text-brand-deep' : 'text-ink-2'}>{tb.label}</span>
+              {tb.badge > 0 && (
+                <span className="absolute right-1.5 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[0.6rem] font-bold text-on-primary md:static md:ml-1">
+                  {tb.badge}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </nav>
 
       {(view === 'favs' || view === 'list') && (
@@ -163,12 +166,20 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
   const s = useMenuStore();
   return (
     <div className="fixed inset-0 z-[300] bg-black">
-      <button onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
-        <X className="size-5" />
-      </button>
+      <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/logo-solo.svg" alt="La Calita" className="h-9 w-auto brightness-0 invert" />
+        <div className="flex items-center gap-2 text-white">
+          <LangSwitcher />
+          <button onClick={onClose} aria-label="Cerrar" className="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+            <X className="size-5" />
+          </button>
+        </div>
+      </div>
       <div className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
         {videos.map((v) => {
           const fav = s.isFav(v.id);
+          const n = s.qty(v.id);
           return (
             <section key={v.id} className="relative flex h-full snap-start items-center justify-center overflow-hidden">
               {v.video && <video src={v.video} poster={v.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />}
@@ -193,9 +204,17 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                   <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className="flex size-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
                     <Heart className="size-6" fill={fav ? 'currentColor' : 'none'} />
                   </button>
-                  <button onClick={() => s.setOpen(v)} aria-label="Añadir" className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
-                    <Plus className="size-6" />
-                  </button>
+                  {n === 0 ? (
+                    <button onClick={() => s.add(v)} aria-label="Añadir" className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
+                      <Plus className="size-6" />
+                    </button>
+                  ) : (
+                    <div className="flex flex-col items-center gap-1 rounded-full bg-brand px-1.5 py-2 text-on-primary">
+                      <button onClick={() => s.add(v)} aria-label="Añadir"><Plus className="size-5" /></button>
+                      <span className="text-sm font-bold tabular-nums">{n}</span>
+                      <button onClick={() => s.dec(v.id)} aria-label="Quitar"><Minus className="size-5" /></button>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
