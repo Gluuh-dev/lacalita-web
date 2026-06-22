@@ -10,6 +10,7 @@ import {SITE_URL} from '@/lib/site';
 import RealtimeRefresh from '@/components/realtime-refresh';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
+import HideOnBurger from '@/components/hide-on-burger';
 import {HeaderModeProvider} from '@/components/header-mode';
 import ServiceWorker from '@/components/service-worker';
 import '../../globals.css';
@@ -53,9 +54,13 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-bg font-sans text-ink">
         <NextIntlClientProvider>
           <HeaderModeProvider>
-            <SiteHeader />
+            <HideOnBurger>
+              <SiteHeader />
+            </HideOnBurger>
             {children}
-            <SiteFooter />
+            <HideOnBurger>
+              <SiteFooter />
+            </HideOnBurger>
             <Toaster richColors position="top-center" />
             <ServiceWorker />
             <RealtimeRefresh />

@@ -20,6 +20,9 @@ export type Product = {
   available: boolean;
   position: number;
   category_id: string;
+  old_price: number | null;
+  votes: number;
+  rating: number | null;
   product_variants: Variant[];
   product_allergens: {allergens: Allergen}[];
 };
@@ -95,7 +98,7 @@ export async function getMenu(slug: string): Promise<Menu | null> {
        categories (
          id, menu_id, name, description, position, visible,
          products (
-           id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id,
+           id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
            product_variants ( id, name, price, position ),
            product_allergens ( allergens ( id, code, name, icon ) )
          )
@@ -177,7 +180,7 @@ export async function getProductsAdmin() {
   const {data} = await supabase
     .from('products')
     .select(
-      `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id,
+      `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
        product_variants ( id, name, price, position ),
        product_allergens ( allergens ( id, code ) ),
        categories ( name, menus ( name, slug ) )`
@@ -191,7 +194,7 @@ export async function getProductById(id: string) {
   const {data} = await supabase
     .from('products')
     .select(
-      `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id,
+      `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
        product_variants ( id, name, price, position ),
        product_allergens ( allergens ( id, code ) )`
     )
