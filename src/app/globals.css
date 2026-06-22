@@ -294,3 +294,11 @@
 .ds-navlink:hover::after {
   transform: scaleX(1);
 }
+.eyebrow {
+  font-family: 'Adam', serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brand-deep);
+  font-weight: 400;
+}

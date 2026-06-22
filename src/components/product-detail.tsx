@@ -42,7 +42,7 @@ export default function ProductDetail({
         <div className="flex items-center justify-between gap-3">
           <Link
             href={`/carta/${menuSlug}`}
-            className="text-sm text-brand-deep hover:underline"
+            className="inline-flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] text-ink-2 hover:text-ink"
           >
             ← {t('back')}
           </Link>

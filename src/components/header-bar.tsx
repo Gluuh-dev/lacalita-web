@@ -58,9 +58,9 @@ export default function HeaderBar({
         </Link>
 
         <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
-          <Link href="/carta" className="ds-navlink">{labels.menu}</Link>
-          <Link href="/eventos" className="ds-navlink">{labels.events}</Link>
-          <Link href="/#info" className="ds-navlink">{labels.location}</Link>
+          <Link href="/carta" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.menu}</Link>
+          <Link href="/eventos" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.events}</Link>
+          <Link href="/#info" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.location}</Link>
           {isAdmin && (
             <a href="/admin" className="rounded-full bg-ink px-3 py-1 text-xs font-medium text-white hover:opacity-90">Admin</a>
           )}

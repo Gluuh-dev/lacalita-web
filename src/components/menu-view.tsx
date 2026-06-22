@@ -29,11 +29,10 @@ export default async function MenuView({
 
   return (
     <div data-theme={menu.theme} className="min-h-screen bg-bg text-ink">
-      <header
-        className={`relative overflow-hidden px-6 pb-10 pt-20 text-center ${
-          headerMedia ? 'pb-20 text-white' : 'bg-brand/10'
-        }`}
-      >
+      <header className="relative overflow-hidden px-6 pb-12 pt-24 text-center text-white">
+        {!headerMedia && (
+          <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
+        )}
         {menu.header_video ? (
           <video
             className="absolute inset-0 h-full w-full object-cover"
@@ -56,20 +55,12 @@ export default async function MenuView({
         <div className="relative z-10">
           <Link
             href="/carta"
-            className={`text-sm hover:underline ${
-              headerMedia ? 'text-white/90' : 'text-brand-deep'
-            }`}
+            className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] backdrop-blur transition hover:bg-white/30"
           >
             ← {t('all')}
           </Link>
-          <h1 className="mt-3 font-serif text-4xl sm:text-5xl">
-            {tx(menu.name, locale)}
-          </h1>
-          {menu.subtitle && (
-            <p className={headerMedia ? 'mt-2 text-white/80' : 'mt-2 text-ink-2'}>
-              {tx(menu.subtitle, locale)}
-            </p>
-          )}
+          <h1 className="font-serif text-4xl sm:text-5xl">{tx(menu.name, locale)}</h1>
+          {menu.subtitle && <p className="mt-2 text-white/90">{tx(menu.subtitle, locale)}</p>}
           <AdminEditLink href={`/admin/menus/${menu.id}`} label="Editar carta" />
         </div>
       </header>
