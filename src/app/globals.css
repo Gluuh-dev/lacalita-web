@@ -327,7 +327,10 @@
 /* Hamburguesa flotando arriba-abajo en el hero */
 @keyframes burger-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
 .burger-float { animation: burger-float 6s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .burger-float { animation: none; } }
+/* Entrada: la hamburguesa sube desde abajo (como saliendo de la pantalla) */
+@keyframes burger-rise { from { opacity: 0; transform: translateY(120px); } to { opacity: 1; transform: translateY(0); } }
+.burger-rise { animation: burger-rise 0.8s cubic-bezier(0.16, 0.84, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .burger-float, .burger-rise { animation: none; } }
 @keyframes lc-hero-slide { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
 .lc-hero-slide { animation: lc-hero-slide var(--dur-slow) var(--ease-out) both; }
