@@ -34,7 +34,10 @@ const EFFECTS: [string, string][] = [
 ];
 const FX_VIDEOS: [string, string][] = [
   ['none', 'Ninguno'],
-  ['/burger/fx/fx.mp4', 'Fuego / humo']
+  ['/burger/fx/fx.mp4', 'Fuego'],
+  ['/burger/fx/humo-naranja.mp4', 'Humo naranja'],
+  ['/burger/fx/humo-blanco.mp4', 'Humo blanco'],
+  ['/burger/fx/rayo-azul.mp4', 'Rayo azul']
 ];
 const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
