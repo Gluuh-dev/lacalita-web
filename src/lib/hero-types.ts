@@ -9,17 +9,22 @@ export type HeroSlide = {
   mediaType: 'image' | 'video';
   poster?: string;
   darken: number;
-  showLogo: boolean;
-  logoColor: 'white' | 'cream' | 'brown' | 'ink' | 'orange';
+  showLogo: boolean; // legado (compat)
+  logoVariant: 'none' | 'solo' | 'debajo' | 'derecha' | 'texto';
+  logoColor: string; // color libre (hex) o nombre legado (white/cream/brown/ink/orange)
   eyebrow: string;
   eyebrowColor: string;
+  eyebrowScale: number;
   lema: string;
   lemaColor: string;
+  lemaScale: number;
   bienvenida: string;
   bienvenidaColor: string;
+  bienvenidaScale: number;
   button: string;
   link: string;
   btnColor: string;
+  contentAlign: 'left' | 'center' | 'right';
   heroMode: 'boton' | 'rotulo' | 'agenda';
   rotulo: string;
   sub: string;
@@ -46,16 +51,21 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   mediaType: 'image',
   darken: 45,
   showLogo: true,
+  logoVariant: 'debajo',
   logoColor: 'white',
   eyebrow: '',
   eyebrowColor: '#e9ae74',
+  eyebrowScale: 1,
   lema: 'Título de la portada',
   lemaColor: '#ffffff',
+  lemaScale: 1,
   bienvenida: '',
   bienvenidaColor: '#ffffff',
+  bienvenidaScale: 1,
   button: 'Ver la carta',
   link: '/carta',
   btnColor: '#e9ae74',
+  contentAlign: 'left',
   heroMode: 'boton',
   rotulo: '',
   sub: '',

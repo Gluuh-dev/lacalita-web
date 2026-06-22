@@ -12,13 +12,6 @@ const FONT: Record<string, string> = {
   eight: "'Eight One', sans-serif",
   display: 'var(--font-playfair), serif'
 };
-const LOGO_FILTER: Record<string, string> = {
-  white: 'brightness(0) invert(1)',
-  cream: 'brightness(0) invert(1)',
-  brown: 'brightness(0)',
-  ink: 'brightness(0)',
-  orange: 'brightness(0) invert(1)'
-};
 const cover: React.CSSProperties = {position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'};
 
 function HeroButton({slide, bc, bt, pc, preview}: {slide: HeroSlide; bc: string; bt: string; pc: boolean; preview: boolean}) {
@@ -96,6 +89,7 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
         {evs.map((e, i) => <EvRow key={e.id} e={e} on={i === active} onClick={() => setActive(i)} />)}
       </div>
       {slide.eventBtn && <div style={{marginTop: 14, textAlign: 'center', background: bc, color: bt, borderRadius: 999, padding: 11, fontWeight: 700, fontSize: 14}}>{slide.eventBtnText}</div>}
+      <div style={{marginTop: 12, textAlign: 'center', fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: 11, color: 'rgba(255,255,255,.75)'}}>Ver todos los eventos →</div>
     </aside>
   );
 }
@@ -117,6 +111,11 @@ export function HeroStage({
   const bt = inkOn(bc);
   const agenda = slide.heroMode === 'agenda';
   const animCls = slide.anim === 'slide' ? 'lc-hero-slide' : slide.anim === 'none' ? '' : 'lc-hero-fade';
+  const logoSrc = logoOf(slide);
+  const logoVariant = slide.logoVariant ?? (slide.showLogo ? 'debajo' : 'none');
+  const align = slide.contentAlign ?? 'left';
+  const ai = align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start';
+  const ta = (align === 'center' ? 'center' : align === 'right' ? 'right' : 'left') as 'center' | 'right' | 'left';
 
   const rotuloDesktop = slide.heroMode === 'rotulo' && slide.rotulo && pc;
   const rotuloMobile = slide.heroMode === 'rotulo' && slide.rotulo && !pc;
@@ -140,14 +139,33 @@ export function HeroStage({
       {/* contenido */}
       <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', zIndex: 3}}>
         <div style={{width: pc ? 1180 : '100%', margin: '0 auto', padding: pc ? '0 40px' : '0 24px', boxSizing: 'border-box', display: pc && agenda && events.length > 0 ? 'grid' : 'flex', gridTemplateColumns: pc && agenda && events.length > 0 ? 'minmax(0,1fr) 340px' : undefined, gap: 48, alignItems: 'center'}}>
-          <div key={animKey} className={animCls} style={{display: 'flex', flexDirection: 'column', alignItems: pc ? 'flex-start' : 'center', textAlign: pc ? 'left' : 'center', maxWidth: pc ? 660 : '100%', margin: pc ? 0 : '0 auto', color: '#fff'}}>
-            {slide.showLogo && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src="/brand/logo-texto-debajo.svg" alt="" style={{height: pc ? 132 : 100, marginBottom: pc ? 22 : 18, filter: LOGO_FILTER[slide.logoColor] || LOGO_FILTER.white}} />
-            )}
-            {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: pc ? 14 : 12, color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
-            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: pc ? 76 : 42, lineHeight: 1.03, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
-            {slide.bienvenida && <div style={{fontSize: pc ? 18 : 16, color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
+          <div key={animKey} className={animCls} style={{display: 'flex', flexDirection: 'column', alignItems: pc ? ai : 'center', textAlign: pc ? ta : 'center', maxWidth: pc ? 660 : '100%', margin: pc ? (align === 'center' ? '0 auto' : 0) : '0 auto', color: '#fff'}}>
+            {logoSrc &&
+              (() => {
+                const h = logoVariant === 'debajo' ? (pc ? 132 : 100) : logoVariant === 'solo' ? (pc ? 84 : 64) : pc ? 58 : 44;
+                return (
+                  <span
+                    style={{
+                      display: 'block',
+                      height: h,
+                      width: h * (LOGO_ASPECT[logoVariant] ?? 1),
+                      marginBottom: pc ? 22 : 18,
+                      backgroundColor: logoColorOf(slide),
+                      WebkitMaskImage: `url(${logoSrc})`,
+                      maskImage: `url(${logoSrc})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center'
+                    }}
+                  />
+                );
+              })()}
+            {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: (pc ? 14 : 12) * (slide.eyebrowScale ?? 1), color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
+            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: (pc ? 76 : 42) * (slide.lemaScale ?? 1), lineHeight: 1.03, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
+            {slide.bienvenida && <div style={{fontSize: (pc ? 18 : 16) * (slide.bienvenidaScale ?? 1), color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
             {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc={pc} preview={preview} />}
 
             {rotuloMobile && (
@@ -208,13 +226,35 @@ export function HeroPreview({slide, events, device, animKey = 0}: {slide: HeroSl
   );
 }
 
-const LOGO_TW: Record<string, string> = {
-  white: 'brightness-0 invert',
-  cream: 'brightness-0 invert',
-  brown: 'brightness-0',
-  ink: 'brightness-0',
-  orange: 'brightness-0 invert'
+const LOGO_NAMED: Record<string, string> = {
+  white: '#ffffff',
+  cream: '#faf6ef',
+  brown: '#4c2f08',
+  ink: '#243b53',
+  orange: '#f26b21'
 };
+const LOGO_ASPECT: Record<string, number> = {solo: 1.15, debajo: 0.95, derecha: 3.1, texto: 4.4};
+function logoColorOf(slide: HeroSlide): string {
+  const c = slide.logoColor || '#ffffff';
+  return LOGO_NAMED[c] ?? c;
+}
+const LOGO_SRC: Record<string, string> = {
+  solo: '/brand/logo-solo.svg',
+  debajo: '/brand/logo-texto-debajo.svg',
+  derecha: '/brand/logo-texto-derecha.svg',
+  texto: '/brand/texto-lacalita-derecha.svg'
+};
+// altura responsive por variante (debajo es alto, derecha/solo/texto más bajos)
+const LOGO_H: Record<string, string> = {
+  solo: 'h-16 sm:h-20',
+  debajo: 'h-20 sm:h-24 lg:h-28',
+  derecha: 'h-11 sm:h-14',
+  texto: 'h-8 sm:h-10'
+};
+function logoOf(slide: HeroSlide): string | null {
+  const v = slide.logoVariant ?? (slide.showLogo ? 'debajo' : 'none');
+  return v === 'none' ? null : LOGO_SRC[v] ?? null;
+}
 
 /** Vista responsive de una diapositiva (lo que se ve en la web). */
 function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
@@ -229,6 +269,10 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   const feat = evs[active] || evs[0];
   const bc = slide.btnColor || '#e9ae74';
   const bt = inkOn(bc);
+  const logoSrc = logoOf(slide);
+  const align = slide.contentAlign ?? 'left';
+  const colAlign = align === 'center' ? 'lg:items-center lg:text-center' : align === 'right' ? 'lg:items-end lg:text-right' : 'lg:items-start lg:text-left';
+  const btnAlign = align === 'center' ? 'lg:justify-center' : align === 'right' ? 'lg:justify-end' : 'lg:justify-start';
 
   useEffect(() => {
     if (!agenda || evs.length < 2) return;
@@ -265,21 +309,36 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       {/* contenido */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-24 sm:px-8">
         <div className={`grid items-center gap-8 ${showAgenda ? 'lg:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
-          <div className="flex flex-col items-center text-center text-white lg:items-start lg:text-left">
-            {slide.showLogo && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src="/brand/logo-texto-debajo.svg" alt="La Calita" className={`mb-5 h-20 w-auto sm:h-24 lg:h-28 ${LOGO_TW[slide.logoColor] || LOGO_TW.white}`} />
+          <div className={`flex flex-col items-center text-center text-white ${colAlign}`}>
+            {logoSrc && (
+              <span
+                aria-label="La Calita"
+                role="img"
+                className={`mb-5 block ${LOGO_H[slide.logoVariant ?? 'debajo'] ?? LOGO_H.debajo}`}
+                style={{
+                  aspectRatio: String(LOGO_ASPECT[slide.logoVariant ?? 'debajo'] ?? 1),
+                  backgroundColor: logoColorOf(slide),
+                  WebkitMaskImage: `url(${logoSrc})`,
+                  maskImage: `url(${logoSrc})`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center'
+                }}
+              />
             )}
             {slide.eyebrow && (
-              <div className="mb-3 font-adam text-[0.72rem] uppercase tracking-[0.22em] sm:text-xs" style={{color: slide.eyebrowColor || 'var(--brand)'}}>{slide.eyebrow}</div>
+              <div className="mb-3 font-adam uppercase tracking-[0.22em]" style={{color: slide.eyebrowColor || 'var(--brand)', fontSize: `calc(0.8rem * ${slide.eyebrowScale ?? 1})`}}>{slide.eyebrow}</div>
             )}
             {slide.lema && (
-              <h1 className="font-serif font-extrabold leading-[1.05] text-[clamp(2rem,5.2vw,3.4rem)]" style={{color: slide.lemaColor || '#fff', textWrap: 'balance'}}>{slide.lema}</h1>
+              <h1 className="font-serif font-extrabold leading-[1.05]" style={{color: slide.lemaColor || '#fff', textWrap: 'balance', fontSize: `calc(clamp(2rem, 5.2vw, 3.4rem) * ${slide.lemaScale ?? 1})`}}>{slide.lema}</h1>
             )}
             {slide.bienvenida && (
-              <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed sm:text-base" style={{color: slide.bienvenidaColor || 'rgba(255,255,255,.86)'}}>{slide.bienvenida}</p>
+              <p className="mt-4 max-w-md leading-relaxed" style={{color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', fontSize: `calc(1rem * ${slide.bienvenidaScale ?? 1})`}}>{slide.bienvenida}</p>
             )}
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            <div className={`mt-7 flex flex-wrap items-center justify-center gap-3 ${btnAlign}`}>
               {slide.button &&
                 (slide.link?.startsWith('/') ? (
                   <Link href={slide.link} className="inline-flex items-center rounded-full border border-transparent px-6 py-3 font-semibold shadow-sm transition hover:brightness-105" style={{background: bc, color: bt}}>

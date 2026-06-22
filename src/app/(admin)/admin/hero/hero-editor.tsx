@@ -17,13 +17,14 @@ const MODES = [
   {id: 'agenda', label: 'Lista de eventos', Icon: List}
 ] as const;
 
-const LOGO_COLORS: [HeroSlide['logoColor'], string][] = [
-  ['white', '#ffffff'],
-  ['cream', '#faf6ef'],
-  ['brown', '#4c2f08'],
-  ['ink', '#243b53'],
-  ['orange', '#f26b21']
-];
+// Mapea los valores antiguos del color del logo a hex (compatibilidad).
+const LEGACY_LOGO: Record<string, string> = {
+  white: '#ffffff',
+  cream: '#faf6ef',
+  brown: '#4c2f08',
+  ink: '#243b53',
+  orange: '#f26b21'
+};
 
 export default function HeroEditor({initial, events}: {initial: HeroSlide[]; events: HeroEvent[]}) {
   const [slides, setSlides] = useState<HeroSlide[]>(
@@ -134,14 +135,21 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           <Field label={`Oscurecido del fondo · ${slide.darken}%`}>
             <input type="range" min={0} max={80} value={slide.darken} onChange={(e) => set('darken', +e.target.value)} className="w-full accent-brand" />
           </Field>
-          <Toggle label="Mostrar logo" checked={slide.showLogo} onChange={(v) => set('showLogo', v)} />
-          {slide.showLogo && (
+          <Field label="Logo">
+            <div className="grid grid-cols-3 gap-2">
+              {([['none', 'Ninguno'], ['solo', 'Símbolo'], ['debajo', 'Texto debajo'], ['derecha', 'Texto al lado'], ['texto', 'Solo texto']] as const).map(([v, l]) => {
+                const on = (slide.logoVariant ?? 'debajo') === v;
+                return (
+                  <button key={v} type="button" onClick={() => set('logoVariant', v)} className={cn('rounded-[12px] border px-1 py-2 text-[0.7rem] font-medium leading-tight', on ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>
+                    {l}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+          {(slide.logoVariant ?? 'debajo') !== 'none' && (
             <Field label="Color del logo">
-              <div className="flex gap-2">
-                {LOGO_COLORS.map(([name, hex]) => (
-                  <button key={name} onClick={() => set('logoColor', name)} className="size-7 rounded-full" style={{background: hex, boxShadow: `0 0 0 ${(slide.logoColor || 'white') === name ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
-                ))}
-              </div>
+              <Swatch value={LEGACY_LOGO[slide.logoColor] ?? slide.logoColor ?? '#ffffff'} onPick={(c) => set('logoColor', c)} />
             </Field>
           )}
         </Card>
@@ -180,6 +188,29 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               <Swatch value={slide.bienvenidaColor} onPick={(c) => set('bienvenidaColor', c)} />
             </Field>
           </div>
+          <div className="grid grid-cols-3 gap-3">
+            <Field label={`Tamaño eyebrow · ${Math.round((slide.eyebrowScale ?? 1) * 100)}%`}>
+              <input type="range" min={0.6} max={1.6} step={0.05} value={slide.eyebrowScale ?? 1} onChange={(e) => set('eyebrowScale', +e.target.value)} className="w-full accent-brand" />
+            </Field>
+            <Field label={`Tamaño título · ${Math.round((slide.lemaScale ?? 1) * 100)}%`}>
+              <input type="range" min={0.6} max={1.8} step={0.05} value={slide.lemaScale ?? 1} onChange={(e) => set('lemaScale', +e.target.value)} className="w-full accent-brand" />
+            </Field>
+            <Field label={`Tamaño bienvenida · ${Math.round((slide.bienvenidaScale ?? 1) * 100)}%`}>
+              <input type="range" min={0.6} max={1.6} step={0.05} value={slide.bienvenidaScale ?? 1} onChange={(e) => set('bienvenidaScale', +e.target.value)} className="w-full accent-brand" />
+            </Field>
+          </div>
+          <Field label="Posición del contenido">
+            <div className="grid grid-cols-3 gap-2">
+              {([['left', 'Izquierda'], ['center', 'Centro'], ['right', 'Derecha']] as const).map(([v, l]) => {
+                const on = (slide.contentAlign ?? 'left') === v;
+                return (
+                  <button key={v} type="button" onClick={() => set('contentAlign', v)} className={cn('rounded-[12px] border px-1 py-2 text-xs font-medium', on ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>
+                    {l}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
         </Card>
 
         {/* Zona de eventos */}
@@ -349,23 +380,31 @@ function Toggle({label, checked, onChange}: {label: string; checked: boolean; on
 }
 
 function Swatch({value, onPick, colors, none}: {value: string; onPick: (c: string) => void; colors?: string[]; none?: boolean}) {
+  const [open, setOpen] = useState(false);
   const list = colors ?? ['#e9ae74', '#ffffff', '#fedb71', '#2e6e8e', '#f26b21', '#4c2f08', '#243b53'];
-  const isCustom = !!value && !list.includes(value);
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {none && (
-        <button type="button" onClick={() => onPick('')} title="Ninguno" className="flex size-7 items-center justify-center rounded-full border border-line-strong bg-surface text-xs text-ink-3" style={{boxShadow: !value ? '0 0 0 2px var(--ink)' : 'none'}}>
-          ∅
-        </button>
+    <div className="relative inline-block">
+      <button type="button" onClick={() => setOpen((o) => !o)} className="flex items-center gap-2 rounded-full border border-line bg-surface px-2.5 py-1.5">
+        <span className="size-5 rounded-full border border-line-strong" style={{background: value || 'transparent'}} />
+        <span className="text-xs text-ink-2">{value || 'Ninguno'}</span>
+      </button>
+      {open && (
+        <>
+          <button type="button" aria-hidden className="fixed inset-0 z-10 cursor-default" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 z-20 mt-1 flex w-max max-w-[220px] flex-wrap items-center gap-2 rounded-[14px] border border-line bg-surface p-3 shadow-lg">
+            {none && (
+              <button type="button" onClick={() => { onPick(''); setOpen(false); }} title="Ninguno" className="flex size-7 items-center justify-center rounded-full border border-line-strong bg-surface text-xs text-ink-3">∅</button>
+            )}
+            {list.map((c) => (
+              <button key={c} type="button" onClick={() => { onPick(c); setOpen(false); }} className="size-7 rounded-full" style={{background: c, boxShadow: `0 0 0 ${value === c ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
+            ))}
+            <label className="relative size-7 cursor-pointer overflow-hidden rounded-full" title="Color personalizado" style={{boxShadow: '0 0 0 1px var(--line-strong)'}}>
+              <span className="absolute inset-0" style={{background: 'conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red)'}} />
+              <input type="color" value={value && value.startsWith('#') ? value : '#e9ae74'} onChange={(e) => onPick(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0" />
+            </label>
+          </div>
+        </>
       )}
-      {list.map((c) => (
-        <button key={c} type="button" onClick={() => onPick(c)} className="size-7 rounded-full" style={{background: c, boxShadow: `0 0 0 ${value === c ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
-      ))}
-      {/* Color personalizado: cualquier color */}
-      <label className="relative size-7 cursor-pointer overflow-hidden rounded-full" title="Color personalizado" style={{boxShadow: `0 0 0 ${isCustom ? '2px var(--ink)' : '1px var(--line-strong)'}`}}>
-        <span className="absolute inset-0" style={{background: isCustom ? value : 'conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red)'}} />
-        <input type="color" value={value && value.startsWith('#') ? value : '#e9ae74'} onChange={(e) => onPick(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0" />
-      </label>
     </div>
   );
 }
