@@ -4,7 +4,8 @@ import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
-import {euro} from '@/lib/localize';
+import {euro, tx} from '@/lib/localize';
+import AllergenIcon from '@/components/allergen-icon';
 import {useMenuStore, type MenuItem} from './store';
 
 type View = 'none' | 'favs' | 'list' | 'video';
@@ -62,9 +63,9 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
   const dy = useRef<number | null>(null);
   return (
     <div className="fixed inset-0 z-[300]">
-      <div onClick={onClose} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
+      <div onClick={onClose} onTouchMove={(e) => e.preventDefault()} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
       <div
-        className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-[24px] border-t border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom"
+        className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-[24px] border-t border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom"
         style={{transform: `translateY(${drag}px)`, transition: drag ? 'none' : undefined}}
         onTouchStart={(e) => (dy.current = e.touches[0].clientY)}
         onTouchMove={(e) => {
@@ -177,6 +178,15 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                   {v.price != null && <p className="mt-0.5 font-bold text-brand">{euro(v.price, locale)}</p>}
                   {v.desc && <p className="mt-1 line-clamp-2 max-w-md text-sm text-white/85">{v.desc}</p>}
                   <Link href={`/carta/${v.menuSlug}/${v.slug}`} className="mt-1 inline-block text-sm font-medium text-brand">Ver más</Link>
+                  {v.allergens && v.allergens.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {v.allergens.map((a) => (
+                        <span key={a.code} className="flex size-7 items-center justify-center rounded-md bg-white/90">
+                          <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={20} />
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-3">
                   <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className="flex size-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">

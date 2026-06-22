@@ -40,7 +40,11 @@ export default async function MenuView({
       slug: p.slug,
       menuSlug: menu.slug,
       video: p.video,
-      desc: p.description ? tx(p.description, locale) : undefined
+      desc: p.description ? tx(p.description, locale) : undefined,
+      allergens: (p.product_allergens ?? [])
+        .map((pa) => pa.allergens)
+        .filter((a): a is NonNullable<typeof a> => !!a)
+        .map((a) => ({code: a.code, icon: a.icon, name: a.name}))
     }));
 
   return (
