@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
-import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} from 'lucide-react';
+import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2, ChevronUp, ChevronDown} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
@@ -164,6 +164,44 @@ function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
 
 function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: string; onClose: () => void}) {
   const s = useMenuStore();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [idx, setIdx] = useState(0);
+  const [controls, setControls] = useState(false);
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const i = sectionRefs.current.indexOf(e.target as HTMLElement);
+          if (i < 0) continue;
+          if (e.isIntersecting && e.intersectionRatio > 0.6) {
+            setIdx(i);
+            videoRefs.current.forEach((v, j) => {
+              if (!v) return;
+              if (j === i) {
+                v.currentTime = 0;
+                v.play().catch(() => {});
+              } else {
+                v.pause();
+              }
+            });
+          }
+        }
+      },
+      {root, threshold: [0.6]}
+    );
+    sectionRefs.current.forEach((el) => el && obs.observe(el));
+    return () => obs.disconnect();
+  }, [videos.length]);
+
+  function goTo(i: number) {
+    sectionRefs.current[i]?.scrollIntoView({behavior: 'smooth'});
+  }
+
   return (
     <div className="fixed inset-0 z-[300] bg-black">
       <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
@@ -173,15 +211,27 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
           <X className="size-5" />
         </button>
       </div>
-      <div className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
-        {videos.map((v) => {
+
+      {controls && videos.length > 1 && (
+        <div className="absolute right-4 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3">
+          <button onClick={() => goTo(idx - 1)} disabled={idx === 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
+            <ChevronUp className="size-6" />
+          </button>
+          <button onClick={() => goTo(idx + 1)} disabled={idx === videos.length - 1} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
+            <ChevronDown className="size-6" />
+          </button>
+        </div>
+      )}
+
+      <div ref={scrollRef} onClick={() => setControls((c) => !c)} className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
+        {videos.map((v, i) => {
           const fav = s.isFav(v.id);
           const n = s.qty(v.id);
           return (
-            <section key={v.id} className="relative flex h-full snap-start items-center justify-center overflow-hidden">
-              {v.video && <video src={v.video} poster={v.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />}
+            <section key={v.id} ref={(el) => { sectionRefs.current[i] = el; }} className="relative flex h-full snap-start items-center justify-center overflow-hidden">
+              {v.video && <video ref={(el) => { videoRefs.current[i] = el; }} src={v.video} poster={v.image ?? undefined} muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />}
               <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.72), transparent 45%)'}} />
-              <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-5 pb-10 text-white">
+              <div onClick={(e) => e.stopPropagation()} className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-5 pb-10 text-white">
                 <div className="min-w-0">
                   <h3 className="font-serif text-2xl font-bold">{v.name}</h3>
                   {v.price != null && <p className="mt-0.5 font-bold text-brand">{euro(v.price, locale)}</p>}
