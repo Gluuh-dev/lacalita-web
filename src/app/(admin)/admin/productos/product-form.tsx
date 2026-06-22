@@ -9,15 +9,6 @@ import {Label} from '@/components/ui/label';
 import {Textarea} from '@/components/ui/textarea';
 import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import HeroMedia from '@/components/admin/hero-media';
 import AllergenIcon from '@/components/allergen-icon';
 import {tx} from '@/lib/localize';
@@ -133,26 +124,28 @@ export default function ProductForm({
       <div className="flex-1 space-y-4 overflow-y-auto p-5">
       <div>
         <Label>Categoría</Label>
-        <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? '')}>
-          <SelectTrigger>
-            {(() => {
-              const c = menus.flatMap((m) => m.categories).find((x) => x.id === categoryId);
-              return <span className={c ? '' : 'text-ink-3'}>{c ? tx(c.name, 'es') : 'Elige categoría'}</span>;
-            })()}
-          </SelectTrigger>
-          <SelectContent>
-            {menus.map((m) => (
-              <SelectGroup key={m.id}>
-                <SelectLabel>{tx(m.name, 'es')}</SelectLabel>
-                {m.categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {tx(c.name, 'es')}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-3">
+          {menus.map((m) => (
+            <div key={m.id}>
+              {menus.length > 1 && <div className="mb-1.5 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">{tx(m.name, 'es')}</div>}
+              <div className="flex flex-wrap gap-2">
+                {m.categories.map((c) => {
+                  const on = categoryId === c.id;
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setCategoryId(c.id)}
+                      className={`rounded-full border px-3 py-1.5 text-sm transition ${on ? 'border-brand bg-brand/10 font-medium text-brand-deep' : 'border-line text-ink-2 hover:border-brand'}`}
+                    >
+                      {tx(c.name, 'es')}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div>

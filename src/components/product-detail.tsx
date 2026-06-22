@@ -48,7 +48,7 @@ export default function ProductDetail({
           </Link>
           {isAdmin && (
             <a
-              href={`/admin/productos/${product.id}`}
+              href={`/admin/productos/${menuSlug}`}
               className="rounded-full bg-black/70 px-3 py-1 text-xs font-medium text-white hover:bg-black"
             >
               ✎ Editar producto

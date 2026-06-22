@@ -85,19 +85,21 @@ export default function ProductsTable({products, menus, allergens}: {products: R
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar producto…" className="w-full rounded-full border border-line bg-surface py-2.5 pl-9 pr-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25" />
         </div>
-        <Select value={menu} onValueChange={(v) => setMenu(v ?? 'all')}>
-          <SelectTrigger className="min-w-[190px] rounded-full px-4">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="all">Todas las cartas</SelectItem>
-              {menuOpts.map(([slug, name]) => (
-                <SelectItem key={slug} value={slug}>{name}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        {menuOpts.length > 1 && (
+          <Select value={menu} onValueChange={(v) => setMenu(v ?? 'all')}>
+            <SelectTrigger className="min-w-[190px] rounded-full px-4">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">Todas las cartas</SelectItem>
+                {menuOpts.map(([slug, name]) => (
+                  <SelectItem key={slug} value={slug}>{name}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
         <button onClick={() => setEdit(null)} className={`${btn} ml-auto inline-flex items-center gap-1.5`}>
           <Plus className="size-4" /> Nuevo producto
         </button>
