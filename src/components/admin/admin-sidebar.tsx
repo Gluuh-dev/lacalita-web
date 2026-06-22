@@ -34,7 +34,7 @@ export default function AdminSidebar({title, children}: {title: string; children
       {open && <div onClick={() => setOpen(false)} className="fixed inset-0 z-40 bg-black/45 lg:hidden" />}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col bg-[#1c160e] p-3 text-[#fbf7f0] transition-transform lg:static lg:z-auto lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col overflow-y-auto bg-[#1c160e] p-3 text-[#fbf7f0] transition-transform lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center gap-2 px-2 pb-5 pt-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -70,12 +70,9 @@ export default function AdminSidebar({title, children}: {title: string; children
             <h1 className="font-serif text-xl font-bold capitalize text-ink">{title}</h1>
             <span className="rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">En español</span>
           </div>
-          <div className="flex items-center gap-2">
-            <a href="/" target="_blank" rel="noreferrer" aria-label="Ver web pública" className="rounded-md p-1.5 text-ink-2 transition hover:bg-surface-2">
-              <ExternalLink className="size-5" />
-            </a>
-            <span className="flex size-9 items-center justify-center rounded-full bg-brand text-sm font-bold text-on-primary">LC</span>
-          </div>
+          <a href="/" target="_blank" rel="noreferrer" aria-label="Ver web pública" className="rounded-md p-1.5 text-ink-2 transition hover:bg-surface-2">
+            <ExternalLink className="size-5" />
+          </a>
         </header>
         <main className="p-5 sm:p-7">{children}</main>
       </div>
