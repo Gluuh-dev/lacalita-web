@@ -179,8 +179,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
       {/* Previsualización (como en la web) */}
       <div className="lg:sticky lg:top-20 lg:h-fit">
         <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">Previsualización · así se verá en el hero</div>
-        <div className="relative flex min-h-[460px] items-center justify-center overflow-hidden rounded-[22px]" style={{background: 'radial-gradient(90% 80% at 60% 35%, #2a1f18 0%, #16100d 70%)'}}>
-          {/* fondo */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[18px]" style={{background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}>
+          {/* anillos */}
+          <div className="pointer-events-none absolute right-0 top-0 h-[92%] w-[72%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 16px, rgba(233,174,116,.16) 16px 18px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'}} />
+          {/* fondo configurable */}
           {bgEffect === 'image' && bgImage && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -188,34 +190,59 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <div className="absolute inset-0 bg-[#14100a]/55" />
             </>
           )}
-          {bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 55% 45%, rgba(225,225,225,.12), transparent 70%)', filter: 'blur(6px)'}} />}
-          {bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 55% 100%, rgba(242,107,33,.3), transparent 68%)'}} />}
+          {bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 60% 42%, rgba(225,225,225,.12), transparent 70%)', filter: 'blur(6px)'}} />}
+          {bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 60% 100%, rgba(242,107,33,.3), transparent 68%)'}} />}
 
-          {/* eyebrow */}
-          {eyebrow.es && (
-            <div className="absolute left-0 right-0 top-[7%] z-[3] text-center">
-              <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: '0.72rem', color: '#e9ae74'}}>
-                <span style={{width: 22, height: 1, background: '#e9ae74', opacity: 0.6}} />
-                {eyebrow.es}
-                <span style={{width: 22, height: 1, background: '#e9ae74', opacity: 0.6}} />
-              </span>
+          {/* nav simulada */}
+          <div className="absolute inset-x-0 top-0 z-[6] flex items-center justify-between px-4 py-2 font-adam text-[7px] uppercase tracking-[0.18em] text-white/65">
+            <span className="size-3 rounded-full" style={{background: '#e9ae74'}} />
+            <div className="flex gap-3">
+              <span>Carta</span><span>Ofertas</span><span>Local</span>
             </div>
-          )}
-          {/* título */}
-          <h3 className="absolute left-0 right-0 top-[11%] m-0 px-3 text-center font-extrabold uppercase" style={{fontFamily: FONT_CSS[titleFont], color: titleColor, zIndex: titleBehind ? 1 : 3, fontSize: 'clamp(1.8rem,5vw,2.8rem)', lineHeight: 0.85, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>
-            {title.es || 'Título'}
-          </h3>
-          {/* hamburguesa */}
-          {image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={image} alt="" style={{height: '78%', maxWidth: '92%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 20px 30px rgba(0,0,0,.55))'}} />
-          ) : (
-            <div className="flex size-40 items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25" style={{zIndex: 2}}>
-              <UtensilsCrossed className="size-12" />
+            <div className="flex gap-2"><span>Admin</span><span>ES</span></div>
+          </div>
+
+          {/* contenido en 2 columnas */}
+          <div className="relative z-[2] grid h-full grid-cols-2 items-center gap-2 px-4">
+            {/* izquierda */}
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span style={{height: 22, aspectRatio: '1.15', display: 'block', backgroundColor: '#e9ae74', WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
+                <span className="font-modern text-base leading-none" style={{color: '#e9ae74'}}>LA CALITA</span>
+              </div>
+              <div className="mt-1 font-adam text-[6px] uppercase tracking-[0.2em]" style={{color: '#e9ae74'}}>Smash burgers · a pie de playa</div>
+              <p className="mt-1.5 max-w-[24ch] text-[8px] leading-relaxed text-white/55">Carne fresca, pan brioche y queso fundido, frente al mar.</p>
+              <div className="mt-2 flex gap-1.5">
+                <span className="rounded-full px-2.5 py-1 text-[7px] font-semibold" style={{background: '#e9ae74', color: '#2a1c08'}}>Ver la carta</span>
+                <span className="rounded-full bg-white px-2.5 py-1 text-[7px] font-semibold text-[#1c160e]">Cómo llegar</span>
+              </div>
             </div>
-          )}
-          {/* precio */}
-          {f.price && <div className="absolute bottom-[6%] left-0 right-0 z-[4] text-center font-eight font-extrabold" style={{fontSize: 'clamp(1.8rem,5vw,3rem)', color: '#e9ae74', textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{f.price} €</div>}
+
+            {/* derecha: hamburguesa */}
+            <div className="relative flex h-full items-center justify-center">
+              {eyebrow.es && (
+                <div className="absolute left-0 right-0 top-[8%] z-[3] text-center">
+                  <span className="inline-flex items-center gap-1.5 font-adam uppercase tracking-[0.28em]" style={{fontSize: '7px', color: '#e9ae74'}}>
+                    <span style={{width: 14, height: 1, background: '#e9ae74', opacity: 0.6}} />
+                    {eyebrow.es}
+                    <span style={{width: 14, height: 1, background: '#e9ae74', opacity: 0.6}} />
+                  </span>
+                </div>
+              )}
+              <h3 className="absolute left-0 right-0 top-[12%] m-0 px-1 text-center font-extrabold uppercase" style={{fontFamily: FONT_CSS[titleFont], color: titleColor, zIndex: titleBehind ? 1 : 3, fontSize: 'clamp(1rem,3.4vw,2.2rem)', lineHeight: 0.85, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>
+                {title.es || 'Título'}
+              </h3>
+              {image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={image} alt="" style={{height: '86%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 20px 30px rgba(0,0,0,.55))'}} />
+              ) : (
+                <div className="flex size-28 items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25" style={{zIndex: 2}}>
+                  <UtensilsCrossed className="size-10" />
+                </div>
+              )}
+              {f.price && <div className="absolute bottom-[4%] left-0 right-0 z-[4] text-center font-eight font-extrabold" style={{fontSize: 'clamp(1rem,3.2vw,2rem)', color: '#e9ae74', textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{f.price} €</div>}
+            </div>
+          </div>
         </div>
       </div>
     </div>
