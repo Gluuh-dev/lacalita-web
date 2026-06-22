@@ -53,37 +53,10 @@ export type EventRow = {
   published: boolean;
 };
 
-export type HeroCaption = {
-  kind?: 'text' | 'image'; // texto o imagen (png/svg, ej. logo de un DJ)
-  font?: 'sans' | 'modern' | 'eight'; // tipografía del texto
-  text: string;
-  src?: string | null; // url de la imagen cuando kind='image'
-  size?: number; // ancho % de la imagen (10-100)
-  orientation: 'horizontal' | 'vertical';
-  position:
-    | 'top-left' | 'top' | 'top-right'
-    | 'left' | 'center' | 'right'
-    | 'bottom-left' | 'bottom' | 'bottom-right';
-  color: string;
-  bg: string | null; // fondo del texto (null = sin fondo)
-  opacity: number; // 0-100 transparencia del texto
-  anim: 'none' | 'fade' | 'enter' | 'marquee' | 'marquee-y' | 'diagonal';
-  speed: number; // 1-10 (solo animaciones en movimiento)
-  offsetY?: number; // px para subir/bajar el texto y evitar solapes
-  fontSize?: number; // px (si no, usa el tamaño por defecto)
-};
-
-export type HeroSlide = {
-  type: 'image' | 'video';
-  url: string;
-  overlay: number; // 0-90: oscurecimiento sobre la media
-  logoLight: boolean; // logo/textos en blanco
-  loop: boolean; // vídeo: true=repetir, false=pasar al terminar
-  poster?: string; // imagen del primer fotograma (carga instantánea del vídeo)
-  captions?: HeroCaption[]; // varios textos independientes por diapositiva
-  ctaLabel?: string; // texto del botón (defecto "Ver la carta")
-  ctaHref?: string; // destino del botón (interno /carta o URL externa)
-};
+// Modelo de portada en módulo sin dependencias de servidor (cliente lo importa).
+export type {HeroSlide} from './hero-types';
+export {DEFAULT_HERO_SLIDE} from './hero-types';
+import type {HeroSlide} from './hero-types';
 export type Settings = {
   id: number;
   hours: Record<string, unknown> | null;

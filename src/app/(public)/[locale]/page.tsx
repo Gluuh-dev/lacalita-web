@@ -1,12 +1,13 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {Link} from '@/i18n/navigation';
-import {getSettings, getUpcomingEvents} from '@/lib/queries';
+import {getSettings, getUpcomingEvents, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
 import {tx} from '@/lib/localize';
+import {toHeroEvents} from '@/lib/hero';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {SITE_URL, altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
-import HeroCarousel from '@/components/hero-carousel';
+import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
 
 export const revalidate = 300;
@@ -25,20 +26,26 @@ export default async function Home({
   const t = await getTranslations();
   const [settings, events] = await Promise.all([
     getSettings(),
-    getUpcomingEvents(3)
+    getUpcomingEvents(6)
   ]);
-
-  const heroSlides: HeroSlide[] =
-    settings?.hero && settings.hero.length
-      ? settings.hero
-      : settings?.hero_video
-        ? [{type: 'video', url: settings.hero_video, overlay: 35, logoLight: true, loop: true}]
-        : settings?.hero_image
-          ? [{type: 'image', url: settings.hero_image, overlay: 25, logoLight: true, loop: false}]
-          : [];
 
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
   const hours = normalizeHours(settings?.hours);
+
+  const heroSlides: HeroSlide[] = settings?.hero?.length
+    ? settings.hero
+    : [
+        {
+          ...DEFAULT_HERO_SLIDE,
+          id: 'default',
+          media: settings?.hero_video || settings?.hero_image || '',
+          mediaType: settings?.hero_video ? 'video' : 'image',
+          lema: t('home.tagline'),
+          bienvenida: intro,
+          button: t('home.cta'),
+          link: '/carta'
+        }
+      ];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -65,12 +72,7 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
       />
-      <HeroCarousel
-        slides={heroSlides}
-        tagline={t('home.tagline')}
-        intro={intro}
-        cta={t('home.cta')}
-      />
+      <Hero slides={heroSlides} events={toHeroEvents(events, locale)} />
 
       {/* Próximos eventos */}
       {events.length > 0 && (
@@ -83,7 +85,7 @@ export default async function Home({
             </Link>
           </div>
           <div className="space-y-3">
-            {events.map((e) => (
+            {events.slice(0, 3).map((e) => (
               <EventCard key={e.id} event={e} locale={locale} />
             ))}
           </div>

@@ -2,24 +2,24 @@
 
 import {useRef, useState} from 'react';
 import {toast} from 'sonner';
-import {UploadCloud, RefreshCw, Trash2} from 'lucide-react';
+import {UploadCloud, RefreshCw, Trash2, Play} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {createClient} from '@/lib/supabase/client';
 import {compressImage, captureVideoPoster} from '@/lib/compress';
 import {removeMedia} from '@/lib/storage';
 import {Progress} from '@/components/ui/progress';
-import HeroPreview from './hero-preview';
-import type {HeroSlide} from '@/lib/queries';
 
 export default function HeroMedia({
-  slide,
-  device,
+  media,
+  mediaType,
+  poster,
   onSet,
   onClear
 }: {
-  slide: HeroSlide;
-  device: 'pc' | 'mobile';
-  onSet: (m: {type: 'image' | 'video'; url: string; poster?: string}) => void;
+  media: string;
+  mediaType: 'image' | 'video';
+  poster?: string;
+  onSet: (m: {media: string; mediaType: 'image' | 'video'; poster?: string}) => void;
   onClear: () => void;
 }) {
   const [busy, setBusy] = useState(false);
@@ -44,7 +44,6 @@ export default function HeroMedia({
       if (isImg) {
         body = await compressImage(file);
         if (body.type === 'image/webp') ext = 'webp';
-        setProgress((p) => Math.max(p, 45));
       }
       const path = `${isImg ? 'image' : 'video'}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const {error} = await supabase.storage.from('media').upload(path, body, {contentType: body.type || file.type});
@@ -52,109 +51,98 @@ export default function HeroMedia({
         toast.error(error.message);
         return;
       }
-      const newUrl = supabase.storage.from('media').getPublicUrl(path).data.publicUrl;
-      if (slide.url) removeMedia(slide.url);
-      if (slide.poster) removeMedia(slide.poster);
-
-      let poster: string | undefined;
+      const url = supabase.storage.from('media').getPublicUrl(path).data.publicUrl;
+      let newPoster: string | undefined;
       if (isVid) {
-        const pst = await captureVideoPoster(file);
-        if (pst) {
-          const pp = `poster/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
-          const {error: pe} = await supabase.storage.from('media').upload(pp, pst, {contentType: 'image/webp'});
-          if (!pe) poster = supabase.storage.from('media').getPublicUrl(pp).data.publicUrl;
+        try {
+          const posterBlob = await captureVideoPoster(file);
+          if (posterBlob) {
+            const pPath = `image/${Date.now()}-poster.webp`;
+            await supabase.storage.from('media').upload(pPath, posterBlob, {contentType: 'image/webp'});
+            newPoster = supabase.storage.from('media').getPublicUrl(pPath).data.publicUrl;
+          }
+        } catch {
+          /* sin poster */
         }
       }
+      if (media) removeMedia(media);
+      if (poster) removeMedia(poster);
+      onSet({media: url, mediaType: isImg ? 'image' : 'video', poster: newPoster});
       setProgress(100);
-      onSet({type: isImg ? 'image' : 'video', url: newUrl, poster});
-      toast.success(isImg ? 'Imagen subida' : 'Vídeo subido');
     } finally {
       clearInterval(timer);
-      if (inputRef.current) inputRef.current.value = '';
       setTimeout(() => {
         setBusy(false);
         setProgress(0);
-      }, 500);
+      }, 400);
     }
   }
 
-  const pick = () => inputRef.current?.click();
+  function clear() {
+    if (media) removeMedia(media);
+    if (poster) removeMedia(poster);
+    onClear();
+  }
+
+  if (media) {
+    return (
+      <div className="group relative aspect-video overflow-hidden rounded-[14px] border border-line bg-surface-sunken">
+        {mediaType === 'video' ? (
+          <video src={media} poster={poster} muted loop className="h-full w-full object-cover" />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={media} alt="" className="h-full w-full object-cover" />
+        )}
+        {mediaType === 'video' && (
+          <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-black/55 px-2 py-0.5 text-xs text-white">
+            <Play className="size-3" /> vídeo
+          </span>
+        )}
+        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition group-hover:opacity-100">
+          <button type="button" onClick={() => inputRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-ink shadow">
+            <RefreshCw className="size-4" /> Cambiar
+          </button>
+          <button type="button" onClick={clear} className="inline-flex items-center gap-1.5 rounded-full bg-danger px-3 py-1.5 text-sm font-medium text-white shadow">
+            <Trash2 className="size-4" /> Eliminar
+          </button>
+        </div>
+        <input ref={inputRef} type="file" accept="image/*,video/*" hidden onChange={(e) => e.target.files?.[0] && handle(e.target.files[0])} />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-2">
-      <div
-        className="group relative"
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDrag(true);
-        }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDrag(false);
-          const f = e.dataTransfer.files?.[0];
-          if (f) handle(f);
-        }}
-      >
-        {slide.url ? (
-          <>
-            <HeroPreview slide={slide} device={device} />
-            {/* Controles al pasar por encima */}
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
-              <button
-                type="button"
-                onClick={pick}
-                className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm font-medium hover:bg-white"
-              >
-                <RefreshCw className="size-4" /> Cambiar
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  removeMedia(slide.url);
-                  removeMedia(slide.poster);
-                  onClear();
-                }}
-                className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-              >
-                <Trash2 className="size-4" /> Eliminar
-              </button>
-            </div>
-          </>
-        ) : (
-          <button
-            type="button"
-            onClick={pick}
-            className={cn(
-              'flex aspect-video w-full flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed text-center transition',
-              drag ? 'border-brand bg-brand/5' : 'border-input hover:border-brand/60 hover:bg-accent/40',
-              busy && 'pointer-events-none opacity-70'
-            )}
-          >
-            <UploadCloud className="size-7 text-muted-foreground" />
-            <span className="text-sm font-medium">Arrastra una imagen o vídeo, o haz clic</span>
-            <span className="text-xs text-muted-foreground">La imagen se comprime · Vídeo MP4</span>
-          </button>
-        )}
-
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*,video/*"
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handle(f);
-          }}
-        />
-      </div>
-
-      {busy && (
-        <div className="space-y-1">
-          <Progress value={progress} />
-          <p className="text-xs text-muted-foreground">Subiendo… {Math.round(progress)}%</p>
-        </div>
+    <div
+      onClick={() => inputRef.current?.click()}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDrag(true);
+      }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDrag(false);
+        if (e.dataTransfer.files?.[0]) handle(e.dataTransfer.files[0]);
+      }}
+      className={cn(
+        'flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border-2 border-dashed bg-surface-2 text-center text-sm text-ink-3 transition',
+        drag ? 'border-brand bg-accent-soft' : 'border-line-strong hover:border-brand'
       )}
+    >
+      {busy ? (
+        <div className="w-2/3">
+          <Progress value={progress} />
+          <p className="mt-2 text-xs">Subiendo… {Math.round(progress)}%</p>
+        </div>
+      ) : (
+        <>
+          <UploadCloud className="size-7 text-ink-3" />
+          <p>
+            Arrastra una <b>imagen</b> o un <b>vídeo</b>, o pulsa para elegir
+          </p>
+        </>
+      )}
+      <input ref={inputRef} type="file" accept="image/*,video/*" hidden onChange={(e) => e.target.files?.[0] && handle(e.target.files[0])} />
     </div>
   );
 }

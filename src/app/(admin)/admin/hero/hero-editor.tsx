@@ -1,73 +1,68 @@
 'use client';
 
-import {useState, useTransition} from 'react';
+import {useEffect, useState, useTransition} from 'react';
 import {toast} from 'sonner';
-import {Button} from '@/components/ui/button';
-import {Checkbox} from '@/components/ui/checkbox';
-import {card} from '@/components/admin/ui';
-import MediaUpload from '@/components/admin/media-upload';
+import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List} from 'lucide-react';
+import {cn} from '@/lib/utils';
+import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
-import HeroStage from '@/components/hero-stage';
-import {removeMedia} from '@/lib/storage';
+import {HeroPreview} from '@/components/hero';
 import {saveHero} from './actions';
-import type {HeroSlide, HeroCaption} from '@/lib/queries';
+import {DEFAULT_HERO_SLIDE, type HeroSlide} from '@/lib/hero-types';
+import type {HeroEvent} from '@/lib/hero';
 
-const fld = 'w-full rounded-lg border border-input bg-background px-2 py-1.5 text-sm';
+const MODES = [
+  {id: 'boton', label: 'Solo botón', Icon: MousePointerClick},
+  {id: 'rotulo', label: 'Rótulo de evento', Icon: Sparkles},
+  {id: 'agenda', label: 'Lista de eventos', Icon: List}
+] as const;
 
-const DEFAULT_CAPTION: HeroCaption = {
-  kind: 'text', font: 'eight', text: 'SÁBADO · 21:00', src: null, size: 30,
-  orientation: 'horizontal', position: 'bottom', color: '#ffffff', bg: null,
-  opacity: 70, anim: 'enter', speed: 4, offsetY: 0
-};
-
-const POSITIONS: [HeroCaption['position'], string][] = [
-  ['top-left', 'Arriba izq.'], ['top', 'Arriba'], ['top-right', 'Arriba der.'],
-  ['left', 'Izquierda'], ['center', 'Centro'], ['right', 'Derecha'],
-  ['bottom-left', 'Abajo izq.'], ['bottom', 'Abajo'], ['bottom-right', 'Abajo der.']
+const LOGO_COLORS: [HeroSlide['logoColor'], string][] = [
+  ['white', '#ffffff'],
+  ['cream', '#faf6ef'],
+  ['brown', '#4c2f08'],
+  ['ink', '#243b53'],
+  ['orange', '#f26b21']
 ];
-const ANIMS: [HeroCaption['anim'], string][] = [
-  ['none', 'Fija'], ['fade', 'Aparecer'], ['enter', 'Entra y se queda'],
-  ['marquee', 'Cinta horizontal'], ['marquee-y', 'Cinta vertical'], ['diagonal', 'Diagonal']
-];
-const MOVING = ['marquee', 'marquee-y', 'diagonal'];
 
-export default function HeroEditor({initial}: {initial: HeroSlide[]}) {
-  const [slides, setSlides] = useState<HeroSlide[]>(initial);
-  const [pending, start] = useTransition();
+export default function HeroEditor({initial, events}: {initial: HeroSlide[]; events: HeroEvent[]}) {
+  const [slides, setSlides] = useState<HeroSlide[]>(
+    initial.length ? initial : [{...DEFAULT_HERO_SLIDE, id: 's' + Date.now()}]
+  );
+  const [sel, setSel] = useState(slides[0]?.id);
   const [device, setDevice] = useState<'pc' | 'mobile'>('pc');
-  const [full, setFull] = useState<number | null>(null);
+  const [animKey, setAnimKey] = useState(0);
+  const [pending, start] = useTransition();
 
-  const addHero = () =>
-    setSlides((s) => [...s, {type: 'image', url: '', overlay: 25, logoLight: true, loop: false, captions: []}]);
-  const update = (i: number, patch: Partial<HeroSlide>) =>
-    setSlides((s) => s.map((sl, j) => (j === i ? {...sl, ...patch} : sl)));
-  const remove = (i: number) => {
-    const sl = slides[i];
-    if (sl) {
-      removeMedia(sl.url);
-      removeMedia(sl.poster);
-      (sl.captions ?? []).forEach((c) => c.kind === 'image' && removeMedia(c.src ?? undefined));
-    }
-    setSlides((s) => s.filter((_, j) => j !== i));
-  };
-  const move = (i: number, dir: -1 | 1) =>
-    setSlides((s) => {
+  const slide = slides.find((s) => s.id === sel) ?? slides[0];
+
+  useEffect(() => {
+    if (!slides.find((s) => s.id === sel) && slides[0]) setSel(slides[0].id);
+  }, [slides, sel]);
+  useEffect(() => setAnimKey((k) => k + 1), [sel, device]);
+
+  function set<K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) {
+    setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, [k]: v} : s)));
+  }
+  function addSlide() {
+    const id = 's' + Date.now();
+    setSlides((arr) => [...arr, {...DEFAULT_HERO_SLIDE, id, name: `Diapositiva ${arr.length + 1}`}]);
+    setSel(id);
+  }
+  function removeSlide(id: string) {
+    if (slides.length <= 1) return toast.error('Debe quedar al menos una');
+    setSlides((arr) => arr.filter((s) => s.id !== id));
+  }
+  function move(id: string, dir: -1 | 1) {
+    setSlides((arr) => {
+      const i = arr.findIndex((s) => s.id === id);
       const j = i + dir;
-      if (j < 0 || j >= s.length) return s;
-      const n = [...s];
-      [n[i], n[j]] = [n[j], n[i]];
-      return n;
+      if (j < 0 || j >= arr.length) return arr;
+      const next = [...arr];
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
     });
-
-  const addCap = (i: number) => update(i, {captions: [...(slides[i].captions ?? []), DEFAULT_CAPTION]});
-  const patchCap = (i: number, ci: number, patch: Partial<HeroCaption>) =>
-    update(i, {captions: (slides[i].captions ?? []).map((c, k) => (k === ci ? {...c, ...patch} : c))});
-  const removeCap = (i: number, ci: number) => {
-    const c = (slides[i].captions ?? [])[ci];
-    if (c?.kind === 'image') removeMedia(c.src ?? undefined);
-    update(i, {captions: (slides[i].captions ?? []).filter((_, k) => k !== ci)});
-  };
-
+  }
   function save() {
     start(async () => {
       const r = await saveHero(slides);
@@ -76,197 +71,272 @@ export default function HeroEditor({initial}: {initial: HeroSlide[]}) {
     });
   }
 
+  if (!slide) return null;
+
   return (
-    <div className="space-y-5">
-      <div className={`${card} flex flex-wrap items-center justify-between gap-4`}>
-        <Button type="button" onClick={addHero}>+ Añadir hero</Button>
-        <div className="flex items-center gap-1 text-sm">
-          <span className="mr-1 text-muted-foreground">Preview:</span>
-          {(['pc', 'mobile'] as const).map((d) => (
-            <button key={d} type="button" onClick={() => setDevice(d)}
-              className={`rounded-full px-3 py-1 ${device === d ? 'bg-neutral-900 text-white' : 'bg-neutral-100'}`}>
-              {d === 'pc' ? 'PC' : 'Móvil'}
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,400px)_1fr] lg:items-start">
+      {/* EDITOR */}
+      <div className="flex flex-col gap-4">
+        {/* Diapositivas */}
+        <Card>
+          <div className="mb-3 flex items-center justify-between">
+            <div className="eyebrow">Diapositivas</div>
+            <button onClick={addSlide} className={`${btnGhost} inline-flex items-center gap-1.5`}>
+              <Plus className="size-4" /> Añadir
             </button>
-          ))}
-        </div>
-      </div>
-
-      {slides.length === 0 && (
-        <p className="text-sm text-muted-foreground">Sin heros. Pulsa “+ Añadir hero” y luego sube una imagen o vídeo.</p>
-      )}
-
-      <div className="space-y-3">
-        {slides.map((sl, i) => (
-          <div key={i} className={`${card} lg:grid lg:grid-cols-2 lg:items-start lg:gap-6`}>
-            {/* Columna izquierda: media (preview + arrastrar/cambiar/eliminar) */}
-            <div className="space-y-3">
-              <HeroMedia
-                slide={sl}
-                device={device}
-                onSet={(m) => update(i, {type: m.type, url: m.url, poster: m.poster})}
-                onClear={() => update(i, {url: '', poster: undefined})}
-              />
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-sm font-medium">Hero {i + 1}</span>
-                <div className="flex items-center gap-3 text-sm">
-                  <button type="button" onClick={() => setFull(i)} className="text-blue-600 hover:underline">Pantalla completa</button>
-                  <button type="button" onClick={() => move(i, -1)} disabled={i === 0} className="disabled:opacity-30">↑</button>
-                  <button type="button" onClick={() => move(i, 1)} disabled={i === slides.length - 1} className="disabled:opacity-30">↓</button>
-                  <button type="button" onClick={() => remove(i)} className="text-destructive hover:underline">Quitar hero</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Columna derecha: controles */}
-            <div className="mt-4 space-y-3 lg:mt-0">
-              <div className="flex items-center justify-end">
-                <Button type="button" size="sm" disabled={pending} onClick={save}>Guardar</Button>
-              </div>
-              <label className="block text-sm">
-                Oscurecer fondo: <span className="font-medium">{sl.overlay}%</span>
-                <input type="range" min={0} max={90} value={sl.overlay} onChange={(e) => update(i, {overlay: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-              </label>
-              {sl.type === 'video' && (
-                <label className="flex items-center gap-2 text-sm">
-                  <Checkbox checked={sl.loop} onCheckedChange={(v) => update(i, {loop: v === true})} />
-                  Repetir vídeo
-                </label>
-              )}
-              <div className="grid grid-cols-2 gap-3">
-                <label className="text-xs text-muted-foreground">
-                  Texto del botón
-                  <input className={fld} value={sl.ctaLabel ?? ''} onChange={(e) => update(i, {ctaLabel: e.target.value})} placeholder="Ver la carta" />
-                </label>
-                <label className="text-xs text-muted-foreground">
-                  Enlace del botón
-                  <input className={fld} value={sl.ctaHref ?? ''} onChange={(e) => update(i, {ctaHref: e.target.value})} placeholder="/carta o https://…" />
-                </label>
-              </div>
-
-              <div className="border-t border-black/10 pt-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Textos / imágenes</span>
-                  <Button type="button" variant="outline" size="sm" onClick={() => addCap(i)}>+ Añadir</Button>
-                </div>
-
-                {(sl.captions ?? []).map((cap, ci) => {
-                  const kind = cap.kind ?? 'text';
-                  return (
-                    <div key={ci} className="mt-3 space-y-3 rounded-lg border border-black/10 p-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{ci + 1}.</span>
-                        <button type="button" onClick={() => removeCap(i, ci)} className="text-destructive hover:underline">Quitar</button>
-                      </div>
-                      <label className="block text-xs text-muted-foreground">
-                        Tipo
-                        <select className={fld} value={kind} onChange={(e) => patchCap(i, ci, {kind: e.target.value as 'text' | 'image'})}>
-                          <option value="text">Texto</option>
-                          <option value="image">Imagen (logo / sello)</option>
-                        </select>
-                      </label>
-
-                      {kind === 'image' ? (
-                        <>
-                          <MediaUpload kind="image" value={cap.src ?? null} onChange={(u) => patchCap(i, ci, {src: u})} label="Subir logo / sello" />
-                          <label className="block text-xs text-muted-foreground">
-                            Tamaño: {cap.size ?? 30}%
-                            <input type="range" min={10} max={80} value={cap.size ?? 30} onChange={(e) => patchCap(i, ci, {size: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-                          </label>
-                        </>
-                      ) : (
-                        <>
-                          <textarea value={cap.text} onChange={(e) => patchCap(i, ci, {text: e.target.value})} rows={2} placeholder="Ej: SÁBADO · 21:00" className="w-full rounded-lg border border-input bg-background px-2.5 py-2 text-sm" />
-                          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                            <label className="text-xs text-muted-foreground">
-                              Fuente
-                              <select className={fld} value={cap.font ?? 'sans'} onChange={(e) => patchCap(i, ci, {font: e.target.value as 'sans' | 'modern' | 'eight'})}>
-                                <option value="sans">Normal</option>
-                                <option value="modern">Modern Romance</option>
-                                <option value="eight">Eight One</option>
-                              </select>
-                            </label>
-                            <label className="text-xs text-muted-foreground">
-                              Tamaño letra: {cap.fontSize ?? 'auto'}
-                              <input type="range" min={16} max={140} value={cap.fontSize ?? 56} onChange={(e) => patchCap(i, ci, {fontSize: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-                            </label>
-                            <label className="text-xs text-muted-foreground">
-                              Color
-                              <input type="color" value={cap.color} onChange={(e) => patchCap(i, ci, {color: e.target.value})} className="mt-1 block h-9 w-full rounded-lg border border-input" />
-                            </label>
-                            <label className="text-xs text-muted-foreground">
-                              Fondo
-                              <div className="mt-1 flex items-center gap-2">
-                                <Checkbox checked={!!cap.bg} onCheckedChange={(v) => patchCap(i, ci, {bg: v === true ? '#243b53' : null})} />
-                                {cap.bg && <input type="color" value={cap.bg} onChange={(e) => patchCap(i, ci, {bg: e.target.value})} className="h-8 w-12 rounded border border-input" />}
-                              </div>
-                            </label>
-                            <label className="text-xs text-muted-foreground">
-                              Orientación
-                              <select className={fld} value={cap.orientation} onChange={(e) => patchCap(i, ci, {orientation: e.target.value as HeroCaption['orientation']})}>
-                                <option value="horizontal">Horizontal</option>
-                                <option value="vertical">Vertical</option>
-                              </select>
-                            </label>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        <label className="text-xs text-muted-foreground">
-                          Posición
-                          <select className={fld} value={cap.position} onChange={(e) => patchCap(i, ci, {position: e.target.value as HeroCaption['position']})}>
-                            {POSITIONS.map(([v, l]) => (<option key={v} value={v}>{l}</option>))}
-                          </select>
-                        </label>
-                        <label className="text-xs text-muted-foreground">
-                          Animación
-                          <select className={fld} value={cap.anim} onChange={(e) => patchCap(i, ci, {anim: e.target.value as HeroCaption['anim']})}>
-                            {ANIMS.map(([v, l]) => (<option key={v} value={v}>{l}</option>))}
-                          </select>
-                        </label>
-                        <label className="text-xs text-muted-foreground">
-                          Mover ↑/↓: {cap.offsetY ?? 0}px
-                          <input type="range" min={-300} max={300} value={cap.offsetY ?? 0} onChange={(e) => patchCap(i, ci, {offsetY: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-                        </label>
-                        <label className="text-xs text-muted-foreground">
-                          Transparencia: {cap.opacity}%
-                          <input type="range" min={10} max={100} value={cap.opacity} onChange={(e) => patchCap(i, ci, {opacity: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-                        </label>
-                        {MOVING.includes(cap.anim) && (
-                          <label className="text-xs text-muted-foreground">
-                            Velocidad: {cap.speed}
-                            <input type="range" min={1} max={10} value={cap.speed} onChange={(e) => patchCap(i, ci, {speed: Number(e.target.value)})} className="mt-1 w-full accent-brand" />
-                          </label>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
-        ))}
-      </div>
+          <div className="flex flex-col gap-1.5">
+            {slides.map((s, i) => (
+              <div key={s.id} className={cn('flex items-center gap-2 rounded-lg border p-1.5', s.id === sel ? 'border-brand bg-surface-sunken' : 'border-line')}>
+                <div className="flex flex-col">
+                  <button onClick={() => move(s.id, -1)} disabled={i === 0} className="text-ink-3 disabled:opacity-30"><ChevronUp className="size-4" /></button>
+                  <button onClick={() => move(s.id, 1)} disabled={i === slides.length - 1} className="text-ink-3 disabled:opacity-30"><ChevronDown className="size-4" /></button>
+                </div>
+                <button onClick={() => setSel(s.id)} className="flex flex-1 items-center gap-2 text-left">
+                  <span className="flex h-7 w-11 shrink-0 items-center justify-center overflow-hidden rounded bg-gradient-to-br from-accent to-ink text-white" style={s.media && s.mediaType === 'image' ? {background: `center/cover url(${s.media})`} : undefined}>
+                    {s.mediaType === 'video' && '▶'}
+                  </span>
+                  <span className="flex-1 truncate text-sm font-medium">{s.name}</span>
+                  {i === 0 && <span className="rounded-full bg-success/15 px-2 py-0.5 text-[0.65rem] font-medium text-success">Activa</span>}
+                </button>
+                <button onClick={() => removeSlide(s.id)} aria-label="Eliminar" className="p-1 text-ink-3 hover:text-danger"><Trash2 className="size-4" /></button>
+              </div>
+            ))}
+          </div>
+        </Card>
 
-      <Button onClick={save} disabled={pending}>{pending ? 'Guardando…' : 'Guardar todo'}</Button>
-
-      {full !== null && slides[full] && (
-        <div className="fixed inset-0 z-[60] bg-black">
-          <div className="relative h-full w-full">
-            <HeroStage
-              slide={slides[full]}
-              preview
-              tagline="Beach Club · Restaurante · Cafetería"
-              intro="Cocina mediterránea con los pies en la arena, en Salobreña."
-              ctaLabel={slides[full].ctaLabel || 'Ver la carta'}
-              ctaHref={slides[full].ctaHref || '/carta'}
+        {/* Fondo */}
+        <Card>
+          <Field label="Nombre de la diapositiva">
+            <input className={inputCls} value={slide.name} onChange={(e) => set('name', e.target.value)} />
+          </Field>
+          <Field label="Fondo (imagen o vídeo)">
+            <HeroMedia
+              media={slide.media}
+              mediaType={slide.mediaType}
+              poster={slide.poster}
+              onSet={(m) => setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, ...m} : s)))}
+              onClear={() => setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, media: '', poster: undefined} : s)))}
             />
+          </Field>
+          <Field label={`Oscurecido del fondo · ${slide.darken}%`}>
+            <input type="range" min={0} max={80} value={slide.darken} onChange={(e) => set('darken', +e.target.value)} className="w-full accent-brand" />
+          </Field>
+          <Toggle label="Mostrar logo" checked={slide.showLogo} onChange={(v) => set('showLogo', v)} />
+          {slide.showLogo && (
+            <Field label="Color del logo">
+              <div className="flex gap-2">
+                {LOGO_COLORS.map(([name, hex]) => (
+                  <button key={name} onClick={() => set('logoColor', name)} className="size-7 rounded-full" style={{background: hex, boxShadow: `0 0 0 ${(slide.logoColor || 'white') === name ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
+                ))}
+              </div>
+            </Field>
+          )}
+        </Card>
+
+        {/* Textos */}
+        <Card>
+          <div className="eyebrow">Textos</div>
+          <Field label="Eyebrow (rótulo superior)">
+            <input className={inputCls} value={slide.eyebrow} onChange={(e) => set('eyebrow', e.target.value)} />
+          </Field>
+          <Field label="Título / lema">
+            <textarea className={inputCls} rows={2} value={slide.lema} onChange={(e) => set('lema', e.target.value)} />
+          </Field>
+          <Field label="Frase de bienvenida">
+            <textarea className={inputCls} rows={2} value={slide.bienvenida} onChange={(e) => set('bienvenida', e.target.value)} />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Texto del botón">
+              <input className={inputCls} value={slide.button} onChange={(e) => set('button', e.target.value)} placeholder="Ver la carta" />
+            </Field>
+            <Field label="Enlace del botón">
+              <input className={inputCls} value={slide.link} onChange={(e) => set('link', e.target.value)} placeholder="/carta" />
+            </Field>
           </div>
-          <button type="button" onClick={() => setFull(null)} className="absolute right-4 top-4 z-[70] rounded-full bg-white/90 px-4 py-1.5 text-sm font-medium">
-            Cerrar ✕
-          </button>
+          <Field label="Color del botón">
+            <Swatch value={slide.btnColor} onPick={(c) => set('btnColor', c)} />
+          </Field>
+        </Card>
+
+        {/* Zona de eventos */}
+        <Card>
+          <div className="eyebrow">Zona de eventos en el hero</div>
+          <div className="grid grid-cols-3 gap-2">
+            {MODES.map((m) => {
+              const on = (slide.heroMode || 'boton') === m.id;
+              return (
+                <button key={m.id} onClick={() => set('heroMode', m.id)} className={cn('flex flex-col items-center gap-1.5 rounded-[14px] border p-3 text-center', on ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>
+                  <m.Icon className="size-5" />
+                  <span className="text-xs font-semibold leading-tight">{m.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {slide.heroMode === 'agenda' ? (
+            <p className="text-sm text-ink-3">Muestra los próximos eventos uno debajo de otro. En PC aparece un panel lateral.</p>
+          ) : (
+            <>
+              <Field label="Texto del rótulo">
+                <input className={inputCls} value={slide.rotulo} onChange={(e) => set('rotulo', e.target.value)} placeholder="Sunset Sessions" />
+              </Field>
+              <Field label="Subtexto">
+                <input className={inputCls} value={slide.sub} onChange={(e) => set('sub', e.target.value)} placeholder="SÁBADO · 20:00" />
+              </Field>
+            </>
+          )}
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Tipografía rótulo">
+              <select className={inputCls} value={slide.font} onChange={(e) => set('font', e.target.value as HeroSlide['font'])}>
+                <option value="romance">Modern Romance</option>
+                <option value="eight">Eight One</option>
+                <option value="display">Playfair</option>
+              </select>
+            </Field>
+            <Field label="Animación">
+              <select className={inputCls} value={slide.anim} onChange={(e) => set('anim', e.target.value as HeroSlide['anim'])}>
+                <option value="fade">Fundido</option>
+                <option value="slide">Deslizar</option>
+                <option value="none">Ninguna</option>
+              </select>
+            </Field>
+          </div>
+          <Field label="Color del rótulo">
+            <Swatch value={slide.color} onPick={(c) => set('color', c)} colors={['#e9ae74', '#ffffff', '#fedb71', '#2e6e8e', '#f26b21']} />
+          </Field>
+          {slide.heroMode === 'rotulo' && (
+            <Field label={`Posición vertical del rótulo · ${slide.rotuloY ?? 68}%`} hint="Más arriba o más abajo en la pantalla">
+              <input type="range" min={10} max={88} value={slide.rotuloY ?? 68} onChange={(e) => set('rotuloY', +e.target.value)} className="w-full accent-brand" />
+            </Field>
+          )}
+          <div className="flex flex-col gap-3 border-t border-line pt-3">
+            <Toggle label="Botón 'Ir al evento' bajo el evento" checked={slide.eventBtn} onChange={(v) => set('eventBtn', v)} />
+            {slide.eventBtn && (
+              <Field label="Texto del botón de evento">
+                <input className={inputCls} value={slide.eventBtnText} onChange={(e) => set('eventBtnText', e.target.value)} />
+              </Field>
+            )}
+          </div>
+        </Card>
+
+        {/* Marquesina */}
+        <Card>
+          <div className="eyebrow">Texto en movimiento</div>
+          <Toggle label="Activar marquesina (texto animado de un lado a otro)" checked={slide.marqueeOn} onChange={(v) => set('marqueeOn', v)} />
+          {slide.marqueeOn && (
+            <>
+              <Field label="Texto">
+                <input className={inputCls} value={slide.marquee} onChange={(e) => set('marquee', e.target.value)} placeholder="Noche de directo · La Calita" />
+              </Field>
+              <Field label={`Velocidad · ${slide.marqueeSpeed}s por vuelta`}>
+                <input type="range" min={6} max={40} value={slide.marqueeSpeed} onChange={(e) => set('marqueeSpeed', +e.target.value)} className="w-full accent-brand" />
+              </Field>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Orientación">
+                  <select className={inputCls} value={slide.marqueeOrient} onChange={(e) => set('marqueeOrient', e.target.value as HeroSlide['marqueeOrient'])}>
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                  </select>
+                </Field>
+                <Field label="Dirección">
+                  <select className={inputCls} value={slide.marqueeDir} onChange={(e) => set('marqueeDir', e.target.value as HeroSlide['marqueeDir'])}>
+                    {slide.marqueeOrient === 'vertical' ? (
+                      <>
+                        <option value="up">Hacia arriba</option>
+                        <option value="down">Hacia abajo</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="left">Hacia la izquierda</option>
+                        <option value="right">Hacia la derecha</option>
+                      </>
+                    )}
+                  </select>
+                </Field>
+              </div>
+              <Field label={`Posición · ${slide.marqueePos}%`} hint={slide.marqueeOrient === 'vertical' ? 'Izquierda → derecha' : 'Arriba → abajo'}>
+                <input type="range" min={0} max={100} value={slide.marqueePos} onChange={(e) => set('marqueePos', +e.target.value)} className="w-full accent-brand" />
+              </Field>
+              <Field label="Color del texto">
+                <Swatch value={slide.marqueeColor} onPick={(c) => set('marqueeColor', c)} />
+              </Field>
+              <Field label="Fondo de la banda" hint="Opcional">
+                <Swatch value={slide.marqueeBg} onPick={(c) => set('marqueeBg', c)} none />
+              </Field>
+            </>
+          )}
+        </Card>
+
+        <button onClick={save} disabled={pending} className={`${btn} inline-flex items-center justify-center gap-1.5`}>
+          <Check className="size-4" /> {pending ? 'Guardando…' : 'Guardar portada'}
+        </button>
+      </div>
+
+      {/* PREVIEW */}
+      <div className="lg:sticky lg:top-20">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="eyebrow">Previsualización · así se verá en la web</div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setAnimKey((k) => k + 1)} className={`${btnGhost} inline-flex items-center gap-1.5`}>
+              <RotateCcw className="size-4" /> Recargar
+            </button>
+            <div className="inline-flex gap-1 rounded-full bg-surface-sunken p-1">
+              {([['pc', Monitor, 'PC'], ['mobile', Smartphone, 'Móvil']] as const).map(([key, Ic, lbl]) => (
+                <button key={key} onClick={() => setDevice(key)} className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium', device === key ? 'bg-surface text-ink shadow-sm' : 'text-ink-3')}>
+                  <Ic className="size-4" /> {lbl}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
+        <div className={cn('flex justify-center rounded-[20px] bg-[#1c160e] p-6', device === 'mobile' && 'px-[24%]')}>
+          <div className="w-full">
+            <HeroPreview slide={slide} events={events} device={device} animKey={animKey} />
+          </div>
+        </div>
+        <p className="mt-3 text-center text-sm text-ink-3">Mismas tipografías, proporciones y animación que la web. Pulsa “Recargar” para ver la entrada.</p>
+      </div>
+    </div>
+  );
+}
+
+function Card({children}: {children: React.ReactNode}) {
+  return <div className="flex flex-col gap-3.5 rounded-[20px] border border-line bg-surface p-4 shadow-sm">{children}</div>;
+}
+
+function Field({label, hint, children}: {label: string; hint?: string; children: React.ReactNode}) {
+  return (
+    <div>
+      <label className={labelCls}>{label}</label>
+      {children}
+      {hint && <p className="mt-1 text-xs text-ink-3">{hint}</p>}
+    </div>
+  );
+}
+
+function Toggle({label, checked, onChange}: {label: string; checked: boolean; onChange: (v: boolean) => void}) {
+  return (
+    <button type="button" onClick={() => onChange(!checked)} className="flex w-full items-center justify-between gap-3 text-left text-sm">
+      <span className="text-ink-2">{label}</span>
+      <span className={cn('relative h-6 w-10 shrink-0 rounded-full transition', checked ? 'bg-brand' : 'bg-line-strong')}>
+        <span className={cn('absolute top-0.5 size-5 rounded-full bg-white transition-all', checked ? 'left-[18px]' : 'left-0.5')} />
+      </span>
+    </button>
+  );
+}
+
+function Swatch({value, onPick, colors, none}: {value: string; onPick: (c: string) => void; colors?: string[]; none?: boolean}) {
+  const list = colors ?? ['#e9ae74', '#ffffff', '#fedb71', '#2e6e8e', '#f26b21', '#4c2f08', '#243b53'];
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {none && (
+        <button type="button" onClick={() => onPick('')} title="Ninguno" className="flex size-7 items-center justify-center rounded-full border border-line-strong bg-surface text-xs text-ink-3" style={{boxShadow: !value ? '0 0 0 2px var(--ink)' : 'none'}}>
+          ∅
+        </button>
       )}
+      {list.map((c) => (
+        <button key={c} type="button" onClick={() => onPick(c)} className="size-7 rounded-full" style={{background: c, boxShadow: `0 0 0 ${value === c ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
+      ))}
     </div>
   );
 }
