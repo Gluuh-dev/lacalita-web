@@ -42,7 +42,7 @@ export default function ProductCard({
         {product.image ? (
           <Image
             src={product.image}
-            alt=""
+            alt={tx(product.name, locale)}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"

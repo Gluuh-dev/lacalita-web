@@ -78,7 +78,7 @@ export default function ProductDetail({
           ) : product.image ? (
             <Image
               src={product.image}
-              alt=""
+              alt={tx(product.name, locale)}
               fill
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-cover"

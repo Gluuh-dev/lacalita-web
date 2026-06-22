@@ -51,7 +51,7 @@ export default async function EventCard({
       {event.image && (
         <Image
           src={event.image}
-          alt=""
+          alt={tx(event.title, locale)}
           width={80}
           height={80}
           className="h-20 w-20 shrink-0 rounded-xl object-cover ring-1 ring-black/5"
