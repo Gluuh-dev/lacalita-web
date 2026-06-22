@@ -39,20 +39,27 @@ export function Sparks() {
 /** Vídeo de efecto (humo/fuego) con el negro eliminado vía mezcla "screen".
  *  Centrado sobre la hamburguesa (derecha) y delante o detrás según `behind`. */
 export function FxVideo({src, behind, x = 62, y = 50, scale = 1.1}: {src: string; behind?: boolean; x?: number; y?: number; scale?: number}) {
-  // Caja posicionable (x,y en %) y escalable, centrada en su punto.
+  // Posición/tamaño y mezcla "screen" directamente en el <video> (sin wrapper),
+  // para que el negro se mezcle con la hamburguesa y desaparezca (no se aísla).
   return (
-    <div className="pointer-events-none absolute" style={{left: `${x}%`, top: `${y}%`, width: `${90 * scale}%`, height: `${100 * scale}%`, transform: 'translate(-50%,-50%)', zIndex: behind ? 1 : 5}}>
-      <video
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        className="h-full w-full object-cover"
-        style={{mixBlendMode: 'screen'}}
-      />
-    </div>
+    <video
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="metadata"
+      className="pointer-events-none absolute object-cover"
+      style={{
+        left: `${x}%`,
+        top: `${y}%`,
+        width: `${90 * scale}%`,
+        height: `${100 * scale}%`,
+        transform: 'translate(-50%,-50%)',
+        zIndex: behind ? 1 : 5,
+        mixBlendMode: 'screen'
+      }}
+    />
   );
 }
 
