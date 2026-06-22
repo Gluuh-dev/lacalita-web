@@ -2,7 +2,7 @@
 
 import {useEffect, useState, useTransition} from 'react';
 import {toast} from 'sonner';
-import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List} from 'lucide-react';
+import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List, Eye, EyeOff} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
@@ -44,24 +44,34 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
   function set<K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) {
     setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, [k]: v} : s)));
   }
+  function persist(next: HeroSlide[], msg?: string) {
+    setSlides(next);
+    start(async () => {
+      const r = await saveHero(next);
+      if (!r.ok) toast.error(r.error);
+      else if (msg) toast.success(msg);
+    });
+  }
   function addSlide() {
     const id = 's' + Date.now();
-    setSlides((arr) => [...arr, {...DEFAULT_HERO_SLIDE, id, name: `Diapositiva ${arr.length + 1}`}]);
+    const next = [...slides, {...DEFAULT_HERO_SLIDE, id, name: `Diapositiva ${slides.length + 1}`}];
+    persist(next, 'Diapositiva añadida');
     setSel(id);
   }
   function removeSlide(id: string) {
     if (slides.length <= 1) return toast.error('Debe quedar al menos una');
-    setSlides((arr) => arr.filter((s) => s.id !== id));
+    persist(slides.filter((s) => s.id !== id), 'Diapositiva eliminada');
+  }
+  function toggleActive(id: string) {
+    persist(slides.map((s) => (s.id === id ? {...s, active: s.active === false} : s)));
   }
   function move(id: string, dir: -1 | 1) {
-    setSlides((arr) => {
-      const i = arr.findIndex((s) => s.id === id);
-      const j = i + dir;
-      if (j < 0 || j >= arr.length) return arr;
-      const next = [...arr];
-      [next[i], next[j]] = [next[j], next[i]];
-      return next;
-    });
+    const i = slides.findIndex((s) => s.id === id);
+    const j = i + dir;
+    if (j < 0 || j >= slides.length) return;
+    const next = [...slides];
+    [next[i], next[j]] = [next[j], next[i]];
+    persist(next);
   }
   function save() {
     start(async () => {
@@ -96,8 +106,10 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
                   <span className="flex h-7 w-11 shrink-0 items-center justify-center overflow-hidden rounded bg-gradient-to-br from-accent to-ink text-white" style={s.media && s.mediaType === 'image' ? {background: `center/cover url(${s.media})`} : undefined}>
                     {s.mediaType === 'video' && '▶'}
                   </span>
-                  <span className="flex-1 truncate text-sm font-medium">{s.name}</span>
-                  {i === 0 && <span className="rounded-full bg-success/15 px-2 py-0.5 text-[0.65rem] font-medium text-success">Activa</span>}
+                  <span className={cn('flex-1 truncate text-sm font-medium', s.active === false && 'text-ink-3 line-through')}>{s.name}</span>
+                </button>
+                <button onClick={() => toggleActive(s.id)} aria-label={s.active === false ? 'Activar' : 'Desactivar'} title={s.active === false ? 'Activar' : 'Ocultar en la web'} className="p-1 text-ink-3 hover:text-ink">
+                  {s.active === false ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
                 <button onClick={() => removeSlide(s.id)} aria-label="Eliminar" className="p-1 text-ink-3 hover:text-danger"><Trash2 className="size-4" /></button>
               </div>
@@ -154,9 +166,20 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               <input className={inputCls} value={slide.link} onChange={(e) => set('link', e.target.value)} placeholder="/carta" />
             </Field>
           </div>
-          <Field label="Color del botón">
-            <Swatch value={slide.btnColor} onPick={(c) => set('btnColor', c)} />
-          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Color del botón">
+              <Swatch value={slide.btnColor} onPick={(c) => set('btnColor', c)} />
+            </Field>
+            <Field label="Color del eyebrow">
+              <Swatch value={slide.eyebrowColor} onPick={(c) => set('eyebrowColor', c)} />
+            </Field>
+            <Field label="Color del título">
+              <Swatch value={slide.lemaColor} onPick={(c) => set('lemaColor', c)} />
+            </Field>
+            <Field label="Color de la bienvenida">
+              <Swatch value={slide.bienvenidaColor} onPick={(c) => set('bienvenidaColor', c)} />
+            </Field>
+          </div>
         </Card>
 
         {/* Zona de eventos */}
@@ -327,6 +350,7 @@ function Toggle({label, checked, onChange}: {label: string; checked: boolean; on
 
 function Swatch({value, onPick, colors, none}: {value: string; onPick: (c: string) => void; colors?: string[]; none?: boolean}) {
   const list = colors ?? ['#e9ae74', '#ffffff', '#fedb71', '#2e6e8e', '#f26b21', '#4c2f08', '#243b53'];
+  const isCustom = !!value && !list.includes(value);
   return (
     <div className="flex flex-wrap items-center gap-2">
       {none && (
@@ -337,6 +361,11 @@ function Swatch({value, onPick, colors, none}: {value: string; onPick: (c: strin
       {list.map((c) => (
         <button key={c} type="button" onClick={() => onPick(c)} className="size-7 rounded-full" style={{background: c, boxShadow: `0 0 0 ${value === c ? '2px var(--ink)' : '1px var(--line-strong)'}`}} />
       ))}
+      {/* Color personalizado: cualquier color */}
+      <label className="relative size-7 cursor-pointer overflow-hidden rounded-full" title="Color personalizado" style={{boxShadow: `0 0 0 ${isCustom ? '2px var(--ink)' : '1px var(--line-strong)'}`}}>
+        <span className="absolute inset-0" style={{background: isCustom ? value : 'conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red)'}} />
+        <input type="color" value={value && value.startsWith('#') ? value : '#e9ae74'} onChange={(e) => onPick(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0" />
+      </label>
     </div>
   );
 }

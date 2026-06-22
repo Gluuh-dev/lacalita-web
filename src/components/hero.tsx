@@ -137,15 +137,15 @@ export function HeroStage({
 
       {/* contenido */}
       <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', zIndex: 3}}>
-        <div style={{width: pc ? 1180 : '100%', margin: '0 auto', padding: pc ? '0 40px' : '0 24px', boxSizing: 'border-box', display: pc && agenda ? 'grid' : 'flex', gridTemplateColumns: pc && agenda ? 'minmax(0,1fr) 340px' : undefined, gap: 48, alignItems: 'center'}}>
+        <div style={{width: pc ? 1180 : '100%', margin: '0 auto', padding: pc ? '0 40px' : '0 24px', boxSizing: 'border-box', display: pc && agenda && events.length > 0 ? 'grid' : 'flex', gridTemplateColumns: pc && agenda && events.length > 0 ? 'minmax(0,1fr) 340px' : undefined, gap: 48, alignItems: 'center'}}>
           <div key={animKey} className={animCls} style={{display: 'flex', flexDirection: 'column', alignItems: pc ? 'flex-start' : 'center', textAlign: pc ? 'left' : 'center', maxWidth: pc ? 660 : '100%', margin: pc ? 0 : '0 auto', color: '#fff'}}>
             {slide.showLogo && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src="/brand/logo-texto-debajo.svg" alt="" style={{height: pc ? 132 : 100, marginBottom: pc ? 22 : 18, filter: LOGO_FILTER[slide.logoColor] || LOGO_FILTER.white}} />
             )}
-            {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: pc ? 14 : 12, color: 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
-            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: pc ? 76 : 42, lineHeight: 1.03, marginBottom: 20, textWrap: 'balance'}}>{slide.lema}</div>}
-            {slide.bienvenida && <div style={{fontSize: pc ? 18 : 16, color: 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
+            {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: pc ? 14 : 12, color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
+            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: pc ? 76 : 42, lineHeight: 1.03, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
+            {slide.bienvenida && <div style={{fontSize: pc ? 18 : 16, color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
             {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc={pc} preview={preview} />}
 
             {rotuloMobile && (

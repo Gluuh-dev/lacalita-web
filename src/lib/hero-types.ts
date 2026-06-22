@@ -4,6 +4,7 @@
 export type HeroSlide = {
   id: string;
   name: string;
+  active: boolean; // si está desactivada no aparece en la web
   media: string;
   mediaType: 'image' | 'video';
   poster?: string;
@@ -11,8 +12,11 @@ export type HeroSlide = {
   showLogo: boolean;
   logoColor: 'white' | 'cream' | 'brown' | 'ink' | 'orange';
   eyebrow: string;
+  eyebrowColor: string;
   lema: string;
+  lemaColor: string;
   bienvenida: string;
+  bienvenidaColor: string;
   button: string;
   link: string;
   btnColor: string;
@@ -37,14 +41,18 @@ export type HeroSlide = {
 
 export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   name: 'Nueva diapositiva',
+  active: true,
   media: '',
   mediaType: 'image',
   darken: 45,
   showLogo: true,
   logoColor: 'white',
   eyebrow: '',
+  eyebrowColor: '#e9ae74',
   lema: 'Título de la portada',
+  lemaColor: '#ffffff',
   bienvenida: '',
+  bienvenidaColor: '#ffffff',
   button: 'Ver la carta',
   link: '/carta',
   btnColor: '#e9ae74',

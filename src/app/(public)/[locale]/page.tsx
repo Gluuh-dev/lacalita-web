@@ -34,8 +34,9 @@ export default async function Home({
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
   const hours = normalizeHours(settings?.hours);
 
-  const heroSlides: HeroSlide[] = settings?.hero?.length
-    ? settings.hero
+  const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false);
+  const heroSlides: HeroSlide[] = activeHero.length
+    ? activeHero
     : [
         {
           ...DEFAULT_HERO_SLIDE,

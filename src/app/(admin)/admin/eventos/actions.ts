@@ -2,6 +2,7 @@
 
 import {revalidatePath} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
+import {removeMediaServer} from '@/lib/storage-server';
 import {translateField} from '@/lib/translate';
 
 export type EventInput = {
@@ -39,8 +40,10 @@ export async function saveEvent(id: string | null, form: EventInput) {
 
 export async function deleteEvent(id: string) {
   const supabase = await createClient();
+  const {data: row} = await supabase.from('events').select('image, images, video').eq('id', id).single();
   const {error} = await supabase.from('events').delete().eq('id', id);
   if (error) return {ok: false, error: error.message};
+  if (row) await removeMediaServer(supabase, [row.image, row.video, ...((row.images as string[]) ?? [])]);
   revalidatePath('/', 'layout');
   revalidatePath('/admin/eventos');
   return {ok: true};

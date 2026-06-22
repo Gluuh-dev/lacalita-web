@@ -2,6 +2,7 @@
 
 import {revalidatePath} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
+import {removeMediaServer} from '@/lib/storage-server';
 import {translateField} from '@/lib/translate';
 import {slugify} from '@/lib/slug';
 
@@ -90,8 +91,10 @@ export async function saveProduct(id: string | null, form: ProductInput) {
 
 export async function deleteProduct(id: string) {
   const supabase = await createClient();
+  const {data: row} = await supabase.from('products').select('image, video').eq('id', id).single();
   const {error} = await supabase.from('products').delete().eq('id', id);
   if (error) return {ok: false, error: error.message};
+  if (row) await removeMediaServer(supabase, [row.image, row.video]);
   revalidatePath('/', 'layout');
   revalidatePath('/admin/productos');
   return {ok: true};
