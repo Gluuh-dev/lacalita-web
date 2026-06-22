@@ -38,7 +38,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
         {tabs.map((tb) => {
           const active = tb.key === activeKey;
           return (
-            <button key={tb.key} onClick={tb.onClick} className="relative flex flex-1 flex-col items-center gap-0.5 px-2 py-1 text-[0.62rem] font-medium md:flex-row md:gap-1.5 md:text-xs">
+            <button key={tb.key} onClick={tb.onClick} className="relative flex flex-1 flex-col items-center gap-0.5 whitespace-nowrap px-2 py-1 text-[0.62rem] font-medium md:flex-none md:flex-row md:gap-1.5 md:px-3.5 md:text-sm">
               <span className={`flex size-9 items-center justify-center rounded-full transition md:size-auto md:bg-transparent ${active ? 'bg-brand text-on-primary md:text-brand-deep' : 'text-ink-2'}`}>
                 <tb.Icon className="size-5 md:size-4" />
               </span>
