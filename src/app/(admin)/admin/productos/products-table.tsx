@@ -36,26 +36,31 @@ function priceLabel(p: Row) {
 
 export default function ProductsTable({products, menus, allergens}: {products: Row[]; menus: MenuWithCats[]; allergens: Allergen[]}) {
   const [q, setQ] = useState('');
-  const [menu, setMenu] = useState('all');
+  const [cat, setCat] = useState('all');
   const [edit, setEdit] = useState<Row | null | undefined>(undefined);
   const [avail, setAvail] = useState<Record<string, boolean>>(() => Object.fromEntries(products.map((p) => [p.id, p.available])));
   const [, start] = useTransition();
   const open = edit !== undefined;
 
-  const menuOpts = useMemo(() => {
+  const catOpts = useMemo(() => {
     const m = new Map<string, string>();
     for (const p of products) {
-      const x = p.categories?.menus;
-      if (x && !m.has(x.slug)) m.set(x.slug, tx(x.name, 'es'));
+      if (p.category_id && p.categories && !m.has(p.category_id)) m.set(p.category_id, tx(p.categories.name, 'es'));
     }
-    return [...m.entries()];
+    return [...m.entries()].sort((a, b) => a[1].localeCompare(b[1]));
   }, [products]);
 
-  const filtered = products.filter((p) => {
-    if (menu !== 'all' && p.categories?.menus?.slug !== menu) return false;
-    if (q && !tx(p.name, 'es').toLowerCase().includes(q.toLowerCase())) return false;
-    return true;
-  });
+  const filtered = products
+    .filter((p) => {
+      if (cat !== 'all' && p.category_id !== cat) return false;
+      if (q && !tx(p.name, 'es').toLowerCase().includes(q.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const ca = a.categories ? tx(a.categories.name, 'es') : '';
+      const cb = b.categories ? tx(b.categories.name, 'es') : '';
+      return ca.localeCompare(cb) || tx(a.name, 'es').localeCompare(tx(b.name, 'es'));
+    });
 
   function toggle(p: Row) {
     const next = !(avail[p.id] ?? p.available);
@@ -85,16 +90,16 @@ export default function ProductsTable({products, menus, allergens}: {products: R
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar producto…" className="w-full rounded-full border border-line bg-surface py-2.5 pl-9 pr-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25" />
         </div>
-        {menuOpts.length > 1 && (
-          <Select value={menu} onValueChange={(v) => setMenu(v ?? 'all')}>
+        {catOpts.length > 1 && (
+          <Select value={cat} onValueChange={(v) => setCat(v ?? 'all')}>
             <SelectTrigger className="min-w-[190px] rounded-full px-4">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="all">Todas las cartas</SelectItem>
-                {menuOpts.map(([slug, name]) => (
-                  <SelectItem key={slug} value={slug}>{name}</SelectItem>
+                <SelectItem value="all">Todas las categorías</SelectItem>
+                {catOpts.map(([id, name]) => (
+                  <SelectItem key={id} value={id}>{name}</SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
