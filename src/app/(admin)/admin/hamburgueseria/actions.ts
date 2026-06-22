@@ -1,0 +1,103 @@
+'use server';
+
+import {revalidatePath} from 'next/cache';
+import {createClient} from '@/lib/supabase/server';
+import {removeMediaServer} from '@/lib/storage-server';
+
+export type SlideInput = {
+  name: string;
+  eyebrow: string;
+  title: string;
+  price: number | null;
+  image: string | null;
+  position: number;
+  active: boolean;
+};
+export type OfferInput = {
+  title: string;
+  eyebrow: string;
+  rating: number | null;
+  description: string;
+  discount_label: string;
+  price: number | null;
+  old_price: number | null;
+  color_style: string;
+  image: string | null;
+  position: number;
+  active: boolean;
+};
+
+async function authed() {
+  const supabase = await createClient();
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+  return user ? supabase : null;
+}
+
+function done() {
+  revalidatePath('/', 'layout');
+  revalidatePath('/admin/hamburgueseria');
+}
+
+export async function saveBurgerSlide(id: string | null, row: SlideInput) {
+  const supabase = await authed();
+  if (!supabase) return {ok: false, error: 'Sesión caducada. Vuelve a iniciar sesión.'};
+  if (id) {
+    const {data, error} = await supabase.from('burger_hero_slides').update(row).eq('id', id).select('id');
+    if (error) return {ok: false, error: error.message};
+    if (!data?.length) return {ok: false, error: 'No se pudo guardar.'};
+  } else {
+    const {error} = await supabase.from('burger_hero_slides').insert(row);
+    if (error) return {ok: false, error: error.message};
+  }
+  done();
+  return {ok: true};
+}
+
+export async function saveBurgerOffer(id: string | null, row: OfferInput) {
+  const supabase = await authed();
+  if (!supabase) return {ok: false, error: 'Sesión caducada. Vuelve a iniciar sesión.'};
+  if (id) {
+    const {data, error} = await supabase.from('burger_offers').update(row).eq('id', id).select('id');
+    if (error) return {ok: false, error: error.message};
+    if (!data?.length) return {ok: false, error: 'No se pudo guardar.'};
+  } else {
+    const {error} = await supabase.from('burger_offers').insert(row);
+    if (error) return {ok: false, error: error.message};
+  }
+  done();
+  return {ok: true};
+}
+
+async function toggle(table: string, id: string, active: boolean) {
+  const supabase = await authed();
+  if (!supabase) return {ok: false, error: 'Sesión caducada.'};
+  const {error} = await supabase.from(table).update({active}).eq('id', id).select('id');
+  if (error) return {ok: false, error: error.message};
+  done();
+  return {ok: true};
+}
+export async function toggleBurgerSlide(id: string, active: boolean) {
+  return toggle('burger_hero_slides', id, active);
+}
+export async function toggleBurgerOffer(id: string, active: boolean) {
+  return toggle('burger_offers', id, active);
+}
+
+async function remove(table: string, id: string) {
+  const supabase = await authed();
+  if (!supabase) return {ok: false, error: 'Sesión caducada.'};
+  const {data: r} = await supabase.from(table).select('image').eq('id', id).single();
+  const {error} = await supabase.from(table).delete().eq('id', id);
+  if (error) return {ok: false, error: error.message};
+  if (r?.image) await removeMediaServer(supabase, [r.image]);
+  done();
+  return {ok: true};
+}
+export async function deleteBurgerSlide(id: string) {
+  return remove('burger_hero_slides', id);
+}
+export async function deleteBurgerOffer(id: string) {
+  return remove('burger_offers', id);
+}

@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import {createClient} from '@/lib/supabase/client';
 
-const TABLES = ['products', 'menus', 'categories', 'events', 'settings', 'product_variants', 'product_allergens'];
+const TABLES = ['products', 'menus', 'categories', 'events', 'settings', 'product_variants', 'product_allergens', 'burger_hero_slides', 'burger_offers'];
 
 /**
  * Recarga los datos del servidor (router.refresh) en cuanto cambia algo en la
