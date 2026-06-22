@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "menu": "Carta",
+    "events": "Eventos",
+    "location": "Ubicación",
+    "info": "Info"
+  },
+  "home": {
+    "tagline": "Beach Club · Restaurante · Cafetería",
+    "intro": "Cocina mediterránea con los pies en la arena, en Salobreña.",
+    "cta": "Ver la carta"
+  },
+  "menu": {
+    "title": "Nuestra carta",
+    "all": "Todas las cartas",
+    "restaurant": "Restaurante & Desayunos",
+    "burger": "Hamburguesería",
+    "from": "desde",
+    "allergens": "Alérgenos",
+    "back": "Volver"
+  },
+  "events": {
+    "title": "Eventos",
+    "upcoming": "Próximos eventos",
+    "none": "No hay eventos próximos. ¡Vuelve pronto!",
+    "all": "Ver todos",
+    "kind": {
+      "dj": "DJ",
+      "concierto": "Concierto",
+      "otro": "Evento"
+    }
+  },
+  "info": {
+    "title": "Información",
+    "hours": "Horarios",
+    "location": "Cómo llegar",
+    "directions": "Ver en Google Maps",
+    "follow": "Síguenos",
+    "weekdays": "Lun – Vie",
+    "saturday": "Sábado",
+    "sunday": "Domingo"
+  }
+}

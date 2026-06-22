@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "events": "Events",
+    "location": "Location",
+    "info": "Info"
+  },
+  "home": {
+    "tagline": "Beach Club · Restaurant · Café",
+    "intro": "Mediterranean food with your feet in the sand, in Salobreña.",
+    "cta": "See the menu"
+  },
+  "menu": {
+    "title": "Our menu",
+    "all": "All menus",
+    "restaurant": "Restaurant & Breakfast",
+    "burger": "Burgers",
+    "from": "from",
+    "allergens": "Allergens",
+    "back": "Back"
+  },
+  "events": {
+    "title": "Events",
+    "upcoming": "Upcoming events",
+    "none": "No upcoming events. Come back soon!",
+    "all": "See all",
+    "kind": {
+      "dj": "DJ",
+      "concierto": "Concert",
+      "otro": "Event"
+    }
+  },
+  "info": {
+    "title": "Information",
+    "hours": "Opening hours",
+    "location": "Find us",
+    "directions": "Open in Google Maps",
+    "follow": "Follow us",
+    "weekdays": "Mon – Fri",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  }
+}

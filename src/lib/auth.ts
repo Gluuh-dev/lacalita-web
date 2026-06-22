@@ -1,0 +1,20 @@
+import {redirect} from 'next/navigation';
+import {createClient} from '@/lib/supabase/server';
+
+export async function requireUser() {
+  const supabase = await createClient();
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/admin/login');
+  return user;
+}
+
+// Sin redirección: para el público (mostrar atajos de admin si está logueado).
+export async function getOptionalUser() {
+  const supabase = await createClient();
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+  return user;
+}
