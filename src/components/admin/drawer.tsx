@@ -1,7 +1,7 @@
 'use client';
 
-import {useEffect} from 'react';
 import {X} from 'lucide-react';
+import {useScrollLock} from '@/lib/use-scroll-lock';
 
 export default function Drawer({
   open,
@@ -18,12 +18,7 @@ export default function Drawer({
   flush?: boolean; // el hijo gestiona su propio scroll + footer (sin padding)
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [open]);
+  useScrollLock(open);
 
   if (!open) return null;
 
