@@ -3,11 +3,12 @@
 import {useMemo, useState, useTransition} from 'react';
 import Image from 'next/image';
 import {toast} from 'sonner';
-import {Pencil, Trash2, Plus, Search, Star} from 'lucide-react';
+import {Pencil, Trash2, Plus, Search, Star, UtensilsCrossed} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import {btn} from '@/components/admin/ui';
 import Drawer from '@/components/admin/drawer';
 import EmptyState from '@/components/admin/empty-state';
+import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import ProductForm from './product-form';
 import {deleteProduct, toggleAvailable} from './actions';
 import type {Product, Menu, Allergen} from '@/lib/queries';
@@ -84,12 +85,19 @@ export default function ProductsTable({products, menus, allergens}: {products: R
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar producto…" className="w-full rounded-full border border-line bg-surface py-2.5 pl-9 pr-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25" />
         </div>
-        <select value={menu} onChange={(e) => setMenu(e.target.value)} className="rounded-full border border-line bg-surface px-4 py-2.5 text-sm">
-          <option value="all">Todas las cartas</option>
-          {menuOpts.map(([slug, name]) => (
-            <option key={slug} value={slug}>{name}</option>
-          ))}
-        </select>
+        <Select value={menu} onValueChange={(v) => setMenu(v ?? 'all')}>
+          <SelectTrigger className="min-w-[190px] rounded-full px-4">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">Todas las cartas</SelectItem>
+              {menuOpts.map(([slug, name]) => (
+                <SelectItem key={slug} value={slug}>{name}</SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <button onClick={() => setEdit(null)} className={`${btn} ml-auto inline-flex items-center gap-1.5`}>
           <Plus className="size-4" /> Nuevo producto
         </button>
@@ -118,8 +126,14 @@ export default function ProductsTable({products, menus, allergens}: {products: R
                   <tr key={p.id} className="border-b border-line last:border-0">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-surface-sunken">
-                          {p.image && <Image src={p.image} alt="" fill sizes="48px" className="object-cover" />}
+                        <span className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-sunken text-line-strong">
+                          {p.image ? (
+                            <Image src={p.image} alt="" fill sizes="48px" className="object-cover" />
+                          ) : p.video ? (
+                            <video src={p.video} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+                          ) : (
+                            <UtensilsCrossed className="size-5" />
+                          )}
                         </span>
                         <div className="min-w-0">
                           <div className="flex items-center gap-1 font-medium text-ink">

@@ -6,6 +6,7 @@ import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Ch
 import {cn} from '@/lib/utils';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
+import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import {HeroPreview} from '@/components/hero';
 import {saveHero} from './actions';
 import {DEFAULT_HERO_SLIDE, type HeroSlide, type HeroFont} from '@/lib/hero-types';
@@ -273,11 +274,16 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
             </>
           )}
           <Field label="Animación">
-            <select className={inputCls} value={slide.anim} onChange={(e) => set('anim', e.target.value as HeroSlide['anim'])}>
-              <option value="fade">Fundido</option>
-              <option value="slide">Deslizar</option>
-              <option value="none">Ninguna</option>
-            </select>
+            <Select value={slide.anim} onValueChange={(v) => set('anim', (v ?? 'fade') as HeroSlide['anim'])}>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="fade">Fundido</SelectItem>
+                  <SelectItem value="slide">Deslizar</SelectItem>
+                  <SelectItem value="none">Ninguna</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </Field>
           {slide.heroMode === 'rotulo' && (
             <Field label={`Posición vertical del rótulo · ${slide.rotuloY ?? 68}%`} hint="Más arriba o más abajo en la pantalla">
@@ -313,25 +319,35 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               </Field>
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Orientación">
-                  <select className={inputCls} value={slide.marqueeOrient} onChange={(e) => set('marqueeOrient', e.target.value as HeroSlide['marqueeOrient'])}>
-                    <option value="horizontal">Horizontal</option>
-                    <option value="vertical">Vertical</option>
-                  </select>
+                  <Select value={slide.marqueeOrient} onValueChange={(v) => set('marqueeOrient', (v ?? 'horizontal') as HeroSlide['marqueeOrient'])}>
+                    <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="horizontal">Horizontal</SelectItem>
+                        <SelectItem value="vertical">Vertical</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </Field>
                 <Field label="Dirección">
-                  <select className={inputCls} value={slide.marqueeDir} onChange={(e) => set('marqueeDir', e.target.value as HeroSlide['marqueeDir'])}>
-                    {slide.marqueeOrient === 'vertical' ? (
-                      <>
-                        <option value="up">Hacia arriba</option>
-                        <option value="down">Hacia abajo</option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="left">Hacia la izquierda</option>
-                        <option value="right">Hacia la derecha</option>
-                      </>
-                    )}
-                  </select>
+                  <Select value={slide.marqueeDir} onValueChange={(v) => set('marqueeDir', (v ?? 'left') as HeroSlide['marqueeDir'])}>
+                    <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {slide.marqueeOrient === 'vertical' ? (
+                          <>
+                            <SelectItem value="up">Hacia arriba</SelectItem>
+                            <SelectItem value="down">Hacia abajo</SelectItem>
+                          </>
+                        ) : (
+                          <>
+                            <SelectItem value="left">Hacia la izquierda</SelectItem>
+                            <SelectItem value="right">Hacia la derecha</SelectItem>
+                          </>
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </Field>
               </div>
               <Field label={`Posición · ${slide.marqueePos}%`} hint={slide.marqueeOrient === 'vertical' ? 'Izquierda → derecha' : 'Arriba → abajo'}>
@@ -390,11 +406,18 @@ const FONT_LABELS: [string, string][] = [
 
 function FontSelect({value, onChange}: {value: string; onChange: (v: string) => void}) {
   return (
-    <select className={inputCls} value={value} onChange={(e) => onChange(e.target.value)}>
-      {FONT_LABELS.map(([v, l]) => (
-        <option key={v} value={v}>{l}</option>
-      ))}
-    </select>
+    <Select value={value} onValueChange={(v) => onChange(v ?? value)}>
+      <SelectTrigger className="w-full">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {FONT_LABELS.map(([v, l]) => (
+            <SelectItem key={v} value={v}>{l}</SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 }
 
