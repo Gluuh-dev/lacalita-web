@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {ChevronUp, ChevronDown, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
@@ -206,19 +207,168 @@ export function HeroPreview({slide, events, device, animKey = 0}: {slide: HeroSl
   );
 }
 
-/** Hero público: carrusel a pantalla completa (escala tipo "cover"). */
+const LOGO_TW: Record<string, string> = {
+  white: 'brightness-0 invert',
+  cream: 'brightness-0 invert',
+  brown: 'brightness-0',
+  ink: 'brightness-0',
+  orange: 'brightness-0 invert'
+};
+
+/** Vista responsive de una diapositiva (lo que se ve en la web). */
+function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
+  const [active, setActive] = useState(0);
+  const [sheet, setSheet] = useState(false);
+  const [drag, setDrag] = useState(0);
+  const dragY = useRef<number | null>(null);
+
+  const agenda = slide.heroMode === 'agenda';
+  const evs = events.slice(0, 4);
+  const hasEvents = evs.length > 0;
+  const feat = evs[active] || evs[0];
+  const bc = slide.btnColor || '#e9ae74';
+  const bt = inkOn(bc);
+
+  useEffect(() => {
+    if (!agenda || evs.length < 2) return;
+    const t = setInterval(() => setActive((a) => (a + 1) % evs.length), 4200);
+    return () => clearInterval(t);
+  }, [agenda, evs.length]);
+  useEffect(() => {
+    if (sheet) setDrag(0);
+  }, [sheet]);
+
+  const showAgenda = agenda && hasEvents;
+
+  return (
+    <div className="relative flex h-full w-full items-center overflow-hidden">
+      {/* fondo */}
+      {slide.mediaType === 'video' && slide.media ? (
+        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+      ) : slide.media ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={slide.media} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <div className="absolute inset-0" style={{background: 'radial-gradient(120% 90% at 70% 10%, #3f88a6 0%, #2e6e8e 35%, #243b53 80%)'}} />
+      )}
+      <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
+      <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />
+      <div className="pointer-events-none absolute -right-20 -top-24 size-[clamp(220px,40vw,520px)] rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.45), transparent 65%)'}} />
+
+      {/* contenido */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-24 sm:px-8">
+        <div className={`grid items-center gap-8 ${showAgenda ? 'lg:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
+          <div className="flex flex-col items-center text-center text-white lg:items-start lg:text-left">
+            {slide.showLogo && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="/brand/logo-texto-debajo.svg" alt="La Calita" className={`mb-5 h-20 w-auto sm:h-24 lg:h-28 ${LOGO_TW[slide.logoColor] || LOGO_TW.white}`} />
+            )}
+            {slide.eyebrow && (
+              <div className="mb-3 font-adam text-[0.72rem] uppercase tracking-[0.22em] sm:text-xs" style={{color: slide.eyebrowColor || 'var(--brand)'}}>{slide.eyebrow}</div>
+            )}
+            {slide.lema && (
+              <h1 className="font-serif font-extrabold leading-[1.05] text-[clamp(2rem,5.2vw,3.4rem)]" style={{color: slide.lemaColor || '#fff', textWrap: 'balance'}}>{slide.lema}</h1>
+            )}
+            {slide.bienvenida && (
+              <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed sm:text-base" style={{color: slide.bienvenidaColor || 'rgba(255,255,255,.86)'}}>{slide.bienvenida}</p>
+            )}
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc preview={false} />}
+              <a href="#info" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10">
+                Cómo llegar <ChevronDown className="size-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* agenda escritorio */}
+          {showAgenda && (
+            <aside className="hidden rounded-[24px] border border-white/15 bg-black/35 p-5 text-white backdrop-blur-md lg:block">
+              <div className="mb-4 flex items-center gap-2">
+                <span className="size-2 rounded-full bg-brand" />
+                <span className="font-adam text-[0.7rem] uppercase tracking-[0.2em] text-white/80">Próximos eventos</span>
+              </div>
+              <Link href="/eventos" className="mb-3 block border-b border-white/15 pb-4">
+                <div className="min-h-[3.2rem] font-[family-name:var(--font-playfair)] text-[1.9rem] leading-tight" style={{color: slide.color, fontFamily: FONT[slide.font] || FONT.romance}}>{feat?.title}</div>
+                <div className="mt-1.5 font-[family-name:'Eight_One'] text-base" style={{fontFamily: FONT.eight}}>{feat?.day} {feat?.month} · {feat?.time}</div>
+                {feat?.artist && <div className="mt-1 text-sm text-white/70">con {feat.artist}</div>}
+              </Link>
+              <ul className="flex flex-col">
+                {evs.map((e, idx) => (
+                  <li key={e.id} onMouseEnter={() => setActive(idx)}>
+                    <EvRow e={e} on={idx === active} onClick={() => {}} />
+                  </li>
+                ))}
+              </ul>
+              <Link href="/eventos" className="mt-3 flex items-center justify-center gap-1.5 font-adam text-[0.7rem] uppercase tracking-[0.12em] text-white/75 hover:text-white">
+                Ver todos los eventos <ArrowRight className="size-3.5" />
+              </Link>
+            </aside>
+          )}
+        </div>
+      </div>
+
+      {/* móvil: botón + bottom-sheet de eventos */}
+      {hasEvents && (
+        <>
+          <button
+            onClick={() => setSheet(true)}
+            className="absolute inset-x-4 bottom-5 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
+          >
+            <span className="flex min-w-0 items-center gap-2.5">
+              <span className="size-2 shrink-0 rounded-full bg-brand" />
+              <span className="min-w-0 text-left">
+                <span className="block font-adam text-[0.58rem] uppercase tracking-[0.16em] text-white/70">Próximos eventos</span>
+                <span className="block truncate text-sm font-medium">{feat?.title} · {feat?.day} {feat?.month}</span>
+              </span>
+            </span>
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary"><ChevronUp className="size-4" /></span>
+          </button>
+
+          <div className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'pointer-events-none'}`}>
+            <div onClick={() => setSheet(false)} className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
+            <div
+              className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-[#1c160e] p-4 pb-8 text-white shadow-2xl"
+              style={{transform: sheet ? `translateY(${drag}px)` : 'translateY(100%)', transition: drag ? 'none' : 'transform .34s cubic-bezier(0.16,1,0.3,1)'}}
+              onTouchStart={(e) => (dragY.current = e.touches[0].clientY)}
+              onTouchMove={(e) => {
+                if (dragY.current != null) {
+                  const d = e.touches[0].clientY - dragY.current;
+                  if (d > 0) setDrag(d);
+                }
+              }}
+              onTouchEnd={() => {
+                if (drag > 110) setSheet(false);
+                setDrag(0);
+                dragY.current = null;
+              }}
+            >
+              <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-white/30" />
+              <div className="mb-3 flex items-center justify-between">
+                <span className="font-serif text-xl">Próximos eventos</span>
+                <button onClick={() => setSheet(false)} aria-label="Cerrar" className="rounded-full bg-white/10 p-1.5"><X className="size-5" /></button>
+              </div>
+              <ul className="flex flex-col">
+                {evs.map((e) => (
+                  <li key={e.id}>
+                    <EvRow e={e} on={false} onClick={() => setSheet(false)} />
+                  </li>
+                ))}
+              </ul>
+              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary">Ver todos los eventos</Link>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Hero público: carrusel responsive a pantalla completa. */
 export default function Hero({slides, events}: {slides: HeroSlide[]; events: HeroEvent[]}) {
   const {set} = useHeaderMode();
   const [i, setI] = useState(0);
-  const [vp, setVp] = useState({w: 0, h: 0});
   const sx = useRef(0);
 
-  useEffect(() => {
-    const u = () => setVp({w: window.innerWidth, h: window.innerHeight});
-    u();
-    window.addEventListener('resize', u);
-    return () => window.removeEventListener('resize', u);
-  }, []);
   useEffect(() => {
     set({overHero: true, hasMedia: true});
     return () => set({overHero: false, hasMedia: false});
@@ -230,10 +380,6 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
   }, [slides.length]);
 
   if (!slides.length) return null;
-  const pc = vp.w >= 640;
-  const DW = pc ? 1280 : 390;
-  const DH = pc ? 720 : 800;
-  const scale = vp.w ? Math.max(vp.w / DW, vp.h / DH) : 1;
   const cur = slides[i % slides.length];
 
   return (
@@ -242,14 +388,12 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
       onTouchStart={(e) => (sx.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
         const dx = e.changedTouches[0].clientX - sx.current;
-        if (Math.abs(dx) > 50) setI((x) => (x + (dx < 0 ? 1 : slides.length - 1)) % slides.length);
+        if (Math.abs(dx) > 60) setI((x) => (x + (dx < 0 ? 1 : slides.length - 1)) % slides.length);
       }}
     >
-      <div style={{position: 'absolute', top: '50%', left: '50%', width: DW, height: DH, transform: `translate(-50%, -50%) scale(${scale})`}}>
-        <HeroStage key={i} slide={cur} events={events} pc={pc} animKey={i} />
-      </div>
+      <HeroView key={i} slide={cur} events={events} />
       {slides.length > 1 && (
-        <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+        <div className="absolute bottom-20 left-0 right-0 z-20 flex justify-center gap-2 lg:bottom-6">
           {slides.map((_, k) => (
             <button key={k} onClick={() => setI(k)} aria-label={`Diapositiva ${k + 1}`} className="h-2 rounded-full transition-all" style={{width: k === i ? 26 : 9, background: k === i ? '#e9ae74' : 'rgba(255,255,255,.4)'}} />
           ))}
