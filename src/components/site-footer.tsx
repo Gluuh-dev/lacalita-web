@@ -9,11 +9,11 @@ export default async function SiteFooter() {
 
   return (
     <footer className="mt-auto bg-[#1c160e] text-[#fbf7f0]">
-      <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 text-center sm:grid-cols-3 sm:text-left">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-texto-debajo.svg" alt="La Calita" className="mb-4 h-24 w-auto brightness-0 invert" />
-          <p className="max-w-[28ch] text-sm text-[#fbf7f0]/70">
+          <img src="/brand/logo-texto-debajo.svg" alt="La Calita" className="mx-auto mb-4 h-24 w-auto brightness-0 invert sm:mx-0" />
+          <p className="mx-auto max-w-[28ch] text-sm text-[#fbf7f0]/70 sm:mx-0">
             Beach club, restaurante y cafetería frente al mar en Salobreña.
           </p>
         </div>
@@ -22,19 +22,19 @@ export default async function SiteFooter() {
           <div className="eyebrow mb-4 !text-brand">Contacto</div>
           <ul className="flex flex-col gap-3 text-sm text-[#fbf7f0]/80">
             {settings?.address && (
-              <li className="flex items-start gap-2">
+              <li className="flex items-start justify-center gap-2 sm:justify-start">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-brand" />
                 <a href={settings.maps_url ?? '#'} target="_blank" rel="noreferrer">{settings.address}</a>
               </li>
             )}
             {settings?.phone && (
-              <li className="flex items-center gap-2">
+              <li className="flex items-center justify-center gap-2 sm:justify-start">
                 <Phone className="size-4 text-brand" />
                 <a href={`tel:${settings.phone}`}>{settings.phone}</a>
               </li>
             )}
             {settings?.email && (
-              <li className="flex items-center gap-2">
+              <li className="flex items-center justify-center gap-2 sm:justify-start">
                 <Mail className="size-4 text-brand" />
                 <a href={`mailto:${settings.email}`}>{settings.email}</a>
               </li>
@@ -44,7 +44,7 @@ export default async function SiteFooter() {
 
         <div>
           <div className="eyebrow mb-4 !text-brand">{t('follow')}</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
             {settings?.social?.instagram && (
               <a href={settings.social.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-white/10 px-4 py-2 text-sm transition hover:bg-white/20">
                 Instagram
