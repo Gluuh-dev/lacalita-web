@@ -39,9 +39,9 @@ export default async function EventosPage({
         {events.length === 0 ? (
           <p className="text-ink-3">{t('none')}</p>
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((e) => (
-              <EventCard key={e.id} event={e} locale={locale} />
+              <EventCard key={e.id} event={e} locale={locale} layout="tile" />
             ))}
           </div>
         )}
