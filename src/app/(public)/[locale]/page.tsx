@@ -4,12 +4,16 @@ import {getSettings, getUpcomingEvents} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
 import {tx} from '@/lib/localize';
 import {normalizeHours, formatRanges} from '@/lib/hours';
-import {SITE_URL} from '@/lib/site';
+import {SITE_URL, altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import HeroCarousel from '@/components/hero-carousel';
 import Reveal from '@/components/reveal';
 
 export const revalidate = 300;
+
+export function generateMetadata() {
+  return {alternates: altLanguages('')};
+}
 
 export default async function Home({
   params

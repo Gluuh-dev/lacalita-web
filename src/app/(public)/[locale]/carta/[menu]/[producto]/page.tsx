@@ -2,6 +2,7 @@ import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {getMenu} from '@/lib/queries';
 import {tx} from '@/lib/localize';
+import {altLanguages} from '@/lib/site';
 import type {Product} from '@/lib/queries';
 import ProductDetail from '@/components/product-detail';
 
@@ -32,6 +33,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: altLanguages(`/carta/${menu}/${producto}`),
     openGraph: {title, description, images: product.image ? [product.image] : undefined}
   };
 }

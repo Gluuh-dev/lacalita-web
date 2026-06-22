@@ -2,8 +2,13 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {Link} from '@/i18n/navigation';
 import {getMenus} from '@/lib/queries';
 import {tx} from '@/lib/localize';
+import {altLanguages} from '@/lib/site';
 
 export const revalidate = 300;
+
+export function generateMetadata() {
+  return {alternates: altLanguages('/carta')};
+}
 
 export default async function CartaSelector({
   params

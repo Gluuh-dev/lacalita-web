@@ -3,6 +3,7 @@ import {notFound} from 'next/navigation';
 import {Link} from '@/i18n/navigation';
 import {getPublicEvent} from '@/lib/queries';
 import {tx} from '@/lib/localize';
+import {altLanguages} from '@/lib/site';
 
 export const revalidate = 300;
 
@@ -19,6 +20,7 @@ export async function generateMetadata({
   return {
     title,
     description: event.description ? tx(event.description, locale) : undefined,
+    alternates: altLanguages(`/eventos/${id}`),
     openGraph: {title, images: img ? [img] : undefined}
   };
 }

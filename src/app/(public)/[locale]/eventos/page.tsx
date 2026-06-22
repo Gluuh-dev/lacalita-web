@@ -1,5 +1,6 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {getUpcomingEvents} from '@/lib/queries';
+import {altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
 
 export const revalidate = 300;
@@ -11,7 +12,7 @@ export async function generateMetadata({
 }) {
   const {locale} = await params;
   const t = await getTranslations({locale, namespace: 'events'});
-  return {title: `${t('title')} · La Calita`};
+  return {title: `${t('title')} · La Calita`, alternates: altLanguages('/eventos')};
 }
 
 export default async function EventosPage({
