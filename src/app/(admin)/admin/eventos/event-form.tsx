@@ -161,7 +161,7 @@ export default function EventForm({
         <Checkbox checked={published} onCheckedChange={(v) => setPublished(v === true)} />
         Publicado
       </label>
-      <Button disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
     </form>
   );
 }

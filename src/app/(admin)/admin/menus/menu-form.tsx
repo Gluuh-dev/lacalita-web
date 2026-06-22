@@ -102,7 +102,7 @@ export default function MenuForm({
         <Label>Vídeo de cabecera</Label>
         <MediaUpload kind="video" value={video} onChange={setVideo} />
       </div>
-      <Button disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
     </form>
   );
 }

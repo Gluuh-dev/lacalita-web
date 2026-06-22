@@ -95,7 +95,7 @@ export default function CategoryForm({
           Visible
         </label>
       </div>
-      <Button disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
     </form>
   );
 }

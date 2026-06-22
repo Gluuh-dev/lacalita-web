@@ -3,7 +3,7 @@
 import {useState, useTransition} from 'react';
 import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
-import {card} from '@/components/admin/ui';
+import {card, btn, btnGhost} from '@/components/admin/ui';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Textarea} from '@/components/ui/textarea';
@@ -90,6 +90,9 @@ export default function ProductForm({
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    doSave();
+  }
+  function doSave() {
     if (!categoryId) {
       toast.error('Elige una categoría');
       return;
@@ -324,7 +327,14 @@ export default function ProductForm({
         </label>
       </div>
 
-      <Button disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <div className="sticky bottom-0 z-10 -mx-5 -mb-5 mt-2 flex gap-3 border-t border-line bg-bg px-5 py-3">
+        <button type="button" onClick={() => (onSaved ? onSaved() : router.push('/admin/productos'))} className={`${btnGhost} flex-1`}>
+          Cancelar
+        </button>
+        <button type="button" onClick={doSave} disabled={pending} className={`${btn} flex-1`}>
+          {pending ? 'Guardando…' : 'Guardar'}
+        </button>
+      </div>
     </form>
   );
 }
