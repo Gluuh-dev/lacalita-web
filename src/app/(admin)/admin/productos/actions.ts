@@ -20,6 +20,9 @@ export type ProductInput = {
   ingredients: string[];
   available: boolean;
   position: number;
+  old_price: number | null;
+  votes: number;
+  rating: number | null;
   variants: {name: string; price: number}[];
   allergenIds: string[];
 };
@@ -46,6 +49,9 @@ export async function saveProduct(id: string | null, form: ProductInput) {
     ingredients: form.ingredients,
     available: form.available,
     position: form.position,
+    old_price: form.old_price,
+    votes: form.votes,
+    rating: form.rating,
     updated_at: new Date().toISOString()
   };
 

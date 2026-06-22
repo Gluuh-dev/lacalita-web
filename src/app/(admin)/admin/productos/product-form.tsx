@@ -46,6 +46,9 @@ export default function ProductForm({
   const [ingredients, setIngredients] = useState<string[]>(product?.ingredients ?? []);
   const [ingInput, setIngInput] = useState('');
   const [available, setAvailable] = useState(product?.available ?? true);
+  const [oldPrice, setOldPrice] = useState(product?.old_price != null ? String(product.old_price) : '');
+  const [votes, setVotes] = useState(product?.votes != null ? String(product.votes) : '');
+  const [rating, setRating] = useState(product?.rating != null ? String(product.rating) : '');
 
   function commitIngredients(raw: string) {
     const parts = raw
@@ -107,6 +110,9 @@ export default function ProductForm({
         ingredients,
         available,
         position: Number(f.position) || 0,
+        old_price: oldPrice === '' ? null : Number(oldPrice),
+        votes: Number(votes) || 0,
+        rating: rating === '' ? null : Number(rating),
         variants: cleanVariants,
         allergenIds
       });
@@ -215,6 +221,25 @@ export default function ProductForm({
             onChange={(e) => setF({...f, position: e.target.value})}
           />
         </div>
+      </div>
+
+      <div className="rounded-[14px] border border-line bg-surface p-3">
+        <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">Hamburguesería · ofertas y favoritas</div>
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <Label>Precio anterior (€)</Label>
+            <Input type="number" step="0.01" value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} placeholder="tachado" />
+          </div>
+          <div>
+            <Label>Votos (♥)</Label>
+            <Input type="number" value={votes} onChange={(e) => setVotes(e.target.value)} placeholder="0" />
+          </div>
+          <div>
+            <Label>Valoración</Label>
+            <Input type="number" step="0.1" min="0" max="5" value={rating} onChange={(e) => setRating(e.target.value)} placeholder="0–5" />
+          </div>
+        </div>
+        <p className="mt-1.5 text-xs text-ink-3">Para la landing de la hamburguesería: precio tachado en ofertas, votos en “favoritas” y valoración (★).</p>
       </div>
 
       {/* Variantes */}
