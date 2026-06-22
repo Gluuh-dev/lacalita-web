@@ -10,6 +10,7 @@ import {Label} from '@/components/ui/label';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import {btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
+import {I18nField} from '@/components/admin/i18n-field';
 import type {BurgerOffer} from '@/lib/queries';
 import {saveBurgerOffer} from './actions';
 
@@ -24,15 +25,15 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
   const [pending, start] = useTransition();
   const back = '/admin/hamburgueseria';
   const [f, setF] = useState({
-    title: offer?.title ?? '',
-    eyebrow: offer?.eyebrow ?? '',
     rating: offer?.rating != null ? String(offer.rating) : '',
-    description: offer?.description ?? '',
     discount_label: offer?.discount_label ?? '',
     price: offer?.price != null ? String(offer.price) : '',
     old_price: offer?.old_price != null ? String(offer.old_price) : '',
     position: String(offer?.position ?? 0)
   });
+  const [title, setTitle] = useState<Record<string, string>>(offer?.title ?? {es: ''});
+  const [eyebrow, setEyebrow] = useState<Record<string, string>>(offer?.eyebrow ?? {es: ''});
+  const [description, setDescription] = useState<Record<string, string>>(offer?.description ?? {es: ''});
   const [colorStyle, setColorStyle] = useState(offer?.color_style ?? 'orange');
   const [image, setImage] = useState<string | null>(offer?.image ?? null);
   const [active, setActive] = useState(offer?.active ?? true);
@@ -41,10 +42,10 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
   function save() {
     start(async () => {
       const r = await saveBurgerOffer(offer?.id ?? null, {
-        title: f.title,
-        eyebrow: f.eyebrow,
+        title,
+        eyebrow,
         rating: f.rating === '' ? null : Number(f.rating),
-        description: f.description,
+        description,
         discount_label: f.discount_label,
         price: f.price === '' ? null : Number(f.price),
         old_price: f.old_price === '' ? null : Number(f.old_price),
@@ -74,25 +75,14 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
           <Label>Imagen de la hamburguesa</Label>
           <HeroMedia media={image ?? ''} mediaType="image" onSet={({media}) => setImage(media)} onClear={() => setImage(null)} />
         </div>
-        <div>
-          <Label>Título</Label>
-          <Input value={f.title} onChange={(e) => setF({...f, title: e.target.value})} placeholder="Special Beef Burger" />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label>Etiqueta (eyebrow)</Label>
-            <Input value={f.eyebrow} onChange={(e) => setF({...f, eyebrow: e.target.value})} placeholder="Oferta estrella" />
-          </div>
+        <I18nField label="Título" value={title} onChange={setTitle} placeholder="Special Beef Burger" />
+        <I18nField label="Etiqueta (eyebrow)" value={eyebrow} onChange={setEyebrow} placeholder="Oferta estrella" />
+        <I18nField label="Descripción" value={description} onChange={setDescription} placeholder="Doble carne, cheddar y bacon ahumado." />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div>
             <Label>Valoración (★)</Label>
             <Input type="number" step="0.1" min="0" max="5" value={f.rating} onChange={(e) => setF({...f, rating: e.target.value})} placeholder="4.9" />
           </div>
-        </div>
-        <div>
-          <Label>Descripción</Label>
-          <Input value={f.description} onChange={(e) => setF({...f, description: e.target.value})} placeholder="Doble carne, cheddar y bacon ahumado." />
-        </div>
-        <div className="grid grid-cols-3 gap-3">
           <div>
             <Label>Descuento</Label>
             <Input value={f.discount_label} onChange={(e) => setF({...f, discount_label: e.target.value})} placeholder="-45% / 2x1" />
@@ -149,11 +139,11 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
               </div>
             )}
             <div className="relative z-[1] flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em]" style={{color: st.sub}}>
-              {f.eyebrow || 'Oferta'}
+              {eyebrow.es || 'Oferta'}
               {f.rating && <span className="inline-flex items-center gap-0.5" style={{color: st.text}}><Star className="size-3 fill-current" /> {f.rating}</span>}
             </div>
-            <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{f.title || 'Título de la oferta'}</h3>
-            {f.description && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{f.description}</p>}
+            <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{title.es || 'Título de la oferta'}</h3>
+            {description.es && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{description.es}</p>}
             <span className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
               Ver la oferta <ArrowRight className="size-4" />
             </span>

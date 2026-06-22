@@ -7,6 +7,7 @@ import Image from 'next/image';
 import {toast} from 'sonner';
 import {Plus, Pencil, Trash2, Star, Image as ImageIcon} from 'lucide-react';
 import {btn} from '@/components/admin/ui';
+import {tx} from '@/lib/localize';
 import type {BurgerSlide, BurgerOffer} from '@/lib/queries';
 import {deleteBurgerSlide, deleteBurgerOffer, toggleBurgerSlide, toggleBurgerOffer} from './actions';
 
@@ -80,8 +81,8 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
               <div key={s.id} className="flex items-center gap-3 border-b border-line p-3 last:border-0">
                 <Thumb src={s.image} />
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-medium text-ink">{s.name || s.title || 'Sin nombre'}</div>
-                  <div className="truncate text-xs text-ink-3">{s.eyebrow}{s.price != null ? ` · ${s.price} €` : ''}</div>
+                  <div className="truncate font-medium text-ink">{s.name || tx(s.title, 'es') || 'Sin nombre'}</div>
+                  <div className="truncate text-xs text-ink-3">{tx(s.eyebrow, 'es')}{s.price != null ? ` · ${s.price} €` : ''}</div>
                 </div>
                 <Switch on={s.active} onClick={() => togSlide(s)} />
                 <Link href={`/admin/hamburgueseria/hero/${s.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-ink"><Pencil className="size-4" /></Link>
@@ -111,10 +112,10 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
                 <Thumb src={o.image} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 truncate font-medium text-ink">
-                    {o.title || 'Sin título'}
+                    {tx(o.title, 'es') || 'Sin título'}
                     {o.rating != null && <span className="inline-flex items-center gap-0.5 text-xs text-ink-3"><Star className="size-3 fill-brand text-brand" /> {o.rating}</span>}
                   </div>
-                  <div className="truncate text-xs text-ink-3">{o.eyebrow}{o.discount_label ? ` · ${o.discount_label}` : ''}{o.price != null ? ` · ${o.price} €` : ''}</div>
+                  <div className="truncate text-xs text-ink-3">{tx(o.eyebrow, 'es')}{o.discount_label ? ` · ${o.discount_label}` : ''}{o.price != null ? ` · ${o.price} €` : ''}</div>
                 </div>
                 <Switch on={o.active} onClick={() => togOffer(o)} />
                 <Link href={`/admin/hamburgueseria/oferta/${o.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-ink"><Pencil className="size-4" /></Link>

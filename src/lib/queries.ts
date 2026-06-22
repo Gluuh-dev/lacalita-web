@@ -260,8 +260,8 @@ export async function getPublicEvent(id: string) {
 export type BurgerSlide = {
   id: string;
   name: string;
-  eyebrow: string;
-  title: string;
+  eyebrow: I18n;
+  title: I18n;
   price: number | null;
   image: string | null;
   position: number;
@@ -269,10 +269,10 @@ export type BurgerSlide = {
 };
 export type BurgerOffer = {
   id: string;
-  title: string;
-  eyebrow: string;
+  title: I18n;
+  eyebrow: I18n;
   rating: number | null;
-  description: string;
+  description: I18n;
   discount_label: string;
   price: number | null;
   old_price: number | null;

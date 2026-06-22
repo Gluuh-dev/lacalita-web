@@ -4,20 +4,22 @@ import {revalidatePath} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {removeMediaServer} from '@/lib/storage-server';
 
+type I18nMap = Record<string, string>;
+
 export type SlideInput = {
   name: string;
-  eyebrow: string;
-  title: string;
+  eyebrow: I18nMap;
+  title: I18nMap;
   price: number | null;
   image: string | null;
   position: number;
   active: boolean;
 };
 export type OfferInput = {
-  title: string;
-  eyebrow: string;
+  title: I18nMap;
+  eyebrow: I18nMap;
   rating: number | null;
-  description: string;
+  description: I18nMap;
   discount_label: string;
   price: number | null;
   old_price: number | null;

@@ -7,7 +7,7 @@ import BurgerHero from './burger-hero';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
-  bg: '#1a1209',
+  bg: '#1c160e',
   ink: '#f4ede2',
   muted: 'rgba(244,237,226,.62)',
   orange: '#f26b21',
@@ -45,7 +45,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
   const favorites = [...products].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).filter((p) => p.featured || (p.votes ?? 0) > 0).slice(0, 3);
   // Hero: diapositivas configuradas en el admin; si no hay, derivar de productos nuevos/destacados.
-  const fromSlides = slides.map((s) => ({image: s.image, name: s.title, price: s.price, eyebrow: s.eyebrow}));
+  const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale)}));
   const heroPool = (products.filter((p) => p.is_new || p.featured).length ? products.filter((p) => p.is_new || p.featured) : products).slice(0, 6);
   const heroSlides = fromSlides.length ? fromSlides : heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? 'Nuevo' : p.tag || 'De siempre'}));
   const hero = heroSlides.length ? heroSlides : [{image: null, name: 'La Calita Burger', price: null, eyebrow: 'Próximamente'}];
@@ -115,6 +115,9 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           <div className="grid gap-5 md:grid-cols-3">
             {offers.map((o) => {
               const st = OFFER_STYLES[o.color_style] ?? OFFER_STYLES.orange;
+              const oTitle = tx(o.title, locale);
+              const oEyebrow = tx(o.eyebrow, locale);
+              const oDesc = tx(o.description, locale);
               return (
                 <article key={o.id} className="relative flex min-h-[340px] flex-col overflow-hidden rounded-[22px] p-6" style={{background: st.card, color: st.text}}>
                   {o.discount_label && (
@@ -122,19 +125,19 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                   )}
                   {o.image && (
                     <div className="pointer-events-none absolute -bottom-3 right-0 h-60 w-36 opacity-95">
-                      <Image src={o.image} alt={o.title} fill sizes="150px" className="object-contain drop-shadow-2xl" />
+                      <Image src={o.image} alt={oTitle} fill sizes="150px" className="object-contain drop-shadow-2xl" />
                     </div>
                   )}
                   <div className="relative z-[1] flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em]" style={{color: st.sub}}>
-                    {o.eyebrow || 'Oferta'}
+                    {oEyebrow || 'Oferta'}
                     {o.rating != null && (
                       <span className="inline-flex items-center gap-0.5" style={{color: st.text}}>
                         <Star className="size-3 fill-current" /> {o.rating}
                       </span>
                     )}
                   </div>
-                  <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{o.title}</h3>
-                  {o.description && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{o.description}</p>}
+                  <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{oTitle}</h3>
+                  {oDesc && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{oDesc}</p>}
                   <Link href="/carta/hamburgueseria" className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
                     Ver la oferta <ArrowRight className="size-4" />
                   </Link>
