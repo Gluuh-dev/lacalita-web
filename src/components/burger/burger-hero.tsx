@@ -5,6 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
+import {Sparks, Smoke, titleColorStyle} from './burger-fx';
 
 export type HeroSlide = {
   image: string | null;
@@ -19,6 +20,9 @@ export type HeroSlide = {
   titleScale?: number;
   eyebrowScale?: number;
   priceScale?: number;
+  showRings?: boolean;
+  overlayFx?: string;
+  gradient?: string;
 };
 
 const GOLD = '#e9ae74';
@@ -85,7 +89,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           ))}
         </>
       )}
-      <Rings />
+      {(cur?.showRings ?? true) && <Rings />}
       {/* Destellos fríos (azulados) */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(86,140,205,.16), transparent 62%)'}} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(86,140,205,.13), transparent 60%)'}} />
@@ -158,7 +162,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 className="lc-bfade pointer-events-none absolute left-0 right-0 top-[9%] m-0 text-center font-extrabold uppercase"
                 style={{
                   fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
-                  color: cur.color || '#ffffff',
+                  ...titleColorStyle(cur.color || '#ffffff', cur.gradient),
                   zIndex: cur.behind ? 1 : 3,
                   fontSize: `calc(clamp(3rem,9.5vw,7.2rem) * ${cur.titleScale ?? 1})`,
                   lineHeight: 0.82,
@@ -187,6 +191,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   <span className="font-eight font-extrabold" style={{fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
+              {cur.overlayFx === 'sparks' && <Sparks />}
+              {cur.overlayFx === 'smoke' && <Smoke />}
             </>
           )}
         </div>

@@ -29,9 +29,19 @@ const BG_PRESETS: [string, string][] = [
 ];
 const EFFECTS: [string, string][] = [
   ['none', 'Ninguno (degradado)'],
-  ['image', 'Imagen de fondo'],
-  ['smoke', 'Humo'],
-  ['embers', 'Brasas / fuego']
+  ['image', 'Imagen de fondo']
+];
+const OVERLAYS: [string, string][] = [
+  ['none', 'Ninguna'],
+  ['sparks', 'Chispas / brasas'],
+  ['smoke', 'Humo']
+];
+const TITLE_FILLS: [string, string][] = [
+  ['plano', 'Color plano'],
+  ['gold', 'Degradado dorado'],
+  ['orange', 'Degradado naranja'],
+  ['fire', 'Degradado fuego'],
+  ['cream', 'Degradado crema']
 ];
 
 export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) {
@@ -55,6 +65,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
+  const [overlayFx, setOverlayFx] = useState(slide?.overlay_fx ?? 'none');
+  const [showRings, setShowRings] = useState(slide?.show_rings ?? true);
+  const [titleGradient, setTitleGradient] = useState(slide?.title_gradient ?? '');
 
   function save() {
     start(async () => {
@@ -73,7 +86,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         bg_image: bgImage,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
-        price_scale: priceScale
+        price_scale: priceScale,
+        overlay_fx: overlayFx,
+        show_rings: showRings,
+        title_gradient: titleGradient
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -121,6 +137,21 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               </Select>
             </div>
             <div>
+              <Label>Relleno del título</Label>
+              <Select value={titleGradient || 'plano'} onValueChange={(v) => setTitleGradient(v === 'plano' ? '' : (v ?? ''))}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {TITLE_FILLS.map(([v, l]) => (
+                      <SelectItem key={v} value={v}>{l}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {titleGradient === '' && (
+            <div className="mt-3">
               <Label>Color del título</Label>
               <div className="flex items-center gap-2">
                 {COLORS.map((c) => (
@@ -129,7 +160,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
                 <input type="color" value={/^#/.test(titleColor) ? titleColor : '#ffffff'} onChange={(e) => setTitleColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
               </div>
             </div>
-          </div>
+          )}
           <label className="mt-3 flex items-center justify-between text-sm">
             Título detrás de la hamburguesa
             <button type="button" onClick={() => setTitleBehind((v) => !v)} aria-label="Detrás" className={`relative h-6 w-10 rounded-full transition ${titleBehind ? 'bg-brand' : 'bg-line-strong'}`}>
@@ -180,6 +211,25 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <HeroMedia media={bgImage ?? ''} mediaType="image" onSet={({media}) => setBgImage(media)} onClear={() => setBgImage(null)} />
             </div>
           )}
+          <div className="mt-3">
+            <Label>Animación encima de la hamburguesa</Label>
+            <Select value={overlayFx} onValueChange={(v) => setOverlayFx(v ?? 'none')}>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {OVERLAYS.map(([v, l]) => (
+                    <SelectItem key={v} value={v}>{l}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <label className="mt-3 flex items-center justify-between text-sm">
+            Mostrar anillos dorados
+            <button type="button" onClick={() => setShowRings((v) => !v)} aria-label="Anillos" className={`relative h-6 w-10 rounded-full transition ${showRings ? 'bg-brand' : 'bg-line-strong'}`}>
+              <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${showRings ? 'left-[18px]' : 'left-0.5'}`} />
+            </button>
+          </label>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -217,7 +267,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           bgImage,
           titleScale,
           eyebrowScale,
-          priceScale
+          priceScale,
+          showRings,
+          overlayFx,
+          gradient: titleGradient
         }}
       />
     </div>

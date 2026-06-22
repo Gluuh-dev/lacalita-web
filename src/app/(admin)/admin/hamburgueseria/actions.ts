@@ -22,6 +22,9 @@ export type SlideInput = {
   title_scale: number;
   eyebrow_scale: number;
   price_scale: number;
+  overlay_fx: string;
+  show_rings: boolean;
+  title_gradient: string;
 };
 export type OfferInput = {
   title: I18nMap;

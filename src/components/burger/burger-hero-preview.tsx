@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
 import {euro} from '@/lib/localize';
+import {Sparks, Smoke, titleColorStyle} from './burger-fx';
 
 const GOLD = '#e9ae74';
 const FONT_CSS: Record<string, string> = {
@@ -26,12 +27,15 @@ export type PreviewCfg = {
   titleScale: number;
   eyebrowScale: number;
   priceScale: number;
+  showRings: boolean;
+  overlayFx: string;
+  gradient: string;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
   return (
     <>
-      <div className="pointer-events-none absolute right-0 top-0 h-[88%] w-[70%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 30px, rgba(233,174,116,.16) 30px 33px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'}} />
+      {c.showRings && <div className="pointer-events-none absolute right-0 top-0 h-[88%] w-[70%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 30px, rgba(233,174,116,.16) 30px 33px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'}} />}
       {c.bgEffect === 'image' && c.bgImage && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -70,7 +74,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           </span>
         </div>
       )}
-      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: '11%', fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, color: c.color || '#fff', zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 10px 40px rgba(0,0,0,.7)'}}>
+      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: '11%', fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || '#fff', c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 10px 40px rgba(0,0,0,.7)'}}>
         {c.name || 'Título'}
       </div>
       {c.image ? (
@@ -86,6 +90,8 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           {c.price} €
         </div>
       )}
+      {c.overlayFx === 'sparks' && <Sparks />}
+      {c.overlayFx === 'smoke' && <Smoke />}
     </div>
   );
 }
