@@ -88,14 +88,14 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
       <BurgerHero slides={hero} locale={locale} />
 
-      {/* ---- Marquesinas cruzadas (X) ---- */}
-      <div className="relative h-28 overflow-hidden md:h-36" style={{background: C.bg}}>
-        {/* Banda 2 (debajo, oscura, sentido contrario) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[180%] items-center overflow-hidden py-3" style={{background: '#2a1709', transform: 'translate(-50%,-50%) rotate(-7deg)'}}>
-          <div className="lc-mq rev" style={{animationDuration: '38s'}}>
+      {/* ---- Marquesinas cruzadas (X), de lado a lado ---- */}
+      <div className="relative h-44 overflow-hidden md:h-56" style={{background: C.bg}}>
+        {/* Banda 2 (debajo, marrón, sentido contrario) */}
+        <div className="absolute left-1/2 top-1/2 flex w-[240%] items-center overflow-hidden py-3.5" style={{background: '#2a1709', transform: 'translate(-50%,-50%) rotate(-9deg)'}}>
+          <div className="lc-mq rev" style={{animationDuration: '40s'}}>
             {[0, 1].map((k) => (
-              <span key={k} className="flex shrink-0 items-center font-eight text-lg md:text-xl" style={{color: C.orange}}>
-                {Array.from({length: 16}).map((_, idx) => (
+              <span key={k} className="flex shrink-0 items-center font-eight text-xl md:text-2xl" style={{color: '#e7b46a'}}>
+                {Array.from({length: 26}).map((_, idx) => (
                   <span key={idx} className="mx-5 whitespace-nowrap">{['fresh', 'beach', 'grill'][idx % 3]} ·</span>
                 ))}
               </span>
@@ -103,11 +103,11 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           </div>
         </div>
         {/* Banda 1 (encima, naranja) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[180%] items-center overflow-hidden py-3" style={{background: C.orange, transform: 'translate(-50%,-50%) rotate(7deg)'}}>
-          <div className="lc-mq" style={{animationDuration: '34s'}}>
+        <div className="absolute left-1/2 top-1/2 flex w-[240%] items-center overflow-hidden py-3.5" style={{background: C.orange, transform: 'translate(-50%,-50%) rotate(9deg)'}}>
+          <div className="lc-mq" style={{animationDuration: '36s'}}>
             {[0, 1].map((k) => (
-              <span key={k} className="flex shrink-0 items-center font-eight text-lg text-[#2a1709] md:text-xl">
-                {Array.from({length: 16}).map((_, idx) => (
+              <span key={k} className="flex shrink-0 items-center font-eight text-xl text-[#2a1709] md:text-2xl">
+                {Array.from({length: 26}).map((_, idx) => (
                   <span key={idx} className="mx-5 whitespace-nowrap">{['smash', 'juicy', 'crispy'][idx % 3]} ·</span>
                 ))}
               </span>
@@ -137,8 +137,8 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                     <span className="absolute -right-9 top-5 z-10 rotate-45 px-10 py-1 text-center text-xs font-bold" style={{background: st.ribbon, color: st.ribbonText}}>{o.discount_label}</span>
                   )}
                   {o.image && (
-                    <div className="pointer-events-none absolute -bottom-3 right-0 h-60 w-36 opacity-95">
-                      <Image src={o.image} alt={oTitle} fill sizes="150px" className="object-contain drop-shadow-2xl" />
+                    <div className="pointer-events-none absolute -bottom-2 -top-2 right-[-0.75rem] w-44 opacity-95">
+                      <Image src={o.image} alt={oTitle} fill sizes="180px" className="object-contain object-bottom drop-shadow-2xl" />
                     </div>
                   )}
                   <div className="relative z-[1] flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em]" style={{color: st.sub}}>

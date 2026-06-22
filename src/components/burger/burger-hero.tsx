@@ -74,11 +74,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               <div className="font-adam text-[0.7rem] uppercase tracking-[0.34em]" style={{color: GOLD}}>— {s.eyebrow} —</div>
               <div className="mt-2 font-eight text-6xl leading-[0.9] text-white md:text-7xl">{s.name}</div>
               {s.image ? (
-                <div className="burger-float relative mt-6 h-[42svh] w-full max-w-md md:h-[52svh]">
-                  <Image src={s.image} alt={s.name} fill sizes="(min-width:768px) 28rem, 80vw" className="object-contain drop-shadow-[0_30px_45px_rgba(0,0,0,0.6)]" priority />
+                <div className="burger-float relative mt-6 h-[52svh] w-full max-w-xl md:h-[66svh]">
+                  <Image src={s.image} alt={s.name} fill sizes="(min-width:768px) 36rem, 90vw" className="object-contain drop-shadow-[0_30px_45px_rgba(0,0,0,0.6)]" priority />
                 </div>
               ) : (
-                <div className="mt-6 flex h-[42svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25">
+                <div className="mt-6 flex h-[52svh] w-full max-w-xl items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25">
                   <UtensilsCrossed className="size-20" />
                 </div>
               )}

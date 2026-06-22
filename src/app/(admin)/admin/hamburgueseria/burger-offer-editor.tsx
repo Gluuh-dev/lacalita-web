@@ -134,8 +134,8 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
           <article className="relative flex min-h-[340px] max-w-sm flex-col overflow-hidden rounded-[22px] p-6" style={{background: st.card, color: st.text}}>
             {f.discount_label && <span className="absolute -right-9 top-5 z-10 rotate-45 px-10 py-1 text-center text-xs font-bold" style={{background: st.ribbon, color: st.ribbonText}}>{f.discount_label}</span>}
             {image && (
-              <div className="pointer-events-none absolute -bottom-3 right-0 h-60 w-36 opacity-95">
-                <Image src={image} alt="" fill sizes="150px" className="object-contain drop-shadow-2xl" />
+              <div className="pointer-events-none absolute -bottom-2 -top-2 right-[-0.75rem] w-44 opacity-95">
+                <Image src={image} alt="" fill sizes="180px" className="object-contain object-bottom drop-shadow-2xl" />
               </div>
             )}
             <div className="relative z-[1] flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em]" style={{color: st.sub}}>
