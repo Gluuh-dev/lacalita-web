@@ -231,6 +231,12 @@
   html {
     @apply font-sans;
   }
+  /* La página nunca puede ser más ancha que la pantalla */
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
 }
 
 /* ---- Interacciones del Design System ---- */

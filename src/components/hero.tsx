@@ -236,6 +236,10 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   }, [agenda, evs.length]);
   useEffect(() => {
     if (sheet) setDrag(0);
+    document.body.style.overflow = sheet ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [sheet]);
 
   const showAgenda = agenda && hasEvents;
@@ -254,6 +258,8 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />
       <div className="pointer-events-none absolute -right-20 -top-24 size-[clamp(220px,40vw,520px)] rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.45), transparent 65%)'}} />
+
+      <Marquee slide={slide} pc />
 
       {/* contenido */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-24 sm:px-8">
@@ -324,7 +330,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary"><ChevronUp className="size-4" /></span>
           </button>
 
-          <div className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'pointer-events-none'}`}>
+          <div className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'hidden'}`}>
             <div onClick={() => setSheet(false)} className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
             <div
               className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-[#1c160e] p-4 pb-8 text-white shadow-2xl"

@@ -183,9 +183,9 @@ export default async function Home({
                 </span>
               </a>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {settings?.phone && (
-                  <a href={`tel:${settings.phone}`} className="flex items-center gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
+                  <a href={`tel:${settings.phone}`} className="flex min-w-0 items-center gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep">
                       <Phone className="size-4" />
                     </span>
@@ -195,9 +195,9 @@ export default async function Home({
                     </span>
                   </a>
                 )}
-                <div className="flex items-center justify-between gap-2 rounded-[14px] border border-line bg-surface px-4 py-3">
+                <div className="flex min-w-0 flex-col gap-2 rounded-[14px] border border-line bg-surface px-4 py-3">
                   <span className="font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('info.follow')}</span>
-                  <span className="flex gap-2">
+                  <span className="flex flex-wrap gap-2">
                     {settings?.social?.instagram && (
                       <a href={settings.social.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-surface-sunken px-3 py-1 text-xs font-medium">Instagram</a>
                     )}

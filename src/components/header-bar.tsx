@@ -40,7 +40,7 @@ export default function HeaderBar({
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between gap-3 px-4 transition-colors duration-300',
+          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-colors duration-300',
           onMedia
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
@@ -71,9 +71,12 @@ export default function HeaderBar({
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Menú"
-          className={cn('rounded-md p-1 sm:hidden', light ? 'text-white' : 'text-ink')}
+          className={cn(
+            'flex size-9 items-center justify-center rounded-full sm:hidden',
+            light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink'
+          )}
         >
-          <Menu className="size-7" />
+          <Menu className="size-6" />
         </button>
       </header>
 
