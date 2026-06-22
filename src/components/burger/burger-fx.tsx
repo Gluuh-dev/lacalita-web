@@ -57,7 +57,9 @@ export function FxVideo({src, behind, x = 62, y = 50, scale = 1.1}: {src: string
         height: `${100 * scale}%`,
         transform: 'translate(-50%,-50%)',
         zIndex: behind ? 1 : 5,
-        mixBlendMode: 'screen'
+        mixBlendMode: 'screen',
+        WebkitMaskImage: 'radial-gradient(ellipse 82% 90% at 50% 50%, #000 62%, transparent 100%)',
+        maskImage: 'radial-gradient(ellipse 82% 90% at 50% 50%, #000 62%, transparent 100%)'
       }}
     />
   );
