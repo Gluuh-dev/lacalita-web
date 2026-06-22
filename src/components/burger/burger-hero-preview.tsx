@@ -30,6 +30,13 @@ export type PreviewCfg = {
   showRings: boolean;
   overlayFx: string;
   gradient: string;
+  fxSparks: boolean;
+  fxSmoke: boolean;
+  priceFont: string;
+  priceColor: string;
+  priceGradient: string;
+  titleY: number;
+  priceY: number;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
@@ -74,7 +81,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           </span>
         </div>
       )}
-      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: '11%', fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || '#fff', c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 10px 40px rgba(0,0,0,.7)'}}>
+      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || '#fff', c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 10px 40px rgba(0,0,0,.7)'}}>
         {c.name || 'Título'}
       </div>
       {c.image ? (
@@ -86,12 +93,12 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
         </div>
       )}
       {c.price && (
-        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-eight font-extrabold" style={{bottom: '6%', fontSize: ps, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>
+        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient), fontSize: ps, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>
           {c.price} €
         </div>
       )}
-      {c.overlayFx === 'sparks' && <Sparks />}
-      {c.overlayFx === 'smoke' && <Smoke />}
+      {c.fxSparks && <Sparks />}
+      {c.fxSmoke && <Smoke />}
     </div>
   );
 }

@@ -277,6 +277,13 @@ export type BurgerSlide = {
   overlay_fx: string;
   show_rings: boolean;
   title_gradient: string;
+  fx_sparks: boolean;
+  fx_smoke: boolean;
+  price_font: string;
+  price_color: string;
+  price_gradient: string;
+  title_y: number;
+  price_y: number;
 };
 export type BurgerOffer = {
   id: string;

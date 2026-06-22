@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
+import {Checkbox} from '@/components/ui/checkbox';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import {btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
@@ -30,11 +31,6 @@ const BG_PRESETS: [string, string][] = [
 const EFFECTS: [string, string][] = [
   ['none', 'Ninguno (degradado)'],
   ['image', 'Imagen de fondo']
-];
-const OVERLAYS: [string, string][] = [
-  ['none', 'Ninguna'],
-  ['sparks', 'Chispas / brasas'],
-  ['smoke', 'Humo']
 ];
 const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
@@ -65,9 +61,16 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
-  const [overlayFx, setOverlayFx] = useState(slide?.overlay_fx ?? 'none');
+  const [overlayFx] = useState(slide?.overlay_fx ?? 'none');
   const [showRings, setShowRings] = useState(slide?.show_rings ?? true);
   const [titleGradient, setTitleGradient] = useState(slide?.title_gradient ?? '');
+  const [fxSparks, setFxSparks] = useState(slide?.fx_sparks ?? false);
+  const [fxSmoke, setFxSmoke] = useState(slide?.fx_smoke ?? false);
+  const [priceFont, setPriceFont] = useState(slide?.price_font ?? 'eight');
+  const [priceColor, setPriceColor] = useState(slide?.price_color ?? '#e9ae74');
+  const [priceGradient, setPriceGradient] = useState(slide?.price_gradient ?? '');
+  const [titleY, setTitleY] = useState(slide?.title_y ?? 10);
+  const [priceY, setPriceY] = useState(slide?.price_y ?? 14);
 
   function save() {
     start(async () => {
@@ -89,7 +92,14 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         price_scale: priceScale,
         overlay_fx: overlayFx,
         show_rings: showRings,
-        title_gradient: titleGradient
+        title_gradient: titleGradient,
+        fx_sparks: fxSparks,
+        fx_smoke: fxSmoke,
+        price_font: priceFont,
+        price_color: priceColor,
+        price_gradient: priceGradient,
+        title_y: titleY,
+        price_y: priceY
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -181,6 +191,57 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <input type="range" min={0.5} max={1.6} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
             </div>
           </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div>
+              <Label>Posición título (↑ baja el nº) · {titleY}%</Label>
+              <input type="range" min={2} max={45} value={titleY} onChange={(e) => setTitleY(+e.target.value)} className="w-full accent-brand" />
+            </div>
+            <div>
+              <Label>Posición precio (↑ sube el nº) · {priceY}%</Label>
+              <input type="range" min={2} max={45} value={priceY} onChange={(e) => setPriceY(+e.target.value)} className="w-full accent-brand" />
+            </div>
+          </div>
+        </div>
+
+        {/* Estilo del precio */}
+        <div className="rounded-[14px] border border-line bg-surface p-3">
+          <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">Estilo del precio</div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Tipografía</Label>
+              <Select value={priceFont} onValueChange={(v) => setPriceFont(v ?? 'eight')}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {FONTS.map(([v, l]) => (
+                      <SelectItem key={v} value={v}>{l}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Relleno</Label>
+              <Select value={priceGradient || 'plano'} onValueChange={(v) => setPriceGradient(v === 'plano' ? '' : (v ?? ''))}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {TITLE_FILLS.map(([v, l]) => (
+                      <SelectItem key={v} value={v}>{l}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {priceGradient === '' && (
+            <div className="mt-3 flex items-center gap-2">
+              {COLORS.map((c) => (
+                <button key={c} type="button" onClick={() => setPriceColor(c)} className="size-7 rounded-full border" style={{background: c, boxShadow: priceColor === c ? '0 0 0 2px var(--brand)' : '0 0 0 1px var(--line-strong)'}} aria-label={c} />
+              ))}
+              <input type="color" value={/^#/.test(priceColor) ? priceColor : '#e9ae74'} onChange={(e) => setPriceColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
+            </div>
+          )}
         </div>
 
         {/* Fondo */}
@@ -212,17 +273,11 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </div>
           )}
           <div className="mt-3">
-            <Label>Animación encima de la hamburguesa</Label>
-            <Select value={overlayFx} onValueChange={(v) => setOverlayFx(v ?? 'none')}>
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {OVERLAYS.map(([v, l]) => (
-                    <SelectItem key={v} value={v}>{l}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <Label>Animación encima de la hamburguesa (marca las que quieras)</Label>
+            <div className="mt-1 flex gap-5">
+              <label className="flex items-center gap-2 text-sm"><Checkbox checked={fxSparks} onCheckedChange={(v) => setFxSparks(v === true)} /> Chispas / brasas</label>
+              <label className="flex items-center gap-2 text-sm"><Checkbox checked={fxSmoke} onCheckedChange={(v) => setFxSmoke(v === true)} /> Humo</label>
+            </div>
           </div>
           <label className="mt-3 flex items-center justify-between text-sm">
             Mostrar anillos dorados
@@ -270,7 +325,14 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           priceScale,
           showRings,
           overlayFx,
-          gradient: titleGradient
+          gradient: titleGradient,
+          fxSparks,
+          fxSmoke,
+          priceFont,
+          priceColor,
+          priceGradient,
+          titleY,
+          priceY
         }}
       />
     </div>

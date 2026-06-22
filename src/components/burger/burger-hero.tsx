@@ -23,6 +23,13 @@ export type HeroSlide = {
   showRings?: boolean;
   overlayFx?: string;
   gradient?: string;
+  fxSparks?: boolean;
+  fxSmoke?: boolean;
+  priceFont?: string;
+  priceColor?: string;
+  priceGradient?: string;
+  titleY?: number;
+  priceY?: number;
 };
 
 const GOLD = '#e9ae74';
@@ -159,8 +166,9 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </div>
               <h1
                 key={'n' + i}
-                className="lc-bfade pointer-events-none absolute left-0 right-0 top-[9%] m-0 text-center font-extrabold uppercase"
+                className="lc-bfade pointer-events-none absolute left-0 right-0 m-0 text-center font-extrabold uppercase"
                 style={{
+                  top: `${cur.titleY ?? 10}%`,
                   fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
                   ...titleColorStyle(cur.color || '#ffffff', cur.gradient),
                   zIndex: cur.behind ? 1 : 3,
@@ -187,12 +195,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 </div>
               )}
               {cur.price != null && (
-                <div key={'p' + i} className="lc-bfade pointer-events-none absolute bottom-[14%] left-0 right-0 z-[4] flex justify-center" style={{animationDelay: '0.16s'}}>
-                  <span className="font-eight font-extrabold" style={{fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
+                <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
+                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
-              {cur.overlayFx === 'sparks' && <Sparks />}
-              {cur.overlayFx === 'smoke' && <Smoke />}
+              {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}
+              {(cur.fxSmoke || cur.overlayFx === 'smoke') && <Smoke />}
             </>
           )}
         </div>
