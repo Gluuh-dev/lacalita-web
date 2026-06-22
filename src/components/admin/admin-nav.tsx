@@ -8,6 +8,7 @@ const LINKS: [string, string][] = [
   ['/admin/categorias', 'Categorías'],
   ['/admin/menus', 'Menús'],
   ['/admin/eventos', 'Eventos'],
+  ['/admin/contenido', 'Contenido'],
   ['/admin/ajustes', 'Ajustes']
 ];
 

@@ -69,6 +69,7 @@ export type Settings = {
   hero_image: string | null;
   hero_video: string | null;
   hero: HeroSlide[] | null;
+  content: import('./content-types').LandingContent | null;
 };
 
 // ---------- Público ----------
@@ -116,6 +117,26 @@ export async function getSettings(): Promise<Settings | null> {
   const supabase = supabasePublic;
   const {data} = await supabase.from('settings').select('*').eq('id', 1).maybeSingle();
   return (data as Settings) ?? null;
+}
+
+export async function getFeaturedProducts(limit = 4) {
+  const {data} = await supabasePublic
+    .from('products')
+    .select('id, slug, name, price, image, categories ( menus ( slug ) )')
+    .eq('featured', true)
+    .eq('available', true)
+    .not('image', 'is', null)
+    .limit(limit);
+  return (
+    (data as unknown as {
+      id: string;
+      slug: string;
+      name: I18n;
+      price: number | null;
+      image: string | null;
+      categories: {menus: {slug: string} | null} | null;
+    }[]) ?? []
+  );
 }
 
 export async function getUpcomingEvents(limit = 20): Promise<EventRow[]> {

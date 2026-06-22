@@ -1,9 +1,11 @@
+import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone} from 'lucide-react';
+import {Coffee, UtensilsCrossed, Sandwich, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
-import {getSettings, getUpcomingEvents, getMenus, DEFAULT_HERO_SLIDE} from '@/lib/queries';
+import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
-import {tx} from '@/lib/localize';
+import {DEFAULT_CONTENT} from '@/lib/content-types';
+import {tx, euro} from '@/lib/localize';
 import {toHeroEvents} from '@/lib/hero';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {SITE_URL, altLanguages} from '@/lib/site';
@@ -25,14 +27,23 @@ export default async function Home({
   const {locale} = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const [settings, events, menus] = await Promise.all([
+  const [settings, events, menus, featured] = await Promise.all([
     getSettings(),
     getUpcomingEvents(6),
-    getMenus()
+    getMenus(),
+    getFeaturedProducts(4)
   ]);
 
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
   const hours = normalizeHours(settings?.hours);
+
+  const content = settings?.content ?? {};
+  const about = {...DEFAULT_CONTENT.about, ...content.about};
+  const story = {...DEFAULT_CONTENT.story, ...content.story};
+  const features = about.features ?? DEFAULT_CONTENT.about.features ?? [];
+  const reviews = content.reviews ?? [];
+  const gallery = content.gallery ?? [];
+  const featureIcons = [Waves, UtensilsCrossed, Music];
 
   const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false);
   const heroSlides: HeroSlide[] = activeHero.length
@@ -79,6 +90,30 @@ export default async function Home({
       />
       <Hero slides={heroSlides} events={toHeroEvents(events, locale)} />
 
+      {/* Sobre el sitio */}
+      <Reveal>
+        <section className="mx-auto max-w-4xl px-4 py-16 text-center">
+          <div className="eyebrow mb-3">Bienvenidos a La Calita</div>
+          <h2 className="font-serif text-3xl sm:text-4xl">{tx(about.title ?? {}, locale)}</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
+          {features.length > 0 && (
+            <div className="mt-9 grid gap-4 sm:grid-cols-3">
+              {features.map((f, idx) => {
+                const Ic = featureIcons[idx % featureIcons.length];
+                return (
+                  <div key={idx} className="flex flex-col items-center gap-2.5 rounded-[18px] border border-line bg-surface p-6 shadow-sm">
+                    <span className="flex size-11 items-center justify-center rounded-full bg-accent-soft text-accent">
+                      <Ic className="size-5" />
+                    </span>
+                    <span className="font-medium">{f}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </Reveal>
+
       {/* Cartas */}
       <Reveal>
         <section id="carta" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
@@ -112,6 +147,32 @@ export default async function Home({
         </section>
       </Reveal>
 
+      {/* Platos destacados */}
+      {featured.length > 0 && (
+        <Reveal>
+          <section className="mx-auto max-w-6xl px-4 py-16">
+            <SectionHead eyebrow="De nuestra carta" title="Platos para repetir" action={<ActionLink href="/carta" label={t('menu.title')} />} />
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featured.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
+                  className="ds-card--link group flex flex-col overflow-hidden rounded-[20px] border border-line bg-surface shadow-sm"
+                >
+                  <div className="ds-media-zoom relative aspect-[4/3] overflow-hidden">
+                    {p.image && <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 50vw, 280px" className="object-cover" />}
+                  </div>
+                  <div className="flex items-baseline justify-between gap-2 p-4">
+                    <h3 className="font-serif text-lg leading-tight">{tx(p.name, locale)}</h3>
+                    {p.price != null && <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(Number(p.price), locale)}</span>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+      )}
+
       {/* Eventos */}
       {events.length > 0 && (
         <Reveal>
@@ -127,6 +188,52 @@ export default async function Home({
                   <EventCard key={e.id} event={e} locale={locale} />
                 ))}
               </div>
+            </div>
+          </section>
+        </Reveal>
+      )}
+
+      {/* Historia */}
+      <Reveal>
+        <section className="bg-surface-2">
+          <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+            <div className="eyebrow mb-3">La Calita</div>
+            <h2 className="font-serif text-3xl sm:text-4xl">{tx(story.title ?? {}, locale)}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(story.text ?? {}, locale)}</p>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* Reseñas */}
+      {reviews.length > 0 && (
+        <Reveal>
+          <section className="mx-auto max-w-6xl px-4 py-16">
+            <div className="eyebrow mb-8 text-center">Lo que dicen</div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {reviews.map((r, idx) => (
+                <figure key={idx} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
+                  <Quote className="size-6 text-brand" />
+                  <blockquote className="mt-3 leading-relaxed text-ink-2">{r.quote}</blockquote>
+                  <figcaption className="mt-4 font-semibold text-brand-deep">— {r.author}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+      )}
+
+      {/* Galería */}
+      {gallery.length > 0 && (
+        <Reveal>
+          <section className="mx-auto max-w-6xl px-4 py-16">
+            <div className="eyebrow mb-8 text-center">Galería</div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {gallery.map((url, idx) => (
+                <div key={idx} className="ds-media-zoom aspect-square overflow-hidden rounded-[16px] border border-line">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="" className="h-full w-full object-cover" />
+                </div>
+              ))}
             </div>
           </section>
         </Reveal>
