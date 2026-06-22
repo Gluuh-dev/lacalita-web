@@ -5,6 +5,8 @@ import type {Menu, Allergen} from '@/lib/queries';
 import MenuFilters from './menu-filters';
 import AllergenIcon from './allergen-icon';
 import AdminEditLink from './admin-edit-link';
+import {MenuStoreProvider, type MenuItem} from '@/components/menu/store';
+import MenuTabBar from '@/components/menu/menu-tabbar';
 
 export default async function MenuView({
   menu,
@@ -27,8 +29,22 @@ export default async function MenuView({
 
   const headerMedia = menu.header_video || menu.header_image;
 
+  const videos: MenuItem[] = cats
+    .flatMap((c) => c.products)
+    .filter((p) => p.video)
+    .map((p) => ({
+      id: p.id,
+      name: tx(p.name, locale),
+      price: p.price != null ? Number(p.price) : null,
+      image: p.image ?? null,
+      slug: p.slug,
+      menuSlug: menu.slug,
+      video: p.video,
+      desc: p.description ? tx(p.description, locale) : undefined
+    }));
+
   return (
-    <div data-theme={menu.theme} className="min-h-screen bg-bg text-ink">
+    <div data-theme={menu.theme} className="min-h-screen bg-bg pb-24 text-ink md:pb-10">
       <header className="relative overflow-hidden px-6 pb-12 pt-24 text-center text-white">
         {!headerMedia && (
           <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
@@ -65,6 +81,7 @@ export default async function MenuView({
         </div>
       </header>
 
+      <MenuStoreProvider>
       <MenuFilters menu={menu} />
 
       {used.size > 0 && (
@@ -84,6 +101,9 @@ export default async function MenuView({
           </section>
         </div>
       )}
+
+      <MenuTabBar videos={videos} locale={locale} />
+      </MenuStoreProvider>
     </div>
   );
 }

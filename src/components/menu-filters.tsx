@@ -5,7 +5,7 @@ import {motion, AnimatePresence, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
-import ProductCard from './product-card';
+import ProductItem from '@/components/menu/product-item';
 
 export default function MenuFilters({menu}: {menu: Menu}) {
   const t = useTranslations('menu');
@@ -52,7 +52,7 @@ export default function MenuFilters({menu}: {menu: Menu}) {
                 exit={reduce ? {opacity: 0} : {opacity: 0, scale: 0.95}}
                 transition={{duration: 0.25}}
               >
-                <ProductCard product={p} menuSlug={menu.slug} locale={locale} />
+                <ProductItem product={p} menuSlug={menu.slug} locale={locale} />
               </motion.div>
             ))}
           </AnimatePresence>
