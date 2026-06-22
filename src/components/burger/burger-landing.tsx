@@ -88,31 +88,17 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
       <BurgerHero slides={hero} locale={locale} />
 
-      {/* ---- Marquesinas cruzadas (X), de lado a lado ---- */}
-      <div className="relative h-52 overflow-hidden md:h-64" style={{background: C.bg}}>
-        {/* Banda 2 (debajo, marrón, sentido contrario) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[260%] items-center overflow-hidden py-3.5" style={{background: '#2a1709', transform: 'translate(-50%,-50%) rotate(-5deg)'}}>
-          <div className="lc-mq rev" style={{animationDuration: '40s'}}>
-            {[0, 1].map((k) => (
-              <span key={k} className="flex shrink-0 items-center font-eight text-xl md:text-2xl" style={{color: '#e7b46a'}}>
-                {Array.from({length: 26}).map((_, idx) => (
-                  <span key={idx} className="mx-5 whitespace-nowrap">{['fresh', 'beach', 'grill'][idx % 3]} ·</span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Banda 1 (encima, naranja) */}
-        <div className="absolute left-1/2 top-1/2 flex w-[260%] items-center overflow-hidden py-3.5" style={{background: C.orange, transform: 'translate(-50%,-50%) rotate(5deg)'}}>
-          <div className="lc-mq" style={{animationDuration: '36s'}}>
-            {[0, 1].map((k) => (
-              <span key={k} className="flex shrink-0 items-center font-eight text-xl text-[#2a1709] md:text-2xl">
-                {Array.from({length: 26}).map((_, idx) => (
-                  <span key={idx} className="mx-5 whitespace-nowrap">{['smash', 'juicy', 'crispy'][idx % 3]} ·</span>
-                ))}
-              </span>
-            ))}
-          </div>
+      {/* ---- Marquesina (banda naranja inclinada, igual que la referencia) ---- */}
+      <div
+        className="relative z-[50] overflow-hidden"
+        style={{background: C.orange, padding: '0.65rem 0', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%', marginTop: '-30px', marginBottom: '-10px', boxShadow: '0 12px 30px rgba(0,0,0,.4)'}}
+      >
+        <div className="lc-mq" style={{animationDuration: '18s'}}>
+          {[0, 1].map((k) => (
+            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.35rem', color: '#1c1611', letterSpacing: '0.06em', paddingRight: 14}}>
+              {'smash · juicy · crispy · '.repeat(8)}
+            </span>
+          ))}
         </div>
       </div>
 

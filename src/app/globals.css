@@ -324,13 +324,14 @@
 .lc-mq-v { display: inline-flex; flex-direction: column; will-change: transform; animation: lc-marquee-v linear infinite; }
 .lc-mq-v.rev { animation-name: lc-marquee-v-rev; }
 @keyframes lc-hero-fade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-/* Hamburguesa flotando arriba-abajo en el hero */
-@keyframes burger-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
-.burger-float { animation: burger-float 6s ease-in-out infinite; }
-/* Entrada: la hamburguesa sube desde abajo (como saliendo de la pantalla) */
-@keyframes burger-rise { from { opacity: 0; transform: translateY(120px); } to { opacity: 1; transform: translateY(0); } }
-.burger-rise { animation: burger-rise 0.8s cubic-bezier(0.16, 0.84, 0.3, 1) both; }
-@media (prefers-reduced-motion: reduce) { .burger-float, .burger-rise { animation: none; } }
+/* Hero hamburguesería — entrada alterna arriba/abajo con rebote (igual que la referencia) */
+@keyframes lc-slide-top { 0% { opacity: 0; transform: translateY(-118vh); } 70% { opacity: 1; transform: translateY(3%); } 85% { transform: translateY(-1.5%); } 100% { transform: translateY(0); } }
+@keyframes lc-slide-bot { 0% { opacity: 0; transform: translateY(118vh); } 70% { opacity: 1; transform: translateY(-3%); } 85% { transform: translateY(1.5%); } 100% { transform: translateY(0); } }
+.lc-slide-top { animation: lc-slide-top 1.05s cubic-bezier(0.22, 1, 0.36, 1); }
+.lc-slide-bot { animation: lc-slide-bot 1.05s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes lc-bfade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.lc-bfade { animation: lc-bfade 0.55s var(--ease-out, ease-out); }
+@media (prefers-reduced-motion: reduce) { .lc-slide-top, .lc-slide-bot, .lc-bfade { animation: none; } }
 @keyframes lc-hero-slide { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
 .lc-hero-slide { animation: lc-hero-slide var(--dur-slow) var(--ease-out) both; }
