@@ -255,3 +255,48 @@ export async function getPublicEvent(id: string) {
     .maybeSingle();
   return (data as EventRow) ?? null;
 }
+
+// ---- Hamburguesería: diapositivas de portada + ofertas ----
+export type BurgerSlide = {
+  id: string;
+  name: string;
+  eyebrow: string;
+  title: string;
+  price: number | null;
+  image: string | null;
+  position: number;
+  active: boolean;
+};
+export type BurgerOffer = {
+  id: string;
+  title: string;
+  eyebrow: string;
+  rating: number | null;
+  description: string;
+  discount_label: string;
+  price: number | null;
+  old_price: number | null;
+  color_style: string;
+  image: string | null;
+  position: number;
+  active: boolean;
+};
+
+export async function getBurgerSlides(): Promise<BurgerSlide[]> {
+  const {data} = await supabasePublic.from('burger_hero_slides').select('*').eq('active', true).order('position');
+  return (data as BurgerSlide[]) ?? [];
+}
+export async function getBurgerOffers(): Promise<BurgerOffer[]> {
+  const {data} = await supabasePublic.from('burger_offers').select('*').eq('active', true).order('position');
+  return (data as BurgerOffer[]) ?? [];
+}
+export async function getBurgerSlidesAdmin(): Promise<BurgerSlide[]> {
+  const supabase = await createClient();
+  const {data} = await supabase.from('burger_hero_slides').select('*').order('position');
+  return (data as BurgerSlide[]) ?? [];
+}
+export async function getBurgerOffersAdmin(): Promise<BurgerOffer[]> {
+  const supabase = await createClient();
+  const {data} = await supabase.from('burger_offers').select('*').order('position');
+  return (data as BurgerOffer[]) ?? [];
+}

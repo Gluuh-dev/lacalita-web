@@ -1,5 +1,5 @@
 import {setRequestLocale} from 'next-intl/server';
-import {getMenu, getAllergens} from '@/lib/queries';
+import {getMenu, getAllergens, getBurgerSlides, getBurgerOffers} from '@/lib/queries';
 import {altLanguages} from '@/lib/site';
 import BurgerLanding from '@/components/burger/burger-landing';
 
@@ -17,6 +17,6 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
 export default async function HamburgueseriaPage({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
   setRequestLocale(locale);
-  const [menu, allergens] = await Promise.all([getMenu('hamburgueseria'), getAllergens()]);
-  return <BurgerLanding menu={menu} allergens={allergens} locale={locale} />;
+  const [menu, allergens, slides, offers] = await Promise.all([getMenu('hamburgueseria'), getAllergens(), getBurgerSlides(), getBurgerOffers()]);
+  return <BurgerLanding menu={menu} allergens={allergens} slides={slides} offers={offers} locale={locale} />;
 }

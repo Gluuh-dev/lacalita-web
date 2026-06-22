@@ -90,22 +90,22 @@
   --line-strong: #d6c6ad;
 }
 
-/* Tema Hamburguesería */
+/* Tema Hamburguesería — oscuro, igual que la landing */
 [data-theme='burger'] {
-  --bg: #fcfaf8;
-  --surface: #ffffff;
-  --surface-2: #fbf3ec;
-  --surface-sunken: #f6ece3;
+  --bg: #1a1209;
+  --surface: #241910;
+  --surface-2: #1f1610;
+  --surface-sunken: #2a1d12;
   --brand: #f26b21;
   --brand-deep: #d4530f;
   --on-primary: #ffffff;
-  --ink: #140f1f;
-  --ink-2: #45404e;
-  --ink-3: #8b8690;
+  --ink: #f4ede2;
+  --ink-2: #cabfb1;
+  --ink-3: #8f8576;
   --accent: #fedb71;
-  --accent-soft: #fff6dc;
-  --line: #efe2d6;
-  --line-strong: #e2cdb9;
+  --accent-soft: #382a14;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
 }
 
 /* Tokens compartidos del Design System */
