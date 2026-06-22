@@ -50,12 +50,7 @@ export function FxVideo({src, behind, x = 62, y = 50, scale = 1.1}: {src: string
         playsInline
         preload="metadata"
         className="h-full w-full object-cover"
-        style={{
-          mixBlendMode: 'screen',
-          opacity: 0.85,
-          WebkitMaskImage: 'radial-gradient(ellipse 60% 72% at 50% 50%, #000 46%, transparent 80%)',
-          maskImage: 'radial-gradient(ellipse 60% 72% at 50% 50%, #000 46%, transparent 80%)'
-        }}
+        style={{mixBlendMode: 'screen'}}
       />
     </div>
   );
