@@ -286,6 +286,9 @@ export type BurgerSlide = {
   price_y: number;
   fx_video: string;
   fx_video_behind: boolean;
+  fx_video_x: number;
+  fx_video_y: number;
+  fx_video_scale: number;
 };
 export type BurgerOffer = {
   id: string;

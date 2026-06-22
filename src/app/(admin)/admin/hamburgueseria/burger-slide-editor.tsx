@@ -77,6 +77,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [priceY, setPriceY] = useState(slide?.price_y ?? 14);
   const [fxVideo, setFxVideo] = useState(slide?.fx_video ?? '');
   const [fxVideoBehind, setFxVideoBehind] = useState(slide?.fx_video_behind ?? false);
+  const [fxVideoX, setFxVideoX] = useState(slide?.fx_video_x ?? 62);
+  const [fxVideoY, setFxVideoY] = useState(slide?.fx_video_y ?? 50);
+  const [fxVideoScale, setFxVideoScale] = useState(slide?.fx_video_scale ?? 1.1);
 
   function save() {
     start(async () => {
@@ -107,7 +110,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         title_y: titleY,
         price_y: priceY,
         fx_video: fxVideo,
-        fx_video_behind: fxVideoBehind
+        fx_video_behind: fxVideoBehind,
+        fx_video_x: fxVideoX,
+        fx_video_y: fxVideoY,
+        fx_video_scale: fxVideoScale
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -300,12 +306,28 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               </SelectContent>
             </Select>
             {fxVideo && (
-              <label className="mt-2 flex items-center justify-between text-sm">
-                Vídeo detrás de la hamburguesa
-                <button type="button" onClick={() => setFxVideoBehind((v) => !v)} aria-label="Detrás" className={`relative h-6 w-10 rounded-full transition ${fxVideoBehind ? 'bg-brand' : 'bg-line-strong'}`}>
-                  <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${fxVideoBehind ? 'left-[18px]' : 'left-0.5'}`} />
-                </button>
-              </label>
+              <>
+                <label className="mt-2 flex items-center justify-between text-sm">
+                  Vídeo detrás de la hamburguesa
+                  <button type="button" onClick={() => setFxVideoBehind((v) => !v)} aria-label="Detrás" className={`relative h-6 w-10 rounded-full transition ${fxVideoBehind ? 'bg-brand' : 'bg-line-strong'}`}>
+                    <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${fxVideoBehind ? 'left-[18px]' : 'left-0.5'}`} />
+                  </button>
+                </label>
+                <div className="mt-2 grid grid-cols-3 gap-3">
+                  <div>
+                    <Label>Horizontal · {Math.round(fxVideoX)}%</Label>
+                    <input type="range" min={0} max={100} value={fxVideoX} onChange={(e) => setFxVideoX(+e.target.value)} className="w-full accent-brand" />
+                  </div>
+                  <div>
+                    <Label>Vertical · {Math.round(fxVideoY)}%</Label>
+                    <input type="range" min={0} max={100} value={fxVideoY} onChange={(e) => setFxVideoY(+e.target.value)} className="w-full accent-brand" />
+                  </div>
+                  <div>
+                    <Label>Tamaño · {Math.round(fxVideoScale * 100)}%</Label>
+                    <input type="range" min={0.5} max={2} step={0.05} value={fxVideoScale} onChange={(e) => setFxVideoScale(+e.target.value)} className="w-full accent-brand" />
+                  </div>
+                </div>
+              </>
             )}
           </div>
           <label className="mt-3 flex items-center justify-between text-sm">
@@ -363,7 +385,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           titleY,
           priceY,
           fxVideo,
-          fxVideoBehind
+          fxVideoBehind,
+          fxVideoX,
+          fxVideoY,
+          fxVideoScale
         }}
       />
     </div>
