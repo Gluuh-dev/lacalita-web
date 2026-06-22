@@ -3,6 +3,7 @@ import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin, Settings, Star, Heart, ArrowRight, Globe} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product} from '@/lib/queries';
+import BurgerHero from './burger-hero';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
@@ -44,8 +45,10 @@ export default function BurgerLanding({menu, allergens, locale}: {menu: Menu | n
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
   const offers = products.filter((p) => p.tag || p.old_price != null).sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).slice(0, 3);
   const favorites = [...products].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).filter((p) => p.featured || (p.votes ?? 0) > 0).slice(0, 3);
-  const highlight = offers[0] ?? favorites[0] ?? products[0] ?? null;
-  const heroImg = menu?.header_image ?? highlight?.image ?? null;
+  const newOrFeat = products.filter((p) => p.is_new || p.featured);
+  const heroPool = (newOrFeat.length ? newOrFeat : products).slice(0, 6);
+  const heroSlides = heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? 'Nuevo' : p.tag || 'De siempre'}));
+  const hero = heroSlides.length ? heroSlides : [{image: null, name: 'La Calita Burger', price: null, eyebrow: 'Próximamente'}];
 
   const nav = [
     {label: 'Carta', href: `/carta/hamburgueseria`},
@@ -82,51 +85,8 @@ export default function BurgerLanding({menu, allergens, locale}: {menu: Menu | n
         </div>
       </header>
 
-      {/* ---- Hero ---- */}
-      <section className="relative overflow-hidden">
-        {/* anillos concéntricos decorativos */}
-        <div aria-hidden className="pointer-events-none absolute -right-40 top-1/2 size-[820px] -translate-y-1/2 rounded-full" style={{border: '1px solid rgba(231,180,106,.08)', boxShadow: '0 0 0 90px rgba(231,180,106,.04), 0 0 0 200px rgba(231,180,106,.03)'}} />
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/logo-solo.svg" alt="" className="h-14 w-auto" style={{filter: `drop-shadow(0 0 1px ${C.gold})`}} />
-              <span className="font-modern text-4xl tracking-wide" style={{color: C.ink}}>LA CALITA</span>
-            </div>
-            <div className="mt-2 font-adam text-[0.72rem] uppercase tracking-[0.28em]" style={{color: C.gold}}>Smash Burgers · A pie de playa</div>
-            <p className="mt-6 max-w-md text-lg leading-relaxed" style={{color: C.muted}}>
-              Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: C.orange, color: '#fff'}}>
-                <UtensilsCrossed className="size-4" /> Ver la carta
-              </Link>
-              <a href="#local" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10">
-                <MapPin className="size-4" /> Cómo llegar
-              </a>
-            </div>
-          </div>
-
-          <div className="relative flex min-h-[360px] items-center justify-center">
-            {highlight && <div className="absolute top-2 font-adam text-[0.7rem] uppercase tracking-[0.32em]" style={{color: C.gold}}>Crujiente</div>}
-            {highlight && <div className="absolute top-8 text-center font-eight text-5xl leading-none text-white md:text-6xl">{tx(highlight.name, locale)}</div>}
-            {heroImg ? (
-              <div className="relative mt-16 aspect-square w-full max-w-sm">
-                <Image src={heroImg} alt={highlight ? tx(highlight.name, locale) : 'Hamburguesa'} fill sizes="(min-width:768px) 24rem, 90vw" className="object-contain drop-shadow-2xl" />
-              </div>
-            ) : (
-              <div className="mt-16 flex aspect-square w-full max-w-sm items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/30">
-                <UtensilsCrossed className="size-16" />
-              </div>
-            )}
-            {highlight?.price != null && (
-              <div className="absolute bottom-0 font-eight text-4xl" style={{color: C.ink}}>
-                {euro(highlight.price, locale)}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
+      <BurgerHero slides={hero} locale={locale} />
 
       {/* ---- Marquesina diagonal ---- */}
       <div className="relative my-2 overflow-hidden">
