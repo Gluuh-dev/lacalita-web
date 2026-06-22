@@ -11,6 +11,7 @@ export type MenuItem = {
   menuSlug: string;
   video?: string | null;
   desc?: string;
+  ingredients?: string[];
   allergens?: {code: string; icon: string; name: Record<string, string>}[];
 };
 

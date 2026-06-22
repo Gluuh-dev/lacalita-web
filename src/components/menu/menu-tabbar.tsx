@@ -254,6 +254,16 @@ function ProductModal({locale}: {locale: string}) {
           <h2 className="font-serif text-2xl font-bold">{it.name}</h2>
           {it.desc && <p className="mt-1 leading-relaxed text-ink-2">{it.desc}</p>}
           {it.price != null && <p className="mt-3 text-xl font-bold text-brand-deep">{euro(it.price, locale)}</p>}
+          {it.ingredients && it.ingredients.length > 0 && (
+            <div className="mt-3">
+              <div className="mb-1.5 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">Lleva</div>
+              <div className="flex flex-wrap gap-1.5">
+                {it.ingredients.map((ing, i) => (
+                  <span key={i} className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-ink-2">{ing}</span>
+                ))}
+              </div>
+            </div>
+          )}
           {it.allergens && it.allergens.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {it.allergens.map((a) => (

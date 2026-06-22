@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import MediaUpload from '@/components/admin/media-upload';
+import HeroMedia from '@/components/admin/hero-media';
 import AllergenIcon from '@/components/allergen-icon';
 import {tx} from '@/lib/localize';
 import {slugify} from '@/lib/slug';
@@ -52,7 +52,18 @@ export default function ProductForm({
   const [featured, setFeatured] = useState(product?.featured ?? false);
   const [isNew, setIsNew] = useState(product?.is_new ?? false);
   const [tag, setTag] = useState(product?.tag ?? '');
+  const [ingredients, setIngredients] = useState<string[]>(product?.ingredients ?? []);
+  const [ingInput, setIngInput] = useState('');
   const [available, setAvailable] = useState(product?.available ?? true);
+
+  function commitIngredients(raw: string) {
+    const parts = raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length) setIngredients((a) => [...a, ...parts]);
+    setIngInput('');
+  }
   const [variants, setVariants] = useState<{name: string; price: string}[]>(
     (product?.product_variants ?? []).map((v) => ({
       name: v.name?.es ?? '',
@@ -99,6 +110,7 @@ export default function ProductForm({
         featured,
         is_new: isNew,
         tag: tag.trim() || null,
+        ingredients,
         available,
         position: Number(f.position) || 0,
         variants: cleanVariants,
@@ -148,6 +160,39 @@ export default function ProductForm({
           value={f.description}
           onChange={(e) => setF({...f, description: e.target.value})}
         />
+      </div>
+
+      <div>
+        <Label>Ingredientes (escribe y pulsa coma o Enter para añadir otro)</Label>
+        <div className="flex flex-wrap items-center gap-2 rounded-[14px] border border-line bg-surface p-2">
+          {ingredients.map((ing, i) => (
+            <span key={i} className="inline-flex items-center gap-1 rounded-full bg-surface-sunken px-2.5 py-1 text-sm">
+              {ing}
+              <button type="button" onClick={() => setIngredients((a) => a.filter((_, j) => j !== i))} aria-label="Quitar" className="text-ink-3 hover:text-danger">
+                ✕
+              </button>
+            </span>
+          ))}
+          <input
+            value={ingInput}
+            onChange={(e) => {
+              if (e.target.value.includes(',')) commitIngredients(e.target.value);
+              else setIngInput(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                commitIngredients(ingInput);
+              } else if (e.key === 'Backspace' && !ingInput && ingredients.length) {
+                setIngredients((a) => a.slice(0, -1));
+              }
+            }}
+            onBlur={() => ingInput.trim() && commitIngredients(ingInput)}
+            placeholder={ingredients.length ? 'Otro…' : 'Ternera, cheddar, lechuga…'}
+            className="min-w-[8rem] flex-1 bg-transparent px-1 py-1 text-sm outline-none"
+          />
+        </div>
+        <p className="mt-1 text-xs text-ink-3">Aparte de la descripción. Ej. para hamburguesas: lo que lleva.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -238,12 +283,25 @@ export default function ProductForm({
       </div>
 
       <div>
-        <Label>Imagen</Label>
-        <MediaUpload value={image} onChange={setImage} />
-      </div>
-      <div>
-        <Label>Vídeo</Label>
-        <MediaUpload kind="video" value={video} onChange={setVideo} />
+        <Label>Imagen o vídeo (arrastra o pulsa · detecta el tipo)</Label>
+        <HeroMedia
+          media={video || image || ''}
+          mediaType={video ? 'video' : 'image'}
+          poster={video ? image ?? undefined : undefined}
+          onSet={(m) => {
+            if (m.mediaType === 'video') {
+              setVideo(m.media);
+              if (m.poster) setImage(m.poster);
+            } else {
+              setImage(m.media);
+              setVideo(null);
+            }
+          }}
+          onClear={() => {
+            setVideo(null);
+            setImage(null);
+          }}
+        />
       </div>
 
       <div>

@@ -11,7 +11,7 @@ const intl = createMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    const response = NextResponse.next({request});
+    let response = NextResponse.next({request});
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -19,6 +19,10 @@ export async function proxy(request: NextRequest) {
         cookies: {
           getAll: () => request.cookies.getAll(),
           setAll: (cookiesToSet) => {
+            // Patrón oficial Supabase SSR: escribir las cookies refrescadas también
+            // en la REQUEST, para que la Server Action lea el token nuevo (no el caducado).
+            cookiesToSet.forEach(({name, value}) => request.cookies.set(name, value));
+            response = NextResponse.next({request});
             cookiesToSet.forEach(({name, value, options}) =>
               response.cookies.set(name, value, options)
             );

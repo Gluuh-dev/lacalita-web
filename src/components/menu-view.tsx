@@ -39,6 +39,7 @@ export default async function MenuView({
       menuSlug: menu.slug,
       video: p.video,
       desc: p.description ? tx(p.description, locale) : undefined,
+      ingredients: p.ingredients ?? [],
       allergens: (p.product_allergens ?? [])
         .map((pa) => pa.allergens)
         .filter((a): a is NonNullable<typeof a> => !!a)

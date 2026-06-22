@@ -25,6 +25,7 @@ export default function ProductItem({
     menuSlug,
     video: product.video ?? null,
     desc: product.description ? tx(product.description, locale) : undefined,
+    ingredients: product.ingredients ?? [],
     allergens: (product.product_allergens ?? [])
       .map((pa) => pa.allergens)
       .filter((a): a is NonNullable<typeof a> => !!a)
@@ -37,7 +38,14 @@ export default function ProductItem({
     <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 shadow-sm sm:flex-col sm:gap-0 sm:p-0">
       <button onClick={() => setOpen(item)} className="ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
         {item.video ? (
-          <video src={item.video} poster={item.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+          <video
+            src={item.video}
+            poster={item.image ?? undefined}
+            muted
+            playsInline
+            preload="metadata"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          />
         ) : item.image ? (
           <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
         ) : (
