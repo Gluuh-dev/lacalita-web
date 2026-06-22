@@ -20,8 +20,8 @@ function Rings() {
       fill="none"
       style={{maskImage: 'radial-gradient(circle at center, #000 0%, #000 35%, transparent 62%)', WebkitMaskImage: 'radial-gradient(circle at center, #000 0%, #000 35%, transparent 62%)'}}
     >
-      {Array.from({length: 22}).map((_, i) => (
-        <circle key={i} cx="500" cy="500" r={60 + i * 38} stroke={GOLD} strokeWidth="1.1" opacity="0.5" />
+      {Array.from({length: 44}).map((_, i) => (
+        <circle key={i} cx="500" cy="500" r={40 + i * 19} stroke={GOLD} strokeWidth="1" opacity="0.5" />
       ))}
     </svg>
   );
