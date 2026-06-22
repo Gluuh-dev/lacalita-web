@@ -84,8 +84,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </div>
               <h1
                 key={'n' + i}
-                className="lc-bfade pointer-events-none absolute left-0 right-0 top-[10%] z-[3] m-0 text-center font-eight uppercase text-white"
-                style={{fontSize: 'clamp(2.6rem,8vw,6rem)', lineHeight: 0.82, letterSpacing: '0.01em', textShadow: '0 10px 40px rgba(0,0,0,.7)'}}
+                className="lc-bfade pointer-events-none absolute left-0 right-0 top-[9%] z-[3] m-0 text-center font-eight font-extrabold uppercase text-white"
+                style={{fontSize: 'clamp(3rem,9.5vw,7.2rem)', lineHeight: 0.82, letterSpacing: '0.01em', textShadow: '0 10px 40px rgba(0,0,0,.7)'}}
               >
                 {cur.name}
               </h1>
@@ -103,8 +103,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 </div>
               )}
               {cur.price != null && (
-                <div key={'p' + i} className="lc-bfade pointer-events-none absolute bottom-[7%] left-0 right-0 z-[4] flex justify-center">
-                  <span className="font-eight text-white" style={{fontSize: 'clamp(2.6rem,6.5vw,5rem)', lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
+                <div key={'p' + i} className="lc-bfade pointer-events-none absolute bottom-[14%] left-0 right-0 z-[4] flex justify-center">
+                  <span className="font-eight font-extrabold" style={{fontSize: 'clamp(3.2rem,8vw,6.2rem)', lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
             </>
