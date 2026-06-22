@@ -10,6 +10,23 @@ export type HeroSlide = {image: string | null; name: string; price: number | nul
 
 const GOLD = '#e9ae74';
 
+function Rings() {
+  const tr = Array.from({length: 34}, (_, k) => 100 + k * 34);
+  const bl = Array.from({length: 18}, (_, k) => 80 + k * 38);
+  return (
+    <svg aria-hidden viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="pointer-events-none absolute inset-0 h-full w-full">
+      <g fill="none" stroke={GOLD} strokeWidth="1">
+        {tr.map((r, k) => (
+          <circle key={`t${k}`} cx="1440" cy="0" r={r} strokeOpacity={Math.max(0.03, 0.22 - r / 6500)} />
+        ))}
+        {bl.map((r, k) => (
+          <circle key={`b${k}`} cx="0" cy="900" r={r} strokeOpacity={Math.max(0.03, 0.16 - r / 6000)} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
   const n = slides.length;
@@ -28,35 +45,36 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       style={{background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}
     >
-      {/* Anillos arriba-derecha */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-0 top-0 h-[92%] w-[72%]"
-        style={{
-          backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 30px, rgba(233,174,116,.17) 30px 33px)',
-          WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)',
-          maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'
-        }}
-      />
-      {/* Anillos abajo-izquierda */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 h-[78%] w-[58%]"
-        style={{
-          backgroundImage: 'repeating-radial-gradient(circle at 0% 100%, transparent 0 28px, rgba(233,174,116,.12) 28px 31px)',
-          WebkitMaskImage: 'radial-gradient(circle at 0% 100%, #000 0%, transparent 60%)',
-          maskImage: 'radial-gradient(circle at 0% 100%, #000 0%, transparent 60%)'
-        }}
-      />
+      <Rings />
       {/* Destellos fríos (azulados) */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(86,140,205,.16), transparent 62%)'}} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(86,140,205,.13), transparent 60%)'}} />
 
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
-        <div className="min-w-0">
+        <div className="min-w-0 text-center md:text-left">
+          {/* Logo: solo símbolo en móvil, wordmark en escritorio */}
           <span
-            className="block w-[min(285px,80vw)]"
+            className="mx-auto block md:hidden"
+            aria-label="La Calita"
+            role="img"
+            style={{
+              height: 72,
+              aspectRatio: '1.15',
+              backgroundColor: GOLD,
+              WebkitMaskImage: 'url(/brand/logo-solo.svg)',
+              maskImage: 'url(/brand/logo-solo.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              filter: 'drop-shadow(0 8px 24px rgba(0,0,0,.5))'
+            }}
+          />
+          <span
+            className="hidden w-[min(285px,80vw)] md:block"
             aria-label="La Calita"
             role="img"
             style={{
@@ -73,8 +91,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             }}
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: GOLD}}>Smash burgers · a pie de playa</div>
-          <p className="mt-6 max-w-[36ch] text-lg leading-relaxed text-[#f4ede2]/60">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed text-[#f4ede2]/60 md:mx-0">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:justify-start">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: GOLD, color: '#2a1c08'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
             </Link>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {UtensilsCrossed, MapPin, Settings, Star, Heart, ArrowRight, Globe} from 'lucide-react';
+import {UtensilsCrossed, MapPin, Star, Heart, ArrowRight} from 'lucide-react';
+import BurgerHeader from './burger-header';
 import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
@@ -50,40 +51,10 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
   const heroSlides = fromSlides.length ? fromSlides : heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? 'Nuevo' : p.tag || 'De siempre'}));
   const hero = heroSlides.length ? heroSlides : [{image: null, name: 'La Calita Burger', price: null, eyebrow: 'Próximamente'}];
 
-  const nav = [
-    {label: 'Carta', href: `/carta/hamburgueseria`},
-    {label: 'Ofertas', href: '#ofertas'},
-    {label: 'Local', href: '#local'}
-  ];
-
   return (
     <main style={{background: C.bg, color: C.ink}} className="min-h-screen font-sans">
-      {/* ---- Cabecera (superpuesta sobre el hero) ---- */}
-      <header className="absolute inset-x-0 top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
-          <Link href="/hamburgueseria" aria-label="La Calita Burger">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/logo-solo.svg" alt="" className="h-8 w-auto brightness-0 invert" />
-          </Link>
-          <nav className="flex items-center gap-6 font-adam text-[0.7rem] uppercase tracking-[0.18em]">
-            {nav.map((n) =>
-              n.href.startsWith('#') ? (
-                <a key={n.label} href={n.href} className="text-white/75 transition hover:text-white">{n.label}</a>
-              ) : (
-                <Link key={n.label} href={n.href} className="text-white/75 transition hover:text-white">{n.label}</Link>
-              )
-            )}
-          </nav>
-          <div className="flex items-center gap-4 text-white/70">
-            <a href="/admin" className="flex items-center gap-1.5 text-[0.7rem] uppercase tracking-[0.14em] transition hover:text-white">
-              <Settings className="size-3.5" /> Admin
-            </a>
-            <span className="flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[0.7rem] uppercase">
-              <Globe className="size-3.5" /> {locale.toUpperCase()}
-            </span>
-          </div>
-        </div>
-      </header>
+      {/* ---- Cabecera (responsive) ---- */}
+      <BurgerHeader locale={locale} />
 
       {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
       <BurgerHero slides={hero} locale={locale} />
@@ -111,14 +82,14 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         {offers.length === 0 ? (
           <p style={{color: C.muted}}>Aún no hay ofertas. Créalas en el admin → Hamburguesería.</p>
         ) : (
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
             {offers.map((o) => {
               const st = OFFER_STYLES[o.color_style] ?? OFFER_STYLES.orange;
               const oTitle = tx(o.title, locale);
               const oEyebrow = tx(o.eyebrow, locale);
               const oDesc = tx(o.description, locale);
               return (
-                <article key={o.id} className="relative flex min-h-[340px] flex-col overflow-hidden rounded-[22px] p-6" style={{background: st.card, color: st.text}}>
+                <article key={o.id} className="relative flex min-h-[340px] w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] p-6 md:w-auto md:shrink" style={{background: st.card, color: st.text}}>
                   {o.discount_label && (
                     <span className="absolute -right-9 top-5 z-10 rotate-45 px-10 py-1 text-center text-xs font-bold" style={{background: st.ribbon, color: st.ribbonText}}>{o.discount_label}</span>
                   )}
@@ -167,9 +138,9 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         {favorites.length === 0 ? (
           <p style={{color: C.muted}}>Marca productos como destacados (o con votos) para que salgan aquí.</p>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
             {favorites.map((p, i) => (
-              <Link key={p.id} href={`/carta/hamburgueseria/${p.slug}`} className="group flex flex-col overflow-hidden rounded-[20px] border border-white/8" style={{background: 'linear-gradient(180deg,#241910,#160f08)'}}>
+              <Link key={p.id} href={`/carta/hamburgueseria/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-white/8 sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#241910,#160f08)'}}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
