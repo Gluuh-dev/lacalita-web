@@ -28,16 +28,29 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       style={{background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}
     >
-      {/* Anillos: repeating-radial desde la esquina, difuminados con máscara */}
+      {/* Anillos arriba-derecha */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-0 top-0 h-[85%] w-[70%]"
+        className="pointer-events-none absolute right-0 top-0 h-[92%] w-[72%]"
         style={{
-          backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 34px, rgba(233,174,116,.16) 34px 37px)',
-          WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 68%)',
-          maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 68%)'
+          backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 30px, rgba(233,174,116,.17) 30px 33px)',
+          WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)',
+          maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'
         }}
       />
+      {/* Anillos abajo-izquierda */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 h-[78%] w-[58%]"
+        style={{
+          backgroundImage: 'repeating-radial-gradient(circle at 0% 100%, transparent 0 28px, rgba(233,174,116,.12) 28px 31px)',
+          WebkitMaskImage: 'radial-gradient(circle at 0% 100%, #000 0%, transparent 60%)',
+          maskImage: 'radial-gradient(circle at 0% 100%, #000 0%, transparent 60%)'
+        }}
+      />
+      {/* Destellos fríos (azulados) */}
+      <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(86,140,205,.16), transparent 62%)'}} />
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(86,140,205,.13), transparent 60%)'}} />
 
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
