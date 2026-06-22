@@ -8,12 +8,14 @@ export default function Drawer({
   title,
   onClose,
   width = 520,
+  flush = false,
   children
 }: {
   open: boolean;
   title: string;
   onClose: () => void;
   width?: number;
+  flush?: boolean; // el hijo gestiona su propio scroll + footer (sin padding)
   children: React.ReactNode;
 }) {
   useEffect(() => {
@@ -46,7 +48,11 @@ export default function Drawer({
             <X className="size-5" />
           </button>
         </header>
-        <div className="flex-1 overflow-auto p-5">{children}</div>
+        {flush ? (
+          <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+        ) : (
+          <div className="flex-1 overflow-auto p-5">{children}</div>
+        )}
       </div>
     </div>
   );

@@ -129,12 +129,16 @@ export default function ProductForm({
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="flex h-full min-h-0 flex-col">
+      <div className="flex-1 space-y-4 overflow-y-auto p-5">
       <div>
         <Label>Categoría</Label>
         <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? '')}>
           <SelectTrigger>
-            <SelectValue placeholder="Elige categoría" />
+            {(() => {
+              const c = menus.flatMap((m) => m.categories).find((x) => x.id === categoryId);
+              return <span className={c ? '' : 'text-ink-3'}>{c ? tx(c.name, 'es') : 'Elige categoría'}</span>;
+            })()}
           </SelectTrigger>
           <SelectContent>
             {menus.map((m) => (
@@ -327,7 +331,9 @@ export default function ProductForm({
         </label>
       </div>
 
-      <div className="sticky bottom-0 z-10 -mx-5 -mb-5 mt-2 flex gap-3 border-t border-line bg-bg px-5 py-3">
+      </div>
+
+      <div className="flex shrink-0 gap-3 border-t border-line bg-bg p-4">
         <button type="button" onClick={() => (onSaved ? onSaved() : router.push('/admin/productos'))} className={`${btnGhost} flex-1`}>
           Cancelar
         </button>

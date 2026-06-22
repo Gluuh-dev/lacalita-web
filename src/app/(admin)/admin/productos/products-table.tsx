@@ -182,7 +182,7 @@ export default function ProductsTable({products, menus, allergens}: {products: R
         </div>
       )}
 
-      <Drawer open={open} title={edit ? 'Editar producto' : 'Nuevo producto'} onClose={() => setEdit(undefined)}>
+      <Drawer open={open} title={edit ? 'Editar producto' : 'Nuevo producto'} onClose={() => setEdit(undefined)} flush>
         {open && <ProductForm id={edit ? edit.id : null} product={edit ?? null} menus={menus} allergens={allergens} onSaved={() => setEdit(undefined)} />}
       </Drawer>
     </>
