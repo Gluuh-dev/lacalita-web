@@ -16,6 +16,9 @@ export type HeroSlide = {
   behind?: boolean;
   bgEffect?: string;
   bgImage?: string | null;
+  titleScale?: number;
+  eyebrowScale?: number;
+  priceScale?: number;
 };
 
 const GOLD = '#e9ae74';
@@ -144,7 +147,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           {cur && (
             <>
               <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
-                <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: 'clamp(0.7rem,1.4vw,0.92rem)', color: GOLD}}>
+                <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: `calc(clamp(0.7rem,1.4vw,0.92rem) * ${cur.eyebrowScale ?? 1})`, color: GOLD}}>
                   <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
                   {cur.eyebrow}
                   <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
@@ -157,7 +160,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
                   color: cur.color || '#ffffff',
                   zIndex: cur.behind ? 1 : 3,
-                  fontSize: 'clamp(3rem,9.5vw,7.2rem)',
+                  fontSize: `calc(clamp(3rem,9.5vw,7.2rem) * ${cur.titleScale ?? 1})`,
                   lineHeight: 0.82,
                   letterSpacing: '0.01em',
                   textShadow: '0 10px 40px rgba(0,0,0,.7)',
@@ -181,7 +184,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               )}
               {cur.price != null && (
                 <div key={'p' + i} className="lc-bfade pointer-events-none absolute bottom-[14%] left-0 right-0 z-[4] flex justify-center" style={{animationDelay: '0.16s'}}>
-                  <span className="font-eight font-extrabold" style={{fontSize: 'clamp(3.2rem,8vw,6.2rem)', lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
+                  <span className="font-eight font-extrabold" style={{fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, color: GOLD, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
             </>

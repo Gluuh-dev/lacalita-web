@@ -271,6 +271,9 @@ export type BurgerSlide = {
   title_behind: boolean;
   bg_effect: string;
   bg_image: string | null;
+  title_scale: number;
+  eyebrow_scale: number;
+  price_scale: number;
 };
 export type BurgerOffer = {
   id: string;
