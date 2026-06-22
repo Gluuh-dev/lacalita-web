@@ -284,6 +284,7 @@ export type BurgerSlide = {
   price_gradient: string;
   title_y: number;
   price_y: number;
+  fx_video: string;
 };
 export type BurgerOffer = {
   id: string;

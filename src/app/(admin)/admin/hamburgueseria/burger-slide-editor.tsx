@@ -32,6 +32,11 @@ const EFFECTS: [string, string][] = [
   ['none', 'Ninguno (degradado)'],
   ['image', 'Imagen de fondo']
 ];
+const FX_VIDEOS: [string, string][] = [
+  ['none', 'Ninguno'],
+  ['/burger/fx/fx1.mp4', 'Vídeo 1'],
+  ['/burger/fx/fx2.mp4', 'Vídeo 2']
+];
 const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
   ['gold', 'Degradado dorado'],
@@ -71,6 +76,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [priceGradient, setPriceGradient] = useState(slide?.price_gradient ?? '');
   const [titleY, setTitleY] = useState(slide?.title_y ?? 10);
   const [priceY, setPriceY] = useState(slide?.price_y ?? 14);
+  const [fxVideo, setFxVideo] = useState(slide?.fx_video ?? '');
 
   function save() {
     start(async () => {
@@ -99,7 +105,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         price_color: priceColor,
         price_gradient: priceGradient,
         title_y: titleY,
-        price_y: priceY
+        price_y: priceY,
+        fx_video: fxVideo
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -279,6 +286,19 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <label className="flex items-center gap-2 text-sm"><Checkbox checked={fxSmoke} onCheckedChange={(v) => setFxSmoke(v === true)} /> Humo</label>
             </div>
           </div>
+          <div className="mt-3">
+            <Label>Vídeo de efecto (se elimina el fondo negro)</Label>
+            <Select value={fxVideo || 'none'} onValueChange={(v) => setFxVideo(v === 'none' ? '' : (v ?? ''))}>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {FX_VIDEOS.map(([v, l]) => (
+                    <SelectItem key={v} value={v}>{l}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <label className="mt-3 flex items-center justify-between text-sm">
             Mostrar anillos dorados
             <button type="button" onClick={() => setShowRings((v) => !v)} aria-label="Anillos" className={`relative h-6 w-10 rounded-full transition ${showRings ? 'bg-brand' : 'bg-line-strong'}`}>
@@ -332,7 +352,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           priceColor,
           priceGradient,
           titleY,
-          priceY
+          priceY,
+          fxVideo
         }}
       />
     </div>

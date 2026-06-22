@@ -36,6 +36,22 @@ export function Sparks() {
   );
 }
 
+/** Vídeo de efecto (humo/fuego) con el negro eliminado vía mezcla "screen". */
+export function FxVideo({src}: {src: string}) {
+  return (
+    <video
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="metadata"
+      className="pointer-events-none absolute inset-0 z-[5] h-full w-full object-cover"
+      style={{mixBlendMode: 'screen', opacity: 0.9}}
+    />
+  );
+}
+
 /** Humo animado suave (encima de la hamburguesa). */
 export function Smoke() {
   return (

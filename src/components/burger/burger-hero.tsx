@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, FxVideo, titleColorStyle} from './burger-fx';
 
 export type HeroSlide = {
   image: string | null;
@@ -30,6 +30,7 @@ export type HeroSlide = {
   priceGradient?: string;
   titleY?: number;
   priceY?: number;
+  fxVideo?: string;
 };
 
 const GOLD = '#e9ae74';
@@ -199,6 +200,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
+              {cur.fxVideo && <FxVideo src={cur.fxVideo} />}
               {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}
               {(cur.fxSmoke || cur.overlayFx === 'smoke') && <Smoke />}
             </>

@@ -32,6 +32,7 @@ export type SlideInput = {
   price_gradient: string;
   title_y: number;
   price_y: number;
+  fx_video: string;
 };
 export type OfferInput = {
   title: I18nMap;

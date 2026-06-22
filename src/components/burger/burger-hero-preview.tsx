@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, FxVideo, titleColorStyle} from './burger-fx';
 
 const GOLD = '#e9ae74';
 const FONT_CSS: Record<string, string> = {
@@ -37,6 +37,7 @@ export type PreviewCfg = {
   priceGradient: string;
   titleY: number;
   priceY: number;
+  fxVideo: string;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
@@ -97,6 +98,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           {c.price} €
         </div>
       )}
+      {c.fxVideo && <FxVideo src={c.fxVideo} />}
       {c.fxSparks && <Sparks />}
       {c.fxSmoke && <Smoke />}
     </div>
