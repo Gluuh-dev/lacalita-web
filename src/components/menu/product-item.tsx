@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import {Heart, Info, Plus, Minus} from 'lucide-react';
+import {Heart, Info, Plus, Minus, UtensilsCrossed} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import {useMenuStore, type MenuItem} from './store';
 import type {Product} from '@/lib/queries';
@@ -35,10 +35,15 @@ export default function ProductItem({
 
   return (
     <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 shadow-sm sm:flex-col sm:gap-0 sm:p-0">
-      <button onClick={() => setOpen(item)} className="ds-media-zoom relative aspect-square w-24 shrink-0 overflow-hidden rounded-xl bg-surface-sunken sm:aspect-[4/3] sm:w-full sm:rounded-none">
-        {item.image && <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />}
+      <button onClick={() => setOpen(item)} className="ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
+        {item.image ? (
+          <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
+        ) : (
+          <UtensilsCrossed className="size-7" strokeWidth={1.25} />
+        )}
         {item.video && <span className="absolute right-1.5 top-1.5 rounded-full bg-black/55 px-1.5 py-0.5 text-[0.6rem] text-white">▶</span>}
-        <span className="absolute left-1.5 top-1.5 flex gap-1">
+        <span className="absolute left-1.5 top-1.5 flex flex-wrap gap-1">
+          {product.tag && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[0.6rem] font-bold text-white shadow-sm">{product.tag}</span>}
           {product.is_new && <span className="rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-semibold text-white shadow-sm">Nuevo</span>}
           {product.featured && <span className="rounded-full bg-brand px-2 py-0.5 text-[0.6rem] font-semibold text-on-primary shadow-sm">★</span>}
         </span>
@@ -55,7 +60,7 @@ export default function ProductItem({
           <button
             onClick={() => toggleFav(item)}
             aria-label="Favorito"
-            className={`flex size-9 items-center justify-center rounded-full border transition ${fav ? 'border-brand bg-brand/10 text-brand-deep' : 'border-line text-ink-3 hover:border-brand'}`}
+            className={`flex size-9 items-center justify-center rounded-full border transition ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >
             <Heart className="size-4" fill={fav ? 'currentColor' : 'none'} />
           </button>

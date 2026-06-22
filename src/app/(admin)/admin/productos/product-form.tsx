@@ -51,6 +51,7 @@ export default function ProductForm({
   const [video, setVideo] = useState<string | null>(product?.video ?? null);
   const [featured, setFeatured] = useState(product?.featured ?? false);
   const [isNew, setIsNew] = useState(product?.is_new ?? false);
+  const [tag, setTag] = useState(product?.tag ?? '');
   const [available, setAvailable] = useState(product?.available ?? true);
   const [variants, setVariants] = useState<{name: string; price: string}[]>(
     (product?.product_variants ?? []).map((v) => ({
@@ -97,6 +98,7 @@ export default function ProductForm({
         video,
         featured,
         is_new: isNew,
+        tag: tag.trim() || null,
         available,
         position: Number(f.position) || 0,
         variants: cleanVariants,
@@ -242,6 +244,11 @@ export default function ProductForm({
       <div>
         <Label>Vídeo</Label>
         <MediaUpload kind="video" value={video} onChange={setVideo} />
+      </div>
+
+      <div>
+        <Label>Etiqueta (opcional · ej. “2x1”, “En oferta”)</Label>
+        <Input value={tag} onChange={(e) => setTag(e.target.value)} placeholder="Sobre todo para hamburguesas" />
       </div>
 
       <div className="flex gap-6">

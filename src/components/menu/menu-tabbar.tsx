@@ -1,12 +1,11 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import Image from 'next/image';
 import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
-import LangSwitcher from '@/components/lang-switcher';
 import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useMenuStore, type MenuItem} from './store';
 
@@ -104,8 +103,8 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
 function Thumb({item}: {item: MenuItem}) {
   const s = useMenuStore();
   return (
-    <button onClick={() => s.setOpen(item)} className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-surface-sunken">
-      {item.image && <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />}
+    <button onClick={() => s.setOpen(item)} className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong">
+      {item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : <UtensilsCrossed className="size-6" />}
     </button>
   );
 }
@@ -123,7 +122,7 @@ function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
             {it.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(it.price, locale)}</div>}
           </div>
           <button onClick={() => s.add(it)} className="rounded-full bg-brand px-3.5 py-1.5 text-sm font-semibold text-on-primary">Añadir</button>
-          <button onClick={() => s.toggleFav(it)} aria-label="Quitar" className="p-1.5 text-brand-deep">
+          <button onClick={() => s.toggleFav(it)} aria-label="Quitar" className="p-1.5 text-red-500">
             <Heart className="size-5" fill="currentColor" />
           </button>
         </div>
@@ -168,13 +167,10 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
     <div className="fixed inset-0 z-[300] bg-black">
       <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/logo-solo.svg" alt="La Calita" className="h-9 w-auto brightness-0 invert" />
-        <div className="flex items-center gap-2 text-white">
-          <LangSwitcher />
-          <button onClick={onClose} aria-label="Cerrar" className="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
-            <X className="size-5" />
-          </button>
-        </div>
+        <img src="/brand/logo-texto-derecha.svg" alt="La Calita" className="h-9 w-auto brightness-0 invert" />
+        <button onClick={onClose} aria-label="Cerrar" className="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+          <X className="size-5" />
+        </button>
       </div>
       <div className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
         {videos.map((v) => {
@@ -201,7 +197,7 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                   )}
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-3">
-                  <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className="flex size-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+                  <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className={`flex size-12 items-center justify-center rounded-full bg-white/15 backdrop-blur ${fav ? 'text-red-500' : 'text-white'}`}>
                     <Heart className="size-6" fill={fav ? 'currentColor' : 'none'} />
                   </button>
                   {n === 0 ? (
@@ -209,10 +205,10 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                       <Plus className="size-6" />
                     </button>
                   ) : (
-                    <div className="flex flex-col items-center gap-1 rounded-full bg-brand px-1.5 py-2 text-on-primary">
-                      <button onClick={() => s.add(v)} aria-label="Añadir"><Plus className="size-5" /></button>
-                      <span className="text-sm font-bold tabular-nums">{n}</span>
-                      <button onClick={() => s.dec(v.id)} aria-label="Quitar"><Minus className="size-5" /></button>
+                    <div className="flex w-12 flex-col items-center gap-1 rounded-full bg-brand py-2 text-on-primary">
+                      <button onClick={() => s.add(v)} aria-label="Añadir"><Plus className="size-6" /></button>
+                      <span className="text-base font-bold tabular-nums">{n}</span>
+                      <button onClick={() => s.dec(v.id)} aria-label="Quitar"><Minus className="size-6" /></button>
                     </div>
                   )}
                 </div>
@@ -228,22 +224,21 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
 function ProductModal({locale}: {locale: string}) {
   const s = useMenuStore();
   const it = s.open;
-  const [q, setQ] = useState(1);
-  useEffect(() => {
-    setQ(1);
-  }, [it]);
+  const n = it ? s.qty(it.id) : 0;
   if (!it) return null;
   const close = () => s.setOpen(null);
   return (
     <div className="fixed inset-0 z-[320] flex items-end justify-center sm:items-center sm:p-4">
       <div onClick={close} className="absolute inset-0 bg-black/60 duration-200 animate-in fade-in" />
       <div className="relative z-10 w-full max-w-md overflow-hidden rounded-t-[24px] bg-bg shadow-2xl duration-300 animate-in slide-in-from-bottom sm:rounded-[24px] sm:zoom-in-95">
-        <div className="relative aspect-[4/3] bg-surface-sunken">
+        <div className="relative flex aspect-[4/3] items-center justify-center bg-surface-sunken text-line-strong">
           {it.video ? (
-            <video src={it.video} poster={it.image ?? undefined} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+            <video src={it.video} poster={it.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
           ) : it.image ? (
             <Image src={it.image} alt={it.name} fill sizes="448px" className="object-cover" />
-          ) : null}
+          ) : (
+            <UtensilsCrossed className="size-14" strokeWidth={1.25} />
+          )}
           <button onClick={close} aria-label="Cerrar" className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
             <X className="size-5" />
           </button>
@@ -265,13 +260,13 @@ function ProductModal({locale}: {locale: string}) {
         </div>
         <div className="flex items-center gap-3 border-t border-line p-4">
           <div className="flex items-center gap-2">
-            <button onClick={() => setQ((x) => Math.max(1, x - 1))} aria-label="Menos" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Minus className="size-4" /></button>
-            <span className="w-5 text-center font-bold tabular-nums">{q}</span>
-            <button onClick={() => setQ((x) => x + 1)} aria-label="Más" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
+            <button onClick={() => s.dec(it.id)} disabled={n === 0} aria-label="Menos" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary disabled:opacity-40"><Minus className="size-4" /></button>
+            <span className="w-5 text-center font-bold tabular-nums">{n}</span>
+            <button onClick={() => s.add(it)} aria-label="Más" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
           </div>
           <button
             onClick={() => {
-              for (let k = 0; k < q; k++) s.add(it);
+              if (n === 0) s.add(it);
               close();
             }}
             className="flex-1 rounded-full bg-brand py-3 font-semibold text-on-primary transition hover:bg-brand-deep"

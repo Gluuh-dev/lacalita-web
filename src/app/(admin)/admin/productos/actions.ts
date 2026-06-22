@@ -16,6 +16,7 @@ export type ProductInput = {
   video: string | null;
   featured: boolean;
   is_new: boolean;
+  tag: string | null;
   available: boolean;
   position: number;
   variants: {name: string; price: number}[];
@@ -24,6 +25,11 @@ export type ProductInput = {
 
 export async function saveProduct(id: string | null, form: ProductInput) {
   const supabase = await createClient();
+  // Refresca/valida la sesión antes de escribir (evita 0 filas por token caducado).
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+  if (!user) return {ok: false, error: 'Sesión caducada. Vuelve a iniciar sesión.'};
   const slug = form.slug || slugify(form.name);
   const row = {
     category_id: form.category_id,
@@ -35,6 +41,7 @@ export async function saveProduct(id: string | null, form: ProductInput) {
     video: form.video,
     featured: form.featured,
     is_new: form.is_new,
+    tag: form.tag,
     available: form.available,
     position: form.position,
     updated_at: new Date().toISOString()
