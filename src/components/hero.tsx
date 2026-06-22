@@ -176,7 +176,7 @@ export function HeroStage({
               <div style={{marginTop: 34, textAlign: 'center'}}>
                 <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 40, lineHeight: 1.02, color: slide.color}}>{slide.rotulo}</div>
                 {slide.sub && <div style={{fontFamily: FONT.eight, fontSize: 18, letterSpacing: '0.05em', color: '#fff', marginTop: 8}}>{slide.sub}</div>}
-                {slide.eventBtn && <div style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</div>}
+                {slide.eventBtn && <a href={slide.eventBtnLink || '/eventos'} style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</a>}
               </div>
             )}
 
@@ -197,7 +197,7 @@ export function HeroStage({
         <div style={{position: 'absolute', right: 40, top: `${slide.rotuloY != null ? slide.rotuloY : 68}%`, transform: 'translateY(-50%)', textAlign: 'right', maxWidth: 460, zIndex: 4}}>
           <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 56, lineHeight: 1.02, color: slide.color}}>{slide.rotulo}</div>
           {slide.sub && <div style={{fontFamily: FONT.eight, fontSize: 22, letterSpacing: '0.05em', color: '#fff', marginTop: 10}}>{slide.sub}</div>}
-          {slide.eventBtn && <div style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</div>}
+          {slide.eventBtn && <a href={slide.eventBtnLink || '/eventos'} style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</a>}
         </div>
       )}
     </div>

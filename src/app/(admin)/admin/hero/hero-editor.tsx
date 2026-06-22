@@ -266,9 +266,14 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           <div className="flex flex-col gap-3 border-t border-line pt-3">
             <Toggle label="Botón 'Ir al evento' bajo el evento" checked={slide.eventBtn} onChange={(v) => set('eventBtn', v)} />
             {slide.eventBtn && (
-              <Field label="Texto del botón de evento">
-                <input className={inputCls} value={slide.eventBtnText} onChange={(e) => set('eventBtnText', e.target.value)} />
-              </Field>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Texto del botón">
+                  <input className={inputCls} value={slide.eventBtnText} onChange={(e) => set('eventBtnText', e.target.value)} />
+                </Field>
+                <Field label="Enlace (a qué página lleva)">
+                  <input className={inputCls} value={slide.eventBtnLink ?? '/eventos'} onChange={(e) => set('eventBtnLink', e.target.value)} placeholder="/eventos" />
+                </Field>
+              </div>
             )}
           </div>
         </Card>

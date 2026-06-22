@@ -34,6 +34,7 @@ export type HeroSlide = {
   color: string;
   eventBtn: boolean;
   eventBtnText: string;
+  eventBtnLink: string;
   marqueeOn: boolean;
   marquee: string;
   marqueeSpeed: number;
@@ -75,6 +76,7 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   color: '#e9ae74',
   eventBtn: false,
   eventBtnText: 'Ir al evento',
+  eventBtnLink: '/eventos',
   marqueeOn: false,
   marquee: '',
   marqueeSpeed: 18,
