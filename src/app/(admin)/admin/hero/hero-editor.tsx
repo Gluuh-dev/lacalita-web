@@ -8,7 +8,7 @@ import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/
 import HeroMedia from '@/components/admin/hero-media';
 import {HeroPreview} from '@/components/hero';
 import {saveHero} from './actions';
-import {DEFAULT_HERO_SLIDE, type HeroSlide} from '@/lib/hero-types';
+import {DEFAULT_HERO_SLIDE, type HeroSlide, type HeroFont} from '@/lib/hero-types';
 import type {HeroEvent} from '@/lib/hero';
 
 const MODES = [
@@ -44,6 +44,11 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
 
   function set<K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) {
     setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, [k]: v} : s)));
+  }
+  function setLine(i: number, key: 'text' | 'color' | 'font', value: string) {
+    const lines = [0, 1, 2].map((j) => slide.rotuloLines?.[j] ?? {text: '', color: '#ffffff', font: 'romance' as HeroFont});
+    lines[i] = {...lines[i], [key]: value};
+    set('rotuloLines', lines);
   }
   function persist(next: HeroSlide[], msg?: string) {
     setSlides(next);
@@ -189,6 +194,17 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
             </Field>
           </div>
           <div className="grid grid-cols-3 gap-3">
+            <Field label="Tipografía eyebrow">
+              <FontSelect value={slide.eyebrowFont ?? 'adam'} onChange={(v) => set('eyebrowFont', v as HeroFont)} />
+            </Field>
+            <Field label="Tipografía título">
+              <FontSelect value={slide.lemaFont ?? 'display'} onChange={(v) => set('lemaFont', v as HeroFont)} />
+            </Field>
+            <Field label="Tipografía bienvenida">
+              <FontSelect value={slide.bienvenidaFont ?? 'sans'} onChange={(v) => set('bienvenidaFont', v as HeroFont)} />
+            </Field>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
             <Field label={`Tamaño eyebrow · ${Math.round((slide.eyebrowScale ?? 1) * 100)}%`}>
               <input type="range" min={0.6} max={1.6} step={0.05} value={slide.eyebrowScale ?? 1} onChange={(e) => set('eyebrowScale', +e.target.value)} className="w-full accent-brand" />
             </Field>
@@ -231,32 +247,37 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
             <p className="text-sm text-ink-3">Muestra los próximos eventos uno debajo de otro. En PC aparece un panel lateral.</p>
           ) : (
             <>
-              <Field label="Texto del rótulo">
-                <input className={inputCls} value={slide.rotulo} onChange={(e) => set('rotulo', e.target.value)} placeholder="Sunset Sessions" />
-              </Field>
-              <Field label="Subtexto">
-                <input className={inputCls} value={slide.sub} onChange={(e) => set('sub', e.target.value)} placeholder="SÁBADO · 20:00" />
-              </Field>
+              <Toggle label="Rellenar con el próximo evento" checked={!!slide.rotuloAuto} onChange={(v) => set('rotuloAuto', v)} />
+              {slide.rotuloAuto && (
+                <p className="text-sm text-ink-3">Las 3 líneas se rellenan solas con el próximo evento (título · fecha · artista). Elige color y tipografía de cada línea.</p>
+              )}
+              <div className="flex flex-col gap-2">
+                {[0, 1, 2].map((i) => {
+                  const line = slide.rotuloLines?.[i] ?? {text: '', color: '#ffffff', font: 'romance' as HeroFont};
+                  return (
+                    <div key={i} className="rounded-[12px] border border-line p-2.5">
+                      {!slide.rotuloAuto && (
+                        <input className={`${inputCls} mb-2`} value={line.text} placeholder={`Línea ${i + 1}`} onChange={(e) => setLine(i, 'text', e.target.value)} />
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-ink-3">Línea {i + 1}</span>
+                        <div className="ml-auto flex items-center gap-2">
+                          <FontSelect value={line.font} onChange={(v) => setLine(i, 'font', v)} />
+                          <Swatch value={line.color} onPick={(c) => setLine(i, 'color', c)} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </>
           )}
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Tipografía rótulo">
-              <select className={inputCls} value={slide.font} onChange={(e) => set('font', e.target.value as HeroSlide['font'])}>
-                <option value="romance">Modern Romance</option>
-                <option value="eight">Eight One</option>
-                <option value="display">Playfair</option>
-              </select>
-            </Field>
-            <Field label="Animación">
-              <select className={inputCls} value={slide.anim} onChange={(e) => set('anim', e.target.value as HeroSlide['anim'])}>
-                <option value="fade">Fundido</option>
-                <option value="slide">Deslizar</option>
-                <option value="none">Ninguna</option>
-              </select>
-            </Field>
-          </div>
-          <Field label="Color del rótulo">
-            <Swatch value={slide.color} onPick={(c) => set('color', c)} colors={['#e9ae74', '#ffffff', '#fedb71', '#2e6e8e', '#f26b21']} />
+          <Field label="Animación">
+            <select className={inputCls} value={slide.anim} onChange={(e) => set('anim', e.target.value as HeroSlide['anim'])}>
+              <option value="fade">Fundido</option>
+              <option value="slide">Deslizar</option>
+              <option value="none">Ninguna</option>
+            </select>
           </Field>
           {slide.heroMode === 'rotulo' && (
             <Field label={`Posición vertical del rótulo · ${slide.rotuloY ?? 68}%`} hint="Más arriba o más abajo en la pantalla">
@@ -356,6 +377,24 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
         <p className="mt-3 text-center text-sm text-ink-3">Mismas tipografías, proporciones y animación que la web. Pulsa “Recargar” para ver la entrada.</p>
       </div>
     </div>
+  );
+}
+
+const FONT_LABELS: [string, string][] = [
+  ['display', 'Playfair'],
+  ['romance', 'Modern Romance'],
+  ['eight', 'Eight One'],
+  ['adam', 'Adam'],
+  ['sans', 'Geist']
+];
+
+function FontSelect({value, onChange}: {value: string; onChange: (v: string) => void}) {
+  return (
+    <select className={inputCls} value={value} onChange={(e) => onChange(e.target.value)}>
+      {FONT_LABELS.map(([v, l]) => (
+        <option key={v} value={v}>{l}</option>
+      ))}
+    </select>
   );
 }
 

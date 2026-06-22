@@ -10,8 +10,30 @@ import type {HeroSlide} from '@/lib/hero-types';
 const FONT: Record<string, string> = {
   romance: "'Modern Romance', serif",
   eight: "'Eight One', sans-serif",
-  display: 'var(--font-playfair), serif'
+  display: 'var(--font-playfair), serif',
+  adam: "'Adam', sans-serif",
+  sans: 'var(--font-geist), sans-serif'
 };
+
+// Líneas del rótulo: autorrelleno con el próximo evento, manual, o legado (rotulo/sub).
+function getRotuloLines(slide: HeroSlide, events: HeroEvent[]): {text: string; color: string; font: string}[] {
+  const ls = slide.rotuloLines ?? [];
+  if (slide.rotuloAuto && events[0]) {
+    const e = events[0];
+    const out = [
+      {text: e.title, color: ls[0]?.color ?? slide.color ?? '#e9ae74', font: ls[0]?.font ?? slide.font ?? 'romance'},
+      {text: `${e.day} ${e.month} · ${e.time}`, color: ls[1]?.color ?? '#ffffff', font: ls[1]?.font ?? 'eight'}
+    ];
+    if (e.artist) out.push({text: `con ${e.artist}`, color: ls[2]?.color ?? 'rgba(255,255,255,.8)', font: ls[2]?.font ?? 'sans'});
+    return out;
+  }
+  const manual = ls.filter((l) => l.text?.trim());
+  if (manual.length) return manual;
+  const legacy: {text: string; color: string; font: string}[] = [];
+  if (slide.rotulo) legacy.push({text: slide.rotulo, color: slide.color ?? '#e9ae74', font: slide.font ?? 'romance'});
+  if (slide.sub) legacy.push({text: slide.sub, color: '#ffffff', font: 'eight'});
+  return legacy;
+}
 const cover: React.CSSProperties = {position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'};
 
 function HeroButton({slide, bc, bt, pc, preview}: {slide: HeroSlide; bc: string; bt: string; pc: boolean; preview: boolean}) {
@@ -117,8 +139,9 @@ export function HeroStage({
   const ai = align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start';
   const ta = (align === 'center' ? 'center' : align === 'right' ? 'right' : 'left') as 'center' | 'right' | 'left';
 
-  const rotuloDesktop = slide.heroMode === 'rotulo' && slide.rotulo && pc;
-  const rotuloMobile = slide.heroMode === 'rotulo' && slide.rotulo && !pc;
+  const rLines = slide.heroMode === 'rotulo' ? getRotuloLines(slide, events) : [];
+  const rotuloDesktop = rLines.length > 0 && pc;
+  const rotuloMobile = rLines.length > 0 && !pc;
 
   return (
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#243b53'}}>
@@ -167,15 +190,16 @@ export function HeroStage({
                   />
                 );
               })()}
-            {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: (pc ? 14 : 12) * (slide.eyebrowScale ?? 1), color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
-            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: (pc ? 54 : 32) * (slide.lemaScale ?? 1), lineHeight: 1.05, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
-            {slide.bienvenida && <div style={{fontSize: (pc ? 18 : 16) * (slide.bienvenidaScale ?? 1), color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
+            {slide.eyebrow && <div style={{fontFamily: FONT[slide.eyebrowFont ?? 'adam'], textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: (pc ? 14 : 12) * (slide.eyebrowScale ?? 1), color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
+            {slide.lema && <div style={{fontFamily: FONT[slide.lemaFont ?? 'display'], fontWeight: 800, fontSize: (pc ? 54 : 32) * (slide.lemaScale ?? 1), lineHeight: 1.05, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
+            {slide.bienvenida && <div style={{fontFamily: FONT[slide.bienvenidaFont ?? 'sans'], fontSize: (pc ? 18 : 16) * (slide.bienvenidaScale ?? 1), color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
             {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc={pc} preview={preview} />}
 
             {rotuloMobile && (
               <div style={{marginTop: 34, textAlign: 'center'}}>
-                <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 40, lineHeight: 1.02, color: slide.color}}>{slide.rotulo}</div>
-                {slide.sub && <div style={{fontFamily: FONT.eight, fontSize: 18, letterSpacing: '0.05em', color: '#fff', marginTop: 8}}>{slide.sub}</div>}
+                {rLines.map((l, i) => (
+                  <div key={i} style={{fontFamily: FONT[l.font] || FONT.romance, fontSize: i === 0 ? 40 : 18, lineHeight: 1.1, color: l.color, marginTop: i ? 6 : 0}}>{l.text}</div>
+                ))}
                 {slide.eventBtn && <a href={slide.eventBtnLink || '/eventos'} style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</a>}
               </div>
             )}
@@ -195,8 +219,9 @@ export function HeroStage({
 
       {rotuloDesktop && (
         <div style={{position: 'absolute', right: 40, top: `${slide.rotuloY != null ? slide.rotuloY : 68}%`, transform: 'translateY(-50%)', textAlign: 'right', maxWidth: 460, zIndex: 4}}>
-          <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 56, lineHeight: 1.02, color: slide.color}}>{slide.rotulo}</div>
-          {slide.sub && <div style={{fontFamily: FONT.eight, fontSize: 22, letterSpacing: '0.05em', color: '#fff', marginTop: 10}}>{slide.sub}</div>}
+          {rLines.map((l, i) => (
+            <div key={i} style={{fontFamily: FONT[l.font] || FONT.romance, fontSize: i === 0 ? 56 : 22, lineHeight: 1.1, color: l.color, marginTop: i ? 8 : 0}}>{l.text}</div>
+          ))}
           {slide.eventBtn && <a href={slide.eventBtnLink || '/eventos'} style={{display: 'inline-block', marginTop: 14, background: bc, color: bt, borderRadius: 999, padding: '12px 24px', fontWeight: 700, fontSize: 15}}>{slide.eventBtnText}</a>}
         </div>
       )}
@@ -277,6 +302,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   const align = slide.contentAlign ?? 'left';
   const colAlign = align === 'center' ? 'lg:items-center lg:text-center' : align === 'right' ? 'lg:items-end lg:text-right' : 'lg:items-start lg:text-left';
   const btnAlign = align === 'center' ? 'lg:justify-center' : align === 'right' ? 'lg:justify-end' : 'lg:justify-start';
+  const rLines = slide.heroMode === 'rotulo' ? getRotuloLines(slide, events) : [];
 
   useEffect(() => {
     if (!agenda || evs.length < 2) return;
@@ -334,13 +360,13 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
               />
             )}
             {slide.eyebrow && (
-              <div className="mb-3 font-adam uppercase tracking-[0.22em]" style={{color: slide.eyebrowColor || 'var(--brand)', fontSize: `calc(0.8rem * ${slide.eyebrowScale ?? 1})`}}>{slide.eyebrow}</div>
+              <div className="mb-3 uppercase tracking-[0.22em]" style={{fontFamily: FONT[slide.eyebrowFont ?? 'adam'], color: slide.eyebrowColor || 'var(--brand)', fontSize: `calc(0.8rem * ${slide.eyebrowScale ?? 1})`}}>{slide.eyebrow}</div>
             )}
             {slide.lema && (
-              <h1 className="font-serif font-extrabold leading-[1.05]" style={{color: slide.lemaColor || '#fff', textWrap: 'balance', fontSize: `calc(clamp(2rem, 5.2vw, 3.4rem) * ${slide.lemaScale ?? 1})`}}>{slide.lema}</h1>
+              <h1 className="font-extrabold leading-[1.05]" style={{fontFamily: FONT[slide.lemaFont ?? 'display'], color: slide.lemaColor || '#fff', textWrap: 'balance', fontSize: `calc(clamp(2rem, 5.2vw, 3.4rem) * ${slide.lemaScale ?? 1})`}}>{slide.lema}</h1>
             )}
             {slide.bienvenida && (
-              <p className="mt-4 max-w-md leading-relaxed" style={{color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', fontSize: `calc(1rem * ${slide.bienvenidaScale ?? 1})`}}>{slide.bienvenida}</p>
+              <p className="mt-4 max-w-md leading-relaxed" style={{fontFamily: FONT[slide.bienvenidaFont ?? 'sans'], color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', fontSize: `calc(1rem * ${slide.bienvenidaScale ?? 1})`}}>{slide.bienvenida}</p>
             )}
             <div className={`mt-7 flex flex-wrap items-center justify-center gap-3 ${btnAlign}`}>
               {slide.button &&
@@ -357,6 +383,17 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                 Cómo llegar
               </a>
             </div>
+
+            {rLines.length > 0 && (
+              <div className="mt-8 text-center lg:hidden">
+                {rLines.map((l, i) => (
+                  <div key={i} style={{fontFamily: FONT[l.font] || FONT.romance, color: l.color, fontSize: i === 0 ? 'clamp(1.8rem, 7vw, 2.4rem)' : '1.05rem', lineHeight: 1.12, marginTop: i ? 4 : 0}}>{l.text}</div>
+                ))}
+                {slide.eventBtn && (
+                  <a href={slide.eventBtnLink || '/eventos'} className="mt-3 inline-block rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: bc, color: bt}}>{slide.eventBtnText}</a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* agenda escritorio */}
@@ -385,6 +422,18 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
           )}
         </div>
       </div>
+
+      {/* rótulo de evento posicionado (escritorio) */}
+      {rLines.length > 0 && (
+        <div className="absolute right-10 hidden max-w-md text-right lg:block" style={{top: `${slide.rotuloY ?? 68}%`, transform: 'translateY(-50%)'}}>
+          {rLines.map((l, i) => (
+            <div key={i} style={{fontFamily: FONT[l.font] || FONT.romance, color: l.color, fontSize: i === 0 ? 'clamp(2rem, 3vw, 3rem)' : '1.3rem', lineHeight: 1.12, marginTop: i ? 6 : 0}}>{l.text}</div>
+          ))}
+          {slide.eventBtn && (
+            <a href={slide.eventBtnLink || '/eventos'} className="mt-3 inline-block rounded-full px-6 py-3 font-semibold" style={{background: bc, color: bt}}>{slide.eventBtnText}</a>
+          )}
+        </div>
+      )}
 
       {/* móvil: botón + bottom-sheet de eventos */}
       {hasEvents && (

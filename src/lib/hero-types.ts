@@ -1,6 +1,8 @@
 // Tipo + valores por defecto de la portada. Sin dependencias de servidor para
 // poder importarlo desde componentes cliente (editor y hero público).
 
+export type HeroFont = 'romance' | 'eight' | 'display' | 'adam' | 'sans';
+
 export type HeroSlide = {
   id: string;
   name: string;
@@ -15,12 +17,15 @@ export type HeroSlide = {
   eyebrow: string;
   eyebrowColor: string;
   eyebrowScale: number;
+  eyebrowFont: HeroFont;
   lema: string;
   lemaColor: string;
   lemaScale: number;
+  lemaFont: HeroFont;
   bienvenida: string;
   bienvenidaColor: string;
   bienvenidaScale: number;
+  bienvenidaFont: HeroFont;
   button: string;
   link: string;
   btnColor: string;
@@ -29,6 +34,8 @@ export type HeroSlide = {
   rotulo: string;
   sub: string;
   rotuloY: number;
+  rotuloLines: {text: string; color: string; font: HeroFont}[];
+  rotuloAuto: boolean; // rellenar con el próximo evento
   font: 'romance' | 'eight' | 'display';
   anim: 'fade' | 'slide' | 'none';
   color: string;
@@ -57,12 +64,15 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   eyebrow: '',
   eyebrowColor: '#e9ae74',
   eyebrowScale: 1,
+  eyebrowFont: 'adam',
   lema: 'Título de la portada',
   lemaColor: '#ffffff',
   lemaScale: 1,
+  lemaFont: 'display',
   bienvenida: '',
   bienvenidaColor: '#ffffff',
   bienvenidaScale: 1,
+  bienvenidaFont: 'sans',
   button: 'Ver la carta',
   link: '/carta',
   btnColor: '#e9ae74',
@@ -71,6 +81,12 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   rotulo: '',
   sub: '',
   rotuloY: 68,
+  rotuloLines: [
+    {text: '', color: '#e9ae74', font: 'romance'},
+    {text: '', color: '#ffffff', font: 'eight'},
+    {text: '', color: '#ffffff', font: 'sans'}
+  ],
+  rotuloAuto: false,
   font: 'romance',
   anim: 'fade',
   color: '#e9ae74',
