@@ -75,6 +75,7 @@ function EvRow({e, on, onClick}: {e: HeroEvent; on: boolean; onClick: () => void
         <span style={{display: 'block', fontFamily: FONT.display, fontWeight: 600, fontSize: 15, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{e.title}</span>
         <span style={{display: 'block', fontSize: 12, color: 'rgba(255,255,255,.62)'}}>{e.artist}{e.artist && ' · '}{e.time}</span>
       </span>
+      <ArrowRight className="size-4 shrink-0" style={{color: on ? '#e9ae74' : 'rgba(255,255,255,.4)'}} />
     </div>
   );
 }
@@ -302,10 +303,10 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                 <span className="size-2 rounded-full bg-brand" />
                 <span className="font-adam text-[0.7rem] uppercase tracking-[0.2em] text-white/80">Próximos eventos</span>
               </div>
-              <Link href="/eventos" className="mb-3 block border-b border-white/15 pb-4">
-                <div className="min-h-[3.2rem] font-[family-name:var(--font-playfair)] text-[1.9rem] leading-tight" style={{color: slide.color, fontFamily: FONT[slide.font] || FONT.romance}}>{feat?.title}</div>
-                <div className="mt-1.5 font-[family-name:'Eight_One'] text-base" style={{fontFamily: FONT.eight}}>{feat?.day} {feat?.month} · {feat?.time}</div>
-                {feat?.artist && <div className="mt-1 text-sm text-white/70">con {feat.artist}</div>}
+              <Link href="/eventos" className="mb-3 flex h-[8.5rem] flex-col justify-center border-b border-white/15 pb-4">
+                <div className="line-clamp-2 text-[1.9rem] leading-tight" style={{color: slide.color, fontFamily: FONT[slide.font] || FONT.romance}}>{feat?.title}</div>
+                <div className="mt-1.5 text-base" style={{fontFamily: FONT.eight}}>{feat?.day} {feat?.month} · {feat?.time}</div>
+                <div className="mt-1 min-h-[1.25rem] text-sm text-white/70">{feat?.artist ? `con ${feat.artist}` : ''}</div>
               </Link>
               <ul className="flex flex-col">
                 {evs.map((e, idx) => (
