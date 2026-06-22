@@ -66,7 +66,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
   useEffect(() => {
     if (n <= 1) return;
-    const t = setInterval(() => setI((x) => (x + 1) % n), 7000);
+    const t = setInterval(() => setI((x) => (x + 1) % n), 16000);
     return () => clearInterval(t);
   }, [n]);
 
@@ -101,6 +101,9 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       {/* Destellos fríos (azulados) */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(86,140,205,.16), transparent 62%)'}} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(86,140,205,.13), transparent 60%)'}} />
+
+      {/* Vídeo de efecto a pantalla completa (no se corta) */}
+      {cur?.fxVideo && <FxVideo src={cur.fxVideo} />}
 
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
@@ -200,7 +203,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
-              {cur.fxVideo && <FxVideo src={cur.fxVideo} />}
               {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}
               {(cur.fxSmoke || cur.overlayFx === 'smoke') && <Smoke />}
             </>

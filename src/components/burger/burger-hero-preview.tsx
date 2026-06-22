@@ -98,7 +98,6 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           {c.price} €
         </div>
       )}
-      {c.fxVideo && <FxVideo src={c.fxVideo} />}
       {c.fxSparks && <Sparks />}
       {c.fxSmoke && <Smoke />}
     </div>
@@ -112,6 +111,7 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
     <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}>
       <Bg c={c} />
       <Nav />
+      {c.fxVideo && <FxVideo src={c.fxVideo} />}
       {pc ? (
         <div className="absolute inset-0 z-[2] flex items-center">
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>
