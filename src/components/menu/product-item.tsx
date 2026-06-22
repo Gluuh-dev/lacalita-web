@@ -36,12 +36,13 @@ export default function ProductItem({
   return (
     <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 shadow-sm sm:flex-col sm:gap-0 sm:p-0">
       <button onClick={() => setOpen(item)} className="ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
-        {item.image ? (
+        {item.video ? (
+          <video src={item.video} poster={item.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+        ) : item.image ? (
           <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
         ) : (
           <UtensilsCrossed className="size-7" strokeWidth={1.25} />
         )}
-        {item.video && <span className="absolute right-1.5 top-1.5 rounded-full bg-black/55 px-1.5 py-0.5 text-[0.6rem] text-white">▶</span>}
         <span className="absolute left-1.5 top-1.5 flex flex-wrap gap-1">
           {product.tag && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[0.6rem] font-bold text-white shadow-sm">{product.tag}</span>}
           {product.is_new && <span className="rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-semibold text-white shadow-sm">Nuevo</span>}

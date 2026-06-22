@@ -1,10 +1,8 @@
 import {getTranslations} from 'next-intl/server';
-import {Link} from '@/i18n/navigation';
 import {tx} from '@/lib/localize';
 import type {Menu, Allergen} from '@/lib/queries';
 import MenuFilters from './menu-filters';
 import AllergenIcon from './allergen-icon';
-import AdminEditLink from './admin-edit-link';
 import {MenuStoreProvider, type MenuItem} from '@/components/menu/store';
 import MenuTabBar from '@/components/menu/menu-tabbar';
 
@@ -73,15 +71,8 @@ export default async function MenuView({
         {headerMedia && <div className="absolute inset-0 bg-black/40" />}
 
         <div className="relative z-10">
-          <Link
-            href="/carta"
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] backdrop-blur transition hover:bg-white/30"
-          >
-            ← {t('all')}
-          </Link>
           <h1 className="font-serif text-4xl sm:text-5xl">{tx(menu.name, locale)}</h1>
           {menu.subtitle && <p className="mt-2 text-white/90">{tx(menu.subtitle, locale)}</p>}
-          <AdminEditLink href={`/admin/menus/${menu.id}`} label="Editar carta" />
         </div>
       </header>
 

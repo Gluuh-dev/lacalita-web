@@ -1,6 +1,6 @@
 'use client';
 
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
@@ -10,7 +10,7 @@ import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useMenuStore, type MenuItem} from './store';
 
 type View = 'none' | 'favs' | 'list' | 'video';
-type ListEntry = {item: MenuItem; qty: number};
+type ListEntry = {item: MenuItem; qty: number; note?: string};
 
 export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem[]; locale: string; menuSlug: string}) {
   const s = useMenuStore();
@@ -137,12 +137,13 @@ function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   const total = items.reduce((sum, x) => sum + (x.item.price ?? 0) * x.qty, 0);
   return (
     <div className="flex flex-col gap-2">
-      {items.map(({item, qty}) => (
+      {items.map(({item, qty, note}) => (
         <div key={item.id} className="flex items-center gap-3 rounded-[16px] border border-line bg-surface p-2.5">
           <Thumb item={item} />
           <div className="min-w-0 flex-1">
             <div className="truncate font-medium">{item.name}</div>
             {item.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(item.price, locale)}</div>}
+            {note && <div className="mt-0.5 line-clamp-2 text-xs text-ink-3">📝 {note}</div>}
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => s.dec(item.id)} aria-label="Quitar" className="flex size-8 items-center justify-center rounded-full bg-brand text-on-primary"><Minus className="size-4" /></button>
@@ -225,8 +226,14 @@ function ProductModal({locale}: {locale: string}) {
   const s = useMenuStore();
   const it = s.open;
   const n = it ? s.qty(it.id) : 0;
+  const [note, setNote] = useState('');
+  useEffect(() => {
+    setNote(it ? s.list[it.id]?.note ?? '' : '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [it]);
   if (!it) return null;
   const close = () => s.setOpen(null);
+  const isBurger = it.menuSlug === 'hamburgueseria';
   return (
     <div className="fixed inset-0 z-[320] flex items-end justify-center sm:items-center sm:p-4">
       <div onClick={close} className="absolute inset-0 bg-black/60 duration-200 animate-in fade-in" />
@@ -257,7 +264,25 @@ function ProductModal({locale}: {locale: string}) {
               ))}
             </div>
           )}
+          {isBurger && (
+            <div className="mt-4">
+              <label className="mb-1 block text-sm font-medium text-ink-2">¿Quitar o añadir algo?</label>
+              <textarea
+                value={note}
+                onChange={(e) => {
+                  setNote(e.target.value);
+                  if (s.list[it.id]) s.setNote(it.id, e.target.value);
+                }}
+                rows={2}
+                placeholder="Ej. sin cebolla, extra bacon, pan sin gluten…"
+                className="w-full rounded-[12px] border border-line bg-surface px-3 py-2 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25"
+              />
+            </div>
+          )}
         </div>
+        <p className="border-t border-line bg-surface-2 px-5 py-2.5 text-center text-xs text-ink-3">
+          Esta lista no es un pedido: te sirve para guardar lo que quieres y enseñárselo al camarero.
+        </p>
         <div className="flex items-center gap-3 border-t border-line p-4">
           <div className="flex items-center gap-2">
             <button onClick={() => s.dec(it.id)} disabled={n === 0} aria-label="Menos" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary disabled:opacity-40"><Minus className="size-4" /></button>
@@ -267,6 +292,7 @@ function ProductModal({locale}: {locale: string}) {
           <button
             onClick={() => {
               if (n === 0) s.add(it);
+              s.setNote(it.id, note);
               close();
             }}
             className="flex-1 rounded-full bg-brand py-3 font-semibold text-on-primary transition hover:bg-brand-deep"

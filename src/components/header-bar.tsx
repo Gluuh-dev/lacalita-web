@@ -38,7 +38,11 @@ export default function HeaderBar({
         {href: '/eventos', label: labels.events, active: false},
         {href: '/#info', label: labels.location, active: false}
       ];
-  const overlayLinks = [...menuLinks, ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])];
+  const overlayLinks = [
+    ...menuLinks,
+    ...(isAdmin && cartaLabel ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
+    ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])
+  ];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -128,16 +132,18 @@ export default function HeaderBar({
             </button>
           </div>
           <nav className="flex flex-1 flex-col items-center justify-center gap-7">
-            {overlayLinks.map((f) => (
-              <Link
-                key={f.href}
-                href={f.href}
-                onClick={() => setOpen(false)}
-                className={cn('font-adam text-4xl capitalize tracking-wide transition', f.active ? 'text-brand' : 'text-white')}
-              >
-                {f.label}
-              </Link>
-            ))}
+            {overlayLinks.map((f) => {
+              const cls = cn('font-adam text-4xl capitalize tracking-wide transition', f.active ? 'text-brand' : 'text-white');
+              return f.href.startsWith('/admin') ? (
+                <a key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls}>
+                  {f.label}
+                </a>
+              ) : (
+                <Link key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls}>
+                  {f.label}
+                </Link>
+              );
+            })}
           </nav>
           <div className="flex scale-125 justify-center pb-14">
             <LangSwitcher />

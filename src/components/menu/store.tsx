@@ -14,15 +14,17 @@ export type MenuItem = {
   allergens?: {code: string; icon: string; name: Record<string, string>}[];
 };
 
+type ListEntry = {item: MenuItem; qty: number; note?: string};
 type Store = {
   favs: Record<string, MenuItem>;
-  list: Record<string, {item: MenuItem; qty: number}>;
+  list: Record<string, ListEntry>;
   isFav: (id: string) => boolean;
   toggleFav: (i: MenuItem) => void;
   qty: (id: string) => number;
   add: (i: MenuItem) => void;
   dec: (id: string) => void;
   remove: (id: string) => void;
+  setNote: (id: string, note: string) => void;
   clear: () => void;
   favCount: number;
   listCount: number;
@@ -36,7 +38,7 @@ const LK = 'lc_list';
 
 export function MenuStoreProvider({children}: {children: React.ReactNode}) {
   const [favs, setFavs] = useState<Record<string, MenuItem>>({});
-  const [list, setList] = useState<Record<string, {item: MenuItem; qty: number}>>({});
+  const [list, setList] = useState<Record<string, ListEntry>>({});
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState<MenuItem | null>(null);
 
@@ -65,7 +67,10 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     });
   }, []);
   const add = useCallback((i: MenuItem) => {
-    setList((l) => ({...l, [i.id]: {item: i, qty: (l[i.id]?.qty ?? 0) + 1}}));
+    setList((l) => ({...l, [i.id]: {item: i, qty: (l[i.id]?.qty ?? 0) + 1, note: l[i.id]?.note}}));
+  }, []);
+  const setNote = useCallback((id: string, note: string) => {
+    setList((l) => (l[id] ? {...l, [id]: {...l[id], note: note.trim() || undefined}} : l));
   }, []);
   const dec = useCallback((id: string) => {
     setList((l) => {
@@ -96,6 +101,7 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     add,
     dec,
     remove,
+    setNote,
     clear,
     favCount: Object.keys(favs).length,
     listCount: Object.values(list).reduce((s, x) => s + x.qty, 0),
