@@ -2,6 +2,7 @@
 
 import {X} from 'lucide-react';
 import {useScrollLock} from '@/lib/use-scroll-lock';
+import {useBackClose} from '@/lib/use-back-close';
 
 export default function Drawer({
   open,
@@ -19,6 +20,7 @@ export default function Drawer({
   children: React.ReactNode;
 }) {
   useScrollLock(open);
+  useBackClose(open, onClose);
 
   if (!open) return null;
 

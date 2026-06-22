@@ -7,6 +7,7 @@ import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
 import {useScrollLock} from '@/lib/use-scroll-lock';
+import {useBackClose} from '@/lib/use-back-close';
 import {useMenuStore, type MenuItem} from './store';
 
 type View = 'none' | 'favs' | 'list' | 'video';
@@ -68,6 +69,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
 function Sheet({title, onClose, children}: {title: string; onClose: () => void; children: React.ReactNode}) {
   const [drag, setDrag] = useState(0);
   const dy = useRef<number | null>(null);
+  useBackClose(true, onClose);
   return (
     <div className="fixed inset-0 z-[300] flex items-end justify-center sm:items-center sm:p-4">
       <div onClick={onClose} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
@@ -169,6 +171,7 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [idx, setIdx] = useState(0);
   const [controls, setControls] = useState(false);
+  useBackClose(true, onClose);
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -281,6 +284,7 @@ function ProductModal({locale}: {locale: string}) {
     setNote(it ? s.list[it.id]?.note ?? '' : '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [it]);
+  useBackClose(!!it, () => s.setOpen(null));
   if (!it) return null;
   const close = () => s.setOpen(null);
   const isBurger = it.menuSlug === 'hamburgueseria';
