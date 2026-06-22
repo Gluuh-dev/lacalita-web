@@ -100,6 +100,19 @@ export async function saveProduct(id: string | null, form: ProductInput) {
   return {ok: true};
 }
 
+export async function toggleAvailable(id: string, available: boolean) {
+  const supabase = await createClient();
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+  if (!user) return {ok: false, error: 'Sesión caducada. Vuelve a iniciar sesión.'};
+  const {error} = await supabase.from('products').update({available, updated_at: new Date().toISOString()}).eq('id', id).select('id');
+  if (error) return {ok: false, error: error.message};
+  revalidatePath('/', 'layout');
+  revalidatePath('/admin/productos');
+  return {ok: true};
+}
+
 export async function deleteProduct(id: string) {
   const supabase = await createClient();
   const {data: row} = await supabase.from('products').select('image, video').eq('id', id).single();

@@ -1,126 +1,176 @@
 'use client';
 
-import {useState} from 'react';
+import {useMemo, useState, useTransition} from 'react';
+import Image from 'next/image';
+import {toast} from 'sonner';
+import {Pencil, Trash2, Plus, Search, Star} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
-import {btn, card} from '@/components/admin/ui';
+import {btn} from '@/components/admin/ui';
 import Drawer from '@/components/admin/drawer';
-import DeleteButton from '@/components/admin/delete-button';
 import EmptyState from '@/components/admin/empty-state';
 import ProductForm from './product-form';
-import {deleteProduct} from './actions';
+import {deleteProduct, toggleAvailable} from './actions';
 import type {Product, Menu, Allergen} from '@/lib/queries';
 
 type I18n = Record<string, string>;
-type MenuWithCats = Pick<Menu, 'id' | 'name'> & {
-  categories: {id: string; name: I18n}[];
-};
-type Row = Product & {
-  categories?: {name: I18n; menus?: {name: I18n; slug: string} | null} | null;
-};
+type MenuWithCats = Pick<Menu, 'id' | 'name'> & {categories: {id: string; name: I18n}[]};
+type Row = Product & {categories?: {name: I18n; menus?: {name: I18n; slug: string} | null} | null};
 
-export default function ProductsTable({
-  products,
-  menus,
-  allergens
-}: {
-  products: Row[];
-  menus: MenuWithCats[];
-  allergens: Allergen[];
-}) {
-  const [active, setActive] = useState('all');
+const ABBR: Record<string, string> = {
+  gluten: 'GL', crustaceos: 'CR', huevos: 'HU', pescado: 'PE', cacahuetes: 'CA', soja: 'SO',
+  lacteos: 'LA', frutos_cascara: 'FC', frutos_secos: 'FC', apio: 'AP', mostaza: 'MO',
+  sesamo: 'SE', sulfitos: 'SU', altramuces: 'AT', moluscos: 'ML'
+};
+const abbr = (code: string) => ABBR[code] ?? code.slice(0, 2).toUpperCase();
+function hue(code: string) {
+  let h = 0;
+  for (const c of code) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+}
+function priceLabel(p: Row) {
+  const variants = p.product_variants ?? [];
+  if (variants.length) return `desde ${euro(Math.min(...variants.map((v) => Number(v.price))), 'es')}`;
+  return p.price != null ? euro(Number(p.price), 'es') : '—';
+}
+
+export default function ProductsTable({products, menus, allergens}: {products: Row[]; menus: MenuWithCats[]; allergens: Allergen[]}) {
+  const [q, setQ] = useState('');
+  const [menu, setMenu] = useState('all');
   const [edit, setEdit] = useState<Row | null | undefined>(undefined);
+  const [avail, setAvail] = useState<Record<string, boolean>>(() => Object.fromEntries(products.map((p) => [p.id, p.available])));
+  const [, start] = useTransition();
   const open = edit !== undefined;
 
-  const menuMap = new Map<string, I18n>();
-  for (const p of products) {
-    const m = p.categories?.menus;
-    if (m && !menuMap.has(m.slug)) menuMap.set(m.slug, m.name);
-  }
-  const menuTabs = [...menuMap.entries()];
-
-  const filtered = active === 'all' ? products : products.filter((p) => p.categories?.menus?.slug === active);
-  const groups: {label: string; items: Row[]}[] = [];
-  const idx = new Map<string, number>();
-  for (const p of filtered) {
-    const label = p.categories ? tx(p.categories.name, 'es') : 'Sin categoría';
-    if (!idx.has(label)) {
-      idx.set(label, groups.length);
-      groups.push({label, items: []});
+  const menuOpts = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const p of products) {
+      const x = p.categories?.menus;
+      if (x && !m.has(x.slug)) m.set(x.slug, tx(x.name, 'es'));
     }
-    groups[idx.get(label)!].items.push(p);
+    return [...m.entries()];
+  }, [products]);
+
+  const filtered = products.filter((p) => {
+    if (menu !== 'all' && p.categories?.menus?.slug !== menu) return false;
+    if (q && !tx(p.name, 'es').toLowerCase().includes(q.toLowerCase())) return false;
+    return true;
+  });
+
+  function toggle(p: Row) {
+    const next = !(avail[p.id] ?? p.available);
+    setAvail((a) => ({...a, [p.id]: next}));
+    start(async () => {
+      const r = await toggleAvailable(p.id, next);
+      if (!r.ok) {
+        toast.error(r.error);
+        setAvail((a) => ({...a, [p.id]: !next}));
+      }
+    });
+  }
+
+  function remove(p: Row) {
+    if (!confirm('¿Eliminar este producto? Se borra también su imagen/vídeo.')) return;
+    start(async () => {
+      const r = await deleteProduct(p.id);
+      if (r && !r.ok) toast.error(r.error);
+      else toast.success('Eliminado');
+    });
   }
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-2">
-          <Chip active={active === 'all'} onClick={() => setActive('all')}>
-            Todas
-          </Chip>
-          {menuTabs.map(([slug, name]) => (
-            <Chip key={slug} active={active === slug} onClick={() => setActive(slug)}>
-              {tx(name, 'es')}
-            </Chip>
-          ))}
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar producto…" className="w-full rounded-full border border-line bg-surface py-2.5 pl-9 pr-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25" />
         </div>
-        <button className={btn} onClick={() => setEdit(null)}>
-          Nuevo producto
+        <select value={menu} onChange={(e) => setMenu(e.target.value)} className="rounded-full border border-line bg-surface px-4 py-2.5 text-sm">
+          <option value="all">Todas las cartas</option>
+          {menuOpts.map(([slug, name]) => (
+            <option key={slug} value={slug}>{name}</option>
+          ))}
+        </select>
+        <button onClick={() => setEdit(null)} className={`${btn} ml-auto inline-flex items-center gap-1.5`}>
+          <Plus className="size-4" /> Nuevo producto
         </button>
       </div>
 
-      {products.length === 0 && <EmptyState text="Aún no hay productos. Crea el primero." />}
-      {groups.map((g) => (
-        <div key={g.label} className="mb-6">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-3">{g.label}</h2>
-          <ul className="space-y-2">
-            {g.items.map((p) => (
-              <li key={p.id} className={`${card} flex items-center justify-between gap-3`}>
-                <div className="min-w-0">
-                  <div className="truncate font-medium">
-                    {tx(p.name, 'es')}
-                    {!p.available && <span className="ml-2 text-xs text-amber-600">(no disp.)</span>}
-                    {p.featured && <span className="ml-1 text-xs">★</span>}
-                  </div>
-                  <div className="text-xs text-ink-3">
-                    {p.price != null ? euro(Number(p.price), 'es') : '—'}
-                  </div>
-                </div>
-                <div className="flex shrink-0 items-center gap-4">
-                  <button onClick={() => setEdit(p)} className="text-sm text-accent hover:underline">
-                    Editar
-                  </button>
-                  <DeleteButton onDelete={() => deleteProduct(p.id)} />
-                </div>
-              </li>
-            ))}
-          </ul>
+      {filtered.length === 0 ? (
+        <EmptyState text="Sin productos." />
+      ) : (
+        <div className="overflow-x-auto rounded-[20px] border border-line bg-surface shadow-sm">
+          <table className="w-full min-w-[640px] text-sm">
+            <thead>
+              <tr className="border-b border-line text-left font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">
+                <th className="px-4 py-3">Producto</th>
+                <th className="hidden px-4 py-3 sm:table-cell">Categoría</th>
+                <th className="px-4 py-3">Precio</th>
+                <th className="hidden px-4 py-3 md:table-cell">Alérgenos</th>
+                <th className="px-4 py-3">Disp.</th>
+                <th className="px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((p) => {
+                const al = (p.product_allergens ?? []).map((pa) => pa.allergens).filter((a): a is NonNullable<typeof a> => !!a);
+                const on = avail[p.id] ?? p.available;
+                return (
+                  <tr key={p.id} className="border-b border-line last:border-0">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-surface-sunken">
+                          {p.image && <Image src={p.image} alt="" fill sizes="48px" className="object-cover" />}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1 font-medium text-ink">
+                            <span className="truncate">{tx(p.name, 'es')}</span>
+                            {p.featured && <Star className="size-3.5 shrink-0 fill-brand text-brand" />}
+                            {p.tag && <span className="rounded-full bg-red-100 px-1.5 text-[0.6rem] font-bold text-red-600">{p.tag}</span>}
+                          </div>
+                          {p.description && <div className="truncate text-xs text-ink-3">{tx(p.description, 'es')}</div>}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="hidden px-4 py-3 text-ink-2 sm:table-cell">{p.categories ? tx(p.categories.name, 'es') : '—'}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-semibold text-brand-deep">{priceLabel(p)}</td>
+                    <td className="hidden px-4 py-3 md:table-cell">
+                      <div className="flex flex-wrap gap-1">
+                        {al.map((a) => {
+                          const h = hue(a.code);
+                          return (
+                            <span key={a.code} title={tx(a.name, 'es')} className="flex size-6 items-center justify-center rounded-full text-[0.6rem] font-bold" style={{background: `hsl(${h} 55% 90%)`, color: `hsl(${h} 45% 32%)`}}>
+                              {abbr(a.code)}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => toggle(p)} aria-label="Disponible" className={`relative h-6 w-10 rounded-full transition ${on ? 'bg-brand' : 'bg-line-strong'}`}>
+                        <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${on ? 'left-[18px]' : 'left-0.5'}`} />
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => setEdit(p)} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-ink">
+                          <Pencil className="size-4" />
+                        </button>
+                        <button onClick={() => remove(p)} aria-label="Eliminar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-danger">
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      ))}
+      )}
 
       <Drawer open={open} title={edit ? 'Editar producto' : 'Nuevo producto'} onClose={() => setEdit(undefined)}>
-        {open && (
-          <ProductForm
-            id={edit ? edit.id : null}
-            product={edit ?? null}
-            menus={menus}
-            allergens={allergens}
-            onSaved={() => setEdit(undefined)}
-          />
-        )}
+        {open && <ProductForm id={edit ? edit.id : null} product={edit ?? null} menus={menus} allergens={allergens} onSaved={() => setEdit(undefined)} />}
       </Drawer>
     </>
-  );
-}
-
-function Chip({active, onClick, children}: {active: boolean; onClick: () => void; children: React.ReactNode}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`ds-chip rounded-full border px-4 py-1.5 font-adam text-[0.8125rem] uppercase tracking-[0.08em] ${
-        active ? 'border-transparent bg-brand text-on-primary shadow-sm' : 'border-line-strong bg-surface text-ink-2 hover:border-brand'
-      }`}
-    >
-      {children}
-    </button>
   );
 }
