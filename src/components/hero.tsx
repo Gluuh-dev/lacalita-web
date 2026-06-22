@@ -142,7 +142,11 @@ export function HeroStage({
           <div key={animKey} className={animCls} style={{display: 'flex', flexDirection: 'column', alignItems: pc ? ai : 'center', textAlign: pc ? ta : 'center', maxWidth: pc ? 660 : '100%', margin: pc ? (align === 'center' ? '0 auto' : 0) : '0 auto', color: '#fff'}}>
             {logoSrc &&
               (() => {
-                const h = logoVariant === 'debajo' ? (pc ? 132 : 100) : logoVariant === 'solo' ? (pc ? 84 : 64) : pc ? 58 : 44;
+                const h =
+                  logoVariant === 'debajo' ? (pc ? 112 : 80)
+                  : logoVariant === 'solo' ? (pc ? 80 : 64)
+                  : logoVariant === 'texto' ? (pc ? 40 : 32)
+                  : (pc ? 56 : 44); // derecha
                 return (
                   <span
                     style={{
@@ -164,7 +168,7 @@ export function HeroStage({
                 );
               })()}
             {slide.eyebrow && <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.22em', fontSize: (pc ? 14 : 12) * (slide.eyebrowScale ?? 1), color: slide.eyebrowColor || 'var(--brand)', marginBottom: 16}}>{slide.eyebrow}</div>}
-            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: (pc ? 76 : 42) * (slide.lemaScale ?? 1), lineHeight: 1.03, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
+            {slide.lema && <div style={{fontFamily: FONT.display, fontWeight: 800, fontSize: (pc ? 54 : 32) * (slide.lemaScale ?? 1), lineHeight: 1.05, marginBottom: 20, textWrap: 'balance', color: slide.lemaColor || '#fff'}}>{slide.lema}</div>}
             {slide.bienvenida && <div style={{fontSize: (pc ? 18 : 16) * (slide.bienvenidaScale ?? 1), color: slide.bienvenidaColor || 'rgba(255,255,255,.86)', maxWidth: 440, marginBottom: 28, lineHeight: 1.5}}>{slide.bienvenida}</div>}
             {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc={pc} preview={preview} />}
 
@@ -214,8 +218,8 @@ export function HeroPreview({slide, events, device, animKey = 0}: {slide: HeroSl
     return () => ro.disconnect();
   }, []);
   const pc = device === 'pc';
-  const DW = pc ? 1280 : 390;
-  const DH = pc ? 720 : 800;
+  const DW = pc ? 1920 : 390;
+  const DH = pc ? 1080 : 800;
   const scale = w ? w / DW : 0.3;
   return (
     <div ref={ref} style={{width: '100%', height: DH * scale, position: 'relative', overflow: 'hidden', borderRadius: 'var(--r-md)'}}>
