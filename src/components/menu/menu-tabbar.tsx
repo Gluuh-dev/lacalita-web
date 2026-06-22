@@ -6,26 +6,29 @@ import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2} 
 import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
+import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useMenuStore, type MenuItem} from './store';
 
 type View = 'none' | 'favs' | 'list' | 'video';
+type ListEntry = {item: MenuItem; qty: number};
 
-export default function MenuTabBar({videos, locale}: {videos: MenuItem[]; locale: string}) {
+export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem[]; locale: string; menuSlug: string}) {
   const s = useMenuStore();
   const [view, setView] = useState<View>('none');
 
-  useEffect(() => {
-    document.body.style.overflow = view !== 'none' ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [view]);
+  useScrollLock(view !== 'none' || !!s.open);
+
+  // Solo lo de la carta actual (desayunos / restaurante / hamburguesería).
+  const favs = Object.values(s.favs).filter((i) => i.menuSlug === menuSlug);
+  const listItems = Object.values(s.list).filter((x) => x.item.menuSlug === menuSlug);
+  const favCount = favs.length;
+  const listCount = listItems.reduce((n, x) => n + x.qty, 0);
 
   const tabs = [
     {key: 'menu', label: 'Menú', Icon: UtensilsCrossed, onClick: () => setView('none'), badge: 0},
     ...(videos.length ? [{key: 'video', label: 'Vídeo', Icon: PlayCircle, onClick: () => setView('video'), badge: 0}] : []),
-    {key: 'favs', label: 'Favoritos', Icon: Heart, onClick: () => setView('favs'), badge: s.favCount},
-    {key: 'list', label: 'Mi lista', Icon: ListChecks, onClick: () => setView('list'), badge: s.listCount}
+    {key: 'favs', label: 'Favoritos', Icon: Heart, onClick: () => setView('favs'), badge: favCount},
+    {key: 'list', label: 'Mi lista', Icon: ListChecks, onClick: () => setView('list'), badge: listCount}
   ];
 
   return (
@@ -50,10 +53,12 @@ export default function MenuTabBar({videos, locale}: {videos: MenuItem[]; locale
 
       {(view === 'favs' || view === 'list') && (
         <Sheet title={view === 'favs' ? 'Favoritos' : 'Mi lista'} onClose={() => setView('none')}>
-          {view === 'favs' ? <FavsView locale={locale} /> : <ListView locale={locale} />}
+          {view === 'favs' ? <FavsView items={favs} locale={locale} /> : <ListView items={listItems} locale={locale} />}
         </Sheet>
       )}
       {view === 'video' && <VideoReels videos={videos} locale={locale} onClose={() => setView('none')} />}
+
+      <ProductModal locale={locale} />
     </>
   );
 }
@@ -63,7 +68,7 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
   const dy = useRef<number | null>(null);
   return (
     <div className="fixed inset-0 z-[300]">
-      <div onClick={onClose} onTouchMove={(e) => e.preventDefault()} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
+      <div onClick={onClose} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
       <div
         className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-[24px] border-t border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom"
         style={{transform: `translateY(${drag}px)`, transition: drag ? 'none' : undefined}}
@@ -94,18 +99,17 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
 }
 
 function Thumb({item}: {item: MenuItem}) {
+  const s = useMenuStore();
   return (
-    <Link href={`/carta/${item.menuSlug}/${item.slug}`} className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-surface-sunken">
+    <button onClick={() => s.setOpen(item)} className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-surface-sunken">
       {item.image && <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />}
-    </Link>
+    </button>
   );
 }
 
-function FavsView({locale}: {locale: string}) {
+function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
   const s = useMenuStore();
-  const items = Object.values(s.favs);
-  if (!items.length)
-    return <p className="py-8 text-center text-sm text-ink-3">Aún no tienes favoritos. Pulsa el ♥ en los platos.</p>;
+  if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Aún no tienes favoritos. Pulsa el ♥ en los platos.</p>;
   return (
     <div className="flex flex-col gap-2">
       {items.map((it) => (
@@ -125,11 +129,9 @@ function FavsView({locale}: {locale: string}) {
   );
 }
 
-function ListView({locale}: {locale: string}) {
+function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   const s = useMenuStore();
-  const items = Object.values(s.list);
-  if (!items.length)
-    return <p className="py-8 text-center text-sm text-ink-3">Tu lista está vacía. Pulsa "Añadir" en los platos.</p>;
+  if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Tu lista está vacía. Pulsa “Añadir” en los platos.</p>;
   const total = items.reduce((sum, x) => sum + (x.item.price ?? 0) * x.qty, 0);
   return (
     <div className="flex flex-col gap-2">
@@ -166,18 +168,17 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
       </button>
       <div className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
         {videos.map((v) => {
-          const n = s.qty(v.id);
           const fav = s.isFav(v.id);
           return (
             <section key={v.id} className="relative flex h-full snap-start items-center justify-center overflow-hidden">
               {v.video && <video src={v.video} poster={v.image ?? undefined} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />}
-              <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.7), transparent 45%)'}} />
+              <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.72), transparent 45%)'}} />
               <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-5 pb-10 text-white">
                 <div className="min-w-0">
                   <h3 className="font-serif text-2xl font-bold">{v.name}</h3>
                   {v.price != null && <p className="mt-0.5 font-bold text-brand">{euro(v.price, locale)}</p>}
                   {v.desc && <p className="mt-1 line-clamp-2 max-w-md text-sm text-white/85">{v.desc}</p>}
-                  <Link href={`/carta/${v.menuSlug}/${v.slug}`} className="mt-1 inline-block text-sm font-medium text-brand">Ver más</Link>
+                  <button onClick={() => s.setOpen(v)} className="mt-1 inline-block text-sm font-medium text-brand">Ver más</button>
                   {v.allergens && v.allergens.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {v.allergens.map((a) => (
@@ -192,14 +193,73 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                   <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className="flex size-12 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
                     <Heart className="size-6" fill={fav ? 'currentColor' : 'none'} />
                   </button>
-                  <button onClick={() => s.add(v)} aria-label="Añadir" className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
-                    {n > 0 ? <span className="font-bold">{n}</span> : <Plus className="size-6" />}
+                  <button onClick={() => s.setOpen(v)} aria-label="Añadir" className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
+                    <Plus className="size-6" />
                   </button>
                 </div>
               </div>
             </section>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+function ProductModal({locale}: {locale: string}) {
+  const s = useMenuStore();
+  const it = s.open;
+  const [q, setQ] = useState(1);
+  useEffect(() => {
+    setQ(1);
+  }, [it]);
+  if (!it) return null;
+  const close = () => s.setOpen(null);
+  return (
+    <div className="fixed inset-0 z-[320] flex items-end justify-center sm:items-center sm:p-4">
+      <div onClick={close} className="absolute inset-0 bg-black/60 duration-200 animate-in fade-in" />
+      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-t-[24px] bg-bg shadow-2xl duration-300 animate-in slide-in-from-bottom sm:rounded-[24px] sm:zoom-in-95">
+        <div className="relative aspect-[4/3] bg-surface-sunken">
+          {it.video ? (
+            <video src={it.video} poster={it.image ?? undefined} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+          ) : it.image ? (
+            <Image src={it.image} alt={it.name} fill sizes="448px" className="object-cover" />
+          ) : null}
+          <button onClick={close} aria-label="Cerrar" className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
+            <X className="size-5" />
+          </button>
+        </div>
+        <div className="max-h-[38vh] overflow-y-auto overscroll-contain p-5">
+          <h2 className="font-serif text-2xl font-bold">{it.name}</h2>
+          {it.desc && <p className="mt-1 leading-relaxed text-ink-2">{it.desc}</p>}
+          {it.price != null && <p className="mt-3 text-xl font-bold text-brand-deep">{euro(it.price, locale)}</p>}
+          {it.allergens && it.allergens.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {it.allergens.map((a) => (
+                <span key={a.code} className="flex items-center gap-1.5 rounded-full bg-surface-2 px-2.5 py-1 text-xs text-ink-2">
+                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={18} />
+                  {tx(a.name, locale)}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-3 border-t border-line p-4">
+          <div className="flex items-center gap-2">
+            <button onClick={() => setQ((x) => Math.max(1, x - 1))} aria-label="Menos" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Minus className="size-4" /></button>
+            <span className="w-5 text-center font-bold tabular-nums">{q}</span>
+            <button onClick={() => setQ((x) => x + 1)} aria-label="Más" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
+          </div>
+          <button
+            onClick={() => {
+              for (let k = 0; k < q; k++) s.add(it);
+              close();
+            }}
+            className="flex-1 rounded-full bg-brand py-3 font-semibold text-on-primary transition hover:bg-brand-deep"
+          >
+            Añadir
+          </button>
+        </div>
       </div>
     </div>
   );

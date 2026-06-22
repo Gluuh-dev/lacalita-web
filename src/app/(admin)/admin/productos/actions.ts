@@ -15,6 +15,7 @@ export type ProductInput = {
   image: string | null;
   video: string | null;
   featured: boolean;
+  is_new: boolean;
   available: boolean;
   position: number;
   variants: {name: string; price: number}[];
@@ -33,6 +34,7 @@ export async function saveProduct(id: string | null, form: ProductInput) {
     image: form.image,
     video: form.video,
     featured: form.featured,
+    is_new: form.is_new,
     available: form.available,
     position: form.position,
     updated_at: new Date().toISOString()

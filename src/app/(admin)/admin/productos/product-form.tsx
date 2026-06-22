@@ -50,6 +50,7 @@ export default function ProductForm({
   const [image, setImage] = useState<string | null>(product?.image ?? null);
   const [video, setVideo] = useState<string | null>(product?.video ?? null);
   const [featured, setFeatured] = useState(product?.featured ?? false);
+  const [isNew, setIsNew] = useState(product?.is_new ?? false);
   const [available, setAvailable] = useState(product?.available ?? true);
   const [variants, setVariants] = useState<{name: string; price: string}[]>(
     (product?.product_variants ?? []).map((v) => ({
@@ -95,6 +96,7 @@ export default function ProductForm({
         image,
         video,
         featured,
+        is_new: isNew,
         available,
         position: Number(f.position) || 0,
         variants: cleanVariants,
@@ -246,6 +248,10 @@ export default function ProductForm({
         <label className="flex items-center gap-2 text-sm">
           <Checkbox checked={featured} onCheckedChange={(v) => setFeatured(v === true)} />
           Destacado
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <Checkbox checked={isNew} onCheckedChange={(v) => setIsNew(v === true)} />
+          Nuevo
         </label>
         <label className="flex items-center gap-2 text-sm">
           <Checkbox checked={available} onCheckedChange={(v) => setAvailable(v === true)} />

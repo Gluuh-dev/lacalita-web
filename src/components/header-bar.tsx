@@ -2,8 +2,14 @@
 
 import {useEffect, useState} from 'react';
 import {Menu, X} from 'lucide-react';
-import {Link} from '@/i18n/navigation';
+import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
+
+const CARTA_LABELS: Record<string, string> = {
+  desayunos: 'Desayunos & Meriendas',
+  restaurante: 'Restaurante',
+  hamburgueseria: 'Hamburguesería'
+};
 import LangSwitcher from './lang-switcher';
 import {useHeaderMode} from './header-mode';
 import {useIsAdmin} from '@/lib/use-is-admin';
@@ -15,6 +21,9 @@ export default function HeaderBar({
 }) {
   const {mode} = useHeaderMode();
   const isAdmin = useIsAdmin();
+  const pathname = usePathname();
+  const cartaMatch = pathname.match(/^\/carta\/([^/]+)/);
+  const cartaLabel = cartaMatch ? CARTA_LABELS[cartaMatch[1]] ?? null : null;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -58,14 +67,26 @@ export default function HeaderBar({
         </Link>
 
         <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
-          <Link href="/carta" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.menu}</Link>
-          <Link href="/eventos" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.events}</Link>
-          <Link href="/#info" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.location}</Link>
+          {cartaLabel ? (
+            <span className="font-adam text-[0.8rem] uppercase tracking-[0.13em]">{cartaLabel}</span>
+          ) : (
+            <>
+              <Link href="/carta" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.menu}</Link>
+              <Link href="/eventos" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.events}</Link>
+              <Link href="/#info" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.location}</Link>
+            </>
+          )}
           {isAdmin && (
             <a href="/admin" className="rounded-full bg-ink px-3 py-1 text-xs font-medium text-white hover:opacity-90">Admin</a>
           )}
           <LangSwitcher />
         </nav>
+
+        {cartaLabel && (
+          <span className={cn('pointer-events-none absolute left-1/2 -translate-x-1/2 font-adam text-xs uppercase tracking-[0.12em] sm:hidden', light ? 'text-white' : 'text-ink')}>
+            {cartaLabel}
+          </span>
+        )}
 
         <button
           type="button"

@@ -26,6 +26,8 @@ type Store = {
   clear: () => void;
   favCount: number;
   listCount: number;
+  open: MenuItem | null;
+  setOpen: (i: MenuItem | null) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -36,6 +38,7 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
   const [favs, setFavs] = useState<Record<string, MenuItem>>({});
   const [list, setList] = useState<Record<string, {item: MenuItem; qty: number}>>({});
   const [ready, setReady] = useState(false);
+  const [open, setOpen] = useState<MenuItem | null>(null);
 
   useEffect(() => {
     try {
@@ -95,7 +98,9 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     remove,
     clear,
     favCount: Object.keys(favs).length,
-    listCount: Object.values(list).reduce((s, x) => s + x.qty, 0)
+    listCount: Object.values(list).reduce((s, x) => s + x.qty, 0),
+    open,
+    setOpen
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
