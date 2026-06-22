@@ -47,7 +47,12 @@ export function FxVideo({src}: {src: string}) {
       playsInline
       preload="metadata"
       className="pointer-events-none absolute inset-0 z-[5] h-full w-full object-cover"
-      style={{mixBlendMode: 'screen', opacity: 0.9}}
+      style={{
+        mixBlendMode: 'screen',
+        opacity: 0.8,
+        WebkitMaskImage: 'radial-gradient(ellipse 70% 82% at 50% 58%, #000 42%, transparent 78%)',
+        maskImage: 'radial-gradient(ellipse 70% 82% at 50% 58%, #000 42%, transparent 78%)'
+      }}
     />
   );
 }

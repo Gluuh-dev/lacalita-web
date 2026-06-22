@@ -66,7 +66,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
   useEffect(() => {
     if (n <= 1) return;
-    const t = setInterval(() => setI((x) => (x + 1) % n), 3600);
+    const t = setInterval(() => setI((x) => (x + 1) % n), 7000);
     return () => clearInterval(t);
   }, [n]);
 
