@@ -38,6 +38,7 @@ export type PreviewCfg = {
   titleY: number;
   priceY: number;
   fxVideo: string;
+  fxVideoBehind: boolean;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
@@ -111,7 +112,7 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
     <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}>
       <Bg c={c} />
       <Nav />
-      {c.fxVideo && <FxVideo src={c.fxVideo} />}
+      {c.fxVideo && <FxVideo src={c.fxVideo} behind={c.fxVideoBehind} />}
       {pc ? (
         <div className="absolute inset-0 z-[2] flex items-center">
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>

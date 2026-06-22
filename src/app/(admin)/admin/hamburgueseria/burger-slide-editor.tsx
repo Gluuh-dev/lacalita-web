@@ -76,6 +76,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [titleY, setTitleY] = useState(slide?.title_y ?? 10);
   const [priceY, setPriceY] = useState(slide?.price_y ?? 14);
   const [fxVideo, setFxVideo] = useState(slide?.fx_video ?? '');
+  const [fxVideoBehind, setFxVideoBehind] = useState(slide?.fx_video_behind ?? false);
 
   function save() {
     start(async () => {
@@ -105,7 +106,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         price_gradient: priceGradient,
         title_y: titleY,
         price_y: priceY,
-        fx_video: fxVideo
+        fx_video: fxVideo,
+        fx_video_behind: fxVideoBehind
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -297,6 +299,14 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
                 </SelectGroup>
               </SelectContent>
             </Select>
+            {fxVideo && (
+              <label className="mt-2 flex items-center justify-between text-sm">
+                Vídeo detrás de la hamburguesa
+                <button type="button" onClick={() => setFxVideoBehind((v) => !v)} aria-label="Detrás" className={`relative h-6 w-10 rounded-full transition ${fxVideoBehind ? 'bg-brand' : 'bg-line-strong'}`}>
+                  <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${fxVideoBehind ? 'left-[18px]' : 'left-0.5'}`} />
+                </button>
+              </label>
+            )}
           </div>
           <label className="mt-3 flex items-center justify-between text-sm">
             Mostrar anillos dorados
@@ -352,7 +362,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           priceGradient,
           titleY,
           priceY,
-          fxVideo
+          fxVideo,
+          fxVideoBehind
         }}
       />
     </div>

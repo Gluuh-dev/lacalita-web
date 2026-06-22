@@ -31,6 +31,7 @@ export type HeroSlide = {
   titleY?: number;
   priceY?: number;
   fxVideo?: string;
+  fxVideoBehind?: boolean;
 };
 
 const GOLD = '#e9ae74';
@@ -103,7 +104,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(86,140,205,.13), transparent 60%)'}} />
 
       {/* Vídeo de efecto a pantalla completa (no se corta) */}
-      {cur?.fxVideo && <FxVideo src={cur.fxVideo} />}
+      {cur?.fxVideo && <FxVideo src={cur.fxVideo} behind={cur.fxVideoBehind} />}
 
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}

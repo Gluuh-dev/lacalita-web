@@ -36,24 +36,29 @@ export function Sparks() {
   );
 }
 
-/** Vídeo de efecto (humo/fuego) con el negro eliminado vía mezcla "screen". */
-export function FxVideo({src}: {src: string}) {
+/** Vídeo de efecto (humo/fuego) con el negro eliminado vía mezcla "screen".
+ *  Centrado sobre la hamburguesa (derecha) y delante o detrás según `behind`. */
+export function FxVideo({src, behind}: {src: string; behind?: boolean}) {
+  // Caja centrada sobre la hamburguesa (su centro = centro de la burger),
+  // así lo que sale en mitad del vídeo cae en mitad de la hamburguesa.
   return (
-    <video
-      src={src}
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="metadata"
-      className="pointer-events-none absolute inset-0 z-[5] h-full w-full object-cover"
-      style={{
-        mixBlendMode: 'screen',
-        opacity: 0.85,
-        WebkitMaskImage: 'radial-gradient(ellipse 58% 88% at 70% 52%, #000 45%, transparent 80%)',
-        maskImage: 'radial-gradient(ellipse 58% 88% at 70% 52%, #000 45%, transparent 80%)'
-      }}
-    />
+    <div className="pointer-events-none absolute left-1/2 top-1/2 h-full w-[94%] -translate-x-1/2 -translate-y-1/2 md:left-[68%] md:w-[62%]" style={{zIndex: behind ? 1 : 5}}>
+      <video
+        src={src}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        className="h-full w-full object-cover"
+        style={{
+          mixBlendMode: 'screen',
+          opacity: 0.85,
+          WebkitMaskImage: 'radial-gradient(ellipse 60% 72% at 50% 50%, #000 46%, transparent 80%)',
+          maskImage: 'radial-gradient(ellipse 60% 72% at 50% 50%, #000 46%, transparent 80%)'
+        }}
+      />
+    </div>
   );
 }
 

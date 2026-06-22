@@ -33,6 +33,7 @@ export type SlideInput = {
   title_y: number;
   price_y: number;
   fx_video: string;
+  fx_video_behind: boolean;
 };
 export type OfferInput = {
   title: I18nMap;
