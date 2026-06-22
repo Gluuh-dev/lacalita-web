@@ -69,10 +69,10 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
   const [drag, setDrag] = useState(0);
   const dy = useRef<number | null>(null);
   return (
-    <div className="fixed inset-0 z-[300]">
+    <div className="fixed inset-0 z-[300] flex items-end justify-center sm:items-center sm:p-4">
       <div onClick={onClose} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
       <div
-        className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-[24px] border-t border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom"
+        className="relative w-full max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-[24px] border border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom sm:max-w-md sm:rounded-[24px] sm:pb-4"
         style={{transform: `translateY(${drag}px)`, transition: drag ? 'none' : undefined}}
         onTouchStart={(e) => (dy.current = e.touches[0].clientY)}
         onTouchMove={(e) => {
