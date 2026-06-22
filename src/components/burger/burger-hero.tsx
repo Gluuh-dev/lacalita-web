@@ -8,7 +8,22 @@ import {euro} from '@/lib/localize';
 
 export type HeroSlide = {image: string | null; name: string; price: number | null; eyebrow: string};
 
-const GOLD = '#dcb069';
+const GOLD = '#caa15a';
+
+function Rings() {
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute right-0 top-0 h-[150vh] w-[150vh] max-w-none -translate-y-[28%] translate-x-[34%]"
+      viewBox="0 0 800 800"
+      fill="none"
+    >
+      {Array.from({length: 16}).map((_, i) => (
+        <circle key={i} cx="400" cy="400" r={70 + i * 30} stroke={GOLD} strokeWidth="1" opacity={0.16 - i * 0.006} />
+      ))}
+    </svg>
+  );
+}
 
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
@@ -16,67 +31,78 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
   useEffect(() => {
     if (n <= 1) return;
-    const t = setInterval(() => setI((x) => (x + 1) % n), 4500);
+    const t = setInterval(() => setI((x) => (x + 1) % n), 5000);
     return () => clearInterval(t);
   }, [n]);
 
   return (
-    <section className="relative overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute -right-40 top-1/2 size-[820px] -translate-y-1/2 rounded-full" style={{border: '1px solid rgba(231,180,106,.08)', boxShadow: '0 0 0 90px rgba(231,180,106,.04), 0 0 0 200px rgba(231,180,106,.03)'}} />
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden">
+      <Rings />
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-8 px-5 md:grid-cols-2">
         {/* Izquierda (fija) */}
-        <div>
+        <div className="order-2 md:order-1">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/logo-solo.svg" alt="" className="h-14 w-auto" style={{filter: `drop-shadow(0 0 1px ${GOLD})`}} />
-            <span className="font-modern text-4xl tracking-wide text-[#f4ede2]">LA CALITA</span>
+            <img src="/brand/logo-solo.svg" alt="" className="h-12 w-auto md:h-14" style={{filter: `drop-shadow(0 0 1px ${GOLD})`}} />
+            <span className="font-modern text-3xl tracking-wide text-[#f4ede2] md:text-4xl">LA CALITA</span>
           </div>
-          <div className="mt-2 font-adam text-[0.72rem] uppercase tracking-[0.28em]" style={{color: GOLD}}>Smash Burgers · A pie de playa</div>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-[#f4ede2]/62">
+          <div className="mt-2 font-adam text-[0.7rem] uppercase tracking-[0.28em]" style={{color: GOLD}}>Smash Burgers · A pie de playa</div>
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[#f4ede2]/60 md:text-lg">
             Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full bg-[#f26b21] px-6 py-3.5 font-semibold text-white transition hover:brightness-105">
               <UtensilsCrossed className="size-4" /> Ver la carta
             </Link>
-            <a href="#local" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10">
+            <a href="#local" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-[#1c160e] transition hover:bg-white/90">
               <MapPin className="size-4" /> Cómo llegar
             </a>
           </div>
         </div>
 
-        {/* Derecha: slider de hamburguesas nuevas */}
-        <div className="relative min-h-[420px]">
-          <div className="overflow-hidden">
+        {/* Derecha: slider de hamburguesas */}
+        <div className="relative order-1 flex min-h-[60svh] items-center md:order-2 md:min-h-[88svh]">
+          <div className="w-full overflow-hidden">
             <div className="flex transition-transform duration-700 ease-out" style={{transform: `translateX(-${i * 100}%)`}}>
               {slides.map((s, k) => (
                 <div key={k} className="flex w-full shrink-0 flex-col items-center text-center">
-                  <div className="font-adam text-[0.7rem] uppercase tracking-[0.32em]" style={{color: GOLD}}>{s.eyebrow}</div>
-                  <div className="mt-1 font-eight text-5xl leading-none text-white md:text-6xl">{s.name}</div>
+                  <div className="font-adam text-[0.7rem] uppercase tracking-[0.34em]" style={{color: GOLD}}>— {s.eyebrow} —</div>
+                  <div className="mt-2 font-eight text-6xl leading-[0.9] text-white md:text-7xl">{s.name}</div>
                   {s.image ? (
-                    <div className="relative mt-6 aspect-square w-full max-w-sm">
-                      <Image src={s.image} alt={s.name} fill sizes="(min-width:768px) 24rem, 90vw" className="object-contain drop-shadow-2xl" priority={k === 0} />
+                    <div className="burger-float relative mt-6 h-[42svh] w-full max-w-md md:h-[52svh]">
+                      <Image src={s.image} alt={s.name} fill sizes="(min-width:768px) 28rem, 80vw" className="object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.55)]" priority={k === 0} />
                     </div>
                   ) : (
-                    <div className="mt-6 flex aspect-square w-full max-w-sm items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/30">
-                      <UtensilsCrossed className="size-16" />
+                    <div className="mt-6 flex h-[42svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25">
+                      <UtensilsCrossed className="size-20" />
                     </div>
                   )}
-                  {s.price != null && <div className="mt-4 font-eight text-4xl text-[#f4ede2]">{euro(s.price, locale)}</div>}
+                  {s.price != null && <div className="mt-6 font-eight text-4xl md:text-5xl" style={{color: '#f4ede2'}}>{euro(s.price, locale)}</div>}
                 </div>
               ))}
             </div>
           </div>
-
-          {n > 1 && (
-            <div className="absolute -right-1 top-1/2 flex -translate-y-1/2 flex-col gap-2 md:right-2">
-              {slides.map((_, k) => (
-                <button key={k} onClick={() => setI(k)} aria-label={`Ir a ${k + 1}`} className="size-2 rounded-full transition-all" style={{background: k === i ? '#f26b21' : 'rgba(244,237,226,.3)', height: k === i ? 18 : 8}} />
-              ))}
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Paginación de puntos (derecha) */}
+      {n > 1 && (
+        <div className="absolute right-5 top-1/2 z-10 flex -translate-y-1/2 flex-col items-center gap-2.5">
+          {slides.map((_, k) => (
+            <button
+              key={k}
+              onClick={() => setI(k)}
+              aria-label={`Ir a ${k + 1}`}
+              className="rounded-full transition-all"
+              style={{
+                width: 6,
+                height: k === i ? 22 : 6,
+                background: k === i ? '#f26b21' : 'rgba(244,237,226,.28)'
+              }}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

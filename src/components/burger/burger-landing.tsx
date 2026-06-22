@@ -58,8 +58,8 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
 
   return (
     <main style={{background: C.bg, color: C.ink}} className="min-h-screen font-sans">
-      {/* ---- Cabecera ---- */}
-      <header className="sticky top-0 z-40 border-b border-white/5 backdrop-blur-md" style={{background: 'rgba(26,18,9,.78)'}}>
+      {/* ---- Cabecera (superpuesta sobre el hero) ---- */}
+      <header className="absolute inset-x-0 top-0 z-40">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           <Link href="/hamburgueseria" aria-label="La Calita Burger">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,16 +89,18 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       <BurgerHero slides={hero} locale={locale} />
 
       {/* ---- Marquesina diagonal ---- */}
-      <div className="relative my-2 overflow-hidden">
-        <div className="-rotate-2 py-3" style={{background: C.orange}}>
-          <div className="lc-mq" style={{animationDuration: '22s'}}>
-            {[0, 1].map((k) => (
-              <span key={k} className="flex shrink-0 items-center font-eight text-xl text-[#231708]">
-                {Array.from({length: 10}).map((_, i) => (
-                  <span key={i} className="mx-6">{['juicy', 'crispy', 'smash'][i % 3]} ·</span>
-                ))}
-              </span>
-            ))}
+      <div className="relative -my-1 overflow-hidden py-6">
+        <div className="w-[112%] -translate-x-[6%] -rotate-2" style={{background: C.orange}}>
+          <div className="flex items-center overflow-hidden py-3.5">
+            <div className="lc-mq" style={{animationDuration: '34s'}}>
+              {[0, 1].map((k) => (
+                <span key={k} className="flex shrink-0 items-center font-eight text-lg text-[#2a1709] md:text-xl">
+                  {Array.from({length: 14}).map((_, idx) => (
+                    <span key={idx} className="mx-5 whitespace-nowrap">{['juicy', 'crispy', 'smash'][idx % 3]} ·</span>
+                  ))}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
