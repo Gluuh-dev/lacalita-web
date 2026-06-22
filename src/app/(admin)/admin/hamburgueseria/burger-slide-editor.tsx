@@ -21,6 +21,12 @@ const FONTS: [string, string][] = [
   ['sans', 'Geist']
 ];
 const COLORS = ['#ffffff', '#e9ae74', '#f26b21', '#f4ede2', '#fedb71'];
+const BG_PRESETS: [string, string][] = [
+  ['/burger/bg/rings.jpg', 'Anillos'],
+  ['/burger/bg/beach.jpg', 'Playa'],
+  ['/burger/bg/fire.jpg', 'Fuego'],
+  ['/burger/bg/smoke.jpg', 'Humo']
+];
 const EFFECTS: [string, string][] = [
   ['none', 'Ninguno (degradado)'],
   ['image', 'Imagen de fondo'],
@@ -160,8 +166,17 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </SelectContent>
           </Select>
           {bgEffect === 'image' && (
-            <div className="mt-3">
+            <div className="mt-3 space-y-2">
               <Label>Imagen de fondo (se verá difuminada)</Label>
+              <div className="flex flex-wrap gap-2">
+                {BG_PRESETS.map(([src, label]) => (
+                  <button key={src} type="button" onClick={() => setBgImage(src)} title={label} className={`relative h-12 w-20 overflow-hidden rounded-md border ${bgImage === src ? 'border-brand ring-2 ring-brand/40' : 'border-line'}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt={label} className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-ink-3">Elige un preset o sube tu propia imagen:</p>
               <HeroMedia media={bgImage ?? ''} mediaType="image" onSet={({media}) => setBgImage(media)} onClear={() => setBgImage(null)} />
             </div>
           )}
