@@ -49,7 +49,7 @@ export function FxVideo({src, behind, x = 62, y = 50, scale = 1.1}: {src: string
       muted
       playsInline
       preload="metadata"
-      className="pointer-events-none absolute object-cover"
+      className="lc-fxvideo pointer-events-none absolute object-cover"
       style={{
         left: `${x}%`,
         top: `${y}%`,
