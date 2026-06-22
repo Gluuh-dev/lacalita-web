@@ -2,19 +2,17 @@
 
 import {useMemo, useState, useTransition} from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {toast} from 'sonner';
 import {Pencil, Trash2, Plus, Search, Star, UtensilsCrossed} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import {btn} from '@/components/admin/ui';
-import Drawer from '@/components/admin/drawer';
 import EmptyState from '@/components/admin/empty-state';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
-import ProductForm from './product-form';
 import {deleteProduct, toggleAvailable} from './actions';
-import type {Product, Menu, Allergen} from '@/lib/queries';
+import type {Product} from '@/lib/queries';
 
 type I18n = Record<string, string>;
-type MenuWithCats = Pick<Menu, 'id' | 'name'> & {categories: {id: string; name: I18n}[]};
 type Row = Product & {categories?: {name: I18n; menus?: {name: I18n; slug: string} | null} | null};
 
 const ABBR: Record<string, string> = {
@@ -34,13 +32,11 @@ function priceLabel(p: Row) {
   return p.price != null ? euro(Number(p.price), 'es') : '—';
 }
 
-export default function ProductsTable({products, menus, allergens}: {products: Row[]; menus: MenuWithCats[]; allergens: Allergen[]}) {
+export default function ProductsTable({products, cartaSlug}: {products: Row[]; cartaSlug: string}) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('all');
-  const [edit, setEdit] = useState<Row | null | undefined>(undefined);
   const [avail, setAvail] = useState<Record<string, boolean>>(() => Object.fromEntries(products.map((p) => [p.id, p.available])));
   const [, start] = useTransition();
-  const open = edit !== undefined;
 
   const catOpts = useMemo(() => {
     const m = new Map<string, string>();
@@ -105,9 +101,9 @@ export default function ProductsTable({products, menus, allergens}: {products: R
             </SelectContent>
           </Select>
         )}
-        <button onClick={() => setEdit(null)} className={`${btn} ml-auto inline-flex items-center gap-1.5`}>
+        <Link href={`/admin/productos/${cartaSlug}/nuevo`} className={`${btn} ml-auto inline-flex items-center gap-1.5`}>
           <Plus className="size-4" /> Nuevo producto
-        </button>
+        </Link>
       </div>
 
       {filtered.length === 0 ? (
@@ -173,9 +169,9 @@ export default function ProductsTable({products, menus, allergens}: {products: R
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => setEdit(p)} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-ink">
+                        <Link href={`/admin/productos/${cartaSlug}/${p.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-ink">
                           <Pencil className="size-4" />
-                        </button>
+                        </Link>
                         <button onClick={() => remove(p)} aria-label="Eliminar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-danger">
                           <Trash2 className="size-4" />
                         </button>
@@ -188,10 +184,6 @@ export default function ProductsTable({products, menus, allergens}: {products: R
           </table>
         </div>
       )}
-
-      <Drawer open={open} title={edit ? 'Editar producto' : 'Nuevo producto'} onClose={() => setEdit(undefined)} flush>
-        {open && <ProductForm id={edit ? edit.id : null} product={edit ?? null} menus={menus} allergens={allergens} onSaved={() => setEdit(undefined)} />}
-      </Drawer>
     </>
   );
 }

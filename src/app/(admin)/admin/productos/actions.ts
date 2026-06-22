@@ -6,11 +6,13 @@ import {removeMediaServer} from '@/lib/storage-server';
 import {translateField} from '@/lib/translate';
 import {slugify} from '@/lib/slug';
 
+type I18nMap = Record<string, string>;
+
 export type ProductInput = {
   category_id: string;
   slug: string;
-  name: string;
-  description: string;
+  name: I18nMap;
+  description: I18nMap | null;
   price: number | null;
   image: string | null;
   video: string | null;
@@ -34,12 +36,12 @@ export async function saveProduct(id: string | null, form: ProductInput) {
     data: {user}
   } = await supabase.auth.getUser();
   if (!user) return {ok: false, error: 'Sesión caducada. Vuelve a iniciar sesión.'};
-  const slug = form.slug || slugify(form.name);
+  const slug = form.slug || slugify(form.name.es || '');
   const row = {
     category_id: form.category_id,
     slug,
-    name: await translateField(form.name),
-    description: form.description ? await translateField(form.description) : null,
+    name: form.name,
+    description: form.description?.es?.trim() ? form.description : null,
     price: form.variants.length ? null : form.price,
     image: form.image,
     video: form.video,

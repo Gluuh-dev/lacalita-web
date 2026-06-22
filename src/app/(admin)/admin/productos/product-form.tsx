@@ -6,10 +6,10 @@ import {toast} from 'sonner';
 import {card, btn, btnGhost} from '@/components/admin/ui';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Textarea} from '@/components/ui/textarea';
 import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
 import HeroMedia from '@/components/admin/hero-media';
+import {I18nField} from '@/components/admin/i18n-field';
 import AllergenIcon from '@/components/allergen-icon';
 import {tx} from '@/lib/localize';
 import {slugify} from '@/lib/slug';
@@ -25,16 +25,17 @@ export default function ProductForm({
   product,
   menus,
   allergens,
-  onSaved
+  cartaSlug
 }: {
   id: string | null;
   product: Product | null;
   menus: MenuWithCats[];
   allergens: Allergen[];
-  onSaved?: () => void;
+  cartaSlug?: string;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
+  const backHref = cartaSlug ? `/admin/productos/${cartaSlug}` : '/admin/productos';
   const [categoryId, setCategoryId] = useState(
     product?.category_id ?? menus[0]?.categories[0]?.id ?? ''
   );
@@ -69,9 +70,9 @@ export default function ProductForm({
       .map((pa) => pa.allergens?.id)
       .filter(Boolean) as string[]
   );
+  const [name, setName] = useState<Record<string, string>>(product?.name ?? {es: ''});
+  const [description, setDescription] = useState<Record<string, string>>(product?.description ?? {es: ''});
   const [f, setF] = useState({
-    name: product?.name?.es ?? '',
-    description: product?.description?.es ?? '',
     slug: product?.slug ?? '',
     price: product?.price != null ? String(product.price) : '',
     position: String(product?.position ?? 0)
@@ -91,6 +92,10 @@ export default function ProductForm({
       toast.error('Elige una categoría');
       return;
     }
+    if (!name.es?.trim()) {
+      toast.error('Pon el nombre (es)');
+      return;
+    }
     const cleanVariants = variants
       .filter((v) => v.name.trim() && v.price !== '')
       .map((v) => ({name: v.name, price: Number(v.price)}));
@@ -98,9 +103,9 @@ export default function ProductForm({
     start(async () => {
       const r = await saveProduct(id, {
         category_id: categoryId,
-        slug: f.slug || slugify(f.name),
-        name: f.name,
-        description: f.description,
+        slug: f.slug || slugify(name.es),
+        name,
+        description,
         price: f.price === '' ? null : Number(f.price),
         image,
         video,
@@ -118,16 +123,14 @@ export default function ProductForm({
       });
       if (r.ok) {
         toast.success('Guardado');
+        router.push(backHref);
         router.refresh();
-        if (onSaved) onSaved();
-        else router.push('/admin/productos');
       } else toast.error(r.error);
     });
   }
 
   return (
-    <form onSubmit={submit} className="flex h-full min-h-0 flex-col">
-      <div className="flex-1 space-y-4 overflow-y-auto p-5">
+    <form onSubmit={submit} className="mx-auto max-w-2xl space-y-4 pb-24">
       <div>
         <Label>Categoría</Label>
         <div className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-3">
@@ -154,19 +157,9 @@ export default function ProductForm({
         </div>
       </div>
 
-      <div>
-        <Label>Nombre (es)</Label>
-        <Input value={f.name} onChange={(e) => setF({...f, name: e.target.value})} required />
-      </div>
+      <I18nField label="Nombre" value={name} onChange={setName} placeholder="La Doble Calita" />
 
-      <div>
-        <Label>Descripción (es)</Label>
-        <Textarea
-          rows={3}
-          value={f.description}
-          onChange={(e) => setF({...f, description: e.target.value})}
-        />
-      </div>
+      <I18nField label="Descripción" value={description} onChange={setDescription} textarea placeholder="Doble carne, cheddar y bacon ahumado." />
 
       <div>
         <Label>Ingredientes (escribe y pulsa coma o Enter para añadir otro)</Label>
@@ -349,10 +342,8 @@ export default function ProductForm({
         </label>
       </div>
 
-      </div>
-
-      <div className="flex shrink-0 gap-3 border-t border-line bg-bg p-4">
-        <button type="button" onClick={() => (onSaved ? onSaved() : router.push('/admin/productos'))} className={`${btnGhost} flex-1`}>
+      <div className="sticky bottom-0 z-10 mt-2 flex gap-3 border-t border-line bg-bg/95 py-3 backdrop-blur">
+        <button type="button" onClick={() => router.push(backHref)} className={`${btnGhost} flex-1`}>
           Cancelar
         </button>
         <button type="button" onClick={doSave} disabled={pending} className={`${btn} flex-1`}>
