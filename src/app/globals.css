@@ -329,8 +329,8 @@
 @keyframes lc-slide-bot { 0% { opacity: 0; transform: translateY(118vh); } 70% { opacity: 1; transform: translateY(-3%); } 85% { transform: translateY(1.5%); } 100% { transform: translateY(0); } }
 .lc-slide-top { animation: lc-slide-top 1.05s cubic-bezier(0.22, 1, 0.36, 1); }
 .lc-slide-bot { animation: lc-slide-bot 1.05s cubic-bezier(0.22, 1, 0.36, 1); }
-@keyframes lc-bfade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.lc-bfade { animation: lc-bfade 0.55s var(--ease-out, ease-out); }
+@keyframes lc-bfade { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.lc-bfade { animation: lc-bfade 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) { .lc-slide-top, .lc-slide-bot, .lc-bfade { animation: none; } }
 @keyframes lc-hero-slide { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
