@@ -69,7 +69,7 @@ export default function ProductItem({
           <button
             onClick={() => toggleFav(item)}
             aria-label="Favorito"
-            className={`flex size-9 items-center justify-center rounded-full border transition ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
+            className={`flex size-9 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >
             <Heart className="size-4" fill={fav ? 'currentColor' : 'none'} />
           </button>
@@ -78,7 +78,7 @@ export default function ProductItem({
           </button>
           <div className="ml-auto">
             {n === 0 ? (
-              <button onClick={() => add(item)} className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-brand-deep">
+              <button onClick={() => add(item)} className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition active:scale-95 hover:bg-brand-deep">
                 Añadir
               </button>
             ) : (

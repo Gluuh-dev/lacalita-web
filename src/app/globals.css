@@ -243,12 +243,8 @@
 .ds-card--link {
   transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
 }
-.ds-card--link:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
 .ds-card--link:active {
-  transform: translateY(-1px);
+  transform: scale(0.985);
 }
 .ds-media-zoom {
   overflow: hidden;
@@ -257,9 +253,16 @@
 .ds-media-zoom video {
   transition: transform var(--dur-slow) var(--ease-out);
 }
-.ds-card--link:hover .ds-media-zoom img,
-.ds-card--link:hover .ds-media-zoom video {
-  transform: scale(1.05);
+/* Solo en dispositivos con ratón: el hover que eleva la tarjeta cancela el toque en móvil */
+@media (hover: hover) {
+  .ds-card--link:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .ds-card--link:hover .ds-media-zoom img,
+  .ds-card--link:hover .ds-media-zoom video {
+    transform: scale(1.05);
+  }
 }
 .ds-chip {
   transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out),
@@ -297,8 +300,10 @@
   transform-origin: left;
   transition: transform var(--dur-base) var(--ease-out);
 }
-.ds-navlink:hover::after {
-  transform: scaleX(1);
+@media (hover: hover) {
+  .ds-navlink:hover::after {
+    transform: scaleX(1);
+  }
 }
 .eyebrow {
   font-family: 'Adam', serif;
