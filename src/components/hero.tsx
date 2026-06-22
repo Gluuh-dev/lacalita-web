@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {ChevronUp, ChevronDown, X, ArrowRight} from 'lucide-react';
+import {ChevronUp, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
@@ -279,9 +279,18 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
               <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed sm:text-base" style={{color: slide.bienvenidaColor || 'rgba(255,255,255,.86)'}}>{slide.bienvenida}</p>
             )}
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-              {slide.button && <HeroButton slide={slide} bc={bc} bt={bt} pc preview={false} />}
-              <a href="#info" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10">
-                Cómo llegar <ChevronDown className="size-4" />
+              {slide.button &&
+                (slide.link?.startsWith('/') ? (
+                  <Link href={slide.link} className="inline-flex items-center rounded-full border border-transparent px-6 py-3 font-semibold shadow-sm transition hover:brightness-105" style={{background: bc, color: bt}}>
+                    {slide.button}
+                  </Link>
+                ) : (
+                  <a href={slide.link || '#'} className="inline-flex items-center rounded-full border border-transparent px-6 py-3 font-semibold shadow-sm transition hover:brightness-105" style={{background: bc, color: bt}}>
+                    {slide.button}
+                  </a>
+                ))}
+              <a href="#info" className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10">
+                Cómo llegar
               </a>
             </div>
           </div>
