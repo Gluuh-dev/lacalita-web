@@ -85,7 +85,61 @@ Prioridad: **P0** ahora · **P1** importante · **P2** roadmap.
 
 ---
 
-## 6. "Que todo se vea perfecto" — detalles transversales
+## 6. Bloques de pie de landing: "Síguenos" y "Encuéntranos" (P1)
+
+**Capturas 1 (McDonald's):** al final de la landing, dos tarjetas grandes:
+
+### 6.1 "Síguenos" (redes sociales)
+- Tarjeta con **fondo de collage** de fotos (mosaico), logo centrado, titular cálido ("Síguenos y estate al tanto de todo :)") y **iconos circulares de redes** (Facebook, Instagram, YouTube, TikTok).
+- En La Calita: fondo con color de marca (cálido en restaurante / oscuro-naranja en burger), iconos a Instagram/Facebook/TikTok (los que tenga el negocio). URLs configurables en **Ajustes** del admin.
+- **Dónde:** nueva sección en `burger-landing.tsx` y en la home; URLs en `settings` (admin/ajustes).
+
+### 6.2 "Encuéntranos" (ubicación)
+- Tarjeta con **fondo de mapa estilizado** + pin de marca, titular ("Encuéntranos" / "Cómo llegar") y **botón pill** ("Cómo llegar" → abre Google Maps con la dirección).
+- En La Calita basta **un local**, así que en vez de "busca tu restaurante" → **"Cómo llegar"** directo al mapa, con dirección y horario al lado.
+- **Dónde:** sección en home y burger-landing; dirección/coords en `settings`.
+
+---
+
+## 7. Barra de tabs de navegación (estilo Burger King) (P1)
+
+**Capturas 3–4 (Burger King):** barra inferior fija con **iconos + etiqueta**: Inicio · MyBurgerKing · Pedir · Ofertas · Carta. Color de marca, pestaña activa resaltada.
+
+- **Estado:** ya existe una tab bar en la **carta** (`menu-tabbar.tsx`) para favoritos/lista. Conviene un patrón **coherente** y, si se quiere, una tab bar de **navegación del sitio** en móvil.
+- **Acción:**
+  - Diseño unificado: barra inferior fija (móvil), iconos + etiqueta corta, **pestaña activa** con color/realce, respeta `safe-area-inset-bottom`.
+  - Tabs sugeridas para La Calita: **Inicio · Carta · Eventos · Mi lista · Síguenos/Ubicación** (o las que tengan sentido). En la hamburguesería: **Inicio · Carta · Ofertas · Mi lista**.
+  - Una sola implementación reutilizable con `items[]` (icono, etiqueta, href, activo).
+- **Dónde:** refactor de `menu-tabbar.tsx` a un `TabBar` reutilizable; usarlo en carta y, opcionalmente, en las landings.
+
+---
+
+## 8. Páginas legales, FAQ y contacto (P1)
+
+**Captura 4 (Burger King — menú):** secciones "Información y Soporte", "Ayuda" y "Más" con: **Contacto, Preguntas Frecuentes, Sin Gluten, Términos y condiciones, Aviso Legal, Política de Privacidad, Política de Cookies, Configuración de cookies**.
+
+- **Acción — crear estas páginas/secciones** (contenido editable desde admin donde aplique):
+  - **Preguntas frecuentes (FAQ):** acordeón con preguntas habituales (horarios, reservas, alérgenos, eventos, cómo llegar…). Editable en admin (`contenido`).
+  - **Sin gluten / alérgenos:** página explicando opciones sin gluten y el sistema de alérgenos (ya hay iconos de 14 alérgenos).
+  - **Contacto:** datos + (opcional) formulario que envíe email (engancha con el roadmap de emails en `MEJORAS.md`).
+  - **Legales:** Aviso legal, Política de privacidad, Términos y condiciones, **Política de cookies**.
+- **Dónde:** rutas en `(public)/[locale]/` (`/faq`, `/sin-gluten`, `/contacto`, `/legal/...`); enlaces en el menú hamburguesa y en el footer.
+
+---
+
+## 9. Cookies — banner de consentimiento (P0 legal)
+
+- **Obligatorio (RGPD/LSSI en España):** **banner de cookies** al entrar, con opciones **Aceptar / Rechazar / Configurar**, y un enlace permanente a **"Configuración de cookies"** y a la **Política de cookies**.
+- **Acción:**
+  - Banner inferior no intrusivo; guarda la elección (localStorage/cookie) y **no carga analítica/marketing hasta consentir**.
+  - Página **Política de cookies** + acceso a **Configuración de cookies** (como en BK) para cambiar la elección luego.
+  - Si más adelante se añade analítica (Plausible/GA), respetar el consentimiento.
+- **Dónde:** nuevo `cookie-consent.tsx` en el layout público; página `/legal/cookies`.
+- **Nota honesta:** los **textos legales** (privacidad, cookies, términos) conviene que los revise un abogado o usar una plantilla fiable; yo dejo la estructura y el banner funcionando.
+
+---
+
+## 10. "Que todo se vea perfecto" — detalles transversales
 
 - **Scroll con snap** en carruseles (categorías, ofertas, reels) + momentum táctil (`-webkit-overflow-scrolling:touch`, `overscroll-behavior`).
 - **Animaciones de aparición** consistentes (reveal con stagger) en home, carta y landings.
@@ -108,6 +162,11 @@ Prioridad: **P0** ahora · **P1** importante · **P2** roadmap.
 | Oferta a página completa | nueva ruta `hamburgueseria/oferta/[slug]`, `burger-hero.tsx`, `burger-fx.tsx`, admin oferta |
 | Carrusel de categorías + "Ver toda la carta" | `burger-landing.tsx` (+ home), `reveal.tsx` |
 | Aparición al scroll (stagger) | `reveal.tsx` aplicado a más bloques |
+| Bloque "Síguenos" (redes) | `burger-landing.tsx` + home; URLs en `settings`/`admin/ajustes` |
+| Bloque "Encuéntranos" (mapa/cómo llegar) | landings + home; dirección/coords en `settings` |
+| Tab bar de navegación unificada | refactor `menu-tabbar.tsx` → `TabBar` reutilizable |
+| FAQ / Sin gluten / Contacto / Legales | rutas `(public)/[locale]/faq`, `/sin-gluten`, `/contacto`, `/legal/*` |
+| Banner de cookies + política | nuevo `cookie-consent.tsx` en layout + `/legal/cookies` |
 
 ---
 
