@@ -25,11 +25,11 @@ Marca cada tarea al completarla. Esfuerzo: 🟢 rápido (≤medio día) · 🟡 
 
 ## Fase 2 — Carga y rendimiento ("que cargue todo bien")
 
-- [ ] 🟡 **Skeletons en todas las vistas** (home, `/carta`, ficha producto, `/hamburgueseria`, detalle evento, admin) + Suspense en listados. _(MEJORAS §8)_ — `ui/skeleton.tsx`, `loading.tsx`
-- [ ] 🟡 **Optimizar fondos**: pasar `background:url()` a `next/image` + **WebP/AVIF** por breakpoint. _(MEJORAS §6)_ — `hero.tsx`, `burger-hero.tsx`, `public/burger/bg/`
-- [ ] 🟢 **Vídeos lazy + poster** (`preload`, `poster`, pausa fuera de viewport). _(MEJORAS §7)_ — `burger-fx.tsx`, reels
-- [ ] 🟢 **`blur` placeholder** en imágenes de producto/ofertas. _(MEJORAS §9)_
-- [ ] 🟢 **`error.tsx`** para que un fallo de datos no rompa la página. _(MEJORAS §P1)_
+- [x] 🟡 **Skeletons** añadidos en home, `/carta`, ficha de producto, `/hamburgueseria` y detalle de evento (ya existían en `/carta/[menu]` y `/eventos`). _Admin pendiente._ _(MEJORAS §8)_ — `loading.tsx`
+- [ ] 🟡 **Optimizar fondos**: pasar `background:url()` a `next/image` + **WebP/AVIF**. _Pendiente (refactor del hero, riesgo medio)._ _(MEJORAS §6)_
+- [x] 🟢 **Vídeos `preload="metadata"` + poster** (hero y FX). Pausa fuera de viewport ya en reels. _(MEJORAS §7)_ — `hero.tsx`, `burger-fx.tsx`
+- [~] 🟢 **`blur` placeholder**: las imágenes ya cargan sobre `bg-surface-sunken` (placeholder de color); `blur` real opcional. _(MEJORAS §9)_
+- [x] 🟢 **`error.tsx`** para que un fallo no rompa la página. _(MEJORAS §P1)_ — `(public)/[locale]/error.tsx`
 
 ## Fase 3 — Diseño estilo McDonald's / Burger King (impacto visual)
 

@@ -147,7 +147,7 @@ export function HeroStage({
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#243b53'}}>
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
-        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline style={cover} />
+        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={cover} />
       ) : slide.media ? (
         <div style={{...cover, background: `center/cover url(${slide.media})`}} />
       ) : (
@@ -323,7 +323,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
     <div className="relative flex h-full w-full items-center overflow-hidden">
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
-        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
       ) : slide.media ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={slide.media} alt="" className="absolute inset-0 h-full w-full object-cover" />
