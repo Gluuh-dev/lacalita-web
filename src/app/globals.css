@@ -337,8 +337,8 @@
   .lc-slide-bot { animation-name: lc-slide-right; }
   /* En móvil, el vídeo de efecto se centra en la pantalla (no se corta) */
   .lc-fxvideo { top: 50% !important; left: 50% !important; }
-  /* Carrusel de categorías: la card se centra en la pantalla (la 1.ª y la del medio) */
-  .lc-carousel-pad { padding-left: 13vw; padding-right: 13vw; scroll-padding-left: 13vw; }
+  /* Carrusel de categorías: la card se centra y asoman las de los lados */
+  .lc-carousel-pad { padding-left: 18vw; padding-right: 18vw; scroll-padding-left: 18vw; }
 }
 @media (min-width: 768px) {
   /* PC: la 1.ª card alineada bajo el título (gutter del contenido max-w-7xl) */
