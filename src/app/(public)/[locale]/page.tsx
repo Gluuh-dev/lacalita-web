@@ -128,7 +128,7 @@ export default async function Home({
               return (
                 <Link
                   key={m.id}
-                  href={`/carta/${m.slug}`}
+                  href={m.slug === 'hamburgueseria' ? '/hamburgueseria' : `/carta/${m.slug}`}
                   data-theme={m.theme}
                   className="ds-card--link group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-[28px] bg-gradient-to-br from-brand to-brand-deep p-6 text-white shadow-md"
                 >
