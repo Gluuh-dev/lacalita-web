@@ -40,6 +40,24 @@ _Versión 1 · Junio 2026_
 
 > Las webs pueden empezar en planes **gratuitos** de Vercel/Supabase. Para producción seria (tráfico, pagos, fiabilidad) se recomienda Pro (~20 €/mes cada servicio).
 
+### Coste fijo anual de servicios (lo que pediste)
+
+| Servicio | Detalle | Coste anual aprox. |
+|---|---|---|
+| **Dominio La Calita** (`lacalita.es`) | Registro/renovación | ~15 € / año |
+| **Dominio La Calita Burger** (`lacalitaburger.es`) | Registro/renovación | ~15 € / año |
+| **Supabase Pro** | 25 $/mes ≈ 23 €/mes · base de datos, almacenamiento, backups, más capacidad | ~**280 € / año** |
+| **Subtotal (2 dominios + Supabase Pro)** | | **≈ 310 € / año** |
+
+> Notas:
+> - **Un solo Supabase Pro** puede dar servicio a **las dos webs** (comparten base de datos y almacenamiento), así que no hace falta pagar dos.
+> - Los dominios `.es` rondan **10–15 €/año** cada uno (el primer año a veces más barato según registrador).
+> - Si además se quiere **Vercel Pro** (recomendado para producción con pagos/tráfico): **~20 €/mes ≈ 240 €/año**, también compartido por ambas webs en el mismo equipo.
+> - Pasarela de pago (si se contrata el módulo de pagos): **sin cuota fija**, solo **comisión por transacción**.
+
+**Resumen anual mínimo recomendado** (2 dominios + Supabase Pro): **≈ 310 €/año**.
+Con Vercel Pro incluido: **≈ 550 €/año**.
+
 ---
 
 ## D. Paquetes sugeridos
