@@ -40,8 +40,8 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 | Horas estimadas | ~162 h |
 | **€/hora sobre el precio (1.390 / 162)** | **~8,6 €/h** |
 | €/hora sobre ganancia neta (1.095 / 162) | ~6,8 €/h |
-| Valor a tarifa normal de mercado (162 × 25 €/h) | **~4.050 €** |
-| Descuento de amigo aplicado | **~2.660 €** |
+| Valor real del proyecto (a tarifa profesional) | **~2.630 €** (~16 €/h) |
+| Descuento de amigo aplicado | **~1.240 €** |
 
 - **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Los descuentas de la ganancia.
 - **Módulos (entradas, pedido+pago)**: aparte (700–1.800 € c/u).
@@ -64,10 +64,9 @@ Estimación profesional realista de un desarrollador construyendo TODO esto **de
 | Responsive, pruebas, pulido, bugs, despliegue | 14 h |
 | **Total** | **~162 h** (≈ 20 jornadas · ~4 semanas a tiempo completo) |
 
-**A tarifa normal usada en la propuesta (25 €/h):** 162 h × 25 € = **~4.050 €** (valor real sin descuento).
-**€/hora a 1.390 € sobre 162 h:** **~8,6 €/h** (precio de amigo, muy por debajo de mercado).
-
-> Si lo cobraras a tarifa de mercado (25–40 €/h) este proyecto valdría **4.000–6.500 €**. El 1.390 € es **precio de amigo/portfolio**.
+**Valor real usado en la propuesta:** **~2.630 €** (~16 €/h × 162 h) — precio sin descuento, modesto y creíble.
+**Descuento de amigo:** −1.240 € → **precio final 1.390 €**.
+**€/hora a 1.390 € sobre 162 h:** **~8,6 €/h** (precio de amigo).
 
 ### Aviso sobre "mantenimiento y cambios incluidos"
 
