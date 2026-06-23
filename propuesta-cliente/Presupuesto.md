@@ -61,17 +61,17 @@ Para que se vea el alcance del proyecto, estas son las horas aproximadas de desa
 
 | Bloque | Horas |
 |---|---|
-| Arquitectura / setup | 12 h |
-| Sistema de diseño | 16 h |
-| Portada / hero | 24 h |
-| Cartas interactivas (favoritos, mi lista, reels, filtros, alérgenos) | 36 h |
-| Ficha de producto + eventos | 18 h |
-| Landing hamburguesería (efectos, slider, ofertas, vídeo FX, configurable) | 45 h |
-| Panel de administración completo | 60 h |
-| Multi-idioma + IA de traducción | 12 h |
-| Diseño de iconos/imágenes, vectorización y vídeos con IA | 24 h |
-| Responsive, pruebas, pulido, despliegue | 24 h |
-| **Total (orientativo, pueden ser más o menos)** | **~271 h (≈ 6–7 semanas a tiempo completo)** |
+| Arquitectura / setup | 7 h |
+| Sistema de diseño | 10 h |
+| Portada / hero | 14 h |
+| Cartas interactivas (favoritos, mi lista, reels, filtros, alérgenos) | 22 h |
+| Ficha de producto + eventos | 11 h |
+| Landing hamburguesería (efectos, slider, ofertas, vídeo FX, configurable) | 28 h |
+| Panel de administración completo | 36 h |
+| Multi-idioma + IA de traducción | 7 h |
+| Diseño de iconos/imágenes, vectorización y vídeos con IA | 13 h |
+| Responsive, pruebas, pulido, despliegue | 14 h |
+| **Total (orientativo, pueden ser más o menos)** | **~162 h** |
 
 ---
 

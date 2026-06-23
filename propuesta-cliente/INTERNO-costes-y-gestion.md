@@ -37,11 +37,11 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 | Precio cobrado al cliente | **1.390 €** |
 | − Servicios 1.er año (dominio + Supabase Pro, a coste) | **−295 €** |
 | **= Ganancia neta (tu trabajo, 1.er año)** | **~1.095 €** |
-| Horas estimadas | ~231 h |
-| **€/hora sobre el precio (1.390 / 231)** | **~6 €/h** |
-| €/hora sobre ganancia neta (1.095 / 231) | ~4,7 €/h |
-| Valor a tarifa normal de mercado (231 × 35 €/h) | **~8.085 €** |
-| Descuento de amigo aplicado | **~6.695 €** |
+| Horas estimadas | ~162 h |
+| **€/hora sobre el precio (1.390 / 162)** | **~8,6 €/h** |
+| €/hora sobre ganancia neta (1.095 / 162) | ~6,8 €/h |
+| Valor a tarifa normal de mercado (162 × 25 €/h) | **~4.050 €** |
+| Descuento de amigo aplicado | **~2.660 €** |
 
 - **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Los descuentas de la ganancia.
 - **Módulos (entradas, pedido+pago)**: aparte (700–1.800 € c/u).
