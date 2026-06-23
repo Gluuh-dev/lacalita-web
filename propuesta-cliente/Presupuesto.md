@@ -38,7 +38,9 @@ _Versión 1 · Junio 2026_
 | **Pasarela de pago** | Comisión por transacción (p. ej. Stripe ~1,5 % + 0,25 € EU) |
 | **Mantenimiento / soporte** | **40 – 120 €/mes** (actualizaciones, backups, soporte) |
 
-> Las webs pueden empezar en planes **gratuitos** de Vercel/Supabase. Para producción seria (tráfico, pagos, fiabilidad) se recomienda Pro (~20 €/mes cada servicio).
+> ⚠️ **Importante (Supabase Free)**: el plan gratuito de Supabase **pausa el proyecto tras ~7 días sin actividad**. Para una web de negocio en producción —que puede tener días de poco tráfico— eso significa que **la web se quedaría sin datos hasta reactivarla a mano**. Por eso, para producción se necesita **Supabase Pro** (no se pausa, incluye backups y más capacidad). El plan Free solo sirve para **pruebas/desarrollo**, no para el sitio en marcha.
+>
+> Vercel Free (Hobby) **no se pausa** y sirve para arrancar, pero su licencia es de uso personal/no comercial; para producción se recomienda Vercel Pro.
 
 ### Coste fijo anual de servicios (lo que pediste)
 
