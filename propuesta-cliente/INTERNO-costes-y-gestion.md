@@ -36,25 +36,31 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 - **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Sin recargo.
 - **Módulos (entradas, pedido+pago)**: aparte (700–1.800 € c/u).
 
-### Cálculo de horas / €·hora (para ti)
+### Horas para desarrollar esto desde cero (una persona)
 
-Estimación del trabajo (a ojo, todo lo construido):
+Estimación profesional realista de un desarrollador construyendo TODO esto **desde cero**:
 
-| Bloque | Horas aprox. |
+| Bloque | Horas |
 |---|---|
-| Web pública (portada, cartas, eventos, ubicación) | 20–28 h |
-| Área hamburguesería (landing, efectos, carta) | 14–20 h |
-| Panel de administración (todos los editores + previsualización) | 18–26 h |
-| Multi-idioma + IA de traducción | 5–8 h |
-| Ajustes, responsive, pruebas, despliegue | 8–12 h |
-| **Total estimado** | **~65–94 h** (≈ **8–12 jornadas**) |
+| Arquitectura/setup (Next.js, Supabase, auth, i18n, despliegue) | 8–12 h |
+| Sistema de diseño (tokens, fuentes, componentes) | 10–16 h |
+| Portada/hero (carrusel, modos de evento, animaciones) | 16–24 h |
+| Cartas interactivas (store, favoritos, mi lista, reels de vídeo, filtros, alérgenos) | 24–36 h |
+| Ficha de producto + eventos + detalle de evento | 12–18 h |
+| Landing hamburguesería (hero con efectos, slider, ofertas, votadas, marquesina, vídeo FX, todo configurable) | 30–45 h |
+| Panel de administración completo (todos los editores + previsualización en vivo) | 40–60 h |
+| Multi-idioma + IA de traducción | 8–12 h |
+| Responsive, pruebas, pulido, bugs, despliegue | 16–24 h |
+| **Total** | **~165–245 h** (≈ **21–31 jornadas · 4–6 semanas a tiempo completo**) |
 
-**€/hora resultante a 1.390 €:**
-- A 65 h → **~21 €/h**
-- A 80 h → **~17 €/h**
-- A 94 h → **~15 €/h**
+**€/hora a 1.390 € sobre ese trabajo real:**
+- A 165 h → **~8 €/h**
+- A 200 h → **~7 €/h**
+- A 245 h → **~6 €/h**
 
-> Realidad: es **precio de amigo / portfolio** (por debajo de tarifa de mercado, que estaría en 30–50 €/h). Para clientes normales, este mismo trabajo se cobraría **3.000–4.500 €**.
+> Es decir: **1.390 € es muy por debajo de coste de mercado**. A tarifa normal (30–50 €/h) este proyecto valdría **5.000–9.000 €**. El 1.390 € es **precio de amigo/portfolio** — perfecto para conseguir referencias, pero tenlo presente.
+>
+> Nota: con **IA de apoyo** (como en este caso) el tiempo real puede bajar bastante respecto a estas horas "desde cero a mano", pero el **valor entregado** sigue siendo el de un proyecto de 5.000–9.000 €.
 
 ### Aviso sobre "mantenimiento y cambios incluidos"
 
