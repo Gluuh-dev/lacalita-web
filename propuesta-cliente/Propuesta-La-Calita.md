@@ -24,7 +24,7 @@ Se hace **una única web bajo un solo dominio** (`tudominio.com`), con **dos ár
 
 Ventajas de un solo dominio/proyecto:
 - **Un solo mantenimiento, un panel y una base de datos** → más barato y simple.
-- Coste fijo mínimo: **un dominio + un Supabase Pro** (≈ 295 €/año).
+- Una **única cuota anual** de mantenimiento y servicios (ver presupuesto).
 - Cada área conserva su **estética propia** (la hamburguesería es oscura/naranja, la principal cálida).
 
 > Módulos estrella que se pueden añadir: **venta/reserva de entradas para eventos** (área La Calita) y **pedido y pago online de hamburguesas** (área Burger).
