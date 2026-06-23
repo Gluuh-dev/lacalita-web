@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Propuesta web · La Calita</title>
+<style>
+  :root{
+    --ink:#23303f; --ink-2:#51606f; --muted:#7d8a97;
+    --bg:#ffffff; --soft:#faf6ef; --line:#e9ddca;
+    --gold:#c98a4e; --gold-2:#e9ae74; --accent:#2e6e8e; --orange:#f26b21;
+  }
+  *{box-sizing:border-box;}
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{
+    margin:0; color:var(--ink); background:#eef0f2;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; font-size:15px;
+  }
+  .page{
+    max-width:820px; margin:24px auto; background:var(--bg);
+    box-shadow:0 10px 40px rgba(0,0,0,.12); border-radius:14px; overflow:hidden;
+  }
+  .cover{
+    background:radial-gradient(120% 120% at 80% 0%, #fff6ea, #ffffff 60%);
+    border-bottom:1px solid var(--line); padding:48px 56px 40px; text-align:center;
+  }
+  .cover img{ width:120px; height:auto; margin:0 auto 18px; display:block; }
+  .cover h1{ font-size:30px; margin:0 0 6px; letter-spacing:-.01em; }
+  .cover .sub{ color:var(--gold); font-weight:600; letter-spacing:.18em; text-transform:uppercase; font-size:12px; }
+  .cover .meta{ color:var(--muted); font-size:13px; margin-top:14px; }
+  .body{ padding:36px 56px 48px; }
+  h2{ font-size:20px; margin:34px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--soft); }
+  h2 .ico{ color:var(--gold); }
+  h3{ font-size:15px; margin:18px 0 6px; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; font-weight:700;}
+  p{ margin:8px 0; color:var(--ink-2); }
+  ul{ margin:8px 0 8px 0; padding-left:20px; color:var(--ink-2); }
+  li{ margin:5px 0; }
+  strong{ color:var(--ink); }
+  table{ width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); }
+  th{ background:var(--soft); color:var(--ink); font-weight:700; }
+  td.num,th.num{ text-align:right; white-space:nowrap; }
+  tr.total td{ font-weight:800; color:var(--ink); border-top:2px solid var(--gold); background:#fcf7ef; }
+  .price-box{
+    margin:22px 0; padding:22px 26px; border-radius:14px; text-align:center;
+    background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#3a2606;
+  }
+  .price-box .big{ font-size:40px; font-weight:800; letter-spacing:-.02em; }
+  .price-box .lbl{ text-transform:uppercase; letter-spacing:.18em; font-size:12px; font-weight:700; opacity:.8; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .card{ background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .tag{ display:inline-block; background:#fff; border:1px solid var(--line); border-radius:999px; padding:3px 10px; font-size:12px; margin:3px 4px 3px 0; color:var(--ink-2);}
+  .footer{ background:var(--ink); color:#dfe6ee; padding:24px 56px; font-size:13px; }
+  .footer a{ color:#fff; text-decoration:none; }
+  .footer .name{ font-size:16px; font-weight:700; color:#fff; }
+  .note{ font-size:12.5px; color:var(--muted); }
+  @media print{
+    body{ background:#fff; font-size:12.5px; }
+    .page{ box-shadow:none; margin:0; max-width:none; border-radius:0; }
+    h2{ page-break-after:avoid; } table,.price-box,.card{ page-break-inside:avoid; }
+    .cover{ padding:30px 40px; } .body{ padding:24px 40px; } .footer{ padding:18px 40px; }
+  }
+  @media (max-width:640px){ .body,.cover,.footer{ padding-left:22px; padding-right:22px; } .grid2{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- PORTADA -->
+  <div class="cover">
+    <img src="./logo-marca.svg" alt="Logo" />
+    <div class="sub">Propuesta de desarrollo web</div>
+    <h1>La Calita Beach Club</h1>
+    <div class="meta">Una web · Restaurante · Eventos · Hamburguesería &nbsp;·&nbsp; Junio 2026</div>
+  </div>
+
+  <div class="body">
+
+    <h2>Resumen</h2>
+    <p>Una presencia web <strong>moderna, rápida y totalmente autogestionable</strong>: el cliente cambia textos, fotos, cartas, precios, eventos y portadas desde un <strong>panel propio</strong>, sin tocar código. Todo <strong>multi-idioma</strong> y con un diseño que se ve perfecto en <strong>PC, tablet y móvil</strong>.</p>
+    <p>Es <strong>una sola web</strong> bajo un dominio, con dos áreas con identidad propia: <strong>La Calita</strong> (beach club / restaurante / eventos) y <strong>La Calita Burger</strong> (hamburguesería), en <code>tudominio.com/hamburgueseria</code>.</p>
+
+    <h2>🌐 Qué incluye la web</h2>
+
+    <h3>Web pública</h3>
+    <ul>
+      <li><strong>Portada</strong> con carrusel: imagen o vídeo de fondo, logo, lema, botones, zona de eventos y texto en movimiento.</li>
+      <li><strong>Cartas interactivas</strong>: cada plato con foto/vídeo, precio (o "desde X €"), <strong>alérgenos con iconos</strong>, favoritos (♥), lista personal, <strong>modo vídeo (reels)</strong>, filtros y buscador.</li>
+      <li><strong>Ficha de cada plato</strong> y <strong>agenda de eventos</strong> (conciertos, DJ) con su detalle.</li>
+      <li><strong>Área Hamburguesería</strong>: portada a pantalla completa con <strong>efectos (humo, fuego, chispas, vídeo)</strong>, ofertas, "las más votadas" y alérgenos; carta en tema oscuro.</li>
+      <li><strong>Registro e inicio de sesión de usuarios</strong> y <strong>valoraciones</strong> (ranking de "los más valorados").</li>
+      <li><strong>Diseño preparado para incorporar pagos de entradas y reservas.</strong></li>
+      <li><strong>Ubicación</strong>: horarios, mapa y contacto.</li>
+    </ul>
+
+    <h3>Panel de administración (lo gestiona el cliente)</h3>
+    <ul>
+      <li>Cambiar <strong>textos, fotos, vídeos, precios, cartas, categorías, eventos y portadas</strong> sin saber programar.</li>
+      <li><strong>Editor de portada con previsualización en vivo</strong> (PC y móvil).</li>
+      <li><strong>Editor de la hamburguesería</strong> (diapositivas y ofertas) con previsualización y efectos.</li>
+      <li>Los cambios se ven <strong>al instante</strong> en la web.</li>
+    </ul>
+
+    <h3>Idiomas con Inteligencia Artificial</h3>
+    <ul>
+      <li>Web en <strong>3 idiomas: Español, Inglés y Francés</strong>.</li>
+      <li><strong>IA incorporada</strong> para traducir: con un botón se rellenan inglés y francés a partir del español (luego se puede retocar).</li>
+      <li><strong>Posibilidad de añadir los idiomas que quieras</strong> (alemán, italiano…).</li>
+    </ul>
+
+    <h3>Recursos gráficos (incluidos)</h3>
+    <ul>
+      <li><strong>Diseño de iconos e imágenes</strong> a medida.</li>
+      <li><strong>Vectorización</strong> de logos e iconos (SVG, nítidos a cualquier tamaño).</li>
+      <li><strong>Creación de vídeos con IA</strong> para los efectos (humo, fuego, chispas…).</li>
+    </ul>
+
+    <h3>Diseño y calidad</h3>
+    <ul>
+      <li>Se ve perfecto en <strong>PC, tablet y móvil</strong>.</li>
+      <li>Carga rápida, imágenes optimizadas, animaciones suaves.</li>
+      <li>Certificado seguro (HTTPS) y preparada para Google (SEO básico).</li>
+    </ul>
+
+    <h3>Soporte incluido</h3>
+    <ul>
+      <li><strong>Mantenimiento</strong> y los <strong>cambios e ideas</strong> que se vayan ocurriendo.</li>
+      <li><strong>Ayuda para meter los platos</strong> y con las <strong>traducciones</strong>.</li>
+      <li><strong>Formación</strong>: una sesión para aprender a usar el panel.</li>
+    </ul>
+
+    <!-- PRECIO -->
+    <div class="price-box">
+      <div class="lbl">Desarrollo web completo · pago único</div>
+      <div class="big">1.390 €</div>
+      <div class="lbl">Todo lo anterior incluido</div>
+    </div>
+
+    <h2>Trabajo y dedicación estimada</h2>
+    <p class="note">Horas aproximadas de desarrollo (orientativas, pueden ser más o menos):</p>
+    <table>
+      <tr><th>Bloque</th><th class="num">Horas</th></tr>
+      <tr><td>Arquitectura / setup</td><td class="num">12 h</td></tr>
+      <tr><td>Sistema de diseño</td><td class="num">16 h</td></tr>
+      <tr><td>Portada / hero</td><td class="num">24 h</td></tr>
+      <tr><td>Cartas interactivas (favoritos, mi lista, reels, filtros, alérgenos)</td><td class="num">36 h</td></tr>
+      <tr><td>Ficha de producto + eventos</td><td class="num">18 h</td></tr>
+      <tr><td>Landing hamburguesería (efectos, slider, ofertas, vídeo FX, configurable)</td><td class="num">45 h</td></tr>
+      <tr><td>Panel de administración completo</td><td class="num">60 h</td></tr>
+      <tr><td>Multi-idioma + IA de traducción</td><td class="num">12 h</td></tr>
+      <tr><td>Diseño de iconos/imágenes, vectorización y vídeos con IA</td><td class="num">24 h</td></tr>
+      <tr><td>Responsive, pruebas, pulido, despliegue</td><td class="num">24 h</td></tr>
+      <tr class="total"><td>Total (orientativo)</td><td class="num">~271 h · 6–7 semanas</td></tr>
+    </table>
+
+    <h2>Servicios anuales <span class="note">(a precio de coste)</span></h2>
+    <p class="note">Servicios externos para que la web esté online (se pagan a sus proveedores, sin recargo):</p>
+    <table>
+      <tr><th>Servicio</th><th>Para qué</th><th class="num">Coste aprox.</th></tr>
+      <tr><td>Dominio (.es / .com)</td><td>La dirección de la web</td><td class="num">~12–15 €/año</td></tr>
+      <tr><td>Base de datos y alojamiento</td><td>Guarda cartas, fotos, eventos y traducciones; con copias de seguridad</td><td class="num">~280 €/año</td></tr>
+      <tr class="total"><td colspan="2">Total</td><td class="num">≈ 295 €/año</td></tr>
+    </table>
+
+    <h2>Opcionales para más adelante</h2>
+    <p>
+      <span class="tag">🎟️ Entradas / reservas de eventos (con pago y QR)</span>
+      <span class="tag">🍔 Pedido y pago online de hamburguesas</span>
+      <span class="tag">🪑 Reserva de mesa</span>
+      <span class="tag">📧 Newsletter</span>
+      <span class="tag">🌐 Idioma adicional</span>
+    </p>
+
+    <h2>Forma de pago</h2>
+    <table>
+      <tr><th>Concepto</th><th class="num">Importe</th></tr>
+      <tr><td>Total del proyecto</td><td class="num">1.390 €</td></tr>
+      <tr><td>1.º pago — al empezar (50 %)</td><td class="num">695 €</td></tr>
+      <tr><td>2.º pago — a la entrega (50 %)</td><td class="num">695 €</td></tr>
+    </table>
+    <p>Pago por <strong>transferencia bancaria</strong>.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Incluido siempre</h3>
+        <ul style="margin-bottom:0">
+          <li>Diseño responsive (PC / tablet / móvil)</li>
+          <li>Panel para gestionar todo el contenido</li>
+          <li>3 idiomas con traducción asistida (IA)</li>
+          <li>Publicación + HTTPS + formación</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">No incluido (salvo acuerdo)</h3>
+        <ul style="margin-bottom:0">
+          <li>Fotos/vídeos profesionales de producción</li>
+          <li>Textos legales por abogado</li>
+          <li>Comisiones de pasarela de pago</li>
+          <li>Campañas de marketing / publicidad</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONTACTO -->
+  <div class="footer">
+    <div class="name">Plácido Venegas</div>
+    <div>📧 <a href="mailto:placidovenegas@gmail.com">placidovenegas@gmail.com</a> &nbsp;·&nbsp; 📞 <a href="tel:+34633468275">633 468 275</a></div>
+    <div style="margin-top:8px; opacity:.7;">Propuesta orientativa · La Calita · Salobreña (Granada)</div>
+  </div>
+
+</div>
+</body>
+</html>
