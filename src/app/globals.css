@@ -348,6 +348,12 @@
     scroll-padding-left: max(1.25rem, calc((100vw - 80rem) / 2 + 1.25rem));
   }
 }
+/* Carrusel de categorías: cards centradas por transform (la activa al frente) */
+.lc-cat-card { transform: scale(.9); opacity: .45; transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .45s ease, box-shadow .45s ease; }
+.lc-cat-card.is-active { transform: scale(1); opacity: 1; box-shadow: 0 0 0 2px #f97316, 0 26px 60px -22px rgba(249,115,22,.5); }
+.lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(255,255,255,.28); transition: all .35s cubic-bezier(.22,.61,.36,1); }
+.lc-cat-dot.is-active { width: 26px; background: #f97316; }
+@media (prefers-reduced-motion: reduce) { .lc-cat-card, .lc-cat-dot { transition: none; } }
 /* Efectos de fondo del hero hamburguesería */
 @keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }
 .lc-smoke { animation: lc-smoke 14s ease-in-out infinite; }

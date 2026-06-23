@@ -1,6 +1,6 @@
 'use client';
 
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {ChevronLeft, ChevronRight, ArrowRight, UtensilsCrossed} from 'lucide-react';
@@ -9,151 +9,197 @@ import type {Category} from '@/lib/queries';
 
 const ORANGE = '#f26b21';
 
-type Metrics = {lefts: number[]; centers: number[]; w: number; track: number};
-
 export default function BurgerCategoryCarousel({categories, locale}: {categories: Category[]; locale: string}) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [drag, setDrag] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [m, setM] = useState<Metrics | null>(null);
-  const last = categories.length - 1;
-
-  const measure = useCallback(() => {
-    const wrap = wrapRef.current;
-    const track = trackRef.current;
-    if (!wrap || !track) return;
-    const kids = Array.from(track.children) as HTMLElement[];
-    setM({
-      lefts: kids.map((k) => k.offsetLeft),
-      centers: kids.map((k) => k.offsetLeft + k.offsetWidth / 2),
-      w: wrap.clientWidth,
-      track: track.scrollWidth
-    });
-  }, []);
+  const dotsRef = useRef<HTMLDivElement>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const [ready, setReady] = useState(false);
+  const n = categories.length;
 
   useEffect(() => {
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (wrapRef.current) ro.observe(wrapRef.current);
-    return () => ro.disconnect();
-  }, [measure, categories.length]);
+    const vp = viewportRef.current;
+    const track = trackRef.current;
+    if (!vp || !track || n === 0) return;
+    const cards = Array.from(track.children) as HTMLElement[];
+    const dots = dotsRef.current ? (Array.from(dotsRef.current.children) as HTMLElement[]) : [];
 
-  const isMobile = m ? m.w < 768 : true;
-  const gutter = m ? Math.max(20, (m.w - 1280) / 2 + 20) : 20;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TRANS = reduce ? 'none' : 'transform .55s cubic-bezier(.22,.61,.36,1)';
 
-  const baseOffset = (i: number) => {
-    if (!m) return 0;
-    const raw = isMobile ? m.w / 2 - m.centers[i] : gutter - m.lefts[i];
-    const min = Math.min(0, m.w - m.track); // no dejar hueco tras la última
-    const max = isMobile ? m.w / 2 - m.centers[0] : gutter; // primera centrada (móvil) / bajo el título (PC)
-    return Math.max(min, Math.min(max, raw));
-  };
+    let active = 0;
+    let cardW = 0;
+    let step = 0;
+    let center = 0;
 
-  const overflow = m ? m.track > m.w + 4 : false;
-  const offset = (m ? baseOffset(active) : 0) + drag;
+    const layout = () => {
+      const r0 = cards[0].getBoundingClientRect();
+      cardW = r0.width;
+      step = cards.length > 1 ? cards[1].getBoundingClientRect().left - r0.left : cardW;
+      center = vp.getBoundingClientRect().width / 2;
+    };
 
-  // Arrastre táctil propio (sin scroll nativo → sin saltos del snap).
-  const startX = useRef(0);
-  const onStart = (x: number) => {
-    if (!overflow) return;
-    setDragging(true);
-    startX.current = x;
-  };
-  const onMove = (x: number) => {
-    if (dragging) setDrag(x - startX.current);
-  };
-  const onEnd = () => {
-    if (!dragging || !m) return;
-    const cur = baseOffset(active) + drag;
-    let best = active;
-    let bd = Infinity;
-    for (let i = 0; i <= last; i++) {
-      const d = Math.abs(baseOffset(i) - cur);
-      if (d < bd) {
-        bd = d;
-        best = i;
+    const setTransform = (animate: boolean) => {
+      track.style.transition = animate ? TRANS : 'none';
+      const txp = center - cardW / 2 - active * step;
+      track.style.transform = `translate3d(${txp}px,0,0)`;
+      if (!animate) {
+        void track.offsetWidth;
+        track.style.transition = TRANS;
       }
-    }
-    setActive(best);
-    setDrag(0);
-    setDragging(false);
-  };
+    };
 
-  const go = (i: number) => setActive(Math.max(0, Math.min(last, i)));
+    const updateUI = (emph?: number) => {
+      const idx = emph == null ? active : Math.max(0, Math.min(n - 1, emph));
+      cards.forEach((el, k) => el.classList.toggle('is-active', k === idx));
+      dots.forEach((el, j) => el.classList.toggle('is-active', j === idx));
+      if (prevRef.current) prevRef.current.disabled = active <= 0;
+      if (nextRef.current) nextRef.current.disabled = active >= n - 1;
+    };
 
-  if (!categories.length) return null;
+    const go = (t: number, animate = true) => {
+      active = Math.max(0, Math.min(n - 1, t));
+      setTransform(animate);
+      updateUI();
+    };
+
+    const nearest = (txp: number) => Math.round((center - cardW / 2 - txp) / step);
+
+    // ---- Drag (pointer = ratón + táctil) ----
+    let dragging = false;
+    let startX = 0;
+    let startTx = 0;
+    let moved = 0;
+    let didDrag = false;
+
+    const onDown = (e: PointerEvent) => {
+      dragging = true;
+      didDrag = false;
+      moved = 0;
+      startX = e.clientX;
+      const t = getComputedStyle(track).transform;
+      startTx = t && t !== 'none' ? new DOMMatrixReadOnly(t).m41 : 0;
+      track.style.transition = 'none';
+      try {
+        track.setPointerCapture(e.pointerId);
+      } catch {}
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging) return;
+      moved = e.clientX - startX;
+      if (Math.abs(moved) > 5) didDrag = true;
+      const txp = startTx + moved;
+      track.style.transform = `translate3d(${txp}px,0,0)`;
+      updateUI(nearest(txp));
+    };
+    const endDrag = (e: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      try {
+        track.releasePointerCapture(e.pointerId);
+      } catch {}
+      go(Math.max(0, Math.min(n - 1, nearest(startTx + moved))), true);
+    };
+    // Evita que el arrastre dispare la navegación del enlace.
+    const onClickCapture = (e: MouseEvent) => {
+      if (didDrag) {
+        e.preventDefault();
+        e.stopPropagation();
+        didDrag = false;
+      }
+    };
+
+    track.addEventListener('pointerdown', onDown);
+    track.addEventListener('pointermove', onMove);
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('click', onClickCapture, true);
+
+    const prevH = () => go(active - 1);
+    const nextH = () => go(active + 1);
+    prevRef.current?.addEventListener('click', prevH);
+    nextRef.current?.addEventListener('click', nextH);
+    const dotsH = (e: Event) => {
+      const t = (e.target as HTMLElement).closest('[data-d]') as HTMLElement | null;
+      if (t) go(parseInt(t.dataset.d!, 10));
+    };
+    dotsRef.current?.addEventListener('click', dotsH);
+
+    const relayout = () => {
+      if (dragging) return;
+      layout();
+      setTransform(false);
+    };
+    let rt: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(rt);
+      rt = setTimeout(relayout, 80);
+    };
+    window.addEventListener('resize', onResize);
+    if (document.fonts?.ready) document.fonts.ready.then(relayout).catch(() => {});
+    const safety = [120, 400, 900].map((t) => setTimeout(relayout, t));
+
+    layout();
+    setTransform(false);
+    updateUI();
+    setReady(true);
+    const raf = requestAnimationFrame(() => requestAnimationFrame(relayout));
+
+    return () => {
+      track.removeEventListener('pointerdown', onDown);
+      track.removeEventListener('pointermove', onMove);
+      track.removeEventListener('pointerup', endDrag);
+      track.removeEventListener('pointercancel', endDrag);
+      track.removeEventListener('click', onClickCapture, true);
+      prevRef.current?.removeEventListener('click', prevH);
+      nextRef.current?.removeEventListener('click', nextH);
+      dotsRef.current?.removeEventListener('click', dotsH);
+      window.removeEventListener('resize', onResize);
+      clearTimeout(rt);
+      safety.forEach(clearTimeout);
+      cancelAnimationFrame(raf);
+    };
+  }, [n, locale]);
+
+  if (!n) return null;
 
   return (
     <section className="py-14">
-      <div className="mx-auto mb-6 flex max-w-7xl items-end justify-between gap-4 px-5">
+      <div className="mx-auto mb-4 flex max-w-7xl items-end justify-between gap-4 px-5">
         <div>
           <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: ORANGE}}>Nuestra carta</div>
           <h2 className="font-eight text-4xl text-white md:text-5xl">elige tu antojo</h2>
         </div>
-        {overflow && (
-          <div className="hidden shrink-0 gap-2 md:flex">
-            <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
-              <ChevronLeft className="size-5" />
-            </button>
-            <button onClick={() => go(active + 1)} disabled={active >= last} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
-              <ChevronRight className="size-5" />
-            </button>
-          </div>
-        )}
+        <div className="flex shrink-0 items-center gap-2 pb-1">
+          <button ref={prevRef} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <ChevronLeft className="size-5" />
+          </button>
+          <button ref={nextRef} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
       </div>
 
-      <div
-        ref={wrapRef}
-        className="relative overflow-hidden"
-        style={{touchAction: 'pan-y'}}
-        onTouchStart={(e) => onStart(e.touches[0].clientX)}
-        onTouchMove={(e) => onMove(e.touches[0].clientX)}
-        onTouchEnd={onEnd}
-      >
-        {overflow && (
-          <>
-            <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" className="absolute left-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
-              <ChevronLeft className="size-5" />
-            </button>
-            <button onClick={() => go(active + 1)} disabled={active >= last} aria-label="Siguiente" className="absolute right-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
-              <ChevronRight className="size-5" />
-            </button>
-          </>
-        )}
-
-        <div
-          ref={trackRef}
-          className="flex gap-4 will-change-transform"
-          style={{transform: `translate3d(${offset}px,0,0)`, transition: dragging ? 'none' : 'transform .55s cubic-bezier(.22,1,.36,1)'}}
-        >
-          {categories.map((c, i) => {
+      <div ref={viewportRef} className="w-full overflow-hidden [touch-action:pan-y]">
+        <div ref={trackRef} className={`flex gap-[18px] py-6 will-change-transform transition-opacity duration-300 lg:gap-6 ${ready ? 'opacity-100' : 'opacity-0'}`}>
+          {categories.map((c) => {
             const img = c.products?.find((p) => p.image)?.image ?? null;
-            const dim = isMobile && i !== active;
             return (
-              <div
-                key={c.id}
-                className={`w-[64vw] shrink-0 transition-opacity duration-500 sm:w-[44%] md:w-[34%] lg:w-[26%] ${dim ? 'opacity-40' : 'opacity-100'}`}
-              >
+              <div key={c.id} className="lc-cat-card w-[70vw] max-w-[300px] shrink-0 sm:w-[300px] lg:w-[330px]">
                 <Link
                   href="/carta/hamburgueseria"
-                  className="group relative flex aspect-[5/6] h-full w-full overflow-hidden rounded-[26px] border border-white/8"
-                  style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
-                  onClick={(e) => {
-                    if (drag !== 0) e.preventDefault();
-                  }}
                   draggable={false}
+                  className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] border border-white/8"
+                  style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
                 >
                   {img ? (
-                    <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 24rem, 64vw" className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" draggable={false} />
+                    <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 70vw" draggable={false} className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-black/20"><UtensilsCrossed className="size-14" /></div>
                   )}
                   <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.62), transparent 52%)'}} />
-                  <h3 className={`absolute inset-x-5 bottom-5 font-eight text-3xl text-white drop-shadow-lg transition-opacity duration-200 ${dragging ? 'opacity-0' : 'opacity-100'}`}>
-                    {tx(c.name, locale)}
-                  </h3>
+                  <h3 className="absolute inset-x-5 bottom-5 font-eight text-3xl text-white drop-shadow-lg">{tx(c.name, locale)}</h3>
                 </Link>
               </div>
             );
@@ -161,8 +207,13 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
         </div>
       </div>
 
-      <div className="mt-7 flex justify-center">
-        <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em]" style={{background: ORANGE, color: '#1a1209'}}>
+      <div className="mt-6 flex flex-col items-center gap-7">
+        <div ref={dotsRef} className="flex items-center gap-2">
+          {categories.map((c, i) => (
+            <button key={c.id} data-d={i} aria-label={`Categoría ${i + 1}`} className="lc-cat-dot" />
+          ))}
+        </div>
+        <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em] transition hover:brightness-105" style={{background: ORANGE, color: '#1a1209'}}>
           Ver toda la carta <ArrowRight className="size-4" />
         </Link>
       </div>
