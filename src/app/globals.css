@@ -337,6 +337,16 @@
   .lc-slide-bot { animation-name: lc-slide-right; }
   /* En móvil, el vídeo de efecto se centra en la pantalla (no se corta) */
   .lc-fxvideo { top: 50% !important; left: 50% !important; }
+  /* Carrusel de categorías: la card se centra en la pantalla (la 1.ª y la del medio) */
+  .lc-carousel-pad { padding-left: 13vw; padding-right: 13vw; scroll-padding-left: 13vw; }
+}
+@media (min-width: 768px) {
+  /* PC: la 1.ª card alineada bajo el título (gutter del contenido max-w-7xl) */
+  .lc-carousel-pad {
+    padding-left: max(1.25rem, calc((100vw - 80rem) / 2 + 1.25rem));
+    padding-right: 1.25rem;
+    scroll-padding-left: max(1.25rem, calc((100vw - 80rem) / 2 + 1.25rem));
+  }
 }
 /* Efectos de fondo del hero hamburguesería */
 @keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }

@@ -96,7 +96,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
           initial={reduce ? false : 'hidden'}
           whileInView="show"
           viewport={{once: true, margin: '-60px'}}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 pl-5 pr-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:pl-[max(1.25rem,calc((100vw_-_80rem)/2_+_1.25rem))] md:pr-5"
+          className="lc-carousel-pad flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {categories.map((c, i) => {
             const img = c.products?.find((p) => p.image)?.image ?? null;
@@ -104,7 +104,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
               <motion.div
                 key={c.id}
                 variants={item}
-                className={`w-[74vw] shrink-0 snap-start transition-opacity duration-300 sm:w-[48%] md:w-[36%] md:!opacity-100 lg:w-[28%] ${i === active ? 'opacity-100' : 'opacity-55'}`}
+                className={`w-[74vw] shrink-0 snap-center transition-opacity duration-300 sm:w-[48%] md:w-[36%] md:!opacity-100 md:snap-start lg:w-[28%] ${i === active ? 'opacity-100' : 'opacity-55'}`}
               >
                 <Link
                   href="/carta/hamburgueseria"
