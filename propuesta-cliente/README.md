@@ -2,6 +2,9 @@
 
 Carpeta con la documentación para presentar al cliente.
 
+**➡️ Para enviar al cliente: `Propuesta-La-Calita.pdf`** (o el `.html`, que es el diseño profesional con logo y datos de contacto). Para regenerar el PDF: abre el `.html` en el navegador → Imprimir → Guardar como PDF.
+
+
 - **[Propuesta-La-Calita.md](./Propuesta-La-Calita.md)** — qué llevará la web (un solo dominio con área de hamburguesería), diseño responsive (PC/tablet/móvil), 3 idiomas (ampliable), módulos opcionales (entradas de eventos, pedido y pago de hamburguesas…) y **descripción de todas las páginas**.
 - **[Presupuesto.md](./Presupuesto.md)** — presupuesto orientativo: desarrollo, módulos, cuotas y paquetes.
 
