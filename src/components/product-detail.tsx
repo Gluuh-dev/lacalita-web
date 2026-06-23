@@ -10,6 +10,7 @@ import {tx, euro} from '@/lib/localize';
 import type {Product} from '@/lib/queries';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
+import {useFavGate} from '@/lib/use-fav-gate';
 import {useMenuStore, type MenuItem} from '@/components/menu/store';
 
 export default function ProductDetail({
@@ -25,7 +26,8 @@ export default function ProductDetail({
   const t = useTranslations('menu');
   const locale = useLocale();
   const reduce = useReducedMotion();
-  const {isFav, toggleFav, qty, add, dec} = useMenuStore();
+  const {isFav, qty, add, dec} = useMenuStore();
+  const favGate = useFavGate();
   const item: MenuItem = {
     id: product.id,
     name: tx(product.name, locale),
@@ -158,7 +160,7 @@ export default function ProductDetail({
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <button
-            onClick={() => toggleFav(item)}
+            onClick={() => favGate(item)}
             aria-label="Favorito"
             className={`flex size-12 shrink-0 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >

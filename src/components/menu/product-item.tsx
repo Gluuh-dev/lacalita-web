@@ -4,6 +4,7 @@ import Image from 'next/image';
 import {Heart, Info, Plus, Minus, UtensilsCrossed} from 'lucide-react';
 import {useRouter} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
+import {useFavGate} from '@/lib/use-fav-gate';
 import {useMenuStore, type MenuItem} from './store';
 import type {Product} from '@/lib/queries';
 
@@ -16,7 +17,8 @@ export default function ProductItem({
   menuSlug: string;
   locale: string;
 }) {
-  const {isFav, toggleFav, qty, add, dec, setOpen} = useMenuStore();
+  const {isFav, qty, add, dec, setOpen} = useMenuStore();
+  const favGate = useFavGate();
   const router = useRouter();
   // En la hamburguesería abrimos PÁGINA (no modal): más funcional para la compra futura.
   const usePage = menuSlug === 'hamburgueseria';
@@ -75,7 +77,7 @@ export default function ProductItem({
         </div>
         <div className="mt-2 flex items-center gap-2 sm:mt-3">
           <button
-            onClick={() => toggleFav(item)}
+            onClick={() => favGate(item)}
             aria-label="Favorito"
             className={`flex size-9 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >

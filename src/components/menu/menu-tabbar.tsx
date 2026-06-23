@@ -7,6 +7,7 @@ import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
 import {toast} from 'sonner';
+import {useFavGate} from '@/lib/use-fav-gate';
 import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useBackClose} from '@/lib/use-back-close';
 import {useMenuStore, type MenuItem} from './store';
@@ -167,6 +168,7 @@ function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
 
 function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: string; onClose: () => void}) {
   const s = useMenuStore();
+  const favGate = useFavGate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -252,7 +254,7 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
                   )}
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-3">
-                  <button onClick={() => s.toggleFav(v)} aria-label="Favorito" className={`flex size-12 items-center justify-center rounded-full bg-white/15 backdrop-blur ${fav ? 'text-red-500' : 'text-white'}`}>
+                  <button onClick={() => favGate(v)} aria-label="Favorito" className={`flex size-12 items-center justify-center rounded-full bg-white/15 backdrop-blur ${fav ? 'text-red-500' : 'text-white'}`}>
                     <Heart className="size-6" fill={fav ? 'currentColor' : 'none'} />
                   </button>
                   {n === 0 ? (
