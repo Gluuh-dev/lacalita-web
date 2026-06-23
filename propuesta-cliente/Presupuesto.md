@@ -1,49 +1,74 @@
 # Presupuesto — La Calita
 
-_Una sola web (con área de hamburguesería). Precio cerrado y sencillo._
+_Una sola web (con área de hamburguesería). Precio cerrado, todo incluido._
 
 ---
 
-## Desarrollo web completo — **1.330 € (pago único)**
+## Desarrollo web completo — **1.390 € (pago único)**
 
-Incluye **todo** lo necesario para tener la web lista y funcionando:
+Una web completa, moderna y **que gestionas tú mismo**, con todo lo siguiente incluido:
 
-- Web principal **La Calita** (portada, cartas, eventos, contenido, ubicación).
-- Área **Hamburguesería** (landing con efectos + carta).
-- **Panel de administración** para gestionarlo todo tú mismo (textos, fotos, precios, cartas, eventos, portadas).
-- **3 idiomas** (Español, Inglés, Francés) con ayuda de traducción automática.
-- **Diseño adaptado a PC, tablet y móvil**.
-- Publicación, certificado seguro (HTTPS) y una sesión para enseñarte el panel.
+### 🌐 Web pública
 
-> Precio cerrado: **1.330 €**.
+- **Portada (inicio)** con carrusel de portadas: imagen o vídeo de fondo, logo, lema, frase de bienvenida y botones. Zona de eventos (botón, rótulo o agenda) y texto en movimiento opcional.
+- **Cartas interactivas**: cada plato con foto o vídeo, precio (o "desde X €" con variantes), **alérgenos con iconos**, favoritos (♥), lista personal, **modo vídeo (reels)** de los platos, filtros por categoría y buscador.
+- **Ficha de cada plato** y **agenda de eventos** (conciertos, DJ…) con su página de detalle.
+- **Área Hamburguesería**: portada a pantalla completa con **efectos (humo, fuego, chispas, vídeo)**, anillos, **ofertas**, **las más votadas** y panel de alérgenos; carta en tema oscuro.
+- **Ubicación**: horarios, mapa y datos de contacto.
+
+### 🛠️ Panel de administración (lo gestionas tú)
+
+- Cambiar **textos, fotos, vídeos, precios, cartas, categorías, eventos y portadas** sin saber programar.
+- **Editor de portada con previsualización en vivo** (ves cómo queda en PC y móvil antes de publicar).
+- **Editor de la hamburguesería** (diapositivas y ofertas) con previsualización y efectos.
+- Los cambios se ven **al instante** en la web.
+
+### 🌍 Idiomas con Inteligencia Artificial
+
+- Web en **3 idiomas: Español, Inglés y Francés**.
+- Hemos **incorporado IA para traducir** los textos: con un botón, **"Generar traducciones"**, se rellenan inglés y francés a partir del español (luego puedes retocar a mano).
+- Ampliable a más idiomas en el futuro.
+
+### 📱 Diseño y calidad
+
+- **Se ve perfecto en PC, tablet y móvil** (diseño adaptable).
+- Carga rápida, imágenes optimizadas, animaciones suaves.
+- Certificado seguro (HTTPS) y preparada para Google (SEO básico).
+
+### 🤝 Soporte incluido
+
+- **Mantenimiento** y los **cambios e ideas** que se te vayan ocurriendo.
+- **Ayuda para meter los platos** en las cartas y con las **traducciones**.
+- **Formación**: una sesión para enseñarte a usar el panel.
+
+> **Precio cerrado: 1.390 €** (pago único, todo lo anterior incluido).
+
+---
 
 ## Servicios anuales (a precio de coste)
 
-Para que la web esté online y se pueda gestionar. Son servicios externos que se pagan a sus proveedores (sin recargo):
+Servicios externos para que la web esté online (se pagan a sus proveedores, **sin recargo**):
 
 | Servicio | Para qué | Coste aprox. |
 |---|---|---|
 | **Dominio** (`.es` / `.com`) | La dirección de la web | **~12–15 € / año** |
-| **Base de datos y alojamiento** (Supabase) | Guarda cartas, fotos, eventos, traducciones y permite gestionarlo; incluye copias de seguridad | **~23 €/mes ≈ 280 € / año** |
+| **Base de datos y alojamiento** | Guarda cartas, fotos, eventos y traducciones; con copias de seguridad | **~23 €/mes ≈ 280 € / año** |
 | **Total** | | **≈ 295 € / año** |
 
-> Nota: se puede **empezar gratis** mientras hay poco movimiento (planes gratuitos), pero para una web de negocio estable se recomienda el plan de pago de la base de datos (~23 €/mes) para que **no se "duerma"** por inactividad y tenga copias de seguridad. El **alojamiento de la web puede ser gratuito**.
+> Se puede **empezar gratis** mientras haya poco movimiento; para una web de negocio estable se recomienda el plan de pago de la base de datos (~23 €/mes) para que **no se "duerma"** y tenga copias de seguridad. El **alojamiento de la web puede ser gratuito**.
+
+---
 
 ## Opcionales para más adelante (si te interesan)
 
-- 🎟️ **Venta / reserva de entradas para eventos** (con pago y QR).
+- 🎟️ **Venta / reserva de entradas** para eventos (con pago y entrada con QR).
 - 🍔 **Pedido y pago online** de hamburguesas.
-- 🪑 Reserva de mesa · 📧 Newsletter · 🌐 Idioma extra.
+- 🪑 Reserva de mesa · 📧 Newsletter · 🌐 Idioma adicional.
 
-> Estos módulos llevan más trabajo; si los quieres, te paso un pequeño presupuesto aparte. La web base (1.330 €) ya queda completa sin ellos.
+> Estos llevan bastante más trabajo; si los quieres, te paso un presupuesto aparte. La web base (1.390 €) ya queda completa sin ellos.
+
+---
 
 ## Forma de pago
 
 - 50 % al empezar · 50 % al entregar.
-
-## Incluido siempre
-
-- Diseño responsive (PC / tablet / móvil).
-- Panel para gestionar todo el contenido.
-- 3 idiomas con traducción asistida.
-- Publicación + HTTPS + formación del panel.

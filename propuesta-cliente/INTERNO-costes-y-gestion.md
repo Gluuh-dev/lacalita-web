@@ -32,11 +32,33 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 
 ## Precio acordado (amigo)
 
-- **Desarrollo web completo: 1.330 € pago único** (web + hamburguesería + panel + 3 idiomas). Precio de amigo, sin grandes módulos (entradas/pago online quedan fuera).
-- **Servicios anuales: ~300 €/año a precio de coste** (dominio + Supabase Pro). Sin recargo/mantenimiento, porque es amigo. Si algún año quieres meter margen o cobrar soporte, ahí tienes ~295 € de coste real.
-- **Módulos (entradas, pedido+pago)**: presupuestar aparte si los pide (llevan bastante más trabajo → cobrar 700–1.800 € según módulo).
+- **Desarrollo web completo: 1.390 € pago único** (web + hamburguesería + panel + 3 idiomas + IA traducción). Incluye mantenimiento, cambios/ideas y ayuda a meter platos/traducciones.
+- **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Sin recargo.
+- **Módulos (entradas, pedido+pago)**: aparte (700–1.800 € c/u).
 
-> Margen del 1.330 €: es tu tiempo. Si te lleva ~X horas, calcula tu €/h. Para amigo y para conseguir más trabajos, está bien; solo vigila no quedarte corto si pide muchos extras (cóbralos aparte).
+### Cálculo de horas / €·hora (para ti)
+
+Estimación del trabajo (a ojo, todo lo construido):
+
+| Bloque | Horas aprox. |
+|---|---|
+| Web pública (portada, cartas, eventos, ubicación) | 20–28 h |
+| Área hamburguesería (landing, efectos, carta) | 14–20 h |
+| Panel de administración (todos los editores + previsualización) | 18–26 h |
+| Multi-idioma + IA de traducción | 5–8 h |
+| Ajustes, responsive, pruebas, despliegue | 8–12 h |
+| **Total estimado** | **~65–94 h** (≈ **8–12 jornadas**) |
+
+**€/hora resultante a 1.390 €:**
+- A 65 h → **~21 €/h**
+- A 80 h → **~17 €/h**
+- A 94 h → **~15 €/h**
+
+> Realidad: es **precio de amigo / portfolio** (por debajo de tarifa de mercado, que estaría en 30–50 €/h). Para clientes normales, este mismo trabajo se cobraría **3.000–4.500 €**.
+
+### Aviso sobre "mantenimiento y cambios incluidos"
+
+- En el presupuesto pone "incluido" para el amigo. **Acota mentalmente** (p. ej. cambios razonables el primer año); si empieza a pedir rediseños grandes o módulos, **cóbralos aparte** para no trabajar gratis indefinidamente.
 
 ## Cómo gestionarlo
 
