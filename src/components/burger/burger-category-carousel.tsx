@@ -188,7 +188,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
             return (
               <div key={c.id} className="lc-cat-card w-[70vw] max-w-[300px] shrink-0 sm:w-[300px] lg:w-[330px]">
                 <Link
-                  href="/carta/hamburgueseria"
+                  href={`/carta/hamburgueseria?cat=${c.id}`}
                   draggable={false}
                   className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] border border-white/8"
                   style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}

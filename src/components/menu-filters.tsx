@@ -1,6 +1,7 @@
 'use client';
 
 import {useState} from 'react';
+import {useSearchParams} from 'next/navigation';
 import {useLocale} from 'next-intl';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
@@ -8,8 +9,10 @@ import ProductItem from '@/components/menu/product-item';
 
 export default function MenuFilters({menu}: {menu: Menu}) {
   const locale = useLocale();
+  const params = useSearchParams();
   const cats = (menu.categories ?? []).filter((c) => c.products?.length);
-  const [active, setActive] = useState<string>('all');
+  const catParam = params.get('cat');
+  const [active, setActive] = useState<string>(catParam && cats.some((c) => c.id === catParam) ? catParam : 'all');
   const groups = active === 'all' ? cats : cats.filter((c) => c.id === active);
 
   return (

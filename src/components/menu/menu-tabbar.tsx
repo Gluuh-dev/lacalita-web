@@ -6,6 +6,7 @@ import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2, 
 import {Link} from '@/i18n/navigation';
 import {euro, tx} from '@/lib/localize';
 import AllergenIcon from '@/components/allergen-icon';
+import {toast} from 'sonner';
 import {useScrollLock} from '@/lib/use-scroll-lock';
 import {useBackClose} from '@/lib/use-back-close';
 import {useMenuStore, type MenuItem} from './store';
@@ -357,11 +358,11 @@ function ProductModal({locale}: {locale: string}) {
             onClick={() => {
               if (n === 0) s.add(it);
               s.setNote(it.id, note);
-              close();
+              toast.success('Añadido a tu lista');
             }}
             className="flex-1 rounded-full bg-brand py-3 font-semibold text-on-primary transition hover:bg-brand-deep"
           >
-            Añadir
+            {n === 0 ? 'Añadir a mi lista' : 'Guardar'}
           </button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import {Suspense} from 'react';
 import {getTranslations} from 'next-intl/server';
 import {tx} from '@/lib/localize';
 import type {Menu, Allergen} from '@/lib/queries';
@@ -78,7 +79,9 @@ export default async function MenuView({
       </header>
 
       <MenuStoreProvider>
-      <MenuFilters menu={menu} />
+      <Suspense fallback={null}>
+        <MenuFilters menu={menu} />
+      </Suspense>
 
       {used.size > 0 && (
         <div className="mx-auto max-w-5xl px-4 pb-12">
