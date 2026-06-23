@@ -30,17 +30,13 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 - Vercel Hobby funciona pero es "no comercial" por ToS.
 - Recomendado al cliente: cobrar la cuota de mantenimiento que cubra el hosting que elijas.
 
-## Qué cobrar al cliente (orientación de margen)
+## Precio acordado (amigo)
 
-| Concepto | Coste real tuyo | Cobrar al cliente (sugerido) |
-|---|---|---|
-| Desarrollo web base | tu tiempo | 1.800 – 3.000 € |
-| Sección hamburguesería | tu tiempo | 700 – 1.200 € |
-| Módulo entradas | tu tiempo | 700 – 1.500 € |
-| Módulo pedido+pago | tu tiempo | 900 – 1.800 € |
-| **Cuota anual servicios+mantenimiento** | ~295 €/año | **480 – 900 €/año** (incluye tus servicios + tu margen/soporte) |
+- **Desarrollo web completo: 1.330 € pago único** (web + hamburguesería + panel + 3 idiomas). Precio de amigo, sin grandes módulos (entradas/pago online quedan fuera).
+- **Servicios anuales: ~300 €/año a precio de coste** (dominio + Supabase Pro). Sin recargo/mantenimiento, porque es amigo. Si algún año quieres meter margen o cobrar soporte, ahí tienes ~295 € de coste real.
+- **Módulos (entradas, pedido+pago)**: presupuestar aparte si los pide (llevan bastante más trabajo → cobrar 700–1.800 € según módulo).
 
-> Idea: factura una **cuota anual de mantenimiento** (p. ej. 50–75 €/mes) que cubra dominio + Supabase Pro + backups + soporte y te deje margen sobre los ~295 €/año de coste real.
+> Margen del 1.330 €: es tu tiempo. Si te lleva ~X horas, calcula tu €/h. Para amigo y para conseguir más trabajos, está bien; solo vigila no quedarte corto si pide muchos extras (cóbralos aparte).
 
 ## Cómo gestionarlo
 
