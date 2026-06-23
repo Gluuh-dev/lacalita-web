@@ -55,6 +55,18 @@ Una web completa, moderna y **que gestionas tú mismo**, con todo lo siguiente i
 
 ---
 
+## Valoración y descuento
+
+| Concepto | Importe |
+|---|---|
+| Valor real del proyecto (a tarifa profesional, ~162 h) | ~~2.630 €~~ |
+| Descuento especial aplicado | **−1.240 €** |
+| **Precio final** | **1.390 €** |
+
+> El precio final equivale a unos **8,5 €/hora**: un precio especial, por debajo de la tarifa de mercado.
+
+---
+
 ## Trabajo y dedicación estimada
 
 Para que se vea el alcance del proyecto, estas son las horas aproximadas de desarrollo:
