@@ -50,8 +50,9 @@ Estimación profesional realista de un desarrollador construyendo TODO esto **de
 | Landing hamburguesería (hero con efectos, slider, ofertas, votadas, marquesina, vídeo FX, todo configurable) | 30–45 h |
 | Panel de administración completo (todos los editores + previsualización en vivo) | 40–60 h |
 | Multi-idioma + IA de traducción | 8–12 h |
+| Diseño de iconos/imágenes, vectorización y vídeos con IA | 12–24 h |
 | Responsive, pruebas, pulido, bugs, despliegue | 16–24 h |
-| **Total** | **~165–245 h** (≈ **21–31 jornadas · 4–6 semanas a tiempo completo**) |
+| **Total** | **~177–269 h** (≈ **22–34 jornadas · 4,5–7 semanas a tiempo completo**) |
 
 **€/hora a 1.390 € sobre ese trabajo real:**
 - A 165 h → **~8 €/h**

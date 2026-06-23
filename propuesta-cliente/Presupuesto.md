@@ -33,6 +33,12 @@ Una web completa, moderna y **que gestionas tú mismo**, con todo lo siguiente i
 - Hemos **incorporado IA para traducir** los textos: con un botón, **"Generar traducciones"**, se rellenan inglés y francés a partir del español (luego puedes retocar a mano).
 - **Posibilidad de añadir los idiomas que quieras** (alemán, italiano, etc.).
 
+### 🎨 Recursos gráficos (incluidos)
+
+- **Diseño de iconos e imágenes** a medida para la web.
+- **Vectorización** de logos e iconos (formato SVG, nítidos a cualquier tamaño).
+- **Creación de vídeos con IA** para los efectos (humo, fuego, chispas…) y elementos visuales.
+
 ### 📱 Diseño y calidad
 
 - **Se ve perfecto en PC, tablet y móvil** (diseño adaptable).
@@ -63,8 +69,9 @@ Para que se vea el alcance del proyecto, estas son las horas aproximadas de desa
 | Landing hamburguesería (efectos, slider, ofertas, vídeo FX, configurable) | 45 h |
 | Panel de administración completo | 60 h |
 | Multi-idioma + IA de traducción | 12 h |
+| Diseño de iconos/imágenes, vectorización y vídeos con IA | 24 h |
 | Responsive, pruebas, pulido, despliegue | 24 h |
-| **Total (orientativo, pueden ser más o menos)** | **~247 h (≈ 6 semanas a tiempo completo)** |
+| **Total (orientativo, pueden ser más o menos)** | **~271 h (≈ 6–7 semanas a tiempo completo)** |
 
 ---
 
