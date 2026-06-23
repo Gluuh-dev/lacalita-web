@@ -52,26 +52,22 @@ Estimación profesional realista de un desarrollador construyendo TODO esto **de
 
 | Bloque | Horas |
 |---|---|
-| Arquitectura/setup (Next.js, Supabase, auth, i18n, despliegue) | 8–12 h |
-| Sistema de diseño (tokens, fuentes, componentes) | 10–16 h |
-| Portada/hero (carrusel, modos de evento, animaciones) | 16–24 h |
-| Cartas interactivas (store, favoritos, mi lista, reels de vídeo, filtros, alérgenos) | 24–36 h |
-| Ficha de producto + eventos + detalle de evento | 12–18 h |
-| Landing hamburguesería (hero con efectos, slider, ofertas, votadas, marquesina, vídeo FX, todo configurable) | 30–45 h |
-| Panel de administración completo (todos los editores + previsualización en vivo) | 40–60 h |
-| Multi-idioma + IA de traducción | 8–12 h |
-| Diseño de iconos/imágenes, vectorización y vídeos con IA | 12–24 h |
-| Responsive, pruebas, pulido, bugs, despliegue | 16–24 h |
-| **Total** | **~177–269 h** (≈ **22–34 jornadas · 4,5–7 semanas a tiempo completo**) |
+| Arquitectura/setup (Next.js, Supabase, auth, i18n, despliegue) | 7 h |
+| Sistema de diseño (tokens, fuentes, componentes) | 10 h |
+| Portada/hero (carrusel, modos de evento, animaciones) | 14 h |
+| Cartas interactivas (store, favoritos, mi lista, reels de vídeo, filtros, alérgenos) | 22 h |
+| Ficha de producto + eventos + detalle de evento | 11 h |
+| Landing hamburguesería (hero con efectos, slider, ofertas, votadas, marquesina, vídeo FX, todo configurable) | 28 h |
+| Panel de administración completo (todos los editores + previsualización en vivo) | 36 h |
+| Multi-idioma + IA de traducción | 7 h |
+| Diseño de iconos/imágenes, vectorización y vídeos con IA | 13 h |
+| Responsive, pruebas, pulido, bugs, despliegue | 14 h |
+| **Total** | **~162 h** (≈ 20 jornadas · ~4 semanas a tiempo completo) |
 
-**€/hora a 1.390 € sobre ese trabajo real:**
-- A 165 h → **~8 €/h**
-- A 200 h → **~7 €/h**
-- A 245 h → **~6 €/h**
+**A tarifa normal usada en la propuesta (25 €/h):** 162 h × 25 € = **~4.050 €** (valor real sin descuento).
+**€/hora a 1.390 € sobre 162 h:** **~8,6 €/h** (precio de amigo, muy por debajo de mercado).
 
-> Es decir: **1.390 € es muy por debajo de coste de mercado**. A tarifa normal (30–50 €/h) este proyecto valdría **5.000–9.000 €**. El 1.390 € es **precio de amigo/portfolio** — perfecto para conseguir referencias, pero tenlo presente.
->
-> Nota: con **IA de apoyo** (como en este caso) el tiempo real puede bajar bastante respecto a estas horas "desde cero a mano", pero el **valor entregado** sigue siendo el de un proyecto de 5.000–9.000 €.
+> Si lo cobraras a tarifa de mercado (25–40 €/h) este proyecto valdría **4.000–6.500 €**. El 1.390 € es **precio de amigo/portfolio**.
 
 ### Aviso sobre "mantenimiento y cambios incluidos"
 
