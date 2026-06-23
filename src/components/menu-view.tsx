@@ -4,7 +4,7 @@ import {tx} from '@/lib/localize';
 import type {Menu, Allergen} from '@/lib/queries';
 import MenuFilters from './menu-filters';
 import AllergenIcon from './allergen-icon';
-import {MenuStoreProvider, type MenuItem} from '@/components/menu/store';
+import {type MenuItem} from '@/components/menu/store';
 import MenuTabBar from '@/components/menu/menu-tabbar';
 
 export default async function MenuView({
@@ -78,7 +78,6 @@ export default async function MenuView({
         </div>
       </header>
 
-      <MenuStoreProvider>
       <Suspense fallback={null}>
         <MenuFilters menu={menu} />
       </Suspense>
@@ -102,7 +101,6 @@ export default async function MenuView({
       )}
 
       <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
-      </MenuStoreProvider>
     </div>
   );
 }

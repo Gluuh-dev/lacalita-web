@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import {Heart, Info, Plus, Minus, UtensilsCrossed} from 'lucide-react';
+import {useRouter} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import {useMenuStore, type MenuItem} from './store';
 import type {Product} from '@/lib/queries';
@@ -16,6 +17,13 @@ export default function ProductItem({
   locale: string;
 }) {
   const {isFav, toggleFav, qty, add, dec, setOpen} = useMenuStore();
+  const router = useRouter();
+  // En la hamburguesería abrimos PÁGINA (no modal): más funcional para la compra futura.
+  const usePage = menuSlug === 'hamburgueseria';
+  const openIt = () => {
+    if (usePage) router.push(`/carta/${menuSlug}/${product.slug}`);
+    else setOpen(item);
+  };
   const item: MenuItem = {
     id: product.id,
     name: tx(product.name, locale),
@@ -36,7 +44,7 @@ export default function ProductItem({
 
   return (
     <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 shadow-sm sm:flex-col sm:gap-0 sm:p-0">
-      <button onClick={() => setOpen(item)} className="ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
+      <button onClick={() => openIt()} className="ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
         {item.video ? (
           <video
             src={item.video}
@@ -58,7 +66,7 @@ export default function ProductItem({
         </span>
       </button>
       <div className="flex min-w-0 flex-1 flex-col sm:p-4">
-        <div role="button" tabIndex={0} onClick={() => setOpen(item)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setOpen(item)} className="min-w-0 cursor-pointer text-left">
+        <div role="button" tabIndex={0} onClick={() => openIt()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openIt()} className="min-w-0 cursor-pointer text-left">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="truncate font-serif text-base font-semibold sm:whitespace-normal sm:text-lg">{item.name}</h3>
             {item.price != null && <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(item.price, locale)}</span>}
@@ -73,7 +81,7 @@ export default function ProductItem({
           >
             <Heart className="size-4" fill={fav ? 'currentColor' : 'none'} />
           </button>
-          <button onClick={() => setOpen(item)} aria-label="Más información" className="flex size-9 items-center justify-center rounded-full border border-line text-ink-3 transition hover:border-brand">
+          <button onClick={() => openIt()} aria-label="Más información" className="flex size-9 items-center justify-center rounded-full border border-line text-ink-3 transition hover:border-brand">
             <Info className="size-4" />
           </button>
           <div className="ml-auto">

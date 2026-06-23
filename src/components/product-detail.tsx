@@ -3,11 +3,14 @@
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
+import {Heart, Plus, Minus} from 'lucide-react';
+import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import type {Product} from '@/lib/queries';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
+import {useMenuStore, type MenuItem} from '@/components/menu/store';
 
 export default function ProductDetail({
   product,
@@ -22,6 +25,18 @@ export default function ProductDetail({
   const t = useTranslations('menu');
   const locale = useLocale();
   const reduce = useReducedMotion();
+  const {isFav, toggleFav, qty, add, dec} = useMenuStore();
+  const item: MenuItem = {
+    id: product.id,
+    name: tx(product.name, locale),
+    price: product.price != null ? Number(product.price) : null,
+    image: product.image ?? null,
+    slug: product.slug,
+    menuSlug,
+    video: product.video ?? null
+  };
+  const n = qty(product.id);
+  const fav = isFav(product.id);
   const variants = product.product_variants ?? [];
   const allergens = (product.product_allergens ?? [])
     .map((pa) => pa.allergens)
@@ -38,7 +53,7 @@ export default function ProductDetail({
 
   return (
     <div data-theme={theme} className="min-h-screen bg-bg text-ink">
-      <div className="mx-auto max-w-3xl px-4 pb-8 pt-20">
+      <div className="mx-auto max-w-3xl px-4 pb-32 pt-20">
         <div className="flex items-center justify-between gap-3">
           <Link
             href={`/carta/${menuSlug}`}
@@ -137,6 +152,36 @@ export default function ProductDetail({
             </ul>
           </motion.div>
         )}
+      </div>
+
+      {/* Barra de acciones: favorito + añadir a mi lista */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center gap-3">
+          <button
+            onClick={() => toggleFav(item)}
+            aria-label="Favorito"
+            className={`flex size-12 shrink-0 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
+          >
+            <Heart className="size-5" fill={fav ? 'currentColor' : 'none'} />
+          </button>
+          {n === 0 ? (
+            <button
+              onClick={() => {
+                add(item);
+                toast.success('Añadido a tu lista');
+              }}
+              className="flex-1 rounded-full bg-brand py-3.5 font-semibold text-on-primary transition hover:bg-brand-deep"
+            >
+              Añadir a mi lista
+            </button>
+          ) : (
+            <div className="flex flex-1 items-center justify-between rounded-full bg-brand px-3 py-2 text-on-primary">
+              <button onClick={() => dec(item.id)} aria-label="Quitar" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Minus className="size-5" /></button>
+              <span className="font-bold tabular-nums">{n} en tu lista</span>
+              <button onClick={() => add(item)} aria-label="Añadir" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Plus className="size-5" /></button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

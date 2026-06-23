@@ -12,6 +12,7 @@ import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import HideOnBurger from '@/components/hide-on-burger';
 import {HeaderModeProvider} from '@/components/header-mode';
+import {MenuStoreProvider} from '@/components/menu/store';
 import ServiceWorker from '@/components/service-worker';
 import CookieConsent from '@/components/cookie-consent';
 import '../../globals.css';
@@ -55,6 +56,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-bg font-sans text-ink">
         <NextIntlClientProvider>
           <HeaderModeProvider>
+          <MenuStoreProvider>
             <HideOnBurger>
               <SiteHeader />
             </HideOnBurger>
@@ -66,6 +68,7 @@ export default async function LocaleLayout({
             <CookieConsent />
             <ServiceWorker />
             <RealtimeRefresh />
+          </MenuStoreProvider>
           </HeaderModeProvider>
         </NextIntlClientProvider>
       </body>
