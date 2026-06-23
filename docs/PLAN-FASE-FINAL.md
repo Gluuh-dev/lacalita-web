@@ -16,9 +16,10 @@ _Plan a implementar sin interrupciones. Config de variables y pruebas → al fin
 - [ ] (No registro público; solo el admin creado.)
 
 ## Lote 4 — Eventos con entradas
-- [ ] DB: `event_tickets` (tipos, precio, aforo) y `ticket_orders`.
-- [ ] Admin: gestionar entradas por evento (crear tipos, precio, aforo, activar).
-- [ ] Público: en el detalle del evento, **comprar/reservar entradas** (UI lista; pasarela Stripe se conecta al final con las claves).
+- [x] DB: `event_tickets` (tipos, precio, aforo, vendidas) y `ticket_orders` con RLS.
+- [x] Público: en el detalle del evento se muestran los tipos de entrada con precio (y "agotadas"). Botón "Comprar entradas" visible (pago al final).
+- [ ] Admin: gestionar entradas por evento (crear tipos, precio, aforo, activar). _(siguiente)_
+- [ ] Flujo de compra/reserva real + pasarela (al final con claves).
 
 ## Lote 5 — Pulido y mejoras varias
 - [ ] Reveal/animaciones de aparición en más secciones.

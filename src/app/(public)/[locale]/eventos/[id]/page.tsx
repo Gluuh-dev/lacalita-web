@@ -2,8 +2,8 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {Calendar, Clock, Music, MapPin} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
-import {getPublicEvent, getUpcomingEvents} from '@/lib/queries';
-import {tx} from '@/lib/localize';
+import {getPublicEvent, getUpcomingEvents, getEventTickets} from '@/lib/queries';
+import {tx, euro} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
 
@@ -35,6 +35,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   const [t, tk] = [await getTranslations('events'), await getTranslations('events.kind')];
   const [event, upcoming] = await Promise.all([getPublicEvent(id), getUpcomingEvents(8)]);
   if (!event) notFound();
+  const tickets = await getEventTickets(id);
 
   const kind = (event.kind as 'dj' | 'concierto' | 'otro') || 'dj';
   const date = new Date(event.starts_at);
@@ -102,6 +103,31 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
               {event.artist && <InfoRow Icon={Music} label="Artista" value={event.artist} />}
               <InfoRow Icon={MapPin} label="Lugar" value="La Calita · Salobreña" />
             </div>
+
+            {tickets.length > 0 && (
+              <div className="mt-5 border-t border-line pt-5">
+                <div className="eyebrow mb-3">Entradas</div>
+                <div className="flex flex-col gap-2">
+                  {tickets.map((tkt) => {
+                    const soldOut = tkt.capacity != null && tkt.sold >= tkt.capacity;
+                    return (
+                      <div key={tkt.id} className="flex items-center justify-between gap-2 rounded-[12px] border border-line bg-bg px-3 py-2.5">
+                        <div className="min-w-0">
+                          <div className="font-semibold">{tx(tkt.name, locale)}</div>
+                          {tx(tkt.description, locale) && <div className="text-xs text-ink-3">{tx(tkt.description, locale)}</div>}
+                          {soldOut && <div className="text-xs font-semibold text-danger">Agotadas</div>}
+                        </div>
+                        <span className="shrink-0 font-bold text-brand-deep">{euro(Number(tkt.price), locale)}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <button disabled className="mt-3 w-full cursor-default rounded-full bg-brand py-3 font-semibold text-on-primary opacity-60">
+                  Comprar entradas
+                </button>
+                <p className="mt-2 text-center text-xs text-ink-3">Pago online disponible próximamente.</p>
+              </div>
+            )}
           </aside>
         </div>
       </section>

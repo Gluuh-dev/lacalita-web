@@ -256,6 +256,28 @@ export async function getPublicEvent(id: string) {
   return (data as EventRow) ?? null;
 }
 
+// ---- Entradas de eventos ----
+export type EventTicket = {
+  id: string;
+  event_id: string;
+  name: I18n;
+  description: I18n;
+  price: number;
+  capacity: number | null;
+  sold: number;
+  active: boolean;
+  position: number;
+};
+export async function getEventTickets(eventId: string): Promise<EventTicket[]> {
+  const {data} = await supabasePublic.from('event_tickets').select('*').eq('event_id', eventId).eq('active', true).order('position');
+  return (data as EventTicket[]) ?? [];
+}
+export async function getEventTicketsAdmin(eventId: string): Promise<EventTicket[]> {
+  const supabase = await createClient();
+  const {data} = await supabase.from('event_tickets').select('*').eq('event_id', eventId).order('position');
+  return (data as EventTicket[]) ?? [];
+}
+
 // ---- Hamburguesería: diapositivas de portada + ofertas ----
 export type BurgerSlide = {
   id: string;
