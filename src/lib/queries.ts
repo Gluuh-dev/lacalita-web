@@ -313,6 +313,10 @@ export async function getBurgerOffers(): Promise<BurgerOffer[]> {
   const {data} = await supabasePublic.from('burger_offers').select('*').eq('active', true).order('position');
   return (data as BurgerOffer[]) ?? [];
 }
+export async function getBurgerOffer(id: string): Promise<BurgerOffer | null> {
+  const {data} = await supabasePublic.from('burger_offers').select('*').eq('id', id).eq('active', true).maybeSingle();
+  return (data as BurgerOffer) ?? null;
+}
 export async function getBurgerSlidesAdmin(): Promise<BurgerSlide[]> {
   const supabase = await createClient();
   const {data} = await supabase.from('burger_hero_slides').select('*').order('position');

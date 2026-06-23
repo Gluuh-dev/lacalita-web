@@ -33,9 +33,9 @@ Marca cada tarea al completarla. Esfuerzo: 🟢 rápido (≤medio día) · 🟡 
 
 ## Fase 3 — Diseño estilo McDonald's / Burger King (impacto visual)
 
-- [ ] 🔴 **Oferta a página completa** (no modal): hero a pantalla completa (marquesina, foto, precio gigante, banda CTA) reutilizando el motor del hero burger. _(DISENO §4)_ — nueva ruta `hamburgueseria/oferta/[slug]`, `burger-hero.tsx`, admin oferta
-- [ ] 🟡 **Carrusel horizontal de categorías** + botón "Ver toda la carta" (snap + flechas + arrastre, vecinas asomando). _(DISENO §5)_ — `burger-landing.tsx`, home
-- [ ] 🟢 **Aparición al scroll con stagger** aplicada a más bloques. _(DISENO §5,10)_ — `reveal.tsx`
+- [x] 🔴 **Oferta a página completa** (no modal): marquesina + precio gigante + foto + banda CTA, tema oscuro. _(DISENO §4)_ — ruta `hamburgueseria/oferta/[id]`, enlace actualizado en `burger-landing.tsx`, `hide-on-burger.tsx`
+- [x] 🟡 **Carrusel horizontal de categorías** ("elige tu antojo") + botón "Ver toda la carta" (snap, vecinas asomando). _(DISENO §5)_ — `burger-landing.tsx`
+- [x] 🟢 **Aparición al scroll** (`Reveal`) en la sección de categorías. _(DISENO §5,10)_ — aplicar a más bloques pendiente
 - [ ] 🟡 **Tabs de categoría pegajosas** en la carta (móvil) + cabeceras tipo banner. _(DISENO §5)_
 
 ## Fase 4 — Heroes configurables móvil/PC (y admin 3 tamaños)

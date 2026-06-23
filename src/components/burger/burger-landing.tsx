@@ -5,6 +5,7 @@ import BurgerHeader from './burger-header';
 import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
+import Reveal from '@/components/reveal';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
@@ -73,6 +74,40 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         </div>
       </div>
 
+      {/* ---- Carrusel de categorías ("Nuestra carta") ---- */}
+      {(menu?.categories?.filter((c) => c.visible !== false && (c.products?.length ?? 0) > 0).length ?? 0) > 0 && (
+        <Reveal>
+          <section className="mx-auto max-w-7xl px-5 py-14">
+            <div className="mb-6">
+              <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>Nuestra carta</div>
+              <h2 className="font-eight text-4xl text-white md:text-5xl">elige tu antojo</h2>
+            </div>
+            <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 [scrollbar-width:none] md:mx-0 md:px-0">
+              {menu!.categories.filter((c) => c.visible !== false && (c.products?.length ?? 0) > 0).map((c) => {
+                const img = c.products?.find((p) => p.image)?.image ?? null;
+                return (
+                  <Link
+                    key={c.id}
+                    href="/carta/hamburgueseria"
+                    className="group relative flex aspect-[3/4] w-[68%] shrink-0 snap-center overflow-hidden rounded-[22px] border border-white/8 sm:w-[44%] md:w-[31%] lg:w-[23%]"
+                    style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
+                  >
+                    {img && <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 70vw" className="object-cover transition duration-500 group-hover:scale-105" />}
+                    <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.6), transparent 55%)'}} />
+                    <h3 className="absolute inset-x-4 bottom-4 font-eight text-2xl text-white drop-shadow-lg">{tx(c.name, locale)}</h3>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="mt-7 flex justify-center">
+              <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em]" style={{background: C.orange, color: '#1a1209'}}>
+                Ver toda la carta <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </section>
+        </Reveal>
+      )}
+
       {/* ---- Ofertas ---- */}
       <section id="ofertas" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16">
         <div className="mb-8 flex items-end justify-between">
@@ -108,7 +143,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                   </div>
                   <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{oTitle}</h3>
                   {oDesc && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{oDesc}</p>}
-                  <Link href="/carta/hamburgueseria" className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
+                  <Link href={`/hamburgueseria/oferta/${o.id}`} className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
                     Ver la oferta <ArrowRight className="size-4" />
                   </Link>
                   <div className="relative z-[1] mt-3 flex items-end gap-2 font-eight text-2xl">
