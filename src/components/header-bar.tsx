@@ -1,9 +1,10 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {Menu, X} from 'lucide-react';
+import {Menu, X, ChevronLeft} from 'lucide-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
+import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 const CARTA_LABELS: Record<string, string> = {
   desayunos: 'Desayunos & Meriendas',
@@ -43,15 +44,9 @@ export default function HeaderBar({
     ...(isAdmin && cartaLabel ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
     ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])
   ];
-  const [scrolled, setScrolled] = useState(false);
+  const {hidden, scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener('scroll', onScroll, {passive: true});
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const backHref = currentCarta === 'hamburgueseria' ? '/hamburgueseria' : '/';
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -68,7 +63,8 @@ export default function HeaderBar({
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-colors duration-300',
+          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[transform,background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500',
+          hidden && !open && '-translate-y-full',
           onMedia
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
@@ -76,14 +72,25 @@ export default function HeaderBar({
               : 'border-b border-black/5 bg-bg/85 backdrop-blur'
         )}
       >
-        <Link href="/" aria-label="La Calita" className="flex items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/logo-solo.svg"
-            alt="La Calita"
-            className={cn('h-8 w-auto transition sm:h-9', light && 'brightness-0 invert')}
-          />
-        </Link>
+        <div className="flex items-center gap-1">
+          {cartaLabel && (
+            <Link
+              href={backHref}
+              aria-label="Volver"
+              className={cn('-ml-1 flex size-9 items-center justify-center rounded-full transition', light ? 'text-white' : 'text-ink')}
+            >
+              <ChevronLeft className="size-6" />
+            </Link>
+          )}
+          <Link href="/" aria-label="La Calita" className="flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/logo-solo.svg"
+              alt="La Calita"
+              className={cn('h-8 w-auto transition sm:h-9', light && 'brightness-0 invert')}
+            />
+          </Link>
+        </div>
 
         <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
           {cartaLabel ? (

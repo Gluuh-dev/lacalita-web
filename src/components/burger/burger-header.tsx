@@ -1,8 +1,10 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {Link} from '@/i18n/navigation';
-import {Settings, Globe, Menu, X} from 'lucide-react';
+import {Settings, Menu, X} from 'lucide-react';
+import LangSwitcher from '@/components/lang-switcher';
+import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 const NAV = [
   {label: 'Carta', href: '/carta/hamburgueseria', internal: true},
@@ -10,17 +12,11 @@ const NAV = [
   {label: 'Local', href: '#local', internal: false}
 ];
 
-export default function BurgerHeader({locale}: {locale: string}) {
+export default function BurgerHeader({locale: _locale}: {locale: string}) {
   const [open, setOpen] = useState(false);
-  const [solid, setSolid] = useState(false);
-  useEffect(() => {
-    const on = () => setSolid(window.scrollY > 40);
-    window.addEventListener('scroll', on, {passive: true});
-    on();
-    return () => window.removeEventListener('scroll', on);
-  }, []);
+  const {hidden, scrolled} = useHideOnScroll();
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${solid ? 'border-b border-white/10 bg-[#14100a]/85 backdrop-blur-md' : ''}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 animate-in fade-in slide-in-from-top duration-500 ${hidden && !open ? '-translate-y-full' : ''} ${scrolled ? 'border-b border-white/10 bg-[#14100a]/85 backdrop-blur-md' : ''}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
         <Link href="/hamburgueseria" aria-label="La Calita Burger">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -41,9 +37,7 @@ export default function BurgerHeader({locale}: {locale: string}) {
           <a href="/admin" className="flex items-center gap-1.5 text-[0.7rem] uppercase tracking-[0.14em] transition hover:text-white">
             <Settings className="size-3.5" /> Admin
           </a>
-          <span className="flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[0.7rem] uppercase">
-            <Globe className="size-3.5" /> {locale.toUpperCase()}
-          </span>
+          <LangSwitcher />
         </div>
 
         {/* Móvil: botón */}
@@ -73,6 +67,7 @@ export default function BurgerHeader({locale}: {locale: string}) {
             <a href="/admin" onClick={() => setOpen(false)} className="mt-4 flex items-center gap-2 text-sm text-white/70">
               <Settings className="size-4" /> Admin
             </a>
+            <div className="mt-2 scale-125"><LangSwitcher /></div>
           </nav>
         </div>
       )}

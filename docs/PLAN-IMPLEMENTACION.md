@@ -19,9 +19,9 @@ Marca cada tarea al completarla. Esfuerzo: 🟢 rápido (≤medio día) · 🟡 
 
 ## Fase 1 — Navegación e idioma (UX inmediata)
 
-- [ ] 🟢 **LangSwitcher único** (es/en/fr) igual en todas las páginas, mantiene la ruta. _(DISENO §1.2)_ — nuevo `lang-switcher.tsx` + `header-bar.tsx`, `burger-header.tsx`
-- [ ] 🟢 **Botón "volver a la landing"** en el navbar (burger→`/hamburgueseria`, restaurante→`/`). _(DISENO §1.1)_ — headers, `hide-on-burger.tsx`
-- [ ] 🟡 **Header animado**: aparición al montar + ocultar al bajar / mostrar al subir. _(DISENO §1.3)_ — hook `useHideOnScroll`, headers
+- [x] 🟢 **LangSwitcher único** (es/en/fr) en todas las páginas; ahora también en el header burger (antes era un badge estático). _(DISENO §1.2)_ — `lang-switcher.tsx`, `header-bar.tsx`, `burger-header.tsx`
+- [x] 🟢 **Botón "volver a la landing"**: chevron en el navbar de la carta (hamburguesería→`/hamburgueseria`, resto→`/`); logo burger→landing. _(DISENO §1.1)_ — `header-bar.tsx`, `burger-header.tsx`
+- [x] 🟡 **Header animado**: aparición al montar (slide-in) + ocultar al bajar / mostrar al subir. _(DISENO §1.3)_ — `use-hide-on-scroll.ts`, ambos headers
 
 ## Fase 2 — Carga y rendimiento ("que cargue todo bien")
 
