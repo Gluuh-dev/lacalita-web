@@ -13,18 +13,21 @@ Todo el contenido es **multi-idioma (Español, Inglés y Francés)** desde el pr
 
 El sitio se ve **perfectamente en PC, tablet y móvil** (diseño adaptable "mobile-first").
 
-### Planteamiento: dos webs independientes
+### Planteamiento: una sola web (un dominio) con dos áreas
 
-Se recomienda separar la marca en **dos webs independientes** que comparten el mismo motor y panel, pero con identidad y funciones propias:
+Se hace **una única web bajo un solo dominio** (`tudominio.com`), con **dos áreas/marcas** que comparten el mismo motor, panel y base de datos, pero con identidad propia cada una:
 
-| Web | Enfoque | Identidad | Módulo estrella |
-|-----|---------|-----------|------------------|
-| **La Calita** (`lacalita`) | Beach club, restaurante, cafetería, eventos | Cálida, mediterránea (arena, dorado, azul mar) | **Venta / reserva de entradas para conciertos y eventos** |
-| **La Calita Burger** (`lacalita-burger`) | Hamburguesería premium "smash" | Oscura, energética (negro, naranja fuego, dorado) | **Pedido y pago online de hamburguesas** |
+| Área | Ruta | Enfoque | Identidad |
+|------|------|---------|-----------|
+| **La Calita** | `tudominio.com` | Beach club, restaurante, cafetería, eventos | Cálida, mediterránea (arena, dorado, azul mar) |
+| **La Calita Burger** | `tudominio.com/hamburgueseria` | Hamburguesería premium "smash" | Oscura, energética (negro, naranja fuego, dorado) |
 
-Ambas comparten: catálogo de productos/cartas, gestión de contenido, multi-idioma, diseño responsive y panel admin. Cada una añade su módulo específico.
+Ventajas de un solo dominio/proyecto:
+- **Un solo mantenimiento, un panel y una base de datos** → más barato y simple.
+- Coste fijo mínimo: **un dominio + un Supabase Pro** (≈ 295 €/año).
+- Cada área conserva su **estética propia** (la hamburguesería es oscura/naranja, la principal cálida).
 
-> Ventaja de separarlas: cada marca tiene su dominio, su SEO, su estética y su público, sin "mezclar" beach club con hamburguesería. Se pueden enlazar entre sí.
+> Módulos estrella que se pueden añadir: **venta/reserva de entradas para eventos** (área La Calita) y **pedido y pago online de hamburguesas** (área Burger).
 
 ---
 
@@ -153,8 +156,8 @@ Todo autogestionable, sin conocimientos técnicos:
 
 ## 9. Plazos orientativos
 
-- **Base (1 web)**: contenido + cartas + portada + panel + 3 idiomas → 2–4 semanas.
-- **Segunda web (Burger)** reutilizando el motor → 1–2 semanas.
+- **Base**: contenido + cartas + portada + panel + 3 idiomas → 2–4 semanas.
+- **Área hamburguesería** (landing + carta + panel) → 1–2 semanas.
 - **Módulo de pago/entradas** → 1–2 semanas adicionales por módulo.
 
 ---
