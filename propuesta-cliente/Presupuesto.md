@@ -1,4 +1,4 @@
-<img src="./logo-marca.svg" alt="Logo" width="200" />
+<p align="center"><img src="./logo-marca.svg" alt="Logo" width="110" /></p>
 
 # Presupuesto — La Calita
 
