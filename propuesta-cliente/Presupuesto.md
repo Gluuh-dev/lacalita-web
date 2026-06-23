@@ -19,11 +19,15 @@ Incluye **todo** lo necesario para tener la web lista y funcionando:
 
 ## Servicios anuales (a precio de coste)
 
-Para que la web esté online y se pueda gestionar:
+Para que la web esté online y se pueda gestionar. Son servicios externos que se pagan a sus proveedores (sin recargo):
 
-- **Dominio + alojamiento + base de datos + copias de seguridad**: **≈ 300 €/año** (lo justo que cuestan los servicios; sin recargo).
+| Servicio | Para qué | Coste aprox. |
+|---|---|---|
+| **Dominio** (`.es` / `.com`) | La dirección de la web | **~12–15 € / año** |
+| **Base de datos y alojamiento** (Supabase) | Guarda cartas, fotos, eventos, traducciones y permite gestionarlo; incluye copias de seguridad | **~23 €/mes ≈ 280 € / año** |
+| **Total** | | **≈ 295 € / año** |
 
-> Se puede empezar más barato si el volumen es bajo; te aviso de la opción más económica en cada momento.
+> Nota: se puede **empezar gratis** mientras hay poco movimiento (planes gratuitos), pero para una web de negocio estable se recomienda el plan de pago de la base de datos (~23 €/mes) para que **no se "duerma"** por inactividad y tenga copias de seguridad. El **alojamiento de la web puede ser gratuito**.
 
 ## Opcionales para más adelante (si te interesan)
 
