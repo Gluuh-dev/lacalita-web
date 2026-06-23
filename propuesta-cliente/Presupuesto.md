@@ -60,6 +60,29 @@ Con Vercel Pro incluido: **≈ 550 €/año**.
 
 ---
 
+## C-bis. Qué se necesita para cada gestión
+
+**Gestionar entradas / reservas de eventos**
+- Base de datos (Supabase) — eventos, entradas, compradores, aforo.
+- Pasarela de pago si se cobra online (Stripe/Redsys) — _o reserva sin pago = gratis_.
+- Email transaccional para enviar la entrada/QR (Resend, Brevo…).
+- Generación de QR y validación en puerta — **incluida en el desarrollo** (sin coste extra de servicio).
+- Recomendado **Supabase Pro** si hay volumen de ventas.
+
+**Gestionar imágenes (subir/cambiar fotos y vídeos)**
+- Almacenamiento de archivos: **Supabase Storage** (incluido). Free: ~1 GB · Pro: 100 GB.
+- Optimización automática de imágenes (AVIF/WebP) — **incluida**.
+
+**Cambiar cosas en la web (textos, precios, cartas, portadas…)**
+- **Panel de administración** — incluido en el desarrollo.
+- Base de datos + **autenticación** del panel (Supabase) — incluido.
+- **Alojamiento** (Vercel) con publicación automática de los cambios.
+- Para producción estable: **Supabase Pro** (y opcionalmente Vercel Pro).
+
+> En resumen, para que el cliente pueda **gestionar entradas, imágenes y contenido** de forma fiable, lo mínimo recomendado es: **2 dominios + Supabase Pro (~310 €/año)**, y si hay pagos online, añadir **pasarela** (solo comisión) y **email transaccional** (suele haber plan gratuito).
+
+---
+
 ## D. Paquetes sugeridos
 
 ### Paquete 1 — "Presencia" (una sola web)
