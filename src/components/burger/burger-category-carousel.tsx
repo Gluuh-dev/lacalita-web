@@ -1,71 +1,87 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
-import {motion, useReducedMotion, type Variants} from 'framer-motion';
 import {Link} from '@/i18n/navigation';
 import {ChevronLeft, ChevronRight, ArrowRight, UtensilsCrossed} from 'lucide-react';
 import {tx} from '@/lib/localize';
 import type {Category} from '@/lib/queries';
 
 const ORANGE = '#f26b21';
-const EASE = [0.22, 1, 0.36, 1] as const; // suave (easeOutQuint-ish)
 
-const container: Variants = {hidden: {}, show: {transition: {staggerChildren: 0.09}}};
-const item: Variants = {hidden: {opacity: 0, y: 28}, show: {opacity: 1, y: 0, transition: {duration: 0.6, ease: EASE}}};
+type Metrics = {lefts: number[]; centers: number[]; w: number; track: number};
 
 export default function BurgerCategoryCarousel({categories, locale}: {categories: Category[]; locale: string}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [overflow, setOverflow] = useState(false);
-  const [scrolling, setScrolling] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
+  const [drag, setDrag] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [m, setM] = useState<Metrics | null>(null);
   const last = categories.length - 1;
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const check = () => setOverflow(el.scrollWidth > el.clientWidth + 4);
-    check();
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [categories.length]);
+  const measure = useCallback(() => {
+    const wrap = wrapRef.current;
+    const track = trackRef.current;
+    if (!wrap || !track) return;
+    const kids = Array.from(track.children) as HTMLElement[];
+    setM({
+      lefts: kids.map((k) => k.offsetLeft),
+      centers: kids.map((k) => k.offsetLeft + k.offsetWidth / 2),
+      w: wrap.clientWidth,
+      track: track.scrollWidth
+    });
+  }, []);
 
-  // Centra exactamente la card `idx`. Usamos offsetLeft/offsetWidth (layout real,
-  // sin verse afectado por el `scale` visual de las cards) para que el centrado sea exacto.
-  const goTo = (idx: number) => {
-    const el = ref.current;
-    if (!el) return;
-    const i = Math.max(0, Math.min(last, idx));
-    const card = el.children[i] as HTMLElement | undefined;
-    if (!card) return;
-    const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
-    el.scrollTo({left: Math.max(0, left), behavior: 'smooth'});
-    setActive(i);
+  useEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (wrapRef.current) ro.observe(wrapRef.current);
+    return () => ro.disconnect();
+  }, [measure, categories.length]);
+
+  const isMobile = m ? m.w < 768 : true;
+  const gutter = m ? Math.max(20, (m.w - 1280) / 2 + 20) : 20;
+
+  const baseOffset = (i: number) => {
+    if (!m) return 0;
+    const raw = isMobile ? m.w / 2 - m.centers[i] : gutter - m.lefts[i];
+    const min = Math.min(0, m.w - m.track); // no dejar hueco tras la última
+    const max = isMobile ? m.w / 2 - m.centers[0] : gutter; // primera centrada (móvil) / bajo el título (PC)
+    return Math.max(min, Math.min(max, raw));
   };
 
-  // Mientras se arrastra: esconde títulos y detecta la card centrada.
-  const tRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const onScroll = () => {
-    setScrolling(true);
-    if (tRef.current) clearTimeout(tRef.current);
-    tRef.current = setTimeout(() => setScrolling(false), 160);
-    const el = ref.current;
-    if (!el) return;
-    const center = el.scrollLeft + el.clientWidth / 2;
-    let best = 0;
-    let bestD = Infinity;
-    Array.from(el.children).forEach((ch, i) => {
-      const c = ch as HTMLElement;
-      const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
-      if (d < bestD) {
-        bestD = d;
+  const overflow = m ? m.track > m.w + 4 : false;
+  const offset = (m ? baseOffset(active) : 0) + drag;
+
+  // Arrastre táctil propio (sin scroll nativo → sin saltos del snap).
+  const startX = useRef(0);
+  const onStart = (x: number) => {
+    if (!overflow) return;
+    setDragging(true);
+    startX.current = x;
+  };
+  const onMove = (x: number) => {
+    if (dragging) setDrag(x - startX.current);
+  };
+  const onEnd = () => {
+    if (!dragging || !m) return;
+    const cur = baseOffset(active) + drag;
+    let best = active;
+    let bd = Infinity;
+    for (let i = 0; i <= last; i++) {
+      const d = Math.abs(baseOffset(i) - cur);
+      if (d < bd) {
+        bd = d;
         best = i;
       }
-    });
+    }
     setActive(best);
+    setDrag(0);
+    setDragging(false);
   };
+
+  const go = (i: number) => setActive(Math.max(0, Math.min(last, i)));
 
   if (!categories.length) return null;
 
@@ -76,70 +92,73 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
           <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: ORANGE}}>Nuestra carta</div>
           <h2 className="font-eight text-4xl text-white md:text-5xl">elige tu antojo</h2>
         </div>
-        {/* PC: flechas a la derecha (solo si no caben todas) */}
         {overflow && (
           <div className="hidden shrink-0 gap-2 md:flex">
-            <button onClick={() => goTo(active - 1)} disabled={active <= 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
               <ChevronLeft className="size-5" />
             </button>
-            <button onClick={() => goTo(active + 1)} disabled={active >= last} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <button onClick={() => go(active + 1)} disabled={active >= last} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
               <ChevronRight className="size-5" />
             </button>
           </div>
         )}
       </div>
 
-      <div className="relative">
-        {/* Móvil: flechas a los lados, centradas en las tarjetas */}
+      <div
+        ref={wrapRef}
+        className="relative overflow-hidden"
+        style={{touchAction: 'pan-y'}}
+        onTouchStart={(e) => onStart(e.touches[0].clientX)}
+        onTouchMove={(e) => onMove(e.touches[0].clientX)}
+        onTouchEnd={onEnd}
+      >
         {overflow && (
           <>
-            <button onClick={() => goTo(active - 1)} disabled={active <= 0} aria-label="Anterior" className="absolute left-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
+            <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" className="absolute left-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
               <ChevronLeft className="size-5" />
             </button>
-            <button onClick={() => goTo(active + 1)} disabled={active >= last} aria-label="Siguiente" className="absolute right-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
+            <button onClick={() => go(active + 1)} disabled={active >= last} aria-label="Siguiente" className="absolute right-2 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition disabled:pointer-events-none disabled:opacity-0 md:hidden">
               <ChevronRight className="size-5" />
             </button>
           </>
         )}
 
-        <motion.div
-          ref={ref}
-          onScroll={onScroll}
-          variants={container}
-          initial={reduce ? false : 'hidden'}
-          whileInView="show"
-          viewport={{once: true, margin: '-60px'}}
-          className="lc-carousel-pad flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        <div
+          ref={trackRef}
+          className="flex gap-4 will-change-transform"
+          style={{transform: `translate3d(${offset}px,0,0)`, transition: dragging ? 'none' : 'transform .55s cubic-bezier(.22,1,.36,1)'}}
         >
           {categories.map((c, i) => {
             const img = c.products?.find((p) => p.image)?.image ?? null;
-            const isActive = i === active;
+            const dim = isMobile && i !== active;
             return (
-              <motion.div
+              <div
                 key={c.id}
-                variants={item}
-                style={{transition: 'opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1)'}}
-                className={`w-[64vw] shrink-0 snap-center sm:w-[48%] md:w-[36%] md:!scale-100 md:!opacity-100 md:snap-start lg:w-[28%] ${isActive ? 'scale-100 opacity-100' : 'scale-[0.88] opacity-[0.35]'}`}
+                className={`w-[64vw] shrink-0 transition-opacity duration-500 sm:w-[44%] md:w-[34%] lg:w-[26%] ${dim ? 'opacity-40' : 'opacity-100'}`}
               >
                 <Link
                   href="/carta/hamburgueseria"
                   className="group relative flex aspect-[5/6] h-full w-full overflow-hidden rounded-[26px] border border-white/8"
                   style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
+                  onClick={(e) => {
+                    if (drag !== 0) e.preventDefault();
+                  }}
+                  draggable={false}
                 >
                   {img ? (
-                    <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 24rem, 64vw" className="object-cover transition duration-500 group-hover:scale-105" />
+                    <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 24rem, 64vw" className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" draggable={false} />
                   ) : (
                     <div className="flex h-full items-center justify-center text-black/20"><UtensilsCrossed className="size-14" /></div>
                   )}
                   <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.62), transparent 52%)'}} />
-                  <h3 className={`absolute inset-x-5 bottom-5 font-eight text-3xl text-white drop-shadow-lg transition-opacity duration-200 ${scrolling ? 'opacity-0' : 'opacity-100'}`}>
+                  <h3 className={`absolute inset-x-5 bottom-5 font-eight text-3xl text-white drop-shadow-lg transition-opacity duration-200 ${dragging ? 'opacity-0' : 'opacity-100'}`}>
                     {tx(c.name, locale)}
                   </h3>
                 </Link>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
       <div className="mt-7 flex justify-center">
