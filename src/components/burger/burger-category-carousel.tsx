@@ -109,11 +109,11 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
               <motion.div
                 key={c.id}
                 variants={item}
-                className={`w-[64vw] shrink-0 snap-center transition-[opacity,transform] duration-300 sm:w-[48%] md:w-[36%] md:!scale-100 md:!opacity-100 md:snap-start lg:w-[28%] ${i === active ? 'scale-100 opacity-100' : 'scale-[0.9] opacity-35'}`}
+                className={`w-[64vw] shrink-0 snap-center transition-[opacity,transform] duration-300 sm:w-[48%] md:w-[36%] md:!scale-100 md:!opacity-100 md:snap-start lg:w-[28%] ${i === active ? 'scale-100 opacity-100' : 'scale-[0.9] opacity-[0.35]'}`}
               >
                 <Link
                   href="/carta/hamburgueseria"
-                  className="group relative flex aspect-[4/5] h-full w-full overflow-hidden rounded-[26px] border border-white/8"
+                  className="group relative flex aspect-[5/6] h-full w-full overflow-hidden rounded-[26px] border border-white/8"
                   style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
                 >
                   {img ? (
