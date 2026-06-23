@@ -60,6 +60,23 @@ _Versión 1 · Junio 2026_
 **Resumen anual mínimo recomendado** (2 dominios + Supabase Pro): **≈ 310 €/año**.
 Con Vercel Pro incluido: **≈ 550 €/año**.
 
+### Supabase y base de datos (aclaración)
+
+- **Supabase Pro se paga por _cuenta/organización_ (25 $/mes ≈ 23 €/mes), no por web.** Incluye ~10 $ de créditos de cómputo.
+- Dentro de esa cuenta puede haber varios **proyectos**; cada **proyecto = una base de datos** Postgres.
+  - El plan Pro **cubre 1 proyecto**. Cada **proyecto adicional** activo añade su propio cómputo (~**10 $/mes ≈ 110 €/año** extra).
+  - Dentro de un proyecto: **tablas ilimitadas**, **8 GB de BD** incluidos (luego ~0,125 $/GB) y **100 GB de almacenamiento** de fotos/vídeos.
+
+**Para La Calita + La Calita Burger:**
+
+| Opción | Qué implica | Coste anual |
+|---|---|---|
+| **1 base de datos compartida** (recomendado) | Las dos webs usan el mismo proyecto/BD (así está montado hoy) | **~280 €/año** (un solo Supabase Pro) |
+| 2 bases de datos separadas | Una BD por web | ~**390 €/año** (Pro + 2.º proyecto) |
+
+> Recomendación: **una sola base de datos Supabase Pro para las dos webs**. Solo se paga más si se quieren bases de datos totalmente independientes.
+> _Nota: Supabase puede ajustar sus precios; cifras orientativas a fecha de este documento._
+
 ---
 
 ## C-bis. Qué se necesita para cada gestión
