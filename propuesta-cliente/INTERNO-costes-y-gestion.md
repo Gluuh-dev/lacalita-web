@@ -24,11 +24,11 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 - Pro se paga **por cuenta/organización**, no por web. Cubre **1 proyecto** (= 1 base de datos). Cada proyecto extra ~10 $/mes.
 - **La Calita usa 1 sola BD** (cartas + hamburguesería + eventos + contenido). No hace falta más.
 
-## ¿Vercel Pro necesario?
+## Despliegue: Netlify
 
-- No obligatorio. **Cloudflare Pages (gratis, comercial OK)** o VPS son alternativas.
-- Vercel Hobby funciona pero es "no comercial" por ToS.
-- Recomendado al cliente: cobrar la cuota de mantenimiento que cubra el hosting que elijas.
+- **Desplegamos en Netlify** (plan **gratuito**, que **permite uso comercial**). 0 € de hosting.
+- Next.js funciona en Netlify con su adaptador oficial; **probar el deploy** (Next 16 es nuevo: middleware/`proxy`, ISR). Si diera guerra, alternativa: Vercel (Hobby gratis pero "no comercial" por ToS, o Pro ~20 €/mes) o Cloudflare Pages (gratis).
+- Coste de hosting al cliente: **0 €** (solo dominio + Supabase).
 
 ## Precio acordado (amigo) — cuentas reales
 

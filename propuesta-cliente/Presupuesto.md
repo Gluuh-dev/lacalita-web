@@ -82,8 +82,11 @@ Servicios externos para que la web esté online (se pagan a sus proveedores, **s
 | Servicio | Para qué | Coste aprox. |
 |---|---|---|
 | **Dominio** (`.es` / `.com`) | La dirección de la web | **~12–15 € / año** |
-| **Base de datos y alojamiento** | Guarda cartas, fotos, eventos y traducciones; con copias de seguridad | **~23 €/mes ≈ 280 € / año** |
+| **Alojamiento web (Netlify)** | Publicación de la web, HTTPS, CDN | **Gratuito** |
+| **Base de datos (Supabase)** | Guarda cartas, fotos, eventos y traducciones; con copias de seguridad | **~23 €/mes ≈ 280 € / año** |
 | **Total** | | **≈ 295 € / año** |
+
+> La web se publica en **Netlify** (plan gratuito).
 
 ---
 
