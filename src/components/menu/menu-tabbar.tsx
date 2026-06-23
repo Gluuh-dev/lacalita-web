@@ -35,7 +35,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
 
   return (
     <>
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-line bg-surface/95 px-2 py-2 backdrop-blur md:inset-x-auto md:bottom-5 md:left-1/2 md:-translate-x-1/2 md:gap-1 md:rounded-full md:border md:px-3 md:shadow-lg">
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-line bg-surface/95 px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:inset-x-auto md:bottom-5 md:left-1/2 md:-translate-x-1/2 md:gap-1 md:rounded-full md:border md:px-3 md:pb-2 md:shadow-lg">
         {tabs.map((tb) => {
           const active = tb.key === activeKey;
           return (
@@ -74,7 +74,7 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
     <div className="fixed inset-0 z-[300] flex items-end justify-center sm:items-center sm:p-4">
       <div onClick={onClose} className="absolute inset-0 bg-black/45 duration-200 animate-in fade-in" />
       <div
-        className="relative w-full max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-[24px] border border-line bg-bg p-4 pb-8 shadow-2xl duration-300 animate-in slide-in-from-bottom sm:max-w-md sm:rounded-[24px] sm:pb-4"
+        className="relative w-full max-h-[85dvh] overflow-y-auto overscroll-contain rounded-t-[24px] border border-line bg-bg p-4 pb-[max(2rem,env(safe-area-inset-bottom))] shadow-2xl duration-300 animate-in slide-in-from-bottom sm:max-w-md sm:rounded-[24px] sm:pb-4"
         style={{transform: `translateY(${drag}px)`, transition: drag ? 'none' : undefined}}
         onTouchStart={(e) => (dy.current = e.touches[0].clientY)}
         onTouchMove={(e) => {
@@ -304,7 +304,7 @@ function ProductModal({locale}: {locale: string}) {
             <X className="size-5" />
           </button>
         </div>
-        <div className="max-h-[38vh] overflow-y-auto overscroll-contain p-5">
+        <div className="max-h-[42dvh] overflow-y-auto overscroll-contain p-5">
           <h2 className="font-serif text-2xl font-bold">{it.name}</h2>
           {it.desc && <p className="mt-1 leading-relaxed text-ink-2">{it.desc}</p>}
           {it.price != null && <p className="mt-3 text-xl font-bold text-brand-deep">{euro(it.price, locale)}</p>}

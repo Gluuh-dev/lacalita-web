@@ -13,6 +13,7 @@ import SiteFooter from '@/components/site-footer';
 import HideOnBurger from '@/components/hide-on-burger';
 import {HeaderModeProvider} from '@/components/header-mode';
 import ServiceWorker from '@/components/service-worker';
+import CookieConsent from '@/components/cookie-consent';
 import '../../globals.css';
 
 const sans = Geist({variable: '--font-geist', subsets: ['latin']});
@@ -62,6 +63,7 @@ export default async function LocaleLayout({
               <SiteFooter />
             </HideOnBurger>
             <Toaster richColors position="top-center" />
+            <CookieConsent />
             <ServiceWorker />
             <RealtimeRefresh />
           </HeaderModeProvider>

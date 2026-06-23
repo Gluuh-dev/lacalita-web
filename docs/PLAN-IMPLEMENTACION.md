@@ -11,11 +11,11 @@ Marca cada tarea al completarla. Esfuerzo: 🟢 rápido (≤medio día) · 🟡 
 
 > Lo imprescindible: que el móvil sea perfecto y cumplir la ley de cookies.
 
-- [ ] 🟢 **Scroll en sheets/modales**: `overscroll-behavior:contain`, `max-height:85dvh`, el contenido scrollea (no el body). _(MEJORAS §2)_ — `menu-tabbar.tsx`, `use-scroll-lock.ts`
-- [ ] 🟢 **Alturas `dvh`** en overlays a pantalla completa. _(MEJORAS §1)_ — `header-bar.tsx`, overlays
-- [ ] 🟢 **Safe-area + áreas táctiles ≥44px** en la tab bar y botones. _(MEJORAS §3)_ — `menu-tabbar.tsx`
-- [ ] 🟡 **Banner de cookies (RGPD)** Aceptar/Rechazar/Configurar + política de cookies. _(DISENO §9)_ — nuevo `cookie-consent.tsx`, `/legal/cookies`
-- [ ] 🟢 **Probar en iOS Safari + Android Chrome** (scroll cartas, sheet, teclado admin, botón atrás).
+- [x] 🟢 **Scroll en sheets/modales**: `overscroll-behavior:contain` + `max-height:85dvh` (antes `85vh`); el contenido scrollea, no el body. _(MEJORAS §2)_ — `menu-tabbar.tsx`
+- [x] 🟢 **Alturas `dvh`** en sheets/modal (tab bar y producto a `dvh`). El overlay del header usa `inset-0` (ya robusto). _(MEJORAS §1)_
+- [x] 🟢 **Safe-area + áreas táctiles** en la tab bar y sheets (`env(safe-area-inset-bottom)`). _(MEJORAS §3)_ — `menu-tabbar.tsx`
+- [x] 🟡 **Banner de cookies (RGPD)** Aceptar/Rechazar + Política de cookies. _(DISENO §9)_ — `cookie-consent.tsx`, `/legal/cookies` (config granular → Fase 5)
+- [ ] 🟢 **Probar en iOS Safari + Android Chrome** (scroll cartas, sheet, teclado admin, botón atrás). _(manual)_
 
 ## Fase 1 — Navegación e idioma (UX inmediata)
 
