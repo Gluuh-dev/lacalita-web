@@ -32,17 +32,16 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
     return () => ro.disconnect();
   }, [categories.length]);
 
-  // Centra exactamente la card `idx` (no depende solo de scroll-snap).
+  // Centra exactamente la card `idx`. Usamos offsetLeft/offsetWidth (layout real,
+  // sin verse afectado por el `scale` visual de las cards) para que el centrado sea exacto.
   const goTo = (idx: number) => {
     const el = ref.current;
     if (!el) return;
     const i = Math.max(0, Math.min(last, idx));
     const card = el.children[i] as HTMLElement | undefined;
     if (!card) return;
-    const elRect = el.getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const left = el.scrollLeft + (cardRect.left - elRect.left) - (el.clientWidth - cardRect.width) / 2;
-    el.scrollTo({left, behavior: 'smooth'});
+    const left = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+    el.scrollTo({left: Math.max(0, left), behavior: 'smooth'});
     setActive(i);
   };
 
@@ -54,12 +53,12 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
     tRef.current = setTimeout(() => setScrolling(false), 160);
     const el = ref.current;
     if (!el) return;
-    const cc = el.getBoundingClientRect().left + el.clientWidth / 2;
+    const center = el.scrollLeft + el.clientWidth / 2;
     let best = 0;
     let bestD = Infinity;
     Array.from(el.children).forEach((ch, i) => {
-      const r = (ch as HTMLElement).getBoundingClientRect();
-      const d = Math.abs(r.left + r.width / 2 - cc);
+      const c = ch as HTMLElement;
+      const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
       if (d < bestD) {
         bestD = d;
         best = i;
