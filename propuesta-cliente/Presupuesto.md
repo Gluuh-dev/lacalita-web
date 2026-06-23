@@ -1,3 +1,5 @@
+<img src="./logo-marca.svg" alt="Logo" width="200" />
+
 # Presupuesto — La Calita
 
 _Una sola web (con área de hamburguesería). Precio cerrado, todo incluido._
@@ -14,6 +16,8 @@ Una web completa, moderna y **que gestionas tú mismo**, con todo lo siguiente i
 - **Cartas interactivas**: cada plato con foto o vídeo, precio (o "desde X €" con variantes), **alérgenos con iconos**, favoritos (♥), lista personal, **modo vídeo (reels)** de los platos, filtros por categoría y buscador.
 - **Ficha de cada plato** y **agenda de eventos** (conciertos, DJ…) con su página de detalle.
 - **Área Hamburguesería**: portada a pantalla completa con **efectos (humo, fuego, chispas, vídeo)**, anillos, **ofertas**, **las más votadas** y panel de alérgenos; carta en tema oscuro.
+- **Registro e inicio de sesión de usuarios** y **valoraciones** de platos/hamburguesas (ranking de "**los más valorados**").
+- **Diseño preparado para incorporar pagos de entradas y reservas** (listo para activar el cobro cuando se quiera).
 - **Ubicación**: horarios, mapa y datos de contacto.
 
 ### 🛠️ Panel de administración (lo gestionas tú)
@@ -27,7 +31,7 @@ Una web completa, moderna y **que gestionas tú mismo**, con todo lo siguiente i
 
 - Web en **3 idiomas: Español, Inglés y Francés**.
 - Hemos **incorporado IA para traducir** los textos: con un botón, **"Generar traducciones"**, se rellenan inglés y francés a partir del español (luego puedes retocar a mano).
-- Ampliable a más idiomas en el futuro.
+- **Posibilidad de añadir los idiomas que quieras** (alemán, italiano, etc.).
 
 ### 📱 Diseño y calidad
 
@@ -55,8 +59,6 @@ Servicios externos para que la web esté online (se pagan a sus proveedores, **s
 | **Base de datos y alojamiento** | Guarda cartas, fotos, eventos y traducciones; con copias de seguridad | **~23 €/mes ≈ 280 € / año** |
 | **Total** | | **≈ 295 € / año** |
 
-> Se puede **empezar gratis** mientras haya poco movimiento; para una web de negocio estable se recomienda el plan de pago de la base de datos (~23 €/mes) para que **no se "duerma"** y tenga copias de seguridad. El **alojamiento de la web puede ser gratuito**.
-
 ---
 
 ## Opcionales para más adelante (si te interesan)
@@ -65,10 +67,14 @@ Servicios externos para que la web esté online (se pagan a sus proveedores, **s
 - 🍔 **Pedido y pago online** de hamburguesas.
 - 🪑 Reserva de mesa · 📧 Newsletter · 🌐 Idioma adicional.
 
-> Estos llevan bastante más trabajo; si los quieres, te paso un presupuesto aparte. La web base (1.390 €) ya queda completa sin ellos.
-
 ---
 
 ## Forma de pago
 
-- 50 % al empezar · 50 % al entregar.
+| Concepto | Importe |
+|---|---|
+| **Total del proyecto** | **1.390 €** |
+| 1.º pago — al empezar (50 %) | **695 €** |
+| 2.º pago — a la entrega (50 %) | **695 €** |
+
+Pago por **transferencia bancaria**.

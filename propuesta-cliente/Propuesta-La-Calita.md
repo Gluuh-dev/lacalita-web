@@ -1,3 +1,5 @@
+<img src="./logo-marca.svg" alt="Logo" width="200" />
+
 # Propuesta web — La Calita Beach Club
 
 _Documento para cliente · Salobreña (Granada)_
