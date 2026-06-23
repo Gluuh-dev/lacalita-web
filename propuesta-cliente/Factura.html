@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Factura · La Calita</title>
+<style>
+  :root{ --ink:#23303f; --ink-2:#51606f; --muted:#7d8a97; --soft:#faf6ef; --line:#e9ddca; --gold:#c98a4e; }
+  *{box-sizing:border-box;}
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; color:var(--ink); background:#eef0f2;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.55; font-size:14px; }
+  .page{ max-width:780px; margin:24px auto; background:#fff; box-shadow:0 10px 40px rgba(0,0,0,.12); border-radius:12px; padding:46px 52px; }
+  .top{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; border-bottom:2px solid var(--soft); padding-bottom:22px; }
+  .top img{ width:92px; height:auto; }
+  .top .title{ text-align:right; }
+  .top .title h1{ margin:0; font-size:30px; letter-spacing:.04em; color:var(--ink); }
+  .top .title .doc{ color:var(--gold); font-weight:700; letter-spacing:.16em; text-transform:uppercase; font-size:12px; }
+  .meta{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:24px 0; }
+  .meta h4{ margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); }
+  .meta p{ margin:2px 0; color:var(--ink-2); }
+  .meta strong{ color:var(--ink); }
+  table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; }
+  th,td{ padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; }
+  th{ background:var(--soft); font-weight:700; }
+  td.num,th.num{ text-align:right; white-space:nowrap; }
+  .strike{ color:var(--muted); text-decoration:line-through; }
+  tr.total td{ font-weight:800; font-size:17px; border-top:2px solid var(--gold); background:#fcf7ef; }
+  .pay{ margin-top:20px; background:var(--soft); border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .pay h4{ margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); }
+  .note{ font-size:12px; color:var(--muted); margin-top:16px; }
+  .foot{ margin-top:26px; padding-top:16px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-2); text-align:center; }
+  @media print{ body{ background:#fff; } .page{ box-shadow:none; margin:0; max-width:none; border-radius:0; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="top">
+    <div>
+      <img src="./logo-marca.svg" alt="Logo" />
+    </div>
+    <div class="title">
+      <div class="doc">Factura</div>
+      <h1>FACTURA</h1>
+      <p style="margin:6px 0 0;color:#7d8a97;">Nº <strong style="color:#23303f;">2026-001</strong></p>
+      <p style="margin:0;color:#7d8a97;">Fecha: <strong style="color:#23303f;">__ / __ / 2026</strong></p>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div>
+      <h4>Emisor</h4>
+      <p><strong>Plácido Venegas</strong></p>
+      <p>NIF: ____________</p>
+      <p>placidovenegas@gmail.com</p>
+      <p>Tel: 633 468 275</p>
+    </div>
+    <div>
+      <h4>Cliente</h4>
+      <p><strong>La Calita</strong></p>
+      <p>NIF/CIF: ____________</p>
+      <p>Salobreña (Granada)</p>
+      <p>____________</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Concepto</th><th class="num">Importe</th></tr>
+    <tr>
+      <td>Desarrollo web completo La Calita (web, hamburguesería, panel de administración, 3 idiomas con IA, diseño responsive, recursos gráficos y vídeos, publicación y formación). Valor a tarifa profesional (~231 h × 35 €/h).</td>
+      <td class="num strike">8.085,00 €</td>
+    </tr>
+    <tr><td>Descuento especial</td><td class="num">−6.695,00 €</td></tr>
+    <tr class="total"><td>TOTAL</td><td class="num">1.390,00 €</td></tr>
+  </table>
+
+  <div class="pay">
+    <h4>Forma de pago — transferencia bancaria</h4>
+    <p style="margin:2px 0;">1.º pago (al empezar, 50 %): <strong>695,00 €</strong></p>
+    <p style="margin:2px 0;">2.º pago (a la entrega, 50 %): <strong>695,00 €</strong></p>
+    <p style="margin:6px 0 0;">IBAN: ____ ____ ____ ____ ____ ____</p>
+  </div>
+
+  <p class="note">
+    Servicios anuales (dominio + alojamiento + base de datos) ~295 €/año aparte, a precio de coste.
+    IVA / IRPF según el régimen fiscal aplicable. Documento orientativo.
+  </p>
+
+  <div class="foot">
+    Plácido Venegas · placidovenegas@gmail.com · 633 468 275
+  </div>
+
+</div>
+</body>
+</html>

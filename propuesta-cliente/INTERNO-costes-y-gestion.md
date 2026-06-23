@@ -30,10 +30,20 @@ _Costes reales, márgenes y cómo gestionarlo. Solo para uso propio._
 - Vercel Hobby funciona pero es "no comercial" por ToS.
 - Recomendado al cliente: cobrar la cuota de mantenimiento que cubra el hosting que elijas.
 
-## Precio acordado (amigo)
+## Precio acordado (amigo) — cuentas reales
 
-- **Desarrollo web completo: 1.390 € pago único** (web + hamburguesería + panel + 3 idiomas + IA traducción). Incluye mantenimiento, cambios/ideas y ayuda a meter platos/traducciones.
-- **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Sin recargo.
+| Concepto | Importe |
+|---|---|
+| Precio cobrado al cliente | **1.390 €** |
+| − Servicios 1.er año (dominio + Supabase Pro, a coste) | **−295 €** |
+| **= Ganancia neta (tu trabajo, 1.er año)** | **~1.095 €** |
+| Horas estimadas | ~231 h |
+| **€/hora sobre el precio (1.390 / 231)** | **~6 €/h** |
+| €/hora sobre ganancia neta (1.095 / 231) | ~4,7 €/h |
+| Valor a tarifa normal de mercado (231 × 35 €/h) | **~8.085 €** |
+| Descuento de amigo aplicado | **~6.695 €** |
+
+- **Servicios anuales: ~295 €/año a precio de coste** (dominio + Supabase Pro). Los descuentas de la ganancia.
 - **Módulos (entradas, pedido+pago)**: aparte (700–1.800 € c/u).
 
 ### Horas para desarrollar esto desde cero (una persona)
