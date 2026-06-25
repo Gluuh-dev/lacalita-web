@@ -104,6 +104,43 @@ La base está bien montada: App Router + i18n, ISR (`revalidate=300`), Supabase 
 
 ---
 
+## Rendimiento — análisis con datos (junio 2026)
+
+Medido sobre el repo. `public/` pesa **~10 MB**, y **~9 MB son 4 vídeos FX** de la hamburguesería.
+
+### P0 — Vídeos FX (el mayor problema, con diferencia)
+| Vídeo | Peso |
+|---|---|
+| `rayo-azul.mp4` | **4,8 MB** |
+| `fx.mp4` | 1,76 MB |
+| `humo-blanco.mp4` | 1,5 MB |
+| `humo-naranja.mp4` | 1,3 MB |
+
+- **Comprimir/recodificar**: bajar a 720p, sin audio, CRF más alto (o `.webm` VP9/AV1). Objetivo **<700 KB cada uno** (rayo-azul puede bajar ~85%). Ahorro estimado: **~9 MB → ~2 MB**.
+- **Cargar solo el del slide actual** y con `preload="none"`; **pausar fuera de viewport**; mostrar `poster` mientras carga.
+- **En móvil / `Save-Data`**: desactivar el vídeo FX (o usar versión mini) — hoy se descargan varios MB en datos móviles.
+
+### P1 — Fuentes
+- Las tipografías están en **`.ttf`/`.otf`** (`eight-one.ttf` 47 KB, `modern-romance.otf` 26 KB, `adam.ttf` 12 KB).
+- **Convertir a `.woff2`** (≈ 30–50% menos) + `font-display: swap` + **preload** solo de la crítica. Ahorro: ~40 KB y menos "flash" de texto.
+
+### P1 — Imágenes / fondos
+- `next/image` ya está bien configurado (AVIF/WebP + dominio Supabase). ✓
+- Queda **1 fondo con `background:url()`** (hero) fuera de `next/image` → pasarlo a `<Image>`.
+- 14 PNG de alérgenos (~11–16 KB c/u ≈ 180 KB si se cargan todos) → cargar `loading="lazy"` o sprite SVG.
+
+### P2 — JS / bundle
+- **50 componentes `'use client'`**; `framer-motion` solo en 2 (bien). Aun así, conviene **`@next/bundle-analyzer`** para ver chunks pesados y bajar a server component lo que no necesite interactividad.
+- Revisar que listados grandes no sean client sin necesidad.
+
+### Resumen de prioridad
+1. **Comprimir los 4 vídeos FX** + cargarlos perezosos (≈ −7 MB). **Mayor impacto, sobre todo en móvil.**
+2. Fuentes a **woff2** + preload.
+3. Fondo `background:url()` → `next/image`; alérgenos lazy.
+4. Bundle analyzer y auditar `'use client'`.
+
+---
+
 ## P2 — Roadmap (posibles mejoras)
 
 > Todo lo siguiente queda **apuntado como mejora futura**, no incluido en la web base.
