@@ -50,6 +50,8 @@ export type PreviewCfg = {
   hideTitle: boolean;
   hidePrice: boolean;
   accentColor: string;
+  buttonColor: string;
+  textColor: string;
   mediaY: number;
 };
 
@@ -134,10 +136,10 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>
             <span style={{display: 'block', height: 56, width: 173, backgroundColor: c.accentColor || GOLD, WebkitMaskImage: 'url(/brand/logo-texto-derecha.svg)', maskImage: 'url(/brand/logo-texto-derecha.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
             <div className="font-adam uppercase" style={{marginTop: 8, fontSize: 12, letterSpacing: '0.2em', color: c.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
-            <p style={{marginTop: 18, maxWidth: 360, fontSize: 15, lineHeight: 1.55, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+            <p style={{marginTop: 18, maxWidth: 360, fontSize: 15, lineHeight: 1.55, color: c.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
             <div style={{marginTop: 24, display: 'flex', gap: 12}}>
-              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: c.accentColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
-              <span style={{borderRadius: 999, padding: '11px 22px', fontSize: 14, fontWeight: 600, border: `1px solid ${c.accentColor || RED}`, color: c.accentColor || RED}}>Cómo llegar</span>
+              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: c.buttonColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
+              <span style={{borderRadius: 999, padding: '11px 22px', fontSize: 14, fontWeight: 600, border: `1px solid ${c.buttonColor || RED}`, color: c.buttonColor || RED}}>Cómo llegar</span>
             </div>
           </div>
           <div style={{flex: 1, position: 'relative', height: '100%'}}>
@@ -148,10 +150,10 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
         <div className="absolute inset-0 z-[2] flex flex-col items-center px-5 pt-16 text-center">
           <span style={{display: 'block', height: 52, width: 60, backgroundColor: c.accentColor || GOLD, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
           <div className="font-adam uppercase" style={{marginTop: 6, fontSize: 10, letterSpacing: '0.2em', color: c.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
-          <p style={{marginTop: 12, maxWidth: 300, fontSize: 13, lineHeight: 1.5, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar.</p>
+          <p style={{marginTop: 12, maxWidth: 300, fontSize: 13, lineHeight: 1.5, color: c.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar.</p>
           <div style={{marginTop: 14, display: 'flex', gap: 10}}>
-            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: c.accentColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
-            <span style={{borderRadius: 999, padding: '8px 16px', fontSize: 12, fontWeight: 600, border: `1px solid ${c.accentColor || RED}`, color: c.accentColor || RED}}>Cómo llegar</span>
+            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: c.buttonColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
+            <span style={{borderRadius: 999, padding: '8px 16px', fontSize: 12, fontWeight: 600, border: `1px solid ${c.buttonColor || RED}`, color: c.buttonColor || RED}}>Cómo llegar</span>
           </div>
           <div style={{position: 'relative', flex: 1, width: '100%', marginTop: 8}}>
             <Burger c={c} pc={pc} animKey={animKey} />

@@ -300,6 +300,8 @@ export type BurgerSlide = {
   hide_title: boolean;
   hide_price: boolean;
   accent_color: string;
+  button_color: string;
+  text_color: string;
   media_y: number;
   title_scale: number;
   eyebrow_scale: number;

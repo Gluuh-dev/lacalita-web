@@ -178,6 +178,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [hideTitle, setHideTitle] = useState(slide?.hide_title ?? false);
   const [hidePrice, setHidePrice] = useState(slide?.hide_price ?? false);
   const [accentColor, setAccentColor] = useState(slide?.accent_color ?? '');
+  const [buttonColor, setButtonColor] = useState(slide?.button_color ?? '');
+  const [textColor, setTextColor] = useState(slide?.text_color ?? '');
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -214,6 +216,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         hide_title: hideTitle,
         hide_price: hidePrice,
         accent_color: accentColor,
+        button_color: buttonColor,
+        text_color: textColor,
         media_y: mediaY,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
@@ -461,13 +465,22 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             <p className="mt-1 text-xs text-ink-3">Se coge del fondo de la imagen para que no se note el cambio. Vacío = crema por defecto.</p>
           </div>
           <div className="mt-3">
-            <Label>Color del lado izquierdo (logo, lema, botones)</Label>
-            <div className="flex items-center gap-2">
-              <span className="size-7 rounded-full border border-line-strong" style={{background: accentColor || '#d67a63'}} />
-              <input type="color" value={/^#/.test(accentColor) ? accentColor : '#c94a3c'} onChange={(e) => setAccentColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
-              {accentColor && <button type="button" onClick={() => setAccentColor('')} className="text-xs text-ink-3 underline">Por defecto</button>}
+            <Label>Colores del lado izquierdo (si el fondo es de otro color)</Label>
+            <div className="mt-1 grid gap-2">
+              {([
+                ['Logo y lema', accentColor, setAccentColor, '#d67a63'],
+                ['Botones', buttonColor, setButtonColor, '#c94a3c'],
+                ['Texto', textColor, setTextColor, '#2a1713']
+              ] as [string, string, (v: string) => void, string][]).map(([label, val, set, def]) => (
+                <div key={label} className="flex items-center gap-2 text-sm">
+                  <span className="w-20 text-ink-2">{label}</span>
+                  <span className="size-7 rounded-full border border-line-strong" style={{background: val || def}} />
+                  <input type="color" value={/^#/.test(val) ? val : def} onChange={(e) => set(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
+                  {val && <button type="button" onClick={() => set('')} className="text-xs text-ink-3 underline">Por defecto</button>}
+                </div>
+              ))}
             </div>
-            <p className="mt-1 text-xs text-ink-3">Para que destaque si el fondo es de otro color. Vacío = colores de marca.</p>
+            <p className="mt-1 text-xs text-ink-3">Vacío = colores de marca. Útil si el fondo del hero es de otro color.</p>
           </div>
         </div>
 
@@ -511,6 +524,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           hideTitle,
           hidePrice,
           accentColor,
+          buttonColor,
+          textColor,
           mediaY,
           titleScale,
           eyebrowScale,

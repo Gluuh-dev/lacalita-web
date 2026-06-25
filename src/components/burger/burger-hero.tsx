@@ -43,6 +43,8 @@ export type HeroSlide = {
   hideTitle?: boolean;
   hidePrice?: boolean;
   accentColor?: string;
+  buttonColor?: string;
+  textColor?: string;
   mediaY?: number;
 };
 
@@ -137,12 +139,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             }}
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
-          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed text-[#2a1713]/65 md:mx-0">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-            <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.accentColor || RED, color: '#fdfbf7'}}>
+            <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.buttonColor || RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
             </Link>
-            <a href="#local" className="inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-semibold transition hover:brightness-95" style={{borderColor: cur?.accentColor || RED, color: cur?.accentColor || RED}}>
+            <a href="#local" className="inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-semibold transition hover:brightness-95" style={{borderColor: cur?.buttonColor || RED, color: cur?.buttonColor || RED}}>
               <MapPin className="size-4" /> Cómo llegar
             </a>
           </div>
