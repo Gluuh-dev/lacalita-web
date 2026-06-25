@@ -95,10 +95,14 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
         {c.name || 'Título'}
       </div>
       {c.image && isVideoUrl(c.image) ? (
-        <video key={`i${animKey}`} src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, position: 'relative', top: `${c.mediaY ?? 0}%`, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+        <div key={`i${animKey}`} className="flex justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
+          <video src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+        </div>
       ) : c.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, position: 'relative', top: `${c.mediaY ?? 0}%`, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+        <div key={`i${animKey}`} className="flex justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+        </div>
       ) : (
         <div className="flex items-center justify-center rounded-3xl border border-dashed text-black/15" style={{height: '60%', aspectRatio: '1', zIndex: 2, borderColor: 'rgba(42,23,19,.18)'}}>
           <UtensilsCrossed style={{width: 64, height: 64}} />

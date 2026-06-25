@@ -179,10 +179,14 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 style={{background: 'radial-gradient(ellipse, rgba(0,0,0,.16), transparent 70%)', filter: 'blur(7px)'}}
               />
               {cur.image && isVideoUrl(cur.image) ? (
-                <video key={'i' + i} src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={{...BURGER_MEDIA_STYLE, position: 'relative', top: `${cur.mediaY ?? 0}%`}} />
+                <div key={'i' + i} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                  <video src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
+                </div>
               ) : cur.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={'i' + i} src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={{...BURGER_MEDIA_STYLE, position: 'relative', top: `${cur.mediaY ?? 0}%`}} />
+                <div key={'i' + i} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
+                </div>
               ) : (
                 <div key={'i' + i} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25`} style={{zIndex: 2}}>
                   <UtensilsCrossed className="size-24" />
