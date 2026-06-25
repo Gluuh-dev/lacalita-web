@@ -71,9 +71,26 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Paleta La Calita — crema + terracota + rojo (toda la web) */
+/* Tema La Calita (restaurante) — por defecto, ORIGINAL (no se toca) */
 :root,
-[data-theme='calita'],
+[data-theme='calita'] {
+  --bg: #faf6ef;
+  --surface: #ffffff;
+  --surface-2: #fbf7f0;
+  --surface-sunken: #f3ece0;
+  --brand: #e9ae74;
+  --brand-deep: #c98a4e;
+  --on-primary: #3a2606;
+  --ink: #243b53;
+  --ink-2: #43586d;
+  --ink-3: #7a8896;
+  --accent: #2e6e8e;
+  --accent-soft: #e3eef3;
+  --line: #e7dccb;
+  --line-strong: #d6c6ad;
+}
+
+/* Tema Hamburguesería — paleta NUEVA: crema + terracota + rojo */
 [data-theme='burger'] {
   --bg: #fdfbf7;
   --surface: #ffffff;
@@ -333,9 +350,9 @@
 }
 /* Carrusel de categorías: cards centradas por transform (la activa al frente) */
 .lc-cat-card { transform: scale(.9); opacity: .45; transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .45s ease, box-shadow .45s ease; }
-.lc-cat-card.is-active { transform: scale(1); opacity: 1; box-shadow: 0 0 0 2px #f97316, 0 26px 60px -22px rgba(249,115,22,.5); }
-.lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(255,255,255,.28); transition: all .35s cubic-bezier(.22,.61,.36,1); }
-.lc-cat-dot.is-active { width: 26px; background: #f97316; }
+.lc-cat-card.is-active { transform: scale(1); opacity: 1; box-shadow: 0 0 0 2px #c94a3c, 0 26px 60px -22px rgba(201,74,60,.45); }
+.lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(42,23,19,.22); transition: all .35s cubic-bezier(.22,.61,.36,1); }
+.lc-cat-dot.is-active { width: 26px; background: #c94a3c; }
 @media (prefers-reduced-motion: reduce) { .lc-cat-card, .lc-cat-dot { transition: none; } }
 /* Efectos de fondo del hero hamburguesería */
 @keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }

@@ -10,9 +10,9 @@ import BurgerHeader from '@/components/burger/burger-header';
 export const revalidate = 300;
 
 const PANELS: Record<string, string> = {
-  orange: 'radial-gradient(120% 90% at 50% 20%, #ff7c33, #f26b21 45%, #b8470f 100%)',
-  dark: 'radial-gradient(120% 90% at 50% 20%, #2a1d11, #15100a 80%)',
-  gold: 'radial-gradient(120% 90% at 50% 20%, #e7c074, #c79545 55%, #9a6f2c 100%)'
+  orange: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #c94a3c 50%, #ad3d31 100%)',
+  dark: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #ad3d31 90%)',
+  gold: 'radial-gradient(120% 90% at 50% 20%, #e0a08a, #d67a63 55%, #c94a3c 100%)'
 };
 
 export async function generateMetadata({params}: {params: Promise<{locale: string; id: string}>}) {
@@ -36,14 +36,14 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
   const intPart = o.price != null ? Math.floor(o.price) : null;
 
   return (
-    <main className="min-h-screen" style={{background: '#14100a', color: '#f4ede2'}}>
+    <main className="min-h-screen" style={{background: '#fdfbf7', color: '#2a1713'}}>
       <BurgerHeader locale={locale} />
 
       {/* Marquesina superior */}
-      <div className="relative z-10 overflow-hidden pt-24" style={{background: '#f26b21', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
+      <div className="relative z-10 overflow-hidden pt-24" style={{background: '#c94a3c', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
         <div className="lc-mq py-2" style={{animationDuration: '16s'}}>
           {[0, 1].map((k) => (
-            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.3rem', color: '#1c1611', letterSpacing: '0.06em', paddingRight: 14}}>
+            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.3rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
               {'oferta · oferta · oferta · '.repeat(8)}
             </span>
           ))}
@@ -51,7 +51,7 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
       </div>
 
       <section className="mx-auto max-w-2xl px-5 pb-20 pt-8">
-        <Link href="/hamburgueseria" className="mb-5 inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-white">
+        <Link href="/hamburgueseria" className="mb-5 inline-flex items-center gap-2 text-sm text-[#2a1713]/70 transition hover:text-[#2a1713]">
           <ArrowLeft className="size-4" /> Volver
         </Link>
 
@@ -101,17 +101,17 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
             href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"
             target="_blank"
             rel="noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold text-[#1a1209]"
-            style={{background: '#f26b21', color: '#1a1209'}}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold"
+            style={{background: '#c94a3c', color: '#fdfbf7'}}
           >
             <MapPin className="size-4" /> Cómo llegar
           </a>
-          <Link href="/carta/hamburgueseria" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10">
+          <Link href="/carta/hamburgueseria" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-[#c94a3c] px-6 py-3.5 font-semibold text-[#c94a3c] transition hover:bg-[#c94a3c]/10">
             Ver la carta
           </Link>
         </div>
 
-        <p className="mt-6 text-center text-xs text-white/45">Oferta disponible en La Calita Burger · Salobreña. Pídela en el local.</p>
+        <p className="mt-6 text-center text-xs text-[#2a1713]/55">Oferta disponible en La Calita Burger · Salobreña. Pídela en el local.</p>
       </section>
     </main>
   );

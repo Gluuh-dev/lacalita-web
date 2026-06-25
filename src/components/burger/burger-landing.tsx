@@ -9,12 +9,12 @@ import BurgerCategoryCarousel from './burger-category-carousel';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
-  bg: '#14100a',
-  ink: '#f4ede2',
-  muted: 'rgba(244,237,226,.62)',
-  orange: '#f26b21',
-  orangeHi: '#ff7c33',
-  gold: '#dcb069'
+  bg: '#fdfbf7',
+  ink: '#2a1713',
+  muted: 'rgba(42,23,19,.6)',
+  orange: '#c94a3c',
+  orangeHi: '#d67a63',
+  gold: '#d67a63'
 };
 
 const ABBR: Record<string, string> = {
@@ -67,7 +67,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       >
         <div className="lc-mq" style={{animationDuration: '18s'}}>
           {[0, 1].map((k) => (
-            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.35rem', color: '#1c1611', letterSpacing: '0.06em', paddingRight: 14}}>
+            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.35rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
               {'smash · juicy · crispy · '.repeat(8)}
             </span>
           ))}
@@ -83,7 +83,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       {/* ---- Ofertas ---- */}
       <section id="ofertas" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16">
         <div className="mb-8 flex items-end justify-between">
-          <h2 className="font-eight text-4xl text-white md:text-5xl">ofertas</h2>
+          <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">ofertas</h2>
           <span className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>Solo en La Calita Burger</span>
         </div>
         {offers.length === 0 ? (
@@ -136,7 +136,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
             <Heart className="size-3.5 fill-current" /> Las más votadas
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-eight text-4xl text-white md:text-5xl">favoritas de la gente</h2>
+            <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">favoritas de la gente</h2>
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
               Ir a la carta <ArrowRight className="size-4" />
             </Link>
@@ -147,12 +147,12 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         ) : (
           <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
             {favorites.map((p, i) => (
-              <Link key={p.id} href={`/carta/hamburgueseria/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-white/8 sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#241910,#160f08)'}}>
+              <Link key={p.id} href={`/carta/hamburgueseria/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-white/20"><UtensilsCrossed className="size-10" /></div>
+                    <div className="flex h-full items-center justify-center text-black/15"><UtensilsCrossed className="size-10" /></div>
                   )}
                   {i === 0 && p.featured && (
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.62rem] font-bold uppercase" style={{background: C.gold, color: '#1a1209'}}>
@@ -165,7 +165,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                 </div>
                 <div className="flex flex-1 flex-col p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-serif text-lg font-bold text-white">{tx(p.name, locale)}</h3>
+                    <h3 className="font-serif text-lg font-bold text-[#2a1713]">{tx(p.name, locale)}</h3>
                     {p.price != null && <span className="shrink-0 font-bold" style={{color: C.orange}}>{euro(p.price, locale)}</span>}
                   </div>
                   {p.description && <p className="mt-1 line-clamp-2 text-sm" style={{color: C.muted}}>{tx(p.description, locale)}</p>}
@@ -183,7 +183,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
 
       {/* ---- Alérgenos + local ---- */}
       <section id="local" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-12">
-        <div className="rounded-[22px] border border-white/8 p-6" style={{background: 'linear-gradient(180deg,#221710,#160f08)'}}>
+        <div className="rounded-[22px] border border-black/5 p-6 shadow-sm" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
           <div className="mb-5 font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>Alérgenos · 14 oficiales UE</div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 lg:grid-cols-5">
             {allergens.map((a) => (
@@ -195,7 +195,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-sm" style={{color: C.muted}}>
           <span>La Calita Burger · Salobreña, Granada</span>
-          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 font-semibold text-white transition hover:bg-white/10">
+          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#c94a3c] px-5 py-2.5 font-semibold text-[#c94a3c] transition hover:bg-[#c94a3c]/10">
             <MapPin className="size-4" /> Cómo llegar
           </a>
         </div>
