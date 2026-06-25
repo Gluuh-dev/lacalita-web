@@ -35,6 +35,7 @@ export type HeroSlide = {
   fxVideoX?: number;
   fxVideoY?: number;
   fxVideoScale?: number;
+  bgColor?: string;
 };
 
 const GOLD = '#d67a63'; // terracota (acento)
@@ -82,14 +83,14 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   return (
     <header
       className="relative flex min-h-[100svh] items-center overflow-hidden"
-      style={{background: 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
+      style={{background: cur?.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
     >
       {/* Efecto de fondo configurable */}
       {cur?.bgEffect === 'image' && cur.bgImage && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={cur.bgImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{filter: 'saturate(1.05)'}} />
-          <div className="absolute inset-0" style={{background: 'linear-gradient(90deg, rgba(253,251,247,.92) 0%, rgba(253,251,247,.5) 55%, rgba(253,251,247,.78) 100%)'}} />
+          <div className="absolute inset-0" style={{background: 'linear-gradient(90deg, rgba(253,251,247,.8) 0%, rgba(253,251,247,.28) 40%, transparent 68%)'}} />
         </>
       )}
       {cur?.bgEffect === 'smoke' && (

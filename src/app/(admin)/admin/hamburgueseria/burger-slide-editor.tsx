@@ -40,6 +40,31 @@ const TITLE_FILLS: [string, string][] = [
   ['cream', 'Degradado crema']
 ];
 
+// Detecta el color de la esquina (fondo) de la imagen → para el fondo del hero.
+function detectBg(url: string): Promise<string> {
+  return new Promise((resolve) => {
+    if (!url) return resolve('');
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 10;
+        c.height = 10;
+        const ctx = c.getContext('2d');
+        if (!ctx) return resolve('');
+        ctx.drawImage(img, 0, 0, 10, 10);
+        const d = ctx.getImageData(0, 0, 1, 1).data;
+        resolve('#' + [d[0], d[1], d[2]].map((x) => x.toString(16).padStart(2, '0')).join(''));
+      } catch {
+        resolve('');
+      }
+    };
+    img.onerror = () => resolve('');
+    img.src = url;
+  });
+}
+
 export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -58,6 +83,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [titleBehind, setTitleBehind] = useState(slide?.title_behind ?? false);
   const [bgEffect, setBgEffect] = useState(slide?.bg_effect ?? 'none');
   const [bgImage, setBgImage] = useState<string | null>(slide?.bg_image ?? null);
+  const [bgColor, setBgColor] = useState(slide?.bg_color ?? '');
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -87,6 +113,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         title_behind: titleBehind,
         bg_effect: bgEffect,
         bg_image: bgImage,
+        bg_color: bgColor,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
         price_scale: priceScale,
@@ -125,7 +152,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
       >
         <div>
           <Label>Imagen de la hamburguesa (PNG recortado)</Label>
-          <HeroMedia media={image ?? ''} mediaType="image" onSet={({media}) => setImage(media)} onClear={() => setImage(null)} />
+          <HeroMedia media={image ?? ''} mediaType="image" onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
         </div>
         <div>
           <Label>Nombre interno</Label>
@@ -290,6 +317,16 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${showRings ? 'left-[18px]' : 'left-0.5'}`} />
             </button>
           </label>
+          <div className="mt-3">
+            <Label>Color de fondo del hero</Label>
+            <div className="flex items-center gap-2">
+              <span className="size-7 rounded-full border border-line-strong" style={{background: bgColor || '#fdfbf7'}} />
+              <input type="color" value={/^#/.test(bgColor) ? bgColor : '#fdfbf7'} onChange={(e) => setBgColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
+              <button type="button" onClick={() => image && detectBg(image).then((c) => c && setBgColor(c))} className="rounded-full border border-line px-3 py-1 text-xs text-ink-2 transition hover:border-brand">Detectar de la imagen</button>
+              {bgColor && <button type="button" onClick={() => setBgColor('')} className="text-xs text-ink-3 underline">Quitar</button>}
+            </div>
+            <p className="mt-1 text-xs text-ink-3">Se coge del fondo de la imagen para que no se note el cambio. Vacío = crema por defecto.</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -325,6 +362,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           behind: titleBehind,
           bgEffect,
           bgImage,
+          bgColor,
           titleScale,
           eyebrowScale,
           priceScale,

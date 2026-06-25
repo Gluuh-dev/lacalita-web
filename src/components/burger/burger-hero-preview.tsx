@@ -42,6 +42,7 @@ export type PreviewCfg = {
   fxVideoX: number;
   fxVideoY: number;
   fxVideoScale: number;
+  bgColor: string;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
@@ -52,7 +53,7 @@ function Bg({c}: {c: PreviewCfg}) {
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={c.bgImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-[#fdfbf7]/80" />
+          <div className="absolute inset-0" style={{background: 'linear-gradient(90deg, rgba(253,251,247,.8) 0%, rgba(253,251,247,.28) 40%, transparent 68%)'}} />
         </>
       )}
       {c.bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 62% 42%, rgba(214,122,99,.16), transparent 70%)', filter: 'blur(8px)'}} />}
@@ -113,7 +114,7 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
   const W = pc ? 1440 : 390;
   const H = pc ? 800 : 780;
   return (
-    <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
+    <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: c.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
       <Bg c={c} />
       <Nav />
       {pc ? (
