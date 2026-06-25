@@ -15,8 +15,8 @@ const NAV = [
 export default function BurgerHeader({locale: _locale}: {locale: string}) {
   const [open, setOpen] = useState(false);
   const {hidden, scrolled} = useHideOnScroll();
-  // Arriba (sobre el hero oscuro) = texto claro; al hacer scroll (sobre crema) = oscuro.
-  const light = !scrolled;
+  // El hero ya es crema (claro), así que el header va siempre en oscuro.
+  const light = false;
   const navCls = light ? 'text-white/80 transition hover:text-white' : 'text-[#2a1713]/70 transition hover:text-[#c94a3c]';
 
   return (
