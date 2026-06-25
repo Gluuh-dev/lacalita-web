@@ -142,7 +142,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
       <form
         onSubmit={(e) => {
           e.preventDefault();
