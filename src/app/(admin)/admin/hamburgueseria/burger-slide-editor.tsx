@@ -21,7 +21,7 @@ const FONTS: [string, string][] = [
   ['adam', 'Adam'],
   ['sans', 'Geist']
 ];
-const COLORS = ['#ffffff', '#e9ae74', '#f26b21', '#f4ede2', '#fedb71'];
+const COLORS = ['#c94a3c', '#d67a63', '#2a1713', '#fdfbf7', '#e9ae74'];
 const BG_PRESETS: [string, string][] = [
   ['/burger/bg/rings.jpg', 'Anillos'],
   ['/burger/bg/beach.jpg', 'Playa'],
@@ -29,21 +29,14 @@ const BG_PRESETS: [string, string][] = [
   ['/burger/bg/smoke.jpg', 'Humo']
 ];
 const EFFECTS: [string, string][] = [
-  ['none', 'Ninguno (degradado)'],
+  ['none', 'Ninguno (crema)'],
   ['image', 'Imagen de fondo']
-];
-const FX_VIDEOS: [string, string][] = [
-  ['none', 'Ninguno'],
-  ['/burger/fx/fx.mp4', 'Fuego'],
-  ['/burger/fx/humo-naranja.mp4', 'Humo naranja'],
-  ['/burger/fx/humo-blanco.mp4', 'Humo blanco'],
-  ['/burger/fx/rayo-azul.mp4', 'Rayo azul']
 ];
 const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
+  ['red', 'Degradado rojo'],
+  ['terra', 'Degradado terracota'],
   ['gold', 'Degradado dorado'],
-  ['orange', 'Degradado naranja'],
-  ['fire', 'Degradado fuego'],
   ['cream', 'Degradado crema']
 ];
 
@@ -61,7 +54,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [image, setImage] = useState<string | null>(slide?.image ?? null);
   const [active, setActive] = useState(slide?.active ?? true);
   const [titleFont, setTitleFont] = useState(slide?.title_font ?? 'eight');
-  const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#ffffff');
+  const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#c94a3c');
   const [titleBehind, setTitleBehind] = useState(slide?.title_behind ?? false);
   const [bgEffect, setBgEffect] = useState(slide?.bg_effect ?? 'none');
   const [bgImage, setBgImage] = useState<string | null>(slide?.bg_image ?? null);
@@ -74,15 +67,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [fxSparks, setFxSparks] = useState(slide?.fx_sparks ?? false);
   const [fxSmoke, setFxSmoke] = useState(slide?.fx_smoke ?? false);
   const [priceFont, setPriceFont] = useState(slide?.price_font ?? 'eight');
-  const [priceColor, setPriceColor] = useState(slide?.price_color ?? '#e9ae74');
+  const [priceColor, setPriceColor] = useState(slide?.price_color ?? '#d67a63');
   const [priceGradient, setPriceGradient] = useState(slide?.price_gradient ?? '');
   const [titleY, setTitleY] = useState(slide?.title_y ?? 10);
   const [priceY, setPriceY] = useState(slide?.price_y ?? 14);
-  const [fxVideo, setFxVideo] = useState(slide?.fx_video ?? '');
-  const [fxVideoBehind, setFxVideoBehind] = useState(slide?.fx_video_behind ?? false);
-  const [fxVideoX, setFxVideoX] = useState(slide?.fx_video_x ?? 62);
-  const [fxVideoY, setFxVideoY] = useState(slide?.fx_video_y ?? 50);
-  const [fxVideoScale, setFxVideoScale] = useState(slide?.fx_video_scale ?? 1.1);
 
   function save() {
     start(async () => {
@@ -112,11 +100,11 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         price_gradient: priceGradient,
         title_y: titleY,
         price_y: priceY,
-        fx_video: fxVideo,
-        fx_video_behind: fxVideoBehind,
-        fx_video_x: fxVideoX,
-        fx_video_y: fxVideoY,
-        fx_video_scale: fxVideoScale
+        fx_video: '',
+        fx_video_behind: false,
+        fx_video_x: 62,
+        fx_video_y: 50,
+        fx_video_scale: 1.1
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -296,45 +284,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <label className="flex items-center gap-2 text-sm"><Checkbox checked={fxSmoke} onCheckedChange={(v) => setFxSmoke(v === true)} /> Humo</label>
             </div>
           </div>
-          <div className="mt-3">
-            <Label>Vídeo de efecto (se elimina el fondo negro)</Label>
-            <Select value={fxVideo || 'none'} onValueChange={(v) => setFxVideo(v === 'none' ? '' : (v ?? ''))}>
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {FX_VIDEOS.map(([v, l]) => (
-                    <SelectItem key={v} value={v}>{l}</SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {fxVideo && (
-              <>
-                <label className="mt-2 flex items-center justify-between text-sm">
-                  Vídeo detrás de la hamburguesa
-                  <button type="button" onClick={() => setFxVideoBehind((v) => !v)} aria-label="Detrás" className={`relative h-6 w-10 rounded-full transition ${fxVideoBehind ? 'bg-brand' : 'bg-line-strong'}`}>
-                    <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${fxVideoBehind ? 'left-[18px]' : 'left-0.5'}`} />
-                  </button>
-                </label>
-                <div className="mt-2 grid grid-cols-3 gap-3">
-                  <div>
-                    <Label>Horizontal · {Math.round(fxVideoX)}%</Label>
-                    <input type="range" min={0} max={100} value={fxVideoX} onChange={(e) => setFxVideoX(+e.target.value)} className="w-full accent-brand" />
-                  </div>
-                  <div>
-                    <Label>Vertical · {Math.round(fxVideoY)}%</Label>
-                    <input type="range" min={0} max={100} value={fxVideoY} onChange={(e) => setFxVideoY(+e.target.value)} className="w-full accent-brand" />
-                  </div>
-                  <div>
-                    <Label>Tamaño · {Math.round(fxVideoScale * 100)}%</Label>
-                    <input type="range" min={0.5} max={2} step={0.05} value={fxVideoScale} onChange={(e) => setFxVideoScale(+e.target.value)} className="w-full accent-brand" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
           <label className="mt-3 flex items-center justify-between text-sm">
-            Mostrar anillos dorados
+            Mostrar anillos
             <button type="button" onClick={() => setShowRings((v) => !v)} aria-label="Anillos" className={`relative h-6 w-10 rounded-full transition ${showRings ? 'bg-brand' : 'bg-line-strong'}`}>
               <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${showRings ? 'left-[18px]' : 'left-0.5'}`} />
             </button>
@@ -387,11 +338,11 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           priceGradient,
           titleY,
           priceY,
-          fxVideo,
-          fxVideoBehind,
-          fxVideoX,
-          fxVideoY,
-          fxVideoScale
+          fxVideo: '',
+          fxVideoBehind: false,
+          fxVideoX: 62,
+          fxVideoY: 50,
+          fxVideoScale: 1.1
         }}
       />
     </div>

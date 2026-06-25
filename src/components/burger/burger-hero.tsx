@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, FxVideo, titleColorStyle, BurgerAura} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, BurgerAura} from './burger-fx';
 
 export type HeroSlide = {
   image: string | null;
@@ -107,9 +107,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       {/* Destellos fríos (azulados) */}
       <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(214,122,99,.18), transparent 62%)'}} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(201,74,60,.12), transparent 60%)'}} />
-
-      {/* Vídeo de efecto a pantalla completa (no se corta) */}
-      {cur?.fxVideo && <FxVideo src={cur.fxVideo} behind={cur.fxVideoBehind} x={cur.fxVideoX} y={cur.fxVideoY} scale={cur.fxVideoScale} />}
 
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}

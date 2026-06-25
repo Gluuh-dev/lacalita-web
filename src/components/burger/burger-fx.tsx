@@ -1,6 +1,8 @@
 import type {CSSProperties} from 'react';
 
 export const TITLE_GRADIENTS: Record<string, string> = {
+  red: 'linear-gradient(180deg,#e0705f,#c94a3c 55%,#9a2f24)',
+  terra: 'linear-gradient(180deg,#e9a591,#d67a63 55%,#b85a44)',
   gold: 'linear-gradient(180deg,#f7e6bd,#e9ae74 45%,#b9853f)',
   orange: 'linear-gradient(180deg,#ffb16b,#f26b21 60%,#c9531a)',
   fire: 'linear-gradient(180deg,#ffd27a,#f26b21 45%,#d4530f)',

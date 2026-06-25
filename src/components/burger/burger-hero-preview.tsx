@@ -2,10 +2,10 @@
 
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
-import {euro} from '@/lib/localize';
-import {Sparks, Smoke, FxVideo, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, BurgerAura} from './burger-fx';
 
-const GOLD = '#e9ae74';
+const GOLD = '#d67a63'; // terracota (acento)
+const RED = '#c94a3c'; // rojo principal
 const FONT_CSS: Record<string, string> = {
   eight: "'Eight One', sans-serif",
   display: 'var(--font-playfair), serif',
@@ -47,23 +47,23 @@ export type PreviewCfg = {
 function Bg({c}: {c: PreviewCfg}) {
   return (
     <>
-      {c.showRings && <div className="pointer-events-none absolute right-0 top-0 h-[88%] w-[70%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 30px, rgba(233,174,116,.16) 30px 33px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 70%)'}} />}
+      {c.showRings && <div className="pointer-events-none absolute right-0 top-0 h-[88%] w-[70%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 26px, rgba(214,122,99,.20) 26px 28px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 55%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 55%)'}} />}
       {c.bgEffect === 'image' && c.bgImage && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={c.bgImage} alt="" className="absolute inset-0 h-full w-full object-cover" style={{filter: 'brightness(.42)'}} />
-          <div className="absolute inset-0 bg-[#14100a]/55" />
+          <img src={c.bgImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-[#fdfbf7]/80" />
         </>
       )}
-      {c.bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 62% 42%, rgba(225,225,225,.11), transparent 70%)', filter: 'blur(8px)'}} />}
-      {c.bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 62% 100%, rgba(242,107,33,.28), transparent 68%)'}} />}
+      {c.bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 62% 42%, rgba(214,122,99,.16), transparent 70%)', filter: 'blur(8px)'}} />}
+      {c.bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 62% 100%, rgba(201,74,60,.2), transparent 68%)'}} />}
     </>
   );
 }
 
 function Nav() {
   return (
-    <div className="absolute inset-x-0 top-0 z-[6] flex items-center justify-between px-10 py-5 font-adam uppercase tracking-[0.18em] text-white/65" style={{fontSize: 11}}>
+    <div className="absolute inset-x-0 top-0 z-[6] flex items-center justify-between px-10 py-5 font-adam uppercase tracking-[0.18em]" style={{fontSize: 11, color: 'rgba(42,23,19,.6)'}}>
       <span className="rounded-full" style={{width: 18, height: 18, background: GOLD}} />
       <div className="flex gap-6"><span>Carta</span><span>Ofertas</span><span>Local</span></div>
       <div className="flex gap-4"><span>Admin</span><span>ES</span></div>
@@ -77,6 +77,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
   const ps = (pc ? 64 : 38) * c.priceScale;
   return (
     <div className="relative flex h-full items-center justify-center">
+      <BurgerAura />
       {c.eyebrow && (
         <div key={`e${animKey}`} className="lc-bfade absolute left-0 right-0 z-[3] text-center" style={{top: '7%'}}>
           <span className="inline-flex items-center font-adam uppercase" style={{gap: 8, letterSpacing: '0.28em', fontSize: eb, color: GOLD}}>
@@ -86,19 +87,19 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           </span>
         </div>
       )}
-      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || '#fff', c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 10px 40px rgba(0,0,0,.7)'}}>
+      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 4px 16px rgba(0,0,0,.1)'}}>
         {c.name || 'Título'}
       </div>
       {c.image ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 30px 40px rgba(0,0,0,.55))'}} />
+        <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 24px 36px rgba(0,0,0,.22))'}} />
       ) : (
-        <div className="flex items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25" style={{height: '60%', aspectRatio: '1', zIndex: 2}}>
+        <div className="flex items-center justify-center rounded-3xl border border-dashed text-black/15" style={{height: '60%', aspectRatio: '1', zIndex: 2, borderColor: 'rgba(42,23,19,.18)'}}>
           <UtensilsCrossed style={{width: 64, height: 64}} />
         </div>
       )}
       {c.price && (
-        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient), fontSize: ps, textShadow: '0 8px 30px rgba(0,0,0,.7)'}}>
+        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient), fontSize: ps, textShadow: '0 4px 14px rgba(0,0,0,.1)'}}>
           {c.price} €
         </div>
       )}
@@ -112,19 +113,18 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
   const W = pc ? 1440 : 390;
   const H = pc ? 800 : 780;
   return (
-    <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 80% at 72% 42%, #2a1f18 0%, #16100d 70%)'}}>
+    <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
       <Bg c={c} />
       <Nav />
-      {c.fxVideo && <FxVideo src={c.fxVideo} behind={c.fxVideoBehind} x={c.fxVideoX} y={c.fxVideoY} scale={c.fxVideoScale} />}
       {pc ? (
         <div className="absolute inset-0 z-[2] flex items-center">
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>
             <span style={{display: 'block', height: 56, width: 173, backgroundColor: GOLD, WebkitMaskImage: 'url(/brand/logo-texto-derecha.svg)', maskImage: 'url(/brand/logo-texto-derecha.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
             <div className="font-adam uppercase" style={{marginTop: 8, fontSize: 12, letterSpacing: '0.2em', color: GOLD}}>Smash burgers · a pie de playa</div>
-            <p style={{marginTop: 18, maxWidth: 360, fontSize: 15, lineHeight: 1.55, color: 'rgba(244,237,226,.6)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+            <p style={{marginTop: 18, maxWidth: 360, fontSize: 15, lineHeight: 1.55, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
             <div style={{marginTop: 24, display: 'flex', gap: 12}}>
-              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: GOLD, color: '#2a1c08'}}>Ver la carta</span>
-              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: '#fff', color: '#1c160e'}}>Cómo llegar</span>
+              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: RED, color: '#fdfbf7'}}>Ver la carta</span>
+              <span style={{borderRadius: 999, padding: '11px 22px', fontSize: 14, fontWeight: 600, border: `1px solid ${RED}`, color: RED}}>Cómo llegar</span>
             </div>
           </div>
           <div style={{flex: 1, position: 'relative', height: '100%'}}>
@@ -135,10 +135,10 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
         <div className="absolute inset-0 z-[2] flex flex-col items-center px-5 pt-16 text-center">
           <span style={{display: 'block', height: 52, width: 60, backgroundColor: GOLD, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
           <div className="font-adam uppercase" style={{marginTop: 6, fontSize: 10, letterSpacing: '0.2em', color: GOLD}}>Smash burgers · a pie de playa</div>
-          <p style={{marginTop: 12, maxWidth: 300, fontSize: 13, lineHeight: 1.5, color: 'rgba(244,237,226,.6)'}}>Carne fresca, pan brioche y queso fundido, frente al mar.</p>
+          <p style={{marginTop: 12, maxWidth: 300, fontSize: 13, lineHeight: 1.5, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar.</p>
           <div style={{marginTop: 14, display: 'flex', gap: 10}}>
-            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: GOLD, color: '#2a1c08'}}>Ver la carta</span>
-            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: '#fff', color: '#1c160e'}}>Cómo llegar</span>
+            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: RED, color: '#fdfbf7'}}>Ver la carta</span>
+            <span style={{borderRadius: 999, padding: '8px 16px', fontSize: 12, fontWeight: 600, border: `1px solid ${RED}`, color: RED}}>Cómo llegar</span>
           </div>
           <div style={{position: 'relative', flex: 1, width: '100%', marginTop: 8}}>
             <Burger c={c} pc={pc} animKey={animKey} />
