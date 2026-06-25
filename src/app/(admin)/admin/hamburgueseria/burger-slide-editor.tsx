@@ -24,10 +24,16 @@ const FONTS: [string, string][] = [
 ];
 const COLORS = ['#c94a3c', '#d67a63', '#9a2f24', '#f26b21', '#e9ae74', '#3a7d44', '#2e6e8e', '#2a1713', '#fdfbf7'];
 const BG_PRESETS: [string, string][] = [
-  ['/burger/bg/rings.jpg', 'Anillos'],
-  ['/burger/bg/beach.jpg', 'Playa'],
-  ['/burger/bg/fire.jpg', 'Fuego'],
-  ['/burger/bg/smoke.jpg', 'Humo']
+  ['/burger/bg/swirl-centro.webp', 'Remolino'],
+  ['/burger/bg/swirl-esquinas.webp', 'Esquinas'],
+  ['/burger/bg/swirl-esquinas2.webp', 'Esquinas 2'],
+  ['/burger/bg/rayos.webp', 'Rayos'],
+  ['/burger/bg/humo-1.webp', 'Humo'],
+  ['/burger/bg/humo-2.webp', 'Humo 2'],
+  ['/burger/bg/brasas.webp', 'Brasas'],
+  ['/burger/bg/extra-1.webp', 'Fondo 8'],
+  ['/burger/bg/extra-2.webp', 'Fondo 9'],
+  ['/burger/bg/extra-3.webp', 'Fondo 10']
 ];
 const EFFECTS: [string, string][] = [
   ['none', 'Ninguno (crema)'],

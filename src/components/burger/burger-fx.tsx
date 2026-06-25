@@ -13,7 +13,7 @@ export const TITLE_GRADIENTS: Record<string, string> = {
  *  color con 'auto'), o color plano. */
 export function titleColorStyle(color: string, gradient?: string | null, outline?: boolean): CSSProperties {
   if (outline) {
-    return {color: 'transparent', WebkitTextFillColor: 'transparent', WebkitTextStroke: `2.5px ${color || '#c94a3c'}`};
+    return {color: 'transparent', WebkitTextFillColor: 'transparent', WebkitTextStroke: `1.5px ${color || '#c94a3c'}`};
   }
   const grad = gradient === 'auto' && color
     ? `linear-gradient(180deg, color-mix(in srgb, ${color} 58%, white), ${color} 52%, color-mix(in srgb, ${color} 80%, black))`
