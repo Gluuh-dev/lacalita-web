@@ -49,16 +49,17 @@ const BURGER_FONT: Record<string, string> = {
 };
 
 function Rings() {
-  const tr = Array.from({length: 34}, (_, k) => 100 + k * 34);
-  const bl = Array.from({length: 18}, (_, k) => 80 + k * 38);
+  // Anillos pequeños pegados a las esquinas (sin expandirse por toda la pantalla).
+  const tr = Array.from({length: 12}, (_, k) => 38 + k * 26);
+  const bl = Array.from({length: 8}, (_, k) => 34 + k * 26);
   return (
     <svg aria-hidden viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="pointer-events-none absolute inset-0 h-full w-full">
       <g fill="none" stroke={GOLD} strokeWidth="1">
         {tr.map((r, k) => (
-          <circle key={`t${k}`} cx="1440" cy="0" r={r} strokeOpacity={Math.max(0.03, 0.22 - r / 6500)} />
+          <circle key={`t${k}`} cx="1440" cy="0" r={r} strokeOpacity={Math.max(0.04, 0.18 - r / 2600)} />
         ))}
         {bl.map((r, k) => (
-          <circle key={`b${k}`} cx="0" cy="900" r={r} strokeOpacity={Math.max(0.03, 0.16 - r / 6000)} />
+          <circle key={`b${k}`} cx="0" cy="900" r={r} strokeOpacity={Math.max(0.04, 0.14 - r / 2600)} />
         ))}
       </g>
     </svg>
