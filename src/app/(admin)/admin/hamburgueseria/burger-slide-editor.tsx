@@ -105,6 +105,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [eyebrow, setEyebrow] = useState<Record<string, string>>(slide?.eyebrow ?? {es: ''});
   const [title, setTitle] = useState<Record<string, string>>(slide?.title ?? {es: ''});
   const [image, setImage] = useState<string | null>(slide?.image ?? null);
+  const [mediaY, setMediaY] = useState(slide?.media_y ?? 0);
   const [active, setActive] = useState(slide?.active ?? true);
   const [titleFont, setTitleFont] = useState(slide?.title_font ?? 'eight');
   const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#c94a3c');
@@ -148,6 +149,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         text_shadow: textShadow,
         title_outline: titleOutline,
         price_outline: priceOutline,
+        media_y: mediaY,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
         price_scale: priceScale,
@@ -187,6 +189,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         <div>
           <Label>Imagen o vídeo de la hamburguesa</Label>
           <HeroMedia media={image ?? ''} mediaType={isVideoUrl(image) ? 'video' : 'image'} onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
+          <div className="mt-2">
+            <Label>Posición vertical (subir/bajar) · {mediaY}%</Label>
+            <input type="range" min={-40} max={40} value={mediaY} onChange={(e) => setMediaY(+e.target.value)} className="w-full accent-brand" />
+          </div>
         </div>
         <div>
           <Label>Nombre interno</Label>
@@ -405,6 +411,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           textShadow,
           titleOutline,
           priceOutline,
+          mediaY,
           titleScale,
           eyebrowScale,
           priceScale,

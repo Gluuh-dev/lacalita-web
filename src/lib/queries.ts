@@ -297,6 +297,7 @@ export type BurgerSlide = {
   text_shadow: boolean;
   title_outline: boolean;
   price_outline: boolean;
+  media_y: number;
   title_scale: number;
   eyebrow_scale: number;
   price_scale: number;
