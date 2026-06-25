@@ -364,7 +364,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${active ? 'left-[18px]' : 'left-0.5'}`} />
           </button>
         </label>
-        <div className="flex gap-3 pt-2">
+        <div className="sticky bottom-0 z-20 -mx-1 mt-2 flex gap-3 border-t border-line bg-bg/95 px-1 py-3 backdrop-blur pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <button type="button" onClick={() => router.push(back)} className={`${btnGhost} flex-1`}>Cancelar</button>
           <button type="submit" disabled={pending} className={`${btn} flex-1`}>{pending ? 'Guardando…' : 'Guardar'}</button>
         </div>
