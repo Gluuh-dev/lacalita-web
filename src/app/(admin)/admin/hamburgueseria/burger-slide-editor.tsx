@@ -212,7 +212,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           <div className="mt-3 grid grid-cols-3 gap-3">
             <div>
               <Label>Título · {Math.round(titleScale * 100)}%</Label>
-              <input type="range" min={0.5} max={1.6} step={0.05} value={titleScale} onChange={(e) => setTitleScale(+e.target.value)} className="w-full accent-brand" />
+              <input type="range" min={0.5} max={2.6} step={0.05} value={titleScale} onChange={(e) => setTitleScale(+e.target.value)} className="w-full accent-brand" />
             </div>
             <div>
               <Label>Eyebrow · {Math.round(eyebrowScale * 100)}%</Label>
@@ -220,7 +220,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </div>
             <div>
               <Label>Precio · {Math.round(priceScale * 100)}%</Label>
-              <input type="range" min={0.5} max={1.6} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
+              <input type="range" min={0.5} max={3.2} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
