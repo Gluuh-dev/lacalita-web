@@ -197,7 +197,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               />
               {cur.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={'i' + i} src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={{height: '92svh', maxWidth: '116%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 24px 36px rgba(0,0,0,.22))'}} />
+                <img key={'i' + i} src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={{height: '92svh', maxWidth: '116%', objectFit: 'contain', zIndex: 2}} />
               ) : (
                 <div key={'i' + i} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25`} style={{zIndex: 2}}>
                   <UtensilsCrossed className="size-24" />

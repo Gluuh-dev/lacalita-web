@@ -93,7 +93,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
       </div>
       {c.image ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 24px 36px rgba(0,0,0,.22))'}} />
+        <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2}} />
       ) : (
         <div className="flex items-center justify-center rounded-3xl border border-dashed text-black/15" style={{height: '60%', aspectRatio: '1', zIndex: 2, borderColor: 'rgba(42,23,19,.18)'}}>
           <UtensilsCrossed style={{width: 64, height: 64}} />
