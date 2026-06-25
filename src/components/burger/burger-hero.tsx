@@ -37,6 +37,9 @@ export type HeroSlide = {
   fxVideoY?: number;
   fxVideoScale?: number;
   bgColor?: string;
+  textShadow?: boolean;
+  titleOutline?: boolean;
+  priceOutline?: boolean;
 };
 
 const GOLD = '#d67a63'; // terracota (acento)
@@ -158,12 +161,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 style={{
                   top: `${cur.titleY ?? 10}%`,
                   fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
-                  ...titleColorStyle(cur.color || RED, cur.gradient),
+                  ...titleColorStyle(cur.color || RED, cur.gradient, cur.titleOutline),
                   zIndex: cur.behind ? 1 : 3,
                   fontSize: `calc(clamp(3rem,9.5vw,7.2rem) * ${cur.titleScale ?? 1})`,
                   lineHeight: 0.82,
                   letterSpacing: '0.01em',
-                  textShadow: 'none',
+                  textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none',
                   animationDelay: '0.08s'
                 }}
               >
@@ -186,7 +189,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               )}
               {cur.price != null && (
                 <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
-                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: 'none'}}>{euro(cur.price, locale)}</span>
+                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
               {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}

@@ -9,11 +9,20 @@ export const TITLE_GRADIENTS: Record<string, string> = {
   cream: 'linear-gradient(180deg,#ffffff,#f4ede2 50%,#cdbfa8)'
 };
 
-/** Estilo de color del título: degradado (recorte de texto) o color plano. */
-export function titleColorStyle(color: string, gradient?: string | null): CSSProperties {
-  if (gradient && TITLE_GRADIENTS[gradient]) {
+/** Estilo del texto: contorno (líneas sin relleno), degradado (preset o del propio
+ *  color con 'auto'), o color plano. */
+export function titleColorStyle(color: string, gradient?: string | null, outline?: boolean): CSSProperties {
+  if (outline) {
+    return {color: 'transparent', WebkitTextFillColor: 'transparent', WebkitTextStroke: `2.5px ${color || '#c94a3c'}`};
+  }
+  const grad = gradient === 'auto' && color
+    ? `linear-gradient(180deg, color-mix(in srgb, ${color} 58%, white), ${color} 52%, color-mix(in srgb, ${color} 80%, black))`
+    : gradient && TITLE_GRADIENTS[gradient]
+      ? TITLE_GRADIENTS[gradient]
+      : null;
+  if (grad) {
     return {
-      backgroundImage: TITLE_GRADIENTS[gradient],
+      backgroundImage: grad,
       WebkitBackgroundClip: 'text',
       backgroundClip: 'text',
       color: 'transparent',

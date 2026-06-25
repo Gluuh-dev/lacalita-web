@@ -44,6 +44,9 @@ export type PreviewCfg = {
   fxVideoY: number;
   fxVideoScale: number;
   bgColor: string;
+  textShadow: boolean;
+  titleOutline: boolean;
+  priceOutline: boolean;
 };
 
 function Bg({c}: {c: PreviewCfg}) {
@@ -87,7 +90,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           </span>
         </div>
       )}
-      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: 'none'}}>
+      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient, c.titleOutline), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>
         {c.name || 'Título'}
       </div>
       {c.image && isVideoUrl(c.image) ? (
@@ -101,7 +104,7 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
         </div>
       )}
       {c.price && (
-        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient), fontSize: ps, textShadow: 'none'}}>
+        <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient, c.priceOutline), fontSize: ps, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>
           {c.price} €
         </div>
       )}

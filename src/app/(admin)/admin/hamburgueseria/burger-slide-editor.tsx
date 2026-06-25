@@ -35,6 +35,7 @@ const EFFECTS: [string, string][] = [
 ];
 const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
+  ['auto', 'Degradado (del color elegido)'],
   ['red', 'Degradado rojo'],
   ['terra', 'Degradado terracota'],
   ['fire', 'Degradado fuego'],
@@ -105,6 +106,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [bgEffect, setBgEffect] = useState(slide?.bg_effect ?? 'none');
   const [bgImage, setBgImage] = useState<string | null>(slide?.bg_image ?? null);
   const [bgColor, setBgColor] = useState(slide?.bg_color ?? '');
+  const [textShadow, setTextShadow] = useState(slide?.text_shadow ?? false);
+  const [titleOutline, setTitleOutline] = useState(slide?.title_outline ?? false);
+  const [priceOutline, setPriceOutline] = useState(slide?.price_outline ?? false);
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -135,6 +139,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         bg_effect: bgEffect,
         bg_image: bgImage,
         bg_color: bgColor,
+        text_shadow: textShadow,
+        title_outline: titleOutline,
+        price_outline: priceOutline,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
         price_scale: priceScale,
@@ -230,7 +237,11 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${titleBehind ? 'left-[18px]' : 'left-0.5'}`} />
             </button>
           </label>
-          <div className="mt-3 grid grid-cols-3 gap-3">
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            <label className="flex items-center gap-2"><Checkbox checked={titleOutline} onCheckedChange={(v) => setTitleOutline(v === true)} /> Título con contorno (sin relleno)</label>
+            <label className="flex items-center gap-2"><Checkbox checked={textShadow} onCheckedChange={(v) => setTextShadow(v === true)} /> Sombra en los textos</label>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
             <div>
               <Label>Título · {Math.round(titleScale * 100)}%</Label>
               <input type="range" min={0.5} max={2.6} step={0.05} value={titleScale} onChange={(e) => setTitleScale(+e.target.value)} className="w-full accent-brand" />
@@ -239,20 +250,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <Label>Eyebrow · {Math.round(eyebrowScale * 100)}%</Label>
               <input type="range" min={0.6} max={1.6} step={0.05} value={eyebrowScale} onChange={(e) => setEyebrowScale(+e.target.value)} className="w-full accent-brand" />
             </div>
-            <div>
-              <Label>Precio · {Math.round(priceScale * 100)}%</Label>
-              <input type="range" min={0.25} max={3.2} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
-            </div>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <div>
-              <Label>Posición título (↑ baja el nº) · {titleY}%</Label>
-              <input type="range" min={2} max={45} value={titleY} onChange={(e) => setTitleY(+e.target.value)} className="w-full accent-brand" />
-            </div>
-            <div>
-              <Label>Posición precio (↑ sube el nº) · {priceY}%</Label>
-              <input type="range" min={2} max={45} value={priceY} onChange={(e) => setPriceY(+e.target.value)} className="w-full accent-brand" />
-            </div>
+          <div className="mt-3">
+            <Label>Posición título (↑ baja el nº) · {titleY}%</Label>
+            <input type="range" min={2} max={45} value={titleY} onChange={(e) => setTitleY(+e.target.value)} className="w-full accent-brand" />
           </div>
         </div>
 
@@ -295,6 +296,17 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
               <input type="color" value={/^#/.test(priceColor) ? priceColor : '#e9ae74'} onChange={(e) => setPriceColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
             </div>
           )}
+          <label className="mt-3 flex items-center gap-2 text-sm"><Checkbox checked={priceOutline} onCheckedChange={(v) => setPriceOutline(v === true)} /> Precio con contorno (sin relleno)</label>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div>
+              <Label>Tamaño del precio · {Math.round(priceScale * 100)}%</Label>
+              <input type="range" min={0.25} max={3.2} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
+            </div>
+            <div>
+              <Label>Posición precio (↑ sube el nº) · {priceY}%</Label>
+              <input type="range" min={2} max={45} value={priceY} onChange={(e) => setPriceY(+e.target.value)} className="w-full accent-brand" />
+            </div>
+          </div>
         </div>
 
         {/* Fondo */}
@@ -384,6 +396,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           bgEffect,
           bgImage,
           bgColor,
+          textShadow,
+          titleOutline,
+          priceOutline,
           titleScale,
           eyebrowScale,
           priceScale,

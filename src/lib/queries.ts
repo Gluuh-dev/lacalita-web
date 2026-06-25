@@ -294,6 +294,9 @@ export type BurgerSlide = {
   bg_effect: string;
   bg_image: string | null;
   bg_color: string;
+  text_shadow: boolean;
+  title_outline: boolean;
+  price_outline: boolean;
   title_scale: number;
   eyebrow_scale: number;
   price_scale: number;
