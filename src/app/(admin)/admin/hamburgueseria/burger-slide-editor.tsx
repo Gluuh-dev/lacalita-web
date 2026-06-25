@@ -241,7 +241,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </div>
             <div>
               <Label>Precio · {Math.round(priceScale * 100)}%</Label>
-              <input type="range" min={0.5} max={3.2} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
+              <input type="range" min={0.25} max={3.2} step={0.05} value={priceScale} onChange={(e) => setPriceScale(+e.target.value)} className="w-full accent-brand" />
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
