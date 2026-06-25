@@ -93,6 +93,65 @@ function detectBg(url: string): Promise<string> {
   });
 }
 
+// Detecta el color más vivo (saturado, valor medio) de la imagen/vídeo → para el título/precio.
+function detectVibrant(url: string): Promise<string> {
+  return new Promise((resolve) => {
+    if (!url) return resolve('');
+    const run = (src: CanvasImageSource) => {
+      try {
+        const S = 48;
+        const c = document.createElement('canvas');
+        c.width = S;
+        c.height = S;
+        const ctx = c.getContext('2d');
+        if (!ctx) return resolve('');
+        ctx.drawImage(src, 0, 0, S, S);
+        const d = ctx.getImageData(0, 0, S, S).data;
+        let best = '';
+        let bestScore = -1;
+        for (let i = 0; i < d.length; i += 4) {
+          const r = d[i], g = d[i + 1], b = d[i + 2];
+          if (d[i + 3] < 200) continue;
+          const max = Math.max(r, g, b), min = Math.min(r, g, b);
+          const v = max / 255;
+          const s = max === 0 ? 0 : (max - min) / max;
+          if (v < 0.22 || v > 0.96) continue; // descarta muy oscuro / muy claro (fondo crema)
+          const score = s * s * (v * (1 - v) * 4); // muy saturado y de valor medio
+          if (score > bestScore) {
+            bestScore = score;
+            best = '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
+          }
+        }
+        resolve(best);
+      } catch {
+        resolve('');
+      }
+    };
+    if (isVideoUrl(url)) {
+      const vid = document.createElement('video');
+      vid.crossOrigin = 'anonymous';
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.onseeked = () => run(vid);
+      vid.onloadeddata = () => {
+        try {
+          vid.currentTime = 0.1;
+        } catch {
+          run(vid);
+        }
+      };
+      vid.onerror = () => resolve('');
+      vid.src = url;
+    } else {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => run(img);
+      img.onerror = () => resolve('');
+      img.src = url;
+    }
+  });
+}
+
 export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -201,6 +260,25 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             <Label>Posición vertical (subir/bajar) · {mediaY}%</Label>
             <input type="range" min={-40} max={40} value={mediaY} onChange={(e) => setMediaY(+e.target.value)} className="w-full accent-brand" />
           </div>
+          <button
+            type="button"
+            onClick={async () => {
+              if (!image) return;
+              const v = await detectVibrant(image);
+              if (!v) {
+                toast.error('No se pudo detectar el color de la imagen');
+                return;
+              }
+              setTitleColor(v);
+              setPriceColor(v);
+              setTitleGradient('auto');
+              setPriceGradient('auto');
+              toast.success('Título y precio combinados con la imagen');
+            }}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs text-ink-2 transition hover:border-brand"
+          >
+            🎨 Combinar título y precio con la imagen
+          </button>
         </div>
         <div>
           <Label>Nombre interno</Label>
