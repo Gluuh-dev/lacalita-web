@@ -163,7 +163,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   fontSize: `calc(clamp(3rem,9.5vw,7.2rem) * ${cur.titleScale ?? 1})`,
                   lineHeight: 0.82,
                   letterSpacing: '0.01em',
-                  textShadow: '0 4px 16px rgba(0,0,0,.1)',
+                  textShadow: 'none',
                   animationDelay: '0.08s'
                 }}
               >
@@ -186,7 +186,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               )}
               {cur.price != null && (
                 <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
-                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 4px 14px rgba(0,0,0,.1)'}}>{euro(cur.price, locale)}</span>
+                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: 'none'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
               {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}

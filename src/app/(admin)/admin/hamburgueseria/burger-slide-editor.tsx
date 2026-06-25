@@ -22,7 +22,7 @@ const FONTS: [string, string][] = [
   ['adam', 'Adam'],
   ['sans', 'Geist']
 ];
-const COLORS = ['#c94a3c', '#d67a63', '#2a1713', '#fdfbf7', '#e9ae74'];
+const COLORS = ['#c94a3c', '#d67a63', '#9a2f24', '#f26b21', '#e9ae74', '#3a7d44', '#2e6e8e', '#2a1713', '#fdfbf7'];
 const BG_PRESETS: [string, string][] = [
   ['/burger/bg/rings.jpg', 'Anillos'],
   ['/burger/bg/beach.jpg', 'Playa'],
@@ -37,6 +37,8 @@ const TITLE_FILLS: [string, string][] = [
   ['plano', 'Color plano'],
   ['red', 'Degradado rojo'],
   ['terra', 'Degradado terracota'],
+  ['fire', 'Degradado fuego'],
+  ['orange', 'Degradado naranja'],
   ['gold', 'Degradado dorado'],
   ['cream', 'Degradado crema']
 ];
