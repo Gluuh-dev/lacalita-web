@@ -71,41 +71,24 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Tema La Calita (restaurante) — por defecto */
+/* Paleta La Calita — crema + terracota + rojo (toda la web) */
 :root,
-[data-theme='calita'] {
-  --bg: #faf6ef;
-  --surface: #ffffff;
-  --surface-2: #fbf7f0;
-  --surface-sunken: #f3ece0;
-  --brand: #e9ae74;
-  --brand-deep: #c98a4e;
-  --on-primary: #3a2606;
-  --ink: #243b53;
-  --ink-2: #43586d;
-  --ink-3: #7a8896;
-  --accent: #2e6e8e;
-  --accent-soft: #e3eef3;
-  --line: #e7dccb;
-  --line-strong: #d6c6ad;
-}
-
-/* Tema Hamburguesería — oscuro, igual que la landing */
+[data-theme='calita'],
 [data-theme='burger'] {
-  --bg: #1a1209;
-  --surface: #241910;
-  --surface-2: #1f1610;
-  --surface-sunken: #2a1d12;
-  --brand: #f26b21;
-  --brand-deep: #d4530f;
-  --on-primary: #ffffff;
-  --ink: #f4ede2;
-  --ink-2: #cabfb1;
-  --ink-3: #8f8576;
-  --accent: #fedb71;
-  --accent-soft: #382a14;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.18);
+  --bg: #fdfbf7;
+  --surface: #ffffff;
+  --surface-2: #fbf2ef;
+  --surface-sunken: #f6e7e1;
+  --brand: #c94a3c;
+  --brand-deep: #ad3d31;
+  --on-primary: #fdfbf7;
+  --ink: #2a1713;
+  --ink-2: #6a504a;
+  --ink-3: #9a817a;
+  --accent: #d67a63;
+  --accent-soft: #f7e4dd;
+  --line: #ecdbd4;
+  --line-strong: #ddc3ba;
 }
 
 /* Tokens compartidos del Design System */
