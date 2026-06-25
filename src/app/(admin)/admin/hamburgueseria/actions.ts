@@ -23,6 +23,9 @@ export type SlideInput = {
   text_shadow: boolean;
   title_outline: boolean;
   price_outline: boolean;
+  hide_title: boolean;
+  hide_price: boolean;
+  accent_color: string;
   media_y: number;
   title_scale: number;
   eyebrow_scale: number;

@@ -116,6 +116,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [textShadow, setTextShadow] = useState(slide?.text_shadow ?? false);
   const [titleOutline, setTitleOutline] = useState(slide?.title_outline ?? false);
   const [priceOutline, setPriceOutline] = useState(slide?.price_outline ?? false);
+  const [hideTitle, setHideTitle] = useState(slide?.hide_title ?? false);
+  const [hidePrice, setHidePrice] = useState(slide?.hide_price ?? false);
+  const [accentColor, setAccentColor] = useState(slide?.accent_color ?? '');
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -149,6 +152,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         text_shadow: textShadow,
         title_outline: titleOutline,
         price_outline: priceOutline,
+        hide_title: hideTitle,
+        hide_price: hidePrice,
+        accent_color: accentColor,
         media_y: mediaY,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
@@ -254,6 +260,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
             <label className="flex items-center gap-2"><Checkbox checked={titleOutline} onCheckedChange={(v) => setTitleOutline(v === true)} /> Título con contorno (sin relleno)</label>
             <label className="flex items-center gap-2"><Checkbox checked={textShadow} onCheckedChange={(v) => setTextShadow(v === true)} /> Sombra en los textos</label>
+            <label className="flex items-center gap-2"><Checkbox checked={hideTitle} onCheckedChange={(v) => setHideTitle(v === true)} /> Ocultar título (ya está en la imagen)</label>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <div>
@@ -311,6 +318,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </div>
           )}
           <label className="mt-3 flex items-center gap-2 text-sm"><Checkbox checked={priceOutline} onCheckedChange={(v) => setPriceOutline(v === true)} /> Precio con contorno (sin relleno)</label>
+          <label className="mt-2 flex items-center gap-2 text-sm"><Checkbox checked={hidePrice} onCheckedChange={(v) => setHidePrice(v === true)} /> Ocultar precio (ya está en la imagen)</label>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <div>
               <Label>Tamaño del precio · {Math.round(priceScale * 100)}%</Label>
@@ -374,6 +382,15 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             </div>
             <p className="mt-1 text-xs text-ink-3">Se coge del fondo de la imagen para que no se note el cambio. Vacío = crema por defecto.</p>
           </div>
+          <div className="mt-3">
+            <Label>Color del lado izquierdo (logo, lema, botones)</Label>
+            <div className="flex items-center gap-2">
+              <span className="size-7 rounded-full border border-line-strong" style={{background: accentColor || '#d67a63'}} />
+              <input type="color" value={/^#/.test(accentColor) ? accentColor : '#c94a3c'} onChange={(e) => setAccentColor(e.target.value)} className="size-7 cursor-pointer rounded-full border-0 bg-transparent p-0" />
+              {accentColor && <button type="button" onClick={() => setAccentColor('')} className="text-xs text-ink-3 underline">Por defecto</button>}
+            </div>
+            <p className="mt-1 text-xs text-ink-3">Para que destaque si el fondo es de otro color. Vacío = colores de marca.</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -413,6 +430,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           textShadow,
           titleOutline,
           priceOutline,
+          hideTitle,
+          hidePrice,
+          accentColor,
           mediaY,
           titleScale,
           eyebrowScale,

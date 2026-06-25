@@ -47,6 +47,9 @@ export type PreviewCfg = {
   textShadow: boolean;
   titleOutline: boolean;
   priceOutline: boolean;
+  hideTitle: boolean;
+  hidePrice: boolean;
+  accentColor: string;
   mediaY: number;
 };
 
@@ -91,24 +94,24 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
           </span>
         </div>
       )}
-      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient, c.titleOutline), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>
+      <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient, c.titleOutline), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none', display: c.hideTitle ? 'none' : undefined}}>
         {c.name || 'Título'}
       </div>
       {c.image && isVideoUrl(c.image) ? (
-        <div key={`i${animKey}`} className="flex justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
-          <video src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '56%', maxWidth: '92%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+        <div key={`i${animKey}`} className="flex h-full items-center justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
+          <video src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
         </div>
       ) : c.image ? (
-        <div key={`i${animKey}`} className="flex justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
+        <div key={`i${animKey}`} className="flex h-full items-center justify-center" style={{transform: `translateY(${c.mediaY ?? 0}%)`, zIndex: 2}}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={c.image} alt="" className="lc-slide-top" style={{height: '56%', maxWidth: '92%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+          <img src={c.image} alt="" className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
         </div>
       ) : (
         <div className="flex items-center justify-center rounded-3xl border border-dashed text-black/15" style={{height: '60%', aspectRatio: '1', zIndex: 2, borderColor: 'rgba(42,23,19,.18)'}}>
           <UtensilsCrossed style={{width: 64, height: 64}} />
         </div>
       )}
-      {c.price && (
+      {c.price && !c.hidePrice && (
         <div key={`p${animKey}`} className="lc-bfade absolute left-0 right-0 z-[4] text-center font-extrabold" style={{bottom: `${c.priceY}%`, fontFamily: FONT_CSS[c.priceFont] ?? FONT_CSS.eight, ...titleColorStyle(c.priceColor || GOLD, c.priceGradient, c.priceOutline), fontSize: ps, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>
           {c.price} €
         </div>
@@ -129,12 +132,12 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
       {pc ? (
         <div className="absolute inset-0 z-[2] flex items-center">
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>
-            <span style={{display: 'block', height: 56, width: 173, backgroundColor: GOLD, WebkitMaskImage: 'url(/brand/logo-texto-derecha.svg)', maskImage: 'url(/brand/logo-texto-derecha.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
-            <div className="font-adam uppercase" style={{marginTop: 8, fontSize: 12, letterSpacing: '0.2em', color: GOLD}}>Smash burgers · a pie de playa</div>
+            <span style={{display: 'block', height: 56, width: 173, backgroundColor: c.accentColor || GOLD, WebkitMaskImage: 'url(/brand/logo-texto-derecha.svg)', maskImage: 'url(/brand/logo-texto-derecha.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
+            <div className="font-adam uppercase" style={{marginTop: 8, fontSize: 12, letterSpacing: '0.2em', color: c.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
             <p style={{marginTop: 18, maxWidth: 360, fontSize: 15, lineHeight: 1.55, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
             <div style={{marginTop: 24, display: 'flex', gap: 12}}>
-              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: RED, color: '#fdfbf7'}}>Ver la carta</span>
-              <span style={{borderRadius: 999, padding: '11px 22px', fontSize: 14, fontWeight: 600, border: `1px solid ${RED}`, color: RED}}>Cómo llegar</span>
+              <span style={{borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 600, background: c.accentColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
+              <span style={{borderRadius: 999, padding: '11px 22px', fontSize: 14, fontWeight: 600, border: `1px solid ${c.accentColor || RED}`, color: c.accentColor || RED}}>Cómo llegar</span>
             </div>
           </div>
           <div style={{flex: 1, position: 'relative', height: '100%'}}>
@@ -143,12 +146,12 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
         </div>
       ) : (
         <div className="absolute inset-0 z-[2] flex flex-col items-center px-5 pt-16 text-center">
-          <span style={{display: 'block', height: 52, width: 60, backgroundColor: GOLD, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
-          <div className="font-adam uppercase" style={{marginTop: 6, fontSize: 10, letterSpacing: '0.2em', color: GOLD}}>Smash burgers · a pie de playa</div>
+          <span style={{display: 'block', height: 52, width: 60, backgroundColor: c.accentColor || GOLD, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain'}} />
+          <div className="font-adam uppercase" style={{marginTop: 6, fontSize: 10, letterSpacing: '0.2em', color: c.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
           <p style={{marginTop: 12, maxWidth: 300, fontSize: 13, lineHeight: 1.5, color: 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar.</p>
           <div style={{marginTop: 14, display: 'flex', gap: 10}}>
-            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: RED, color: '#fdfbf7'}}>Ver la carta</span>
-            <span style={{borderRadius: 999, padding: '8px 16px', fontSize: 12, fontWeight: 600, border: `1px solid ${RED}`, color: RED}}>Cómo llegar</span>
+            <span style={{borderRadius: 999, padding: '9px 16px', fontSize: 12, fontWeight: 600, background: c.accentColor || RED, color: '#fdfbf7'}}>Ver la carta</span>
+            <span style={{borderRadius: 999, padding: '8px 16px', fontSize: 12, fontWeight: 600, border: `1px solid ${c.accentColor || RED}`, color: c.accentColor || RED}}>Cómo llegar</span>
           </div>
           <div style={{position: 'relative', flex: 1, width: '100%', marginTop: 8}}>
             <Burger c={c} pc={pc} animKey={animKey} />

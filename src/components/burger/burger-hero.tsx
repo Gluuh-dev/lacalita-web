@@ -40,6 +40,9 @@ export type HeroSlide = {
   textShadow?: boolean;
   titleOutline?: boolean;
   priceOutline?: boolean;
+  hideTitle?: boolean;
+  hidePrice?: boolean;
+  accentColor?: string;
   mediaY?: number;
 };
 
@@ -104,7 +107,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             style={{
               height: 72,
               aspectRatio: '1.15',
-              backgroundColor: GOLD,
+              backgroundColor: cur?.accentColor || GOLD,
               WebkitMaskImage: 'url(/brand/logo-solo.svg)',
               maskImage: 'url(/brand/logo-solo.svg)',
               WebkitMaskRepeat: 'no-repeat',
@@ -123,7 +126,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             style={{
               height: 92,
               aspectRatio: '3.1',
-              backgroundColor: GOLD,
+              backgroundColor: cur?.accentColor || GOLD,
               WebkitMaskImage: 'url(/brand/logo-texto-derecha.svg)',
               maskImage: 'url(/brand/logo-texto-derecha.svg)',
               WebkitMaskRepeat: 'no-repeat',
@@ -133,13 +136,13 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               filter: 'drop-shadow(0 6px 16px rgba(0,0,0,.12))'
             }}
           />
-          <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: GOLD}}>Smash burgers · a pie de playa</div>
+          <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
           <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed text-[#2a1713]/65 md:mx-0">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-            <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: RED, color: '#fdfbf7'}}>
+            <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.accentColor || RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
             </Link>
-            <a href="#local" className="inline-flex items-center gap-2 rounded-full border border-[#c94a3c] px-6 py-3.5 font-semibold text-[#c94a3c] transition hover:bg-[#c94a3c]/10">
+            <a href="#local" className="inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-semibold transition hover:brightness-95" style={{borderColor: cur?.accentColor || RED, color: cur?.accentColor || RED}}>
               <MapPin className="size-4" /> Cómo llegar
             </a>
           </div>
@@ -168,6 +171,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   lineHeight: 0.82,
                   letterSpacing: '0.01em',
                   textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none',
+                  display: cur.hideTitle ? 'none' : undefined,
                   animationDelay: '0.08s'
                 }}
               >
@@ -192,7 +196,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                   <UtensilsCrossed className="size-24" />
                 </div>
               )}
-              {cur.price != null && (
+              {cur.price != null && !cur.hidePrice && (
                 <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
                   <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
                 </div>
