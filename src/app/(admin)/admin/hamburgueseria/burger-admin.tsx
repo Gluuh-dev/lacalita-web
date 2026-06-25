@@ -8,6 +8,7 @@ import {toast} from 'sonner';
 import {Plus, Pencil, Trash2, Star, Image as ImageIcon} from 'lucide-react';
 import {btn} from '@/components/admin/ui';
 import {tx} from '@/lib/localize';
+import {isVideoUrl} from '@/lib/utils';
 import type {BurgerSlide, BurgerOffer} from '@/lib/queries';
 import {deleteBurgerSlide, deleteBurgerOffer, toggleBurgerSlide, toggleBurgerOffer} from './actions';
 
@@ -21,7 +22,15 @@ function Switch({on, onClick}: {on: boolean; onClick: () => void}) {
 function Thumb({src}: {src: string | null}) {
   return (
     <span className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-sunken text-line-strong">
-      {src ? <Image src={src} alt="" fill sizes="48px" className="object-contain" /> : <ImageIcon className="size-5" />}
+      {src ? (
+        isVideoUrl(src) ? (
+          <video src={src} muted playsInline className="h-full w-full object-contain" />
+        ) : (
+          <Image src={src} alt="" fill sizes="48px" className="object-contain" />
+        )
+      ) : (
+        <ImageIcon className="size-5" />
+      )}
     </span>
   );
 }
