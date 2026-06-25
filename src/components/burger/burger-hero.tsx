@@ -5,7 +5,8 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle, BurgerAura} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {isVideoUrl} from '@/lib/utils';
 
 export type HeroSlide = {
   image: string | null;
@@ -49,23 +50,7 @@ const BURGER_FONT: Record<string, string> = {
   sans: 'var(--font-geist), sans-serif'
 };
 
-function Rings() {
-  // Anillos pequeños pegados a las esquinas (sin expandirse por toda la pantalla).
-  const tr = Array.from({length: 12}, (_, k) => 38 + k * 26);
-  const bl = Array.from({length: 8}, (_, k) => 34 + k * 26);
-  return (
-    <svg aria-hidden viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="pointer-events-none absolute inset-0 h-full w-full">
-      <g fill="none" stroke={GOLD} strokeWidth="1">
-        {tr.map((r, k) => (
-          <circle key={`t${k}`} cx="1440" cy="0" r={r} strokeOpacity={Math.max(0.04, 0.18 - r / 2600)} />
-        ))}
-        {bl.map((r, k) => (
-          <circle key={`b${k}`} cx="0" cy="900" r={r} strokeOpacity={Math.max(0.04, 0.14 - r / 2600)} />
-        ))}
-      </g>
-    </svg>
-  );
-}
+const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'};
 
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
@@ -104,11 +89,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           ))}
         </>
       )}
-      {(cur?.showRings ?? true) && <Rings />}
-      {/* Destellos fríos (azulados) */}
-      <div aria-hidden className="pointer-events-none absolute right-0 top-1/4 h-[60%] w-[32%]" style={{background: 'radial-gradient(circle at 100% 50%, rgba(214,122,99,.18), transparent 62%)'}} />
-      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 h-[45%] w-[36%]" style={{background: 'radial-gradient(circle at 0% 100%, rgba(201,74,60,.12), transparent 60%)'}} />
-
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
@@ -163,7 +143,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
         {/* Derecha: hamburguesa enorme con textos superpuestos */}
         <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
-          <BurgerAura />
           {cur && (
             <>
               <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
@@ -195,9 +174,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 className="lc-bfade pointer-events-none absolute bottom-[13%] left-1/2 z-[1] h-[42px] w-[52%] -translate-x-1/2 rounded-[50%]"
                 style={{background: 'radial-gradient(ellipse, rgba(0,0,0,.16), transparent 70%)', filter: 'blur(7px)'}}
               />
-              {cur.image ? (
+              {cur.image && isVideoUrl(cur.image) ? (
+                <video key={'i' + i} src={cur.image} autoPlay loop muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
+              ) : cur.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={'i' + i} src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={{height: '92svh', maxWidth: '116%', objectFit: 'contain', zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+                <img key={'i' + i} src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
               ) : (
                 <div key={'i' + i} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25`} style={{zIndex: 2}}>
                   <UtensilsCrossed className="size-24" />

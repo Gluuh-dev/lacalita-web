@@ -10,6 +10,7 @@ import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectIt
 import {btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
 import {I18nField} from '@/components/admin/i18n-field';
+import {isVideoUrl} from '@/lib/utils';
 import BurgerHeroPreview from '@/components/burger/burger-hero-preview';
 import type {BurgerSlide} from '@/lib/queries';
 import {saveBurgerSlide} from './actions';
@@ -40,28 +41,46 @@ const TITLE_FILLS: [string, string][] = [
   ['cream', 'Degradado crema']
 ];
 
-// Detecta el color de la esquina (fondo) de la imagen → para el fondo del hero.
+// Detecta el color de la esquina (fondo) de la imagen O del primer fotograma del vídeo.
 function detectBg(url: string): Promise<string> {
   return new Promise((resolve) => {
     if (!url) return resolve('');
-    const img = new window.Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
+    const sample = (src: CanvasImageSource) => {
       try {
         const c = document.createElement('canvas');
         c.width = 10;
         c.height = 10;
         const ctx = c.getContext('2d');
         if (!ctx) return resolve('');
-        ctx.drawImage(img, 0, 0, 10, 10);
+        ctx.drawImage(src, 0, 0, 10, 10);
         const d = ctx.getImageData(0, 0, 1, 1).data;
         resolve('#' + [d[0], d[1], d[2]].map((x) => x.toString(16).padStart(2, '0')).join(''));
       } catch {
         resolve('');
       }
     };
-    img.onerror = () => resolve('');
-    img.src = url;
+    if (isVideoUrl(url)) {
+      const v = document.createElement('video');
+      v.crossOrigin = 'anonymous';
+      v.muted = true;
+      v.playsInline = true;
+      v.onseeked = () => sample(v);
+      v.onloadeddata = () => {
+        try {
+          v.currentTime = 0.1;
+        } catch {
+          sample(v);
+        }
+      };
+      v.onerror = () => resolve('');
+      v.src = url;
+    } else {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => sample(img);
+      img.onerror = () => resolve('');
+      img.src = url;
+    }
   });
 }
 
@@ -151,8 +170,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         className="space-y-4"
       >
         <div>
-          <Label>Imagen de la hamburguesa (PNG recortado)</Label>
-          <HeroMedia media={image ?? ''} mediaType="image" onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
+          <Label>Imagen o vídeo de la hamburguesa</Label>
+          <HeroMedia media={image ?? ''} mediaType={isVideoUrl(image) ? 'video' : 'image'} onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
         </div>
         <div>
           <Label>Nombre interno</Label>

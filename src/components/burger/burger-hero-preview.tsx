@@ -2,7 +2,8 @@
 
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
-import {Sparks, Smoke, titleColorStyle, BurgerAura} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {isVideoUrl} from '@/lib/utils';
 
 const GOLD = '#d67a63'; // terracota (acento)
 const RED = '#c94a3c'; // rojo principal
@@ -48,7 +49,6 @@ export type PreviewCfg = {
 function Bg({c}: {c: PreviewCfg}) {
   return (
     <>
-      {c.showRings && <div className="pointer-events-none absolute right-0 top-0 h-[88%] w-[70%]" style={{backgroundImage: 'repeating-radial-gradient(circle at 100% 0%, transparent 0 26px, rgba(214,122,99,.20) 26px 28px)', WebkitMaskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 55%)', maskImage: 'radial-gradient(circle at 100% 0%, #000 0%, transparent 55%)'}} />}
       {c.bgEffect === 'image' && c.bgImage && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -78,7 +78,6 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
   const ps = (pc ? 64 : 38) * c.priceScale;
   return (
     <div className="relative flex h-full items-center justify-center">
-      <BurgerAura />
       {c.eyebrow && (
         <div key={`e${animKey}`} className="lc-bfade absolute left-0 right-0 z-[3] text-center" style={{top: '7%'}}>
           <span className="inline-flex items-center font-adam uppercase" style={{gap: 8, letterSpacing: '0.28em', fontSize: eb, color: GOLD}}>
@@ -91,7 +90,9 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
       <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: '0 4px 16px rgba(0,0,0,.1)'}}>
         {c.name || 'Título'}
       </div>
-      {c.image ? (
+      {c.image && isVideoUrl(c.image) ? (
+        <video key={`i${animKey}`} src={c.image} autoPlay loop muted playsInline className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
+      ) : c.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img key={`i${animKey}`} src={c.image} alt="" className="lc-slide-top" style={{height: '88%', maxWidth: '116%', objectFit: 'contain', zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)', maskImage: 'radial-gradient(ellipse 84% 96% at 50% 50%, #000 86%, transparent 100%)'}} />
       ) : (
