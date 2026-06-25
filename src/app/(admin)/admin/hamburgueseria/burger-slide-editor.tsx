@@ -188,7 +188,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
       >
         <div>
           <Label>Imagen o vídeo de la hamburguesa</Label>
-          <HeroMedia media={image ?? ''} mediaType={isVideoUrl(image) ? 'video' : 'image'} onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
+          <div className="max-w-[260px]">
+            <HeroMedia media={image ?? ''} mediaType={isVideoUrl(image) ? 'video' : 'image'} onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
+          </div>
           <div className="mt-2">
             <Label>Posición vertical (subir/bajar) · {mediaY}%</Label>
             <input type="range" min={-40} max={40} value={mediaY} onChange={(e) => setMediaY(+e.target.value)} className="w-full accent-brand" />
