@@ -21,15 +21,36 @@ export function titleColorStyle(color: string, gradient?: string | null): CSSPro
   return {color: color || '#ffffff'};
 }
 
+/** Aura cálida + anillos que laten DETRÁS de la hamburguesa (z bajo). */
+export function BurgerAura() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center overflow-hidden">
+      {/* Resplandor */}
+      <div
+        className="absolute size-[80%] rounded-full"
+        style={{background: 'radial-gradient(circle, rgba(214,122,99,.38), rgba(201,74,60,.14) 45%, transparent 68%)', filter: 'blur(10px)'}}
+      />
+      {/* Anillos que laten */}
+      {[0, 1, 2].map((k) => (
+        <span
+          key={k}
+          className="lc-pulse absolute rounded-full"
+          style={{width: '44%', height: '44%', border: '1.5px solid rgba(201,74,60,.30)', animationDelay: `${k * 1.7}s`}}
+        />
+      ))}
+    </div>
+  );
+}
+
 /** Chispas/brasas animadas subiendo (encima de la hamburguesa). */
 export function Sparks() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
-      {Array.from({length: 18}).map((_, k) => (
+      {Array.from({length: 20}).map((_, k) => (
         <span
           key={k}
           className="lc-ember-dot absolute bottom-[8%] rounded-full"
-          style={{left: `${(k * 53) % 96}%`, width: k % 4 ? 3 : 4, height: k % 4 ? 3 : 4, background: k % 3 ? '#f6a04a' : '#f26b21', animation: `lc-ember ${4 + (k % 5)}s linear ${(k % 6) * 0.5}s infinite`}}
+          style={{left: `${(k * 53) % 96}%`, width: k % 4 ? 3 : 5, height: k % 4 ? 3 : 5, background: k % 3 ? '#d67a63' : '#c94a3c', boxShadow: '0 0 7px rgba(201,74,60,.55)', animation: `lc-ember ${4 + (k % 5)}s linear ${(k % 6) * 0.5}s infinite`}}
         />
       ))}
     </div>
@@ -70,7 +91,7 @@ export function Smoke() {
   return (
     <div
       className="lc-smoke pointer-events-none absolute inset-0 z-[5]"
-      style={{background: 'radial-gradient(38% 42% at 52% 42%, rgba(232,232,232,.14), transparent 70%), radial-gradient(30% 36% at 60% 60%, rgba(210,210,210,.10), transparent 72%)', filter: 'blur(7px)'}}
+      style={{background: 'radial-gradient(38% 42% at 52% 42%, rgba(214,122,99,.18), transparent 70%), radial-gradient(30% 36% at 60% 60%, rgba(201,74,60,.12), transparent 72%)', filter: 'blur(8px)'}}
     />
   );
 }

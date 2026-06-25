@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, FxVideo, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, FxVideo, titleColorStyle, BurgerAura} from './burger-fx';
 
 export type HeroSlide = {
   image: string | null;
@@ -165,6 +165,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
         {/* Derecha: hamburguesa enorme con textos superpuestos */}
         <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
+          <BurgerAura />
           {cur && (
             <>
               <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
