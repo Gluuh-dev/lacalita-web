@@ -81,7 +81,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   return (
     <header
       className="relative flex min-h-[100svh] items-center overflow-hidden"
-      style={{background: 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
+      style={{background: 'radial-gradient(90% 80% at 72% 42%, #2a1713 0%, #1a0f0c 70%)'}}
     >
       {/* Efecto de fondo configurable */}
       {cur?.bgEffect === 'image' && cur.bgImage && (
@@ -151,7 +151,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             }}
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: GOLD}}>Smash burgers · a pie de playa</div>
-          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed text-[#2a1713]/65 md:mx-0">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed text-[#f6ece4]/70 md:mx-0">Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:justify-start">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
@@ -179,12 +179,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 style={{
                   top: `${cur.titleY ?? 10}%`,
                   fontFamily: BURGER_FONT[cur.font ?? 'eight'] ?? BURGER_FONT.eight,
-                  ...titleColorStyle(cur.color || RED, cur.gradient),
+                  ...titleColorStyle(cur.color || '#f6ece4', cur.gradient),
                   zIndex: cur.behind ? 1 : 3,
                   fontSize: `calc(clamp(3rem,9.5vw,7.2rem) * ${cur.titleScale ?? 1})`,
                   lineHeight: 0.82,
                   letterSpacing: '0.01em',
-                  textShadow: '0 4px 18px rgba(0,0,0,.12)',
+                  textShadow: '0 10px 40px rgba(0,0,0,.6)',
                   animationDelay: '0.08s'
                 }}
               >
@@ -193,7 +193,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               <div
                 key={'g' + i}
                 className="lc-bfade pointer-events-none absolute bottom-[13%] left-1/2 z-[1] h-[42px] w-[52%] -translate-x-1/2 rounded-[50%]"
-                style={{background: 'radial-gradient(ellipse, rgba(0,0,0,.18), transparent 70%)', filter: 'blur(7px)'}}
+                style={{background: 'radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%)', filter: 'blur(7px)'}}
               />
               {cur.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -205,7 +205,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               )}
               {cur.price != null && (
                 <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
-                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || RED, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 4px 16px rgba(0,0,0,.12)'}}>{euro(cur.price, locale)}</span>
+                  <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient), fontSize: `calc(clamp(3.2rem,8vw,6.2rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: '0 8px 30px rgba(0,0,0,.6)'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
               {(cur.fxSparks || cur.overlayFx === 'sparks') && <Sparks />}
@@ -219,7 +219,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       {n > 1 && (
         <div className="absolute right-[clamp(0.6rem,1.5vw,1.4rem)] top-1/2 z-[5] flex -translate-y-1/2 flex-col items-center gap-2">
           {slides.map((_, k) => (
-            <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? RED : 'rgba(42,23,19,.22)'}} />
+            <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? GOLD : 'rgba(255,255,255,.35)'}} />
           ))}
         </div>
       )}
