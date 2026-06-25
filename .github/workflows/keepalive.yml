@@ -1,0 +1,21 @@
+name: keep-supabase-alive
+
+# Hace una consulta mínima a Supabase cada 2 días para que el plan free NO se pause.
+# (Respaldo del monitor UptimeRobot que apunta a /api/keepalive.)
+on:
+  schedule:
+    - cron: '23 5 */2 * *' # cada 2 días, 05:23 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        run: |
+          curl -fsS "${SUPABASE_URL}/rest/v1/menus?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_KEY}" > /dev/null && echo "Supabase activo"
+        env:
+          # Valores públicos (publishable). Si migras de proyecto, actualízalos aquí o usa secrets del repo.
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://szylffdzkjjrqlfyncqv.supabase.co' }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'sb_publishable_aVhWCZieYomgTF1jLItDmA_a4GakZnI' }}
