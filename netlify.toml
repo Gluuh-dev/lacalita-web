@@ -1,0 +1,10 @@
+[build]
+  command = "pnpm build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Runtime oficial de Next.js en Netlify (SSR, middleware/proxy, ISR).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
