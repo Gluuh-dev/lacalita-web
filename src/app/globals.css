@@ -350,7 +350,7 @@
 }
 /* Carrusel de categorías: cards centradas por transform (la activa al frente) */
 .lc-cat-card { transform: scale(.9); opacity: .45; transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .45s ease, box-shadow .45s ease; }
-.lc-cat-card.is-active { transform: scale(1); opacity: 1; box-shadow: 0 0 0 2px #c94a3c, 0 26px 60px -22px rgba(201,74,60,.45); }
+.lc-cat-card.is-active { transform: scale(1); opacity: 1; box-shadow: 0 26px 60px -26px rgba(42,23,19,.45); }
 .lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(42,23,19,.22); transition: all .35s cubic-bezier(.22,.61,.36,1); }
 .lc-cat-dot.is-active { width: 26px; background: #c94a3c; }
 @media (prefers-reduced-motion: reduce) { .lc-cat-card, .lc-cat-dot { transition: none; } }

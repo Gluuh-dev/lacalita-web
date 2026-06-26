@@ -183,12 +183,14 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
                   className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] bg-[#ece0cd]"
                 >
                   {img ? (
-                    <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 70vw" draggable={false} className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" />
+                    <>
+                      <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 70vw" draggable={false} className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" />
+                      <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.62), transparent 52%)'}} />
+                    </>
                   ) : (
-                    <div className="flex h-full items-center justify-center text-black/20"><UtensilsCrossed className="size-14" /></div>
+                    <div className="flex h-full items-center justify-center text-[#2a1713]/15"><UtensilsCrossed className="size-14" /></div>
                   )}
-                  <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.62), transparent 52%)'}} />
-                  <h3 className="absolute inset-x-5 bottom-5 font-eight text-3xl text-white drop-shadow-lg">{tx(c.name, locale)}</h3>
+                  <h3 className="absolute inset-x-5 bottom-5 font-eight text-3xl drop-shadow-lg" style={{color: img ? '#ffffff' : 'rgba(42,23,19,.65)'}}>{tx(c.name, locale)}</h3>
                 </Link>
               </div>
             );

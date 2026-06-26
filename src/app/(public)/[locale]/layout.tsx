@@ -11,6 +11,7 @@ import RealtimeRefresh from '@/components/realtime-refresh';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import HideOnBurger from '@/components/hide-on-burger';
+import BurgerChrome from '@/components/burger/burger-chrome';
 import {HeaderModeProvider} from '@/components/header-mode';
 import {MenuStoreProvider} from '@/components/menu/store';
 import ServiceWorker from '@/components/service-worker';
@@ -60,6 +61,7 @@ export default async function LocaleLayout({
             <HideOnBurger>
               <SiteHeader />
             </HideOnBurger>
+            <BurgerChrome locale={locale} />
             {children}
             <HideOnBurger>
               <SiteFooter />
