@@ -190,6 +190,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </>
       )}
       {edgeBg && <div className="pointer-events-none absolute inset-0" style={{background: edgeBg}} />}
+      {/* Marca de agua del logo detrás (solo móvil), sin ocupar espacio */}
+      <span aria-hidden className="pointer-events-none absolute left-1/2 top-[32%] z-[1] -translate-x-1/2 -translate-y-1/2 md:hidden" style={{height: 150, aspectRatio: '1.15', backgroundColor: cur?.accentColor || GOLD, opacity: 0.1, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', WebkitMaskPosition: 'center', maskPosition: 'center'}} />
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-1 px-5 pt-[72px] md:grid-cols-2 md:gap-8">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
@@ -213,12 +215,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
           <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
-          {/* Logo como marca de agua bajo los textos (solo móvil) */}
-          <span
-            aria-hidden
-            className="mx-auto mt-7 block md:hidden"
-            style={{height: 96, aspectRatio: '1.15', backgroundColor: cur?.accentColor || GOLD, opacity: 0.13, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', WebkitMaskPosition: 'center', maskPosition: 'center'}}
-          />
           <div className="mt-7 hidden flex-wrap items-center justify-center gap-3 md:flex md:justify-start">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.buttonColor || RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
