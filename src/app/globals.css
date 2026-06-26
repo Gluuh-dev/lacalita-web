@@ -370,7 +370,7 @@
 /* Relleno de progreso del punto activo del paginador (sincronizado con el autoplay) */
 @keyframes lc-prog { from { width: 0; } to { width: 100%; } }
 /* Aparición suave de la hamburguesa al cambiar de diapositiva */
-@keyframes lc-bsoft { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
-.lc-bsoft { animation: lc-bsoft 0.7s ease both; }
+@keyframes lc-bsoft { from { opacity: 0; transform: scale(0.992); } to { opacity: 1; transform: none; } }
+.lc-bsoft { animation: lc-bsoft 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) { .lc-bsoft { animation: none; } }
 .lc-hero-slide { animation: lc-hero-slide var(--dur-slow) var(--ease-out) both; }
