@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState, type CSSProperties} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
@@ -262,7 +262,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 </div>
               )}
               {cur.price != null && !cur.hidePrice && (
-                <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
+                <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center bottom-[8rem] md:bottom-[var(--py)]" style={{['--py' as string]: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'} as CSSProperties}>
                   <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
