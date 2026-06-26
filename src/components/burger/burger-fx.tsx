@@ -49,7 +49,7 @@ export function edgeBackgroundPts(points: EdgePoint[] | null | undefined, box: {
   if (!points?.length) return null;
   const parts = points
     .filter((p) => p.c)
-    .map((p) => `radial-gradient(42% 42% at ${(box.l + p.x * box.w).toFixed(1)}% ${(box.t + p.y * box.h).toFixed(1)}%, ${p.c}, transparent 70%)`);
+    .map((p) => `radial-gradient(58% 58% at ${(box.l + p.x * box.w).toFixed(1)}% ${(box.t + p.y * box.h).toFixed(1)}%, ${p.c}, transparent 82%)`);
   return parts.length ? parts.join(', ') : null;
 }
 

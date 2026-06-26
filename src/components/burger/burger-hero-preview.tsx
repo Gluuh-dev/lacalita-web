@@ -104,12 +104,12 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
       </div>
       {c.image && isVideoUrl(c.image) ? (
         <div key={`i${animKey}`} className="flex h-full items-center justify-center" style={{zIndex: 2}}>
-          <video src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)'}} />
+          <video src={c.image} autoPlay muted playsInline className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'}} />
         </div>
       ) : c.image ? (
         <div key={`i${animKey}`} className="flex h-full items-center justify-center" style={{zIndex: 2}}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={c.image} alt="" className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)'}} />
+          <img src={c.image} alt="" className="lc-slide-top" style={{height: '82%', maxWidth: '116%', objectFit: 'contain', WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'}} />
         </div>
       ) : (
         <div className="flex items-center justify-center rounded-3xl border border-dashed text-black/15" style={{height: '60%', aspectRatio: '1', zIndex: 2, borderColor: 'rgba(42,23,19,.18)'}}>

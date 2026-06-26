@@ -45,6 +45,7 @@ export type HeroSlide = {
   accentColor?: string;
   buttonColor?: string;
   textColor?: string;
+  navColor?: string;
   edgeColors?: Record<string, string>;
   edgePoints?: EdgePoint[];
   mediaY?: number;
@@ -61,7 +62,7 @@ const BURGER_FONT: Record<string, string> = {
   sans: 'var(--font-geist), sans-serif'
 };
 
-const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)'};
+const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'};
 
 // Muestrea 8 colores de borde de la imagen (en cliente) para fundir el fondo.
 function sampleEdgeColors(url: string): Promise<Record<string, string>> {
@@ -138,6 +139,14 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       window.removeEventListener('resize', measure);
     };
   }, [i, cur?.image]);
+  useEffect(() => {
+    const v = cur?.navColor || cur?.accentColor || '';
+    const root = document.documentElement;
+    if (v) root.style.setProperty('--lc-nav', v);
+    else root.style.removeProperty('--lc-nav');
+    return () => root.style.removeProperty('--lc-nav');
+  }, [cur?.navColor, cur?.accentColor]);
+
   const liveEc = cur?.image ? edgeColorsMap[cur.image] || cur.edgeColors : null;
   const pts = cur?.edgePoints?.length ? cur.edgePoints : autoPoints(liveEc);
   const edgeBg = box && pts.length && (!cur?.bgEffect || cur.bgEffect === 'none') ? edgeBackgroundPts(pts, box) : null;

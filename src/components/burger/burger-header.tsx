@@ -18,8 +18,10 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   // El hero ya es crema (claro), así que el header va siempre en oscuro.
   const light = false;
   const navCls = light ? 'text-white/80 transition hover:text-white' : 'text-[#2a1713]/70 transition hover:text-[#c94a3c]';
-  const navStyle = navColor ? {color: navColor} : undefined;
-  const logoColor = navColor || '#c94a3c';
+  // El color del navbar lo marca la diapositiva visible del hero (variable --lc-nav);
+  // si no, usa el de la primera diapositiva (prop) o el tono por defecto.
+  const navStyle = {color: `var(--lc-nav, ${navColor || 'rgba(42,23,19,.7)'})`};
+  const logoColor = `var(--lc-nav, ${navColor || '#c94a3c'})`;
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 animate-in fade-in slide-in-from-top duration-500 ${hidden && !open ? '-translate-y-full' : ''} ${scrolled ? 'border-b border-black/5 bg-[#fdfbf7]/90 backdrop-blur-md' : ''}`}>
