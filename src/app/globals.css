@@ -367,4 +367,6 @@
 @media (prefers-reduced-motion: reduce) { .lc-slide-top, .lc-slide-bot, .lc-bfade { animation: none; } }
 @keyframes lc-hero-slide { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
+/* Relleno de progreso del punto activo del paginador (sincronizado con el autoplay) */
+@keyframes lc-prog { from { width: 0; } to { width: 100%; } }
 .lc-hero-slide { animation: lc-hero-slide var(--dur-slow) var(--ease-out) both; }

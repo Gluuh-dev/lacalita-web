@@ -63,7 +63,7 @@ const BURGER_FONT: Record<string, string> = {
 };
 
 const BURGER_MEDIA_STYLE = {maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'};
-const BURGER_MEDIA_CLS = 'h-[56svh] md:h-[92svh]';
+const BURGER_MEDIA_CLS = 'h-[50svh] md:h-[92svh]';
 
 // Muestrea 8 colores de borde de la imagen (en cliente) para fundir el fondo.
 function sampleEdgeColors(url: string): Promise<Record<string, string>> {
@@ -109,6 +109,29 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   const cur = slides[i] ?? slides[0];
   const go = (dir: number) => n > 1 && setI((x) => (x + dir + n) % n);
   const touchX = useRef<number | null>(null);
+  // Ir a una diapositiva pasando por todos los puntos intermedios.
+  const stepTimer = useRef<number | null>(null);
+  const goTo = (target: number) => {
+    if (target === i || target < 0 || target >= n) return;
+    if (stepTimer.current) {
+      window.clearInterval(stepTimer.current);
+      stepTimer.current = null;
+    }
+    const dir = target > i ? 1 : -1;
+    stepTimer.current = window.setInterval(() => {
+      setI((x) => {
+        const nx = x + dir;
+        if (nx === target && stepTimer.current) {
+          window.clearInterval(stepTimer.current);
+          stepTimer.current = null;
+        }
+        return nx;
+      });
+    }, 240);
+  };
+  useEffect(() => () => {
+    if (stepTimer.current) window.clearInterval(stepTimer.current);
+  }, []);
 
   // Colores de borde muestreados en vivo (8 puntos) + medición de la posición real de la imagen.
   const headerRef = useRef<HTMLElement>(null);
@@ -278,10 +301,15 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       {/* Paginador: pill de puntos + play/pausa (no se mueve solo hasta darle a play) */}
       {n > 1 && (
         <div className="absolute inset-x-0 bottom-[5rem] z-[5] flex items-center justify-center gap-2.5 md:bottom-8">
-          <div className="flex items-center gap-2 rounded-full bg-black/30 px-4 py-2.5 backdrop-blur">
-            {slides.map((_, k) => (
-              <button key={k} onClick={() => setI(k)} aria-label={`Diapositiva ${k + 1}`} className="rounded-full transition-all" style={{height: 7, width: k === i ? 22 : 7, background: k === i ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.4)'}} />
-            ))}
+          <div className="flex h-10 items-center gap-2 rounded-full bg-black/30 px-4 backdrop-blur">
+            {slides.map((_, k) => {
+              const active = k === i;
+              return (
+                <button key={k} type="button" onClick={() => goTo(k)} aria-label={`Diapositiva ${k + 1}`} className="relative h-[7px] overflow-hidden rounded-full transition-all duration-300" style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}>
+                  {active && <span key={`${i}-${playing}`} className="absolute inset-y-0 left-0 rounded-full bg-white" style={playing ? {animation: 'lc-prog 6s linear forwards'} : {width: '100%'}} />}
+                </button>
+              );
+            })}
           </div>
           <button type="button" onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'Pausar' : 'Reproducir'} className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition hover:bg-black/45">
             {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
