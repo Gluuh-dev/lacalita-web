@@ -30,6 +30,21 @@ export function edgeBackground(ec?: Record<string, string> | null): string | nul
   return parts.length ? parts.join(', ') : null;
 }
 
+/** Igual que edgeBackground pero posicionando cada degradado en el punto REAL de la
+ *  imagen en pantalla (box = {l,t,w,h} en % del contenedor). */
+export function edgeBackgroundAt(ec: Record<string, string> | null | undefined, box: {l: number; t: number; w: number; h: number}): string | null {
+  if (!ec) return null;
+  const px = (fx: number) => `${(box.l + fx * box.w).toFixed(1)}%`;
+  const py = (fy: number) => `${(box.t + fy * box.h).toFixed(1)}%`;
+  const g = (fx: number, fy: number, c?: string) =>
+    c ? `radial-gradient(42% 42% at ${px(fx)} ${py(fy)}, ${c}, transparent 70%)` : '';
+  const parts = [
+    g(0, 0, ec.tl), g(1, 0, ec.tr), g(0, 1, ec.bl), g(1, 1, ec.br),
+    g(0.5, 0, ec.tc), g(0.5, 1, ec.bc), g(0, 0.5, ec.lm), g(1, 0.5, ec.rm)
+  ].filter(Boolean);
+  return parts.length ? parts.join(', ') : null;
+}
+
 /** Estilo del texto: contorno (líneas sin relleno), degradado (preset o del propio
  *  color con 'auto'), o color plano. */
 export function titleColorStyle(color: string, gradient?: string | null, outline?: boolean): CSSProperties {

@@ -1,11 +1,11 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle, edgeBackground} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, edgeBackgroundAt} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
 
 export type HeroSlide = {
@@ -104,23 +104,45 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   const cur = slides[i] ?? slides[0];
   const fromTop = i % 2 === 0;
 
-  // Fondo de bordes muestreado en vivo (funciona aunque la diapositiva no lo tenga guardado).
-  const [edgeBgMap, setEdgeBgMap] = useState<Record<string, string>>({});
+  // Colores de borde muestreados en vivo (8 puntos) + medición de la posición real de la imagen.
+  const headerRef = useRef<HTMLElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const [edgeColorsMap, setEdgeColorsMap] = useState<Record<string, Record<string, string>>>({});
+  const [box, setBox] = useState<{l: number; t: number; w: number; h: number} | null>(null);
   useEffect(() => {
     const url = cur?.image;
-    if (!url || isVideoUrl(url) || edgeBgMap[url] !== undefined) return;
+    if (!url || isVideoUrl(url) || edgeColorsMap[url]) return;
     let cancelled = false;
     sampleEdgeColors(url).then((ec) => {
-      if (!cancelled) setEdgeBgMap((m) => ({...m, [url]: edgeBackground(ec) || ''}));
+      if (!cancelled) setEdgeColorsMap((m) => ({...m, [url]: ec}));
     });
     return () => {
       cancelled = true;
     };
-  }, [cur?.image, edgeBgMap]);
-  const edgeBg = cur?.image && (!cur.bgEffect || cur.bgEffect === 'none') ? edgeBgMap[cur.image] || edgeBackground(cur.edgeColors) : null;
+  }, [cur?.image, edgeColorsMap]);
+  useEffect(() => {
+    const measure = () => {
+      const h = headerRef.current, m = mediaRef.current;
+      if (!h || !m) return;
+      const hr = h.getBoundingClientRect(), mr = m.getBoundingClientRect();
+      if (!hr.width || !hr.height || !mr.width) return;
+      setBox({l: ((mr.left - hr.left) / hr.width) * 100, t: ((mr.top - hr.top) / hr.height) * 100, w: (mr.width / hr.width) * 100, h: (mr.height / hr.height) * 100});
+    };
+    const a = setTimeout(measure, 60);
+    const b = setTimeout(measure, 750);
+    window.addEventListener('resize', measure);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+      window.removeEventListener('resize', measure);
+    };
+  }, [i, cur?.image]);
+  const liveEc = cur?.image ? edgeColorsMap[cur.image] || cur.edgeColors : null;
+  const edgeBg = box && liveEc && Object.keys(liveEc).length && (!cur?.bgEffect || cur.bgEffect === 'none') ? edgeBackgroundAt(liveEc, box) : null;
 
   return (
     <header
+      ref={headerRef}
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       style={{background: cur?.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
     >
@@ -226,11 +248,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 {cur.name}
               </h1>
               {cur.image && isVideoUrl(cur.image) ? (
-                <div key={'i' + i} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
                   <video src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : cur.image ? (
-                <div key={'i' + i} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
                 </div>
