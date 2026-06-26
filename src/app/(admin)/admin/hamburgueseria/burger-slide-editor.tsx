@@ -650,6 +650,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
       {showPicker && image && (
         <ImageColorPicker
           image={image}
+          bgColor={bgColor}
           points={edgePoints}
           onPointsChange={setEdgePoints}
           targets={[
