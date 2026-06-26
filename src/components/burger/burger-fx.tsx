@@ -30,6 +30,29 @@ export function edgeBackground(ec?: Record<string, string> | null): string | nul
   return parts.length ? parts.join(', ') : null;
 }
 
+export type EdgePoint = {x: number; y: number; c: string};
+
+const EDGE_POS: Record<string, [number, number]> = {
+  tl: [0.06, 0.06], tc: [0.5, 0.06], tr: [0.94, 0.06], lm: [0.06, 0.5],
+  rm: [0.94, 0.5], bl: [0.06, 0.94], bc: [0.5, 0.94], br: [0.94, 0.94]
+};
+
+/** Convierte los 8 colores muestreados (objeto) en lista de puntos {x,y,c}. */
+export function autoPoints(ec?: Record<string, string> | null): EdgePoint[] {
+  if (!ec) return [];
+  return Object.entries(EDGE_POS).filter(([k]) => ec[k]).map(([k, [x, y]]) => ({x, y, c: ec[k]}));
+}
+
+/** Fondo a partir de una lista de puntos {x,y(0..1), c}, posicionados sobre la imagen
+ *  real en pantalla (box en % del contenedor). */
+export function edgeBackgroundPts(points: EdgePoint[] | null | undefined, box: {l: number; t: number; w: number; h: number}): string | null {
+  if (!points?.length) return null;
+  const parts = points
+    .filter((p) => p.c)
+    .map((p) => `radial-gradient(42% 42% at ${(box.l + p.x * box.w).toFixed(1)}% ${(box.t + p.y * box.h).toFixed(1)}%, ${p.c}, transparent 70%)`);
+  return parts.length ? parts.join(', ') : null;
+}
+
 /** Igual que edgeBackground pero posicionando cada degradado en el punto REAL de la
  *  imagen en pantalla (box = {l,t,w,h} en % del contenedor). */
 export function edgeBackgroundAt(ec: Record<string, string> | null | undefined, box: {l: number; t: number; w: number; h: number}): string | null {

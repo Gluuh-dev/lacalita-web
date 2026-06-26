@@ -11,6 +11,8 @@ import {btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
 import {I18nField} from '@/components/admin/i18n-field';
 import {isVideoUrl} from '@/lib/utils';
+import {autoPoints, type EdgePoint} from '@/components/burger/burger-fx';
+import ImageColorPicker from './image-color-picker';
 import BurgerHeroPreview from '@/components/burger/burger-hero-preview';
 import type {BurgerSlide} from '@/lib/queries';
 import {saveBurgerSlide} from './actions';
@@ -241,6 +243,8 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [buttonColor, setButtonColor] = useState(slide?.button_color ?? '');
   const [textColor, setTextColor] = useState(slide?.text_color ?? '');
   const [edgeColors, setEdgeColors] = useState<Record<string, string>>(slide?.edge_colors ?? {});
+  const [edgePoints, setEdgePoints] = useState<EdgePoint[]>(slide?.edge_points ?? []);
+  const [showPicker, setShowPicker] = useState(false);
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -280,6 +284,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         button_color: buttonColor,
         text_color: textColor,
         edge_colors: edgeColors,
+        edge_points: edgePoints,
         media_y: mediaY,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
@@ -331,7 +336,10 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
                   setTextColor(isLight(c) ? '#2a1713' : '#fdfbf7');
                 }
               });
-              detectEdges(media).then(setEdgeColors);
+              detectEdges(media).then((ec) => {
+                setEdgeColors(ec);
+                setEdgePoints(autoPoints(ec));
+              });
               detectVibrant(media).then((v) => {
                 if (!v) return;
                 setTitleColor(v);
@@ -368,6 +376,11 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           >
             🎨 Combinar título y precio con la imagen
           </button>
+          {image && !isVideoUrl(image) && (
+            <button type="button" onClick={() => setShowPicker(true)} className="mt-2 ml-2 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs text-ink-2 transition hover:border-brand">
+              🎯 Colores y puntos de la imagen
+            </button>
+          )}
         </div>
         <div>
           <Label>Nombre interno</Label>
@@ -612,6 +625,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           buttonColor,
           textColor,
           edgeColors,
+          edgePoints,
           mediaY,
           titleScale,
           eyebrowScale,
@@ -633,6 +647,22 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           fxVideoScale: 1.1
         }}
       />
+      {showPicker && image && (
+        <ImageColorPicker
+          image={image}
+          points={edgePoints}
+          onPointsChange={setEdgePoints}
+          targets={[
+            {label: 'Título', set: (c) => { setTitleColor(c); setTitleGradient(''); }},
+            {label: 'Precio', set: (c) => { setPriceColor(c); setPriceGradient(''); }},
+            {label: 'Logo y lema', set: setAccentColor},
+            {label: 'Botones', set: setButtonColor},
+            {label: 'Texto', set: setTextColor},
+            {label: 'Fondo del hero', set: setBgColor}
+          ]}
+          onClose={() => setShowPicker(false)}
+        />
+      )}
     </div>
   );
 }

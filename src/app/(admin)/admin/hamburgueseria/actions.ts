@@ -29,6 +29,7 @@ export type SlideInput = {
   button_color: string;
   text_color: string;
   edge_colors: Record<string, string>;
+  edge_points: {x: number; y: number; c: string}[];
   media_y: number;
   title_scale: number;
   eyebrow_scale: number;

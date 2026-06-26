@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
-import {Sparks, Smoke, titleColorStyle, edgeBackground} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, edgeBackgroundPts, autoPoints, type EdgePoint} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
 
 const GOLD = '#d67a63'; // terracota (acento)
@@ -53,6 +53,7 @@ export type PreviewCfg = {
   buttonColor: string;
   textColor: string;
   edgeColors: Record<string, string>;
+  edgePoints: EdgePoint[];
   mediaY: number;
 };
 
@@ -130,9 +131,12 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
   const H = pc ? 800 : 780;
   return (
     <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: c.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
-      {(!c.bgEffect || c.bgEffect === 'none') && edgeBackground(c.edgeColors) && (
-        <div className="pointer-events-none absolute inset-0" style={{background: edgeBackground(c.edgeColors)!}} />
-      )}
+      {(!c.bgEffect || c.bgEffect === 'none') && (() => {
+        const pts = c.edgePoints?.length ? c.edgePoints : autoPoints(c.edgeColors);
+        const box = pc ? {l: 52, t: 9, w: 45, h: 82} : {l: 10, t: 34, w: 80, h: 56};
+        const bg = edgeBackgroundPts(pts, box);
+        return bg ? <div className="pointer-events-none absolute inset-0" style={{background: bg}} /> : null;
+      })()}
       <Bg c={c} />
       <Nav />
       {pc ? (

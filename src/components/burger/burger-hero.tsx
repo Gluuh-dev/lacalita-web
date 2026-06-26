@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle, edgeBackgroundAt} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, edgeBackgroundPts, autoPoints, type EdgePoint} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
 
 export type HeroSlide = {
@@ -46,6 +46,7 @@ export type HeroSlide = {
   buttonColor?: string;
   textColor?: string;
   edgeColors?: Record<string, string>;
+  edgePoints?: EdgePoint[];
   mediaY?: number;
 };
 
@@ -138,7 +139,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
     };
   }, [i, cur?.image]);
   const liveEc = cur?.image ? edgeColorsMap[cur.image] || cur.edgeColors : null;
-  const edgeBg = box && liveEc && Object.keys(liveEc).length && (!cur?.bgEffect || cur.bgEffect === 'none') ? edgeBackgroundAt(liveEc, box) : null;
+  const pts = cur?.edgePoints?.length ? cur.edgePoints : autoPoints(liveEc);
+  const edgeBg = box && pts.length && (!cur?.bgEffect || cur.bgEffect === 'none') ? edgeBackgroundPts(pts, box) : null;
 
   return (
     <header
