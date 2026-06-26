@@ -105,7 +105,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   }, [n]);
 
   const cur = slides[i] ?? slides[0];
-  const fromTop = i % 2 === 0;
   const go = (dir: number) => n > 1 && setI((x) => (x + dir + n) % n);
   const touchX = useRef<number | null>(null);
 
@@ -194,26 +193,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-1 px-5 pt-[72px] md:grid-cols-2 md:gap-8">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
-          {/* Logo: solo símbolo en móvil, wordmark en escritorio */}
-          <span
-            className="mx-auto block md:hidden"
-            aria-label="La Calita"
-            role="img"
-            style={{
-              height: 72,
-              aspectRatio: '1.15',
-              backgroundColor: cur?.accentColor || GOLD,
-              WebkitMaskImage: 'url(/brand/logo-solo.svg)',
-              maskImage: 'url(/brand/logo-solo.svg)',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              WebkitMaskPosition: 'center',
-              maskPosition: 'center',
-              filter: 'drop-shadow(0 6px 16px rgba(0,0,0,.12))'
-            }}
-          />
+          {/* Logo wordmark solo en escritorio (en móvil va en el navbar) */}
           <span
             className="hidden w-[min(285px,80vw)] md:block"
             aria-label="La Calita"
@@ -233,6 +213,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
           <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+          {/* Logo como marca de agua bajo los textos (solo móvil) */}
+          <span
+            aria-hidden
+            className="mx-auto mt-7 block md:hidden"
+            style={{height: 96, aspectRatio: '1.15', backgroundColor: cur?.accentColor || GOLD, opacity: 0.13, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', WebkitMaskPosition: 'center', maskPosition: 'center'}}
+          />
           <div className="mt-7 hidden flex-wrap items-center justify-center gap-3 md:flex md:justify-start">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.buttonColor || RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
@@ -267,15 +253,15 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </h1>
               {cur.image && isVideoUrl(cur.image) ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
-                  <video src={cur.image} autoPlay muted playsInline className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
+                  <video src={cur.image} autoPlay muted playsInline className={`lc-bfade ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : cur.image ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={cur.image} alt={cur.name} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
+                  <img src={cur.image} alt={cur.name} className={`lc-bfade ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : (
-                <div key={'i' + i} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25`} style={{zIndex: 2}}>
+                <div key={'i' + i} className="lc-bfade flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25" style={{zIndex: 2}}>
                   <UtensilsCrossed className="size-24" />
                 </div>
               )}
