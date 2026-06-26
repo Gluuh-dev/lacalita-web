@@ -6,6 +6,7 @@ import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
+import BurgerTabBar from './burger-tabbar';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
@@ -56,6 +57,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
     <main style={{background: C.bg, color: C.ink}} className="min-h-screen font-sans">
       {/* ---- Cabecera (responsive) ---- */}
       <BurgerHeader locale={locale} navColor={(() => { const s = slides.find((x) => x.active) ?? slides[0]; return s?.nav_color || s?.accent_color || ''; })()} />
+      <BurgerTabBar />
 
       {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
       <BurgerHero slides={hero} locale={locale} />
@@ -200,6 +202,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           </a>
         </div>
       </section>
+      <div className="h-16 md:hidden" />
     </main>
   );
 }

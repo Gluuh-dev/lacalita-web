@@ -223,7 +223,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
     price: slide?.price != null ? String(slide.price) : '',
     position: String(slide?.position ?? 0)
   });
-  const [eyebrow, setEyebrow] = useState<Record<string, string>>(slide?.eyebrow ?? {es: ''});
+  const [eyebrow] = useState<Record<string, string>>(slide?.eyebrow ?? {es: ''});
   const [title, setTitle] = useState<Record<string, string>>(slide?.title ?? {es: ''});
   const [image, setImage] = useState<string | null>(slide?.image ?? null);
   const [mediaY] = useState(slide?.media_y ?? 0);
@@ -247,7 +247,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [navColor, setNavColor] = useState(slide?.nav_color ?? '');
   const [showPicker, setShowPicker] = useState(false);
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
-  const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
+  const [eyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
   const [overlayFx] = useState(slide?.overlay_fx ?? 'none');
   const [showRings, setShowRings] = useState(slide?.show_rings ?? true);
@@ -437,7 +437,6 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           <Label>Nombre interno</Label>
           <Input value={f.name} onChange={(e) => setF({...f, name: e.target.value})} placeholder="La Doble Calita" />
         </div>
-        <I18nField label="Eyebrow (rótulo superior)" value={eyebrow} onChange={setEyebrow} placeholder="Nuevo · Crujiente · De siempre" />
         <I18nField label="Título (grande)" value={title} onChange={setTitle} placeholder="la doble calita" />
 
         {/* Estilo del título */}
@@ -493,15 +492,9 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             <label className="flex items-center gap-2"><Checkbox checked={textShadow} onCheckedChange={(v) => setTextShadow(v === true)} /> Sombra en los textos</label>
             <label className="flex items-center gap-2"><Checkbox checked={hideTitle} onCheckedChange={(v) => setHideTitle(v === true)} /> Ocultar título (ya está en la imagen)</label>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <div>
-              <Label>Título · {Math.round(titleScale * 100)}%</Label>
-              <input type="range" min={0.5} max={2.6} step={0.05} value={titleScale} onChange={(e) => setTitleScale(+e.target.value)} className="w-full accent-brand" />
-            </div>
-            <div>
-              <Label>Eyebrow · {Math.round(eyebrowScale * 100)}%</Label>
-              <input type="range" min={0.6} max={1.6} step={0.05} value={eyebrowScale} onChange={(e) => setEyebrowScale(+e.target.value)} className="w-full accent-brand" />
-            </div>
+          <div className="mt-3">
+            <Label>Tamaño del título · {Math.round(titleScale * 100)}%</Label>
+            <input type="range" min={0.5} max={2.6} step={0.05} value={titleScale} onChange={(e) => setTitleScale(+e.target.value)} className="w-full accent-brand" />
           </div>
           <div className="mt-3">
             <Label>Posición título (↑ baja el nº) · {titleY}%</Label>

@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {UtensilsCrossed, MapPin} from 'lucide-react';
+import {UtensilsCrossed, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
 import {euro} from '@/lib/localize';
 import {Sparks, Smoke, titleColorStyle, edgeBackgroundPts, autoPoints, type EdgePoint} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
@@ -105,6 +105,8 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
   const cur = slides[i] ?? slides[0];
   const fromTop = i % 2 === 0;
+  const go = (dir: number) => n > 1 && setI((x) => (x + dir + n) % n);
+  const touchX = useRef<number | null>(null);
 
   // Colores de borde muestreados en vivo (8 puntos) + medición de la posición real de la imagen.
   const headerRef = useRef<HTMLElement>(null);
@@ -158,6 +160,15 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       ref={headerRef}
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       style={{background: cur?.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
+      onTouchStart={(e) => {
+        touchX.current = e.touches[0].clientX;
+      }}
+      onTouchEnd={(e) => {
+        if (touchX.current == null) return;
+        const dx = e.changedTouches[0].clientX - touchX.current;
+        if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+        touchX.current = null;
+      }}
     >
       {/* Efecto de fondo configurable */}
       {cur?.bgEffect === 'image' && cur.bgImage && (
@@ -221,7 +232,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           />
           <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
           <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+          <div className="mt-7 hidden flex-wrap items-center justify-center gap-3 md:flex md:justify-start">
             <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.buttonColor || RED, color: '#fdfbf7'}}>
               <UtensilsCrossed className="size-4" /> Ver la carta
             </Link>
@@ -235,13 +246,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
           {cur && (
             <>
-              <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
-                <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: `calc(clamp(0.7rem,1.4vw,0.92rem) * ${cur.eyebrowScale ?? 1})`, color: GOLD}}>
-                  <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
-                  {cur.eyebrow}
-                  <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
-                </span>
-              </div>
               <h1
                 key={'n' + i}
                 className="lc-bfade pointer-events-none absolute left-0 right-0 m-0 text-center font-extrabold uppercase"
@@ -286,12 +290,28 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </div>
       </div>
 
-      {/* Puntos (derecha) */}
+      {/* Escritorio: puntos verticales a la derecha */}
       {n > 1 && (
-        <div className="absolute right-[clamp(0.6rem,1.5vw,1.4rem)] top-1/2 z-[5] flex -translate-y-1/2 flex-col items-center gap-2">
+        <div className="absolute right-[clamp(0.6rem,1.5vw,1.4rem)] top-1/2 z-[5] hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
           {slides.map((_, k) => (
             <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? (cur?.buttonColor || cur?.accentColor || RED) : 'rgba(128,128,128,.6)', boxShadow: k === i ? 'none' : '0 0 0 1px rgba(255,255,255,.4)'}} />
           ))}
+        </div>
+      )}
+      {/* Móvil: flechas + puntos debajo */}
+      {n > 1 && (
+        <div className="absolute inset-x-0 bottom-5 z-[5] flex items-center justify-center gap-4 md:hidden">
+          <button type="button" onClick={() => go(-1)} aria-label="Anterior" className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[#2a1713] backdrop-blur">
+            <ChevronLeft className="size-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            {slides.map((_, k) => (
+              <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{height: 8, width: k === i ? 24 : 8, background: k === i ? (cur?.buttonColor || cur?.accentColor || RED) : 'rgba(128,128,128,.55)'}} />
+            ))}
+          </div>
+          <button type="button" onClick={() => go(1)} aria-label="Siguiente" className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[#2a1713] backdrop-blur">
+            <ChevronRight className="size-5" />
+          </button>
         </div>
       )}
     </header>

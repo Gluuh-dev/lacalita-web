@@ -85,20 +85,10 @@ function Nav({color}: {color?: string}) {
 }
 
 function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) {
-  const eb = (pc ? 15 : 12) * c.eyebrowScale;
   const ts = (pc ? 96 : 46) * c.titleScale;
   const ps = (pc ? 78 : 44) * c.priceScale;
   return (
     <div className="relative flex h-full items-center justify-center">
-      {c.eyebrow && (
-        <div key={`e${animKey}`} className="lc-bfade absolute left-0 right-0 z-[3] text-center" style={{top: '7%'}}>
-          <span className="inline-flex items-center font-adam uppercase" style={{gap: 8, letterSpacing: '0.28em', fontSize: eb, color: GOLD}}>
-            <span style={{width: 24, height: 1, background: GOLD, opacity: 0.6}} />
-            {c.eyebrow}
-            <span style={{width: 24, height: 1, background: GOLD, opacity: 0.6}} />
-          </span>
-        </div>
-      )}
       <div key={`n${animKey}`} className="lc-bfade absolute left-0 right-0 m-0 px-2 text-center font-extrabold uppercase" style={{top: `${c.titleY}%`, fontFamily: FONT_CSS[c.font] ?? FONT_CSS.eight, ...titleColorStyle(c.color || RED, c.gradient, c.titleOutline), zIndex: c.behind ? 1 : 3, fontSize: ts, lineHeight: 0.82, textShadow: c.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none', display: c.hideTitle ? 'none' : undefined}}>
         {c.name || 'Título'}
       </div>
