@@ -144,7 +144,9 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
     const root = document.documentElement;
     if (v) root.style.setProperty('--lc-nav', v);
     else root.style.removeProperty('--lc-nav');
-    return () => root.style.removeProperty('--lc-nav');
+    return () => {
+      root.style.removeProperty('--lc-nav');
+    };
   }, [cur?.navColor, cur?.accentColor]);
 
   const liveEc = cur?.image ? edgeColorsMap[cur.image] || cur.edgeColors : null;
