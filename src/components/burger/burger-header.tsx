@@ -24,8 +24,8 @@ const LOGO_MASK = {
 } as const;
 
 const TEXT_MASK = {
-  WebkitMaskImage: 'url(/brand/texto-calita-burguer.svg)',
-  maskImage: 'url(/brand/texto-calita-burguer.svg)',
+  WebkitMaskImage: 'url(/brand/texto-lacalita-derecha.svg)',
+  maskImage: 'url(/brand/texto-lacalita-derecha.svg)',
   WebkitMaskRepeat: 'no-repeat',
   maskRepeat: 'no-repeat',
   WebkitMaskSize: 'contain',
@@ -99,7 +99,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           <Link href="/hamburgueseria" aria-label="La Calita Burger" className="flex items-center gap-1">
             <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c94a3c' : logoColor, ...LOGO_MASK}} />
-            <span aria-hidden className="block" style={{height: 13, aspectRatio: '13.68', backgroundColor: show ? '#c94a3c' : logoColor, ...TEXT_MASK}} />
+            <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c94a3c' : logoColor, ...TEXT_MASK}} />
           </Link>
 
           {/* Botón que se transforma de hamburguesa a X */}

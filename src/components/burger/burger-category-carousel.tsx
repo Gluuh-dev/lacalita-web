@@ -166,19 +166,9 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
 
   return (
     <section className="py-14">
-      <div className="mx-auto mb-4 flex max-w-7xl items-end justify-between gap-4 px-5">
-        <div>
-          <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: ORANGE}}>Nuestra carta</div>
-          <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">elige tu antojo</h2>
-        </div>
-        <div className="flex shrink-0 items-center gap-2 pb-1">
-          <button ref={prevRef} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/25 text-[#2a1713] transition hover:bg-[#2a1713]/5 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
-            <ChevronLeft className="size-5" />
-          </button>
-          <button ref={nextRef} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/25 text-[#2a1713] transition hover:bg-[#2a1713]/5 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
-            <ChevronRight className="size-5" />
-          </button>
-        </div>
+      <div className="mx-auto mb-4 max-w-7xl px-5 text-center md:text-left">
+        <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: ORANGE}}>Nuestra carta</div>
+        <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">elige tu antojo</h2>
       </div>
 
       <div ref={viewportRef} className="w-full overflow-hidden [touch-action:pan-y]">
@@ -190,8 +180,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
                 <Link
                   href={`/carta/hamburgueseria?cat=${c.id}`}
                   draggable={false}
-                  className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] border border-white/8"
-                  style={{background: 'linear-gradient(180deg,#f4a72e,#df7a18)'}}
+                  className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] bg-[#ece0cd]"
                 >
                   {img ? (
                     <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 70vw" draggable={false} className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" />
@@ -208,10 +197,18 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-7">
-        <div ref={dotsRef} className="flex items-center gap-2">
-          {categories.map((c, i) => (
-            <button key={c.id} data-d={i} aria-label={`Categoría ${i + 1}`} className="lc-cat-dot" />
-          ))}
+        <div className="flex items-center gap-4">
+          <button ref={prevRef} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/20 text-[#2a1713] transition hover:bg-[#2a1713]/5 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <ChevronLeft className="size-5" />
+          </button>
+          <div ref={dotsRef} className="flex items-center gap-2">
+            {categories.map((c, i) => (
+              <button key={c.id} data-d={i} aria-label={`Categoría ${i + 1}`} className="lc-cat-dot" />
+            ))}
+          </div>
+          <button ref={nextRef} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/20 text-[#2a1713] transition hover:bg-[#2a1713]/5 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+            <ChevronRight className="size-5" />
+          </button>
         </div>
         <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em] transition hover:brightness-105" style={{background: ORANGE, color: '#fdfbf7'}}>
           Ver toda la carta <ArrowRight className="size-4" />
