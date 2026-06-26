@@ -88,9 +88,6 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
   const ps = (pc ? 78 : 44) * c.priceScale;
   return (
     <div className="relative flex h-full items-center justify-center">
-      {(!c.bgEffect || c.bgEffect === 'none') && edgeBackground(c.edgeColors) && (
-        <div className="pointer-events-none absolute inset-0 z-0" style={{background: edgeBackground(c.edgeColors)!}} />
-      )}
       {c.eyebrow && (
         <div key={`e${animKey}`} className="lc-bfade absolute left-0 right-0 z-[3] text-center" style={{top: '7%'}}>
           <span className="inline-flex items-center font-adam uppercase" style={{gap: 8, letterSpacing: '0.28em', fontSize: eb, color: GOLD}}>
@@ -133,6 +130,9 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
   const H = pc ? 800 : 780;
   return (
     <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: c.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
+      {(!c.bgEffect || c.bgEffect === 'none') && edgeBackground(c.edgeColors) && (
+        <div className="pointer-events-none absolute inset-0" style={{background: edgeBackground(c.edgeColors)!}} />
+      )}
       <Bg c={c} />
       <Nav />
       {pc ? (

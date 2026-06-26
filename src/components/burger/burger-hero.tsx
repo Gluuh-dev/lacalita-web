@@ -62,6 +62,35 @@ const BURGER_FONT: Record<string, string> = {
 
 const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)'};
 
+// Muestrea 8 colores de borde de la imagen (en cliente) para fundir el fondo.
+function sampleEdgeColors(url: string): Promise<Record<string, string>> {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const S = 100;
+        const c = document.createElement('canvas');
+        c.width = S;
+        c.height = S;
+        const ctx = c.getContext('2d');
+        if (!ctx) return resolve({});
+        ctx.drawImage(img, 0, 0, S, S);
+        const hex = (x: number, y: number) => {
+          const d = ctx.getImageData(Math.round(x * (S - 1)), Math.round(y * (S - 1)), 1, 1).data;
+          return '#' + [d[0], d[1], d[2]].map((n) => n.toString(16).padStart(2, '0')).join('');
+        };
+        const i = 0.06;
+        resolve({tl: hex(i, i), tr: hex(1 - i, i), bl: hex(i, 1 - i), br: hex(1 - i, 1 - i), tc: hex(0.5, i), bc: hex(0.5, 1 - i), lm: hex(i, 0.5), rm: hex(1 - i, 0.5)});
+      } catch {
+        resolve({});
+      }
+    };
+    img.onerror = () => resolve({});
+    img.src = url;
+  });
+}
+
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
   const n = slides.length;
@@ -74,6 +103,21 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
   const cur = slides[i] ?? slides[0];
   const fromTop = i % 2 === 0;
+
+  // Fondo de bordes muestreado en vivo (funciona aunque la diapositiva no lo tenga guardado).
+  const [edgeBgMap, setEdgeBgMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    const url = cur?.image;
+    if (!url || isVideoUrl(url) || edgeBgMap[url] !== undefined) return;
+    let cancelled = false;
+    sampleEdgeColors(url).then((ec) => {
+      if (!cancelled) setEdgeBgMap((m) => ({...m, [url]: edgeBackground(ec) || ''}));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [cur?.image, edgeBgMap]);
+  const edgeBg = cur?.image && (!cur.bgEffect || cur.bgEffect === 'none') ? edgeBgMap[cur.image] || edgeBackground(cur.edgeColors) : null;
 
   return (
     <header
@@ -99,6 +143,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           ))}
         </>
       )}
+      {edgeBg && <div className="pointer-events-none absolute inset-0" style={{background: edgeBg}} />}
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
@@ -155,9 +200,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
           {cur && (
             <>
-              {(!cur.bgEffect || cur.bgEffect === 'none') && edgeBackground(cur.edgeColors) && (
-                <div className="pointer-events-none absolute inset-0 z-0" style={{background: edgeBackground(cur.edgeColors)!}} />
-              )}
               <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
                 <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: `calc(clamp(0.7rem,1.4vw,0.92rem) * ${cur.eyebrowScale ?? 1})`, color: GOLD}}>
                   <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
