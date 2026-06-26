@@ -244,6 +244,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [textColor, setTextColor] = useState(slide?.text_color ?? '');
   const [edgeColors, setEdgeColors] = useState<Record<string, string>>(slide?.edge_colors ?? {});
   const [edgePoints, setEdgePoints] = useState<EdgePoint[]>(slide?.edge_points ?? []);
+  const [navColor, setNavColor] = useState(slide?.nav_color ?? '');
   const [showPicker, setShowPicker] = useState(false);
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
@@ -283,6 +284,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         accent_color: accentColor,
         button_color: buttonColor,
         text_color: textColor,
+        nav_color: navColor,
         edge_colors: edgeColors,
         edge_points: edgePoints,
         media_y: mediaY,
@@ -312,6 +314,59 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
       } else toast.error(r.error);
     });
   }
+
+  const previewCfg = {
+    image,
+    name: title.es ?? '',
+    eyebrow: eyebrow.es ?? '',
+    price: f.price,
+    font: titleFont,
+    color: titleColor,
+    behind: titleBehind,
+    bgEffect,
+    bgImage,
+    bgColor,
+    textShadow,
+    titleOutline,
+    priceOutline,
+    hideTitle,
+    hidePrice,
+    accentColor,
+    buttonColor,
+    textColor,
+    navColor,
+    edgeColors,
+    edgePoints,
+    mediaY,
+    titleScale,
+    eyebrowScale,
+    priceScale,
+    showRings,
+    overlayFx,
+    gradient: titleGradient,
+    fxSparks,
+    fxSmoke,
+    priceFont,
+    priceColor,
+    priceGradient,
+    titleY,
+    priceY,
+    fxVideo: '',
+    fxVideoBehind: false,
+    fxVideoX: 62,
+    fxVideoY: 50,
+    fxVideoScale: 1.1
+  };
+
+  const colorTargets = [
+    {key: 'title', label: 'Título', set: (c: string) => { setTitleColor(c); setTitleGradient(''); }},
+    {key: 'price', label: 'Precio', set: (c: string) => { setPriceColor(c); setPriceGradient(''); }},
+    {key: 'accent', label: 'Logo y lema', set: setAccentColor},
+    {key: 'button', label: 'Botones', set: setButtonColor},
+    {key: 'text', label: 'Texto', set: setTextColor},
+    {key: 'nav', label: 'Navbar', set: setNavColor},
+    {key: 'bg', label: 'Fondo', set: setBgColor}
+  ];
 
   return (
     <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
@@ -604,63 +659,14 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         </div>
       </form>
 
-      <BurgerHeroPreview
-        cfg={{
-          image,
-          name: title.es ?? '',
-          eyebrow: eyebrow.es ?? '',
-          price: f.price,
-          font: titleFont,
-          color: titleColor,
-          behind: titleBehind,
-          bgEffect,
-          bgImage,
-          bgColor,
-          textShadow,
-          titleOutline,
-          priceOutline,
-          hideTitle,
-          hidePrice,
-          accentColor,
-          buttonColor,
-          textColor,
-          edgeColors,
-          edgePoints,
-          mediaY,
-          titleScale,
-          eyebrowScale,
-          priceScale,
-          showRings,
-          overlayFx,
-          gradient: titleGradient,
-          fxSparks,
-          fxSmoke,
-          priceFont,
-          priceColor,
-          priceGradient,
-          titleY,
-          priceY,
-          fxVideo: '',
-          fxVideoBehind: false,
-          fxVideoX: 62,
-          fxVideoY: 50,
-          fxVideoScale: 1.1
-        }}
-      />
+      <BurgerHeroPreview cfg={previewCfg} />
       {showPicker && image && (
         <ImageColorPicker
           image={image}
-          bgColor={bgColor}
+          cfg={previewCfg}
+          targets={colorTargets}
           points={edgePoints}
           onPointsChange={setEdgePoints}
-          targets={[
-            {label: 'Título', set: (c) => { setTitleColor(c); setTitleGradient(''); }},
-            {label: 'Precio', set: (c) => { setPriceColor(c); setPriceGradient(''); }},
-            {label: 'Logo y lema', set: setAccentColor},
-            {label: 'Botones', set: setButtonColor},
-            {label: 'Texto', set: setTextColor},
-            {label: 'Fondo del hero', set: setBgColor}
-          ]}
           onClose={() => setShowPicker(false)}
         />
       )}

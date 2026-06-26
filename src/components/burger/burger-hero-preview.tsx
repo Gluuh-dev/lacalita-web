@@ -52,6 +52,7 @@ export type PreviewCfg = {
   accentColor: string;
   buttonColor: string;
   textColor: string;
+  navColor: string;
   edgeColors: Record<string, string>;
   edgePoints: EdgePoint[];
   mediaY: number;
@@ -73,10 +74,10 @@ function Bg({c}: {c: PreviewCfg}) {
   );
 }
 
-function Nav() {
+function Nav({color}: {color?: string}) {
   return (
-    <div className="absolute inset-x-0 top-0 z-[6] flex items-center justify-between px-10 py-5 font-adam uppercase tracking-[0.18em]" style={{fontSize: 11, color: 'rgba(42,23,19,.6)'}}>
-      <span className="rounded-full" style={{width: 18, height: 18, background: GOLD}} />
+    <div className="absolute inset-x-0 top-0 z-[6] flex items-center justify-between px-10 py-5 font-adam uppercase tracking-[0.18em]" style={{fontSize: 11, color: color || 'rgba(42,23,19,.6)'}}>
+      <span className="rounded-full" style={{width: 18, height: 18, background: color || GOLD}} />
       <div className="flex gap-6"><span>Carta</span><span>Ofertas</span><span>Local</span></div>
       <div className="flex gap-4"><span>Admin</span><span>ES</span></div>
     </div>
@@ -138,7 +139,7 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
         return bg ? <div className="pointer-events-none absolute inset-0" style={{background: bg}} /> : null;
       })()}
       <Bg c={c} />
-      <Nav />
+      <Nav color={c.navColor} />
       {pc ? (
         <div className="absolute inset-0 z-[2] flex items-center">
           <div style={{flex: 1, paddingLeft: 80, paddingRight: 24}}>

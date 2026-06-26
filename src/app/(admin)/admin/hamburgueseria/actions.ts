@@ -28,6 +28,7 @@ export type SlideInput = {
   accent_color: string;
   button_color: string;
   text_color: string;
+  nav_color: string;
   edge_colors: Record<string, string>;
   edge_points: {x: number; y: number; c: string}[];
   media_y: number;

@@ -55,7 +55,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
   return (
     <main style={{background: C.bg, color: C.ink}} className="min-h-screen font-sans">
       {/* ---- Cabecera (responsive) ---- */}
-      <BurgerHeader locale={locale} navColor={slides.find((s) => s.active)?.accent_color || slides[0]?.accent_color || ''} />
+      <BurgerHeader locale={locale} navColor={(() => { const s = slides.find((x) => x.active) ?? slides[0]; return s?.nav_color || s?.accent_color || ''; })()} />
 
       {/* ---- Hero (slider de hamburguesas nuevas) ---- */}
       <BurgerHero slides={hero} locale={locale} />
