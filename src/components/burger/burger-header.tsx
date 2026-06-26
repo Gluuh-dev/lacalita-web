@@ -94,8 +94,9 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         </nav>
       </div>
 
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 animate-in fade-in slide-in-from-top ${hidden && !show ? '-translate-y-full' : ''} ${!show && scrolled ? 'border-b border-black/5 bg-[#fdfbf7]/90 backdrop-blur-md' : ''}`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
+      <header className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 animate-in fade-in slide-in-from-top ${hidden && !show ? '-translate-y-full' : ''}`}>
+        <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           <Link href="/hamburgueseria" aria-label="La Calita Burger" className="flex items-center gap-2.5">
             <span aria-hidden style={{display: 'block', height: 32, aspectRatio: '1.15', backgroundColor: show ? '#c94a3c' : logoColor, ...LOGO_MASK}} />
             <span aria-hidden className="hidden sm:block" style={{height: 15, aspectRatio: '13.68', backgroundColor: show ? '#c94a3c' : logoColor, ...TEXT_MASK}} />
