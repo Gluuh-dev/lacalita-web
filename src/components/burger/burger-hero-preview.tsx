@@ -129,13 +129,6 @@ function Stage({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number}) 
   const H = pc ? 800 : 780;
   return (
     <div style={{width: W, height: H, position: 'relative', overflow: 'hidden', background: c.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}>
-      {c.image && !isVideoUrl(c.image) && (!c.bgEffect || c.bgEffect === 'none') && (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img aria-hidden src={c.image} className="pointer-events-none absolute inset-0 h-full w-full object-cover" style={{transform: 'scale(1.5)', filter: 'blur(50px)', opacity: 0.55}} />
-          <div className="pointer-events-none absolute inset-0" style={{background: `linear-gradient(90deg, ${c.bgColor || '#fdfbf7'} 0%, ${c.bgColor || '#fdfbf7'} 30%, transparent 66%)`}} />
-        </>
-      )}
       <Bg c={c} />
       <Nav />
       {pc ? (
