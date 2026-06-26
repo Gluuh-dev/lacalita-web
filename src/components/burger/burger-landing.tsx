@@ -64,7 +64,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
 
       {/* ---- Marquesina (banda naranja inclinada, igual que la referencia) ---- */}
       <div
-        className="relative z-[50] overflow-hidden"
+        className="relative z-[10] overflow-hidden"
         style={{background: C.orange, padding: '0.65rem 0', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%', marginTop: '-30px', marginBottom: '-10px', boxShadow: '0 12px 30px rgba(0,0,0,.4)'}}
       >
         <div className="lc-mq" style={{animationDuration: '18s'}}>
