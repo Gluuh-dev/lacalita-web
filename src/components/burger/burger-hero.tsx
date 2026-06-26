@@ -179,11 +179,6 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               >
                 {cur.name}
               </h1>
-              <div
-                key={'g' + i}
-                className="lc-bfade pointer-events-none absolute bottom-[13%] left-1/2 z-[1] h-[42px] w-[52%] -translate-x-1/2 rounded-[50%]"
-                style={{background: 'radial-gradient(ellipse, rgba(0,0,0,.16), transparent 70%)', filter: 'blur(7px)'}}
-              />
               {cur.image && isVideoUrl(cur.image) ? (
                 <div key={'i' + i} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
                   <video src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
