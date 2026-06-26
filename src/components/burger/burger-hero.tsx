@@ -62,7 +62,8 @@ const BURGER_FONT: Record<string, string> = {
   sans: 'var(--font-geist), sans-serif'
 };
 
-const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'};
+const BURGER_MEDIA_STYLE = {maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 64% 92% at 50% 50%, #000 40%, transparent 100%)'};
+const BURGER_MEDIA_CLS = 'h-[56svh] md:h-[92svh]';
 
 // Muestrea 8 colores de borde de la imagen (en cliente) para fundir el fondo.
 function sampleEdgeColors(url: string): Promise<Record<string, string>> {
@@ -158,7 +159,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
   return (
     <header
       ref={headerRef}
-      className="relative flex min-h-[100svh] items-center overflow-hidden"
+      className="relative flex min-h-[100svh] items-start overflow-hidden md:items-center"
       style={{background: cur?.bgColor || 'radial-gradient(90% 80% at 72% 42%, #fff4ef 0%, #fdfbf7 70%)'}}
       onTouchStart={(e) => {
         touchX.current = e.touches[0].clientX;
@@ -190,7 +191,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </>
       )}
       {edgeBg && <div className="pointer-events-none absolute inset-0" style={{background: edgeBg}} />}
-      <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
+      <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-1 px-5 pt-[72px] md:grid-cols-2 md:gap-8">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
           {/* Logo: solo símbolo en móvil, wordmark en escritorio */}
@@ -243,7 +244,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </div>
 
         {/* Derecha: hamburguesa enorme con textos superpuestos */}
-        <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
+        <div className="relative flex min-h-[56svh] items-center justify-center md:min-h-[100svh]">
           {cur && (
             <>
               <h1
@@ -266,12 +267,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </h1>
               {cur.image && isVideoUrl(cur.image) ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
-                  <video src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
+                  <video src={cur.image} autoPlay muted playsInline className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : cur.image ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
+                  <img src={cur.image} alt={cur.name} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : (
                 <div key={'i' + i} className={`${fromTop ? 'lc-slide-top' : 'lc-slide-bot'} flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25`} style={{zIndex: 2}}>
@@ -300,7 +301,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       )}
       {/* Móvil: flechas + puntos debajo */}
       {n > 1 && (
-        <div className="absolute inset-x-0 bottom-5 z-[5] flex items-center justify-center gap-4 md:hidden">
+        <div className="absolute inset-x-0 bottom-[5rem] z-[5] flex items-center justify-center gap-4 md:hidden">
           <button type="button" onClick={() => go(-1)} aria-label="Anterior" className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[#2a1713] backdrop-blur">
             <ChevronLeft className="size-5" />
           </button>
