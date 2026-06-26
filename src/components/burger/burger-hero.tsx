@@ -300,7 +300,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
 
       {/* Precio en móvil: en el hueco entre la hamburguesa y el pager */}
       {cur && cur.price != null && !cur.hidePrice && (
-        <div key={'pm' + i} className="lc-bfade pointer-events-none absolute inset-x-0 bottom-[9rem] z-[4] flex justify-center md:hidden">
+        <div key={'pm' + i} className="lc-bfade pointer-events-none absolute inset-x-0 bottom-[8.25rem] z-[4] flex justify-center md:hidden">
           <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.4rem,11vw,5.5rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
         </div>
       )}
