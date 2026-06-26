@@ -152,6 +152,66 @@ function detectVibrant(url: string): Promise<string> {
   });
 }
 
+// ¿El color es claro? (para elegir texto oscuro/claro encima).
+function isLight(hex: string): boolean {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return true;
+  const n = parseInt(m[1], 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150;
+}
+
+// Muestrea 8 colores de borde (4 esquinas + 4 puntos medios) para fundir la imagen.
+function detectEdges(url: string): Promise<Record<string, string>> {
+  return new Promise((resolve) => {
+    if (!url) return resolve({});
+    const run = (src: CanvasImageSource) => {
+      try {
+        const S = 100;
+        const c = document.createElement('canvas');
+        c.width = S;
+        c.height = S;
+        const ctx = c.getContext('2d');
+        if (!ctx) return resolve({});
+        ctx.drawImage(src, 0, 0, S, S);
+        const hex = (x: number, y: number) => {
+          const d = ctx.getImageData(Math.round(x * (S - 1)), Math.round(y * (S - 1)), 1, 1).data;
+          return '#' + [d[0], d[1], d[2]].map((n) => n.toString(16).padStart(2, '0')).join('');
+        };
+        const i = 0.06;
+        resolve({
+          tl: hex(i, i), tr: hex(1 - i, i), bl: hex(i, 1 - i), br: hex(1 - i, 1 - i),
+          tc: hex(0.5, i), bc: hex(0.5, 1 - i), lm: hex(i, 0.5), rm: hex(1 - i, 0.5)
+        });
+      } catch {
+        resolve({});
+      }
+    };
+    if (isVideoUrl(url)) {
+      const v = document.createElement('video');
+      v.crossOrigin = 'anonymous';
+      v.muted = true;
+      v.playsInline = true;
+      v.onseeked = () => run(v);
+      v.onloadeddata = () => {
+        try {
+          v.currentTime = 0.1;
+        } catch {
+          run(v);
+        }
+      };
+      v.onerror = () => resolve({});
+      v.src = url;
+    } else {
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => run(img);
+      img.onerror = () => resolve({});
+      img.src = url;
+    }
+  });
+}
+
 export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -180,6 +240,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [accentColor, setAccentColor] = useState(slide?.accent_color ?? '');
   const [buttonColor, setButtonColor] = useState(slide?.button_color ?? '');
   const [textColor, setTextColor] = useState(slide?.text_color ?? '');
+  const [edgeColors, setEdgeColors] = useState<Record<string, string>>(slide?.edge_colors ?? {});
   const [titleScale, setTitleScale] = useState(slide?.title_scale ?? 1);
   const [eyebrowScale, setEyebrowScale] = useState(slide?.eyebrow_scale ?? 1);
   const [priceScale, setPriceScale] = useState(slide?.price_scale ?? 1);
@@ -218,6 +279,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         accent_color: accentColor,
         button_color: buttonColor,
         text_color: textColor,
+        edge_colors: edgeColors,
         media_y: mediaY,
         title_scale: titleScale,
         eyebrow_scale: eyebrowScale,
@@ -258,7 +320,30 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
         <div>
           <Label>Imagen o vídeo de la hamburguesa</Label>
           <div className="max-w-[260px]">
-            <HeroMedia media={image ?? ''} mediaType={isVideoUrl(image) ? 'video' : 'image'} onSet={({media}) => { setImage(media); detectBg(media).then((c) => c && setBgColor(c)); }} onClear={() => setImage(null)} />
+            <HeroMedia
+            media={image ?? ''}
+            mediaType={isVideoUrl(image) ? 'video' : 'image'}
+            onSet={({media}) => {
+              setImage(media);
+              detectBg(media).then((c) => {
+                if (c) {
+                  setBgColor(c);
+                  setTextColor(isLight(c) ? '#2a1713' : '#fdfbf7');
+                }
+              });
+              detectEdges(media).then(setEdgeColors);
+              detectVibrant(media).then((v) => {
+                if (!v) return;
+                setTitleColor(v);
+                setPriceColor(v);
+                setTitleGradient('auto');
+                setPriceGradient('auto');
+                setAccentColor(v);
+                setButtonColor(v);
+              });
+            }}
+            onClear={() => setImage(null)}
+          />
           </div>
           <div className="mt-2">
             <Label>Posición vertical (subir/bajar) · {mediaY}%</Label>
@@ -526,6 +611,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
           accentColor,
           buttonColor,
           textColor,
+          edgeColors,
           mediaY,
           titleScale,
           eyebrowScale,

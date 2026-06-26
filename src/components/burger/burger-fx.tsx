@@ -9,6 +9,25 @@ export const TITLE_GRADIENTS: Record<string, string> = {
   cream: 'linear-gradient(180deg,#ffffff,#f4ede2 50%,#cdbfa8)'
 };
 
+/** Fondo a partir de los colores de borde muestreados (8 puntos): degradados radiales
+ *  en cada esquina y punto medio para que el contorno de la imagen se funda con el fondo. */
+export function edgeBackground(ec?: Record<string, string> | null): string | null {
+  if (!ec) return null;
+  const g = (w: string, h: string, x: string, y: string, c?: string) =>
+    c ? `radial-gradient(${w} ${h} at ${x} ${y}, ${c}, transparent 72%)` : '';
+  const parts = [
+    g('60%', '60%', '0%', '0%', ec.tl),
+    g('60%', '60%', '100%', '0%', ec.tr),
+    g('60%', '60%', '0%', '100%', ec.bl),
+    g('60%', '60%', '100%', '100%', ec.br),
+    g('72%', '55%', '50%', '0%', ec.tc),
+    g('72%', '55%', '50%', '100%', ec.bc),
+    g('55%', '72%', '0%', '50%', ec.lm),
+    g('55%', '72%', '100%', '50%', ec.rm)
+  ].filter(Boolean);
+  return parts.length ? parts.join(', ') : null;
+}
+
 /** Estilo del texto: contorno (líneas sin relleno), degradado (preset o del propio
  *  color con 'auto'), o color plano. */
 export function titleColorStyle(color: string, gradient?: string | null, outline?: boolean): CSSProperties {

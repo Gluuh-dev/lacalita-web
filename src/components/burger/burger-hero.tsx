@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin} from 'lucide-react';
 import {euro} from '@/lib/localize';
-import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, edgeBackground} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
 
 export type HeroSlide = {
@@ -45,6 +45,7 @@ export type HeroSlide = {
   accentColor?: string;
   buttonColor?: string;
   textColor?: string;
+  edgeColors?: Record<string, string>;
   mediaY?: number;
 };
 
@@ -154,6 +155,9 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         <div className="relative flex min-h-[60svh] items-center justify-center md:min-h-[100svh]">
           {cur && (
             <>
+              {(!cur.bgEffect || cur.bgEffect === 'none') && edgeBackground(cur.edgeColors) && (
+                <div className="pointer-events-none absolute inset-0 z-0" style={{background: edgeBackground(cur.edgeColors)!}} />
+              )}
               <div key={'e' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 top-[6%] z-[3] text-center">
                 <span className="inline-flex items-center gap-2 font-adam uppercase tracking-[0.28em]" style={{fontSize: `calc(clamp(0.7rem,1.4vw,0.92rem) * ${cur.eyebrowScale ?? 1})`, color: GOLD}}>
                   <span style={{width: 26, height: 1, background: GOLD, opacity: 0.6}} />
@@ -209,7 +213,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       {n > 1 && (
         <div className="absolute right-[clamp(0.6rem,1.5vw,1.4rem)] top-1/2 z-[5] flex -translate-y-1/2 flex-col items-center gap-2">
           {slides.map((_, k) => (
-            <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? RED : 'rgba(42,23,19,.22)'}} />
+            <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? (cur?.buttonColor || cur?.accentColor || RED) : 'rgba(128,128,128,.6)', boxShadow: k === i ? 'none' : '0 0 0 1px rgba(255,255,255,.4)'}} />
           ))}
         </div>
       )}

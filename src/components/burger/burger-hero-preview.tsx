@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react';
 import {Monitor, Smartphone, RotateCcw, UtensilsCrossed} from 'lucide-react';
-import {Sparks, Smoke, titleColorStyle} from './burger-fx';
+import {Sparks, Smoke, titleColorStyle, edgeBackground} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
 
 const GOLD = '#d67a63'; // terracota (acento)
@@ -52,6 +52,7 @@ export type PreviewCfg = {
   accentColor: string;
   buttonColor: string;
   textColor: string;
+  edgeColors: Record<string, string>;
   mediaY: number;
 };
 
@@ -87,6 +88,9 @@ function Burger({c, pc, animKey}: {c: PreviewCfg; pc: boolean; animKey: number})
   const ps = (pc ? 78 : 44) * c.priceScale;
   return (
     <div className="relative flex h-full items-center justify-center">
+      {(!c.bgEffect || c.bgEffect === 'none') && edgeBackground(c.edgeColors) && (
+        <div className="pointer-events-none absolute inset-0 z-0" style={{background: edgeBackground(c.edgeColors)!}} />
+      )}
       {c.eyebrow && (
         <div key={`e${animKey}`} className="lc-bfade absolute left-0 right-0 z-[3] text-center" style={{top: '7%'}}>
           <span className="inline-flex items-center font-adam uppercase" style={{gap: 8, letterSpacing: '0.28em', fontSize: eb, color: GOLD}}>
