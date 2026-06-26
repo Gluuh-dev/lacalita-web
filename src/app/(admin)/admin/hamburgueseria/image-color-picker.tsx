@@ -123,7 +123,6 @@ export default function ImageColorPicker({
             <img
               ref={imgRef}
               src={image}
-              crossOrigin="anonymous"
               alt=""
               onLoad={measure}
               onClick={(e) => handleClick(e.clientX, e.clientY)}
