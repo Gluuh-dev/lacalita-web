@@ -226,7 +226,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [eyebrow, setEyebrow] = useState<Record<string, string>>(slide?.eyebrow ?? {es: ''});
   const [title, setTitle] = useState<Record<string, string>>(slide?.title ?? {es: ''});
   const [image, setImage] = useState<string | null>(slide?.image ?? null);
-  const [mediaY, setMediaY] = useState(slide?.media_y ?? 0);
+  const [mediaY] = useState(slide?.media_y ?? 0);
   const [active, setActive] = useState(slide?.active ?? true);
   const [titleFont, setTitleFont] = useState(slide?.title_font ?? 'eight');
   const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#c94a3c');
@@ -407,10 +407,6 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             }}
             onClear={() => setImage(null)}
           />
-          </div>
-          <div className="mt-2">
-            <Label>Posición vertical (subir/bajar) · {mediaY}%</Label>
-            <input type="range" min={-40} max={40} value={mediaY} onChange={(e) => setMediaY(+e.target.value)} className="w-full accent-brand" />
           </div>
           <button
             type="button"

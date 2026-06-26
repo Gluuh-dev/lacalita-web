@@ -250,11 +250,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 {cur.name}
               </h1>
               {cur.image && isVideoUrl(cur.image) ? (
-                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
                   <video src={cur.image} autoPlay muted playsInline className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : cur.image ? (
-                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{transform: `translateY(${cur.mediaY ?? 0}%)`, zIndex: 2}}>
+                <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={cur.image} alt={cur.name} className={fromTop ? 'lc-slide-top' : 'lc-slide-bot'} style={BURGER_MEDIA_STYLE} />
                 </div>
