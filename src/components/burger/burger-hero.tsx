@@ -59,7 +59,7 @@ const BURGER_FONT: Record<string, string> = {
   sans: 'var(--font-geist), sans-serif'
 };
 
-const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 78% 100% at 50% 50%, #000 55%, transparent 100%)', maskImage: 'radial-gradient(ellipse 78% 100% at 50% 50%, #000 55%, transparent 100%)'};
+const BURGER_MEDIA_STYLE = {height: '92svh', maxWidth: '116%', objectFit: 'contain' as const, zIndex: 2, WebkitMaskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)', maskImage: 'radial-gradient(ellipse 62% 100% at 50% 50%, #000 40%, transparent 100%)'};
 
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
