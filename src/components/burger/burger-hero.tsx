@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState, type CSSProperties} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {UtensilsCrossed, MapPin, ChevronLeft, ChevronRight} from 'lucide-react';
+import {UtensilsCrossed, MapPin, Play, Pause} from 'lucide-react';
 import {euro} from '@/lib/localize';
 import {Sparks, Smoke, titleColorStyle, edgeBackgroundPts, autoPoints, type EdgePoint} from './burger-fx';
 import {isVideoUrl} from '@/lib/utils';
@@ -96,13 +96,15 @@ function sampleEdgeColors(url: string): Promise<Record<string, string>> {
 
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
   const [i, setI] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const n = slides.length;
 
+  // Solo se mueve solo si el usuario pulsa play.
   useEffect(() => {
-    if (n <= 1) return;
-    const t = setInterval(() => setI((x) => (x + 1) % n), 10000);
+    if (!playing || n <= 1) return;
+    const t = setInterval(() => setI((x) => (x + 1) % n), 6000);
     return () => clearInterval(t);
-  }, [n]);
+  }, [playing, n]);
 
   const cur = slides[i] ?? slides[0];
   const go = (dir: number) => n > 1 && setI((x) => (x + dir + n) % n);
@@ -273,27 +275,16 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </div>
       </div>
 
-      {/* Escritorio: puntos verticales a la derecha */}
+      {/* Paginador: pill de puntos + play/pausa (no se mueve solo hasta darle a play) */}
       {n > 1 && (
-        <div className="absolute right-[clamp(0.6rem,1.5vw,1.4rem)] top-1/2 z-[5] hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
-          {slides.map((_, k) => (
-            <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{width: 9, height: k === i ? 26 : 9, background: k === i ? (cur?.buttonColor || cur?.accentColor || RED) : 'rgba(128,128,128,.6)', boxShadow: k === i ? 'none' : '0 0 0 1px rgba(255,255,255,.4)'}} />
-          ))}
-        </div>
-      )}
-      {/* Móvil: flechas + puntos debajo */}
-      {n > 1 && (
-        <div className="absolute inset-x-0 bottom-[5rem] z-[5] flex items-center justify-center gap-4 md:hidden">
-          <button type="button" onClick={() => go(-1)} aria-label="Anterior" className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[#2a1713] backdrop-blur">
-            <ChevronLeft className="size-5" />
-          </button>
-          <div className="flex items-center gap-2">
+        <div className="absolute inset-x-0 bottom-[5rem] z-[5] flex items-center justify-center gap-2.5 md:bottom-8">
+          <div className="flex items-center gap-2 rounded-full bg-black/30 px-4 py-2.5 backdrop-blur">
             {slides.map((_, k) => (
-              <button key={k} onClick={() => setI(k)} aria-label={`Burger ${k + 1}`} className="rounded-full transition-all" style={{height: 8, width: k === i ? 24 : 8, background: k === i ? (cur?.buttonColor || cur?.accentColor || RED) : 'rgba(128,128,128,.55)'}} />
+              <button key={k} onClick={() => setI(k)} aria-label={`Diapositiva ${k + 1}`} className="rounded-full transition-all" style={{height: 7, width: k === i ? 22 : 7, background: k === i ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.4)'}} />
             ))}
           </div>
-          <button type="button" onClick={() => go(1)} aria-label="Siguiente" className="flex size-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[#2a1713] backdrop-blur">
-            <ChevronRight className="size-5" />
+          <button type="button" onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'Pausar' : 'Reproducir'} className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition hover:bg-black/45">
+            {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
           </button>
         </div>
       )}
