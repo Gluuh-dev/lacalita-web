@@ -190,11 +190,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </>
       )}
       {edgeBg && <div className="pointer-events-none absolute inset-0" style={{background: edgeBg}} />}
-      {/* Marca de agua del logo detrás (solo móvil), sin ocupar espacio */}
-      <span aria-hidden className="pointer-events-none absolute left-1/2 top-[32%] z-[1] -translate-x-1/2 -translate-y-1/2 md:hidden" style={{height: 150, aspectRatio: '1.15', backgroundColor: cur?.accentColor || GOLD, opacity: 0.1, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', WebkitMaskPosition: 'center', maskPosition: 'center'}} />
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-1 px-5 pt-[72px] md:grid-cols-2 md:gap-8">
         {/* Izquierda */}
-        <div className="min-w-0 text-center md:text-left">
+        <div className="relative min-w-0 text-center md:text-left">
+          {/* Marca de agua del logo justo debajo de los textos (absoluto, no ocupa espacio) */}
+          <span aria-hidden className="pointer-events-none absolute left-1/2 top-full z-0 mt-3 -translate-x-1/2 md:hidden" style={{height: 110, aspectRatio: '1.15', backgroundColor: cur?.accentColor || GOLD, opacity: 0.12, WebkitMaskImage: 'url(/brand/logo-solo.svg)', maskImage: 'url(/brand/logo-solo.svg)', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', WebkitMaskPosition: 'center', maskPosition: 'center'}} />
           {/* Logo wordmark solo en escritorio (en móvil va en el navbar) */}
           <span
             className="hidden w-[min(285px,80vw)] md:block"
