@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef, useState, type CSSProperties} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin, Play, Pause} from 'lucide-react';
@@ -274,12 +274,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               </h1>
               {cur.image && isVideoUrl(cur.image) ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
-                  <video src={cur.image} autoPlay muted playsInline className={`lc-bfade ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
+                  <video src={cur.image} autoPlay muted playsInline className={`lc-bsoft ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : cur.image ? (
                 <div key={'i' + i} ref={mediaRef} className="flex justify-center" style={{zIndex: 2}}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={cur.image} alt={cur.name} className={`lc-bfade ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
+                  <img src={cur.image} alt={cur.name} className={`lc-bsoft ${BURGER_MEDIA_CLS}`} style={BURGER_MEDIA_STYLE} />
                 </div>
               ) : (
                 <div key={'i' + i} className="lc-bfade flex h-[60svh] w-full max-w-md items-center justify-center rounded-3xl border border-dashed border-white/15 text-white/25" style={{zIndex: 2}}>
@@ -287,7 +287,7 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
                 </div>
               )}
               {cur.price != null && !cur.hidePrice && (
-                <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] flex justify-center bottom-[8rem] md:bottom-[var(--py)]" style={{['--py' as string]: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'} as CSSProperties}>
+                <div key={'p' + i} className="lc-bfade pointer-events-none absolute left-0 right-0 z-[4] hidden justify-center md:flex" style={{bottom: `${cur.priceY ?? 14}%`, animationDelay: '0.16s'}}>
                   <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.6rem,9.2vw,7.8rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
                 </div>
               )}
@@ -298,6 +298,12 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
         </div>
       </div>
 
+      {/* Precio en móvil: en el hueco entre la hamburguesa y el pager */}
+      {cur && cur.price != null && !cur.hidePrice && (
+        <div key={'pm' + i} className="lc-bfade pointer-events-none absolute inset-x-0 bottom-[11rem] z-[4] flex justify-center md:hidden">
+          <span className="font-extrabold" style={{fontFamily: BURGER_FONT[cur.priceFont ?? 'eight'] ?? BURGER_FONT.eight, ...titleColorStyle(cur.priceColor || GOLD, cur.priceGradient, cur.priceOutline), fontSize: `calc(clamp(3.4rem,11vw,5.5rem) * ${cur.priceScale ?? 1})`, lineHeight: 1, textShadow: cur.textShadow ? '0 6px 20px rgba(0,0,0,.28)' : 'none'}}>{euro(cur.price, locale)}</span>
+        </div>
+      )}
       {/* Paginador: pill de puntos + play/pausa (no se mueve solo hasta darle a play) */}
       {n > 1 && (
         <div className="absolute inset-x-0 bottom-[5rem] z-[5] flex items-center justify-center gap-2.5 md:bottom-8">
