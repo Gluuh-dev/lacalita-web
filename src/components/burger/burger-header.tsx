@@ -23,6 +23,17 @@ const LOGO_MASK = {
   maskPosition: 'center'
 } as const;
 
+const TEXT_MASK = {
+  WebkitMaskImage: 'url(/brand/texto-calita-burguer.svg)',
+  maskImage: 'url(/brand/texto-calita-burguer.svg)',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskSize: 'contain',
+  maskSize: 'contain',
+  WebkitMaskPosition: 'left center',
+  maskPosition: 'left center'
+} as const;
+
 // Origen del círculo (donde está el botón, arriba a la derecha).
 const ORIGIN = 'calc(100% - 2.6rem) 2.4rem';
 const CLIP_OPEN = `circle(150% at ${ORIGIN})`;
@@ -85,13 +96,13 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
 
       <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 animate-in fade-in slide-in-from-top ${hidden && !show ? '-translate-y-full' : ''} ${!show && scrolled ? 'border-b border-black/5 bg-[#fdfbf7]/90 backdrop-blur-md' : ''}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
-          <Link href="/hamburgueseria" aria-label="La Calita Burger">
+          <Link href="/hamburgueseria" aria-label="La Calita Burger" className="flex items-center gap-2.5">
             <span aria-hidden style={{display: 'block', height: 32, aspectRatio: '1.15', backgroundColor: show ? '#c94a3c' : logoColor, ...LOGO_MASK}} />
+            <span aria-hidden className="hidden sm:block" style={{height: 15, aspectRatio: '13.68', backgroundColor: show ? '#c94a3c' : logoColor, ...TEXT_MASK}} />
           </Link>
 
           {/* Botón que se transforma de hamburguesa a X */}
-          <button onClick={() => setShow((s) => !s)} aria-label={show ? 'Cerrar menú' : 'Abrir menú'} className="flex items-center gap-2 font-adam text-[0.72rem] uppercase tracking-[0.18em] transition" style={show ? {color: '#2a1713'} : navStyle}>
-            <span className="hidden sm:inline">{show ? 'Cerrar' : 'Menú'}</span>
+          <button onClick={() => setShow((s) => !s)} aria-label={show ? 'Cerrar menú' : 'Abrir menú'} className="flex items-center transition" style={show ? {color: '#2a1713'} : navStyle}>
             <span className="relative block h-4 w-6" aria-hidden>
               <span className={`absolute left-0 h-[2px] w-6 rounded-full bg-current transition-all duration-300 ${show ? 'top-1/2 -translate-y-1/2 rotate-45' : 'top-0'}`} />
               <span className={`absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 rounded-full bg-current transition-all duration-300 ${show ? 'opacity-0' : 'opacity-100'}`} />
