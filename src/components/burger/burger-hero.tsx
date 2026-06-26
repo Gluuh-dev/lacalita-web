@@ -98,6 +98,15 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
           ))}
         </>
       )}
+      {/* Fondo borroso de la propia imagen: integra cualquier foto (con degradado/destello)
+          sin que se note el corte; el lado del texto queda sobre el color plano. */}
+      {cur?.image && !isVideoUrl(cur.image) && (!cur.bgEffect || cur.bgEffect === 'none') && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img aria-hidden src={cur.image} className="pointer-events-none absolute inset-0 h-full w-full object-cover" style={{transform: 'scale(1.5)', filter: 'blur(60px)', opacity: 0.55}} />
+          <div className="pointer-events-none absolute inset-0" style={{background: `linear-gradient(90deg, ${cur.bgColor || '#fdfbf7'} 0%, ${cur.bgColor || '#fdfbf7'} 30%, transparent 66%)`}} />
+        </>
+      )}
       <div className="relative z-[2] mx-auto grid w-full max-w-7xl items-center gap-8 px-5 pt-[72px] md:grid-cols-2">
         {/* Izquierda */}
         <div className="min-w-0 text-center md:text-left">
