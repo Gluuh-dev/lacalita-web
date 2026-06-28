@@ -153,7 +153,7 @@ export default function BurgerHeader({locale, navColor = ''}: {locale: string; n
           {showBack ? (
             <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-2" style={{color: show ? '#c36148' : logoColor}}>
               <ChevronLeft strokeWidth={2.4} style={{width: 30, height: 30}} />
-              <span aria-hidden style={labelMask(NAV_SVG.volver[lang], 17, show ? '#c36148' : logoColor)} />
+              <span aria-hidden style={labelMask(NAV_SVG.volver[lang], 15, show ? '#c36148' : logoColor)} />
             </button>
           ) : (
             <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-2">
@@ -161,7 +161,7 @@ export default function BurgerHeader({locale, navColor = ''}: {locale: string; n
               {pathname === '/burguer' ? (
                 <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c36148' : logoColor, ...TEXT_MASK}} />
               ) : labelEntry ? (
-                <span aria-hidden style={labelMask(labelEntry, 18, show ? '#c36148' : logoColor)} />
+                <span aria-hidden style={labelMask(labelEntry, 15, show ? '#c36148' : logoColor)} />
               ) : null}
             </Link>
           )}
