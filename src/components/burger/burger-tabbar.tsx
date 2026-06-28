@@ -49,10 +49,10 @@ export default function BurgerTabBar() {
   ];
   // Estos dos cambian según la página (con animación suave).
   const dyn1: Tab = landing
-    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer#ofertas', active: false, badge: 0, animated: true}
+    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: false, badge: 0, animated: true}
     : {key: 'fav', label: 'Favoritos', icon: Heart, href: '/burguer/fav', active: pathname === '/burguer/fav', badge: favCount, animated: true};
   const dyn2: Tab = landing
-    ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer#local', active: false, badge: 0, animated: true}
+    ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer/local', active: false, badge: 0, animated: true}
     : {key: 'list', label: 'Mi lista', icon: ListChecks, href: '/burguer/list', active: pathname === '/burguer/list', badge: listCount, pop, animated: true};
 
   return (

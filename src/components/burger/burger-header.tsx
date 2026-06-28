@@ -9,8 +9,8 @@ import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 const NAV = [
   {label: 'Carta', href: '/burguer/carta'},
-  {label: 'Ofertas', href: '/burguer#ofertas'},
-  {label: 'Local', href: '/burguer#local'},
+  {label: 'Ofertas', href: '/burguer/ofertas'},
+  {label: 'Local', href: '/burguer/local'},
   {label: 'Restaurante', href: '/carta/restaurante'},
   {label: 'Desayunos', href: '/carta/desayunos'},
   {label: 'Eventos', href: '/eventos'}

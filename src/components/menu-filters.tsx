@@ -3,10 +3,26 @@
 import {useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {useLocale} from 'next-intl';
+import type {LucideIcon} from 'lucide-react';
+import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed} from 'lucide-react';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
+
+// Las categorías no tienen icono en BD: lo inferimos por el nombre.
+function catIcon(name: string): LucideIcon {
+  const s = name.toLowerCase();
+  if (/hamburg|burger|smash/.test(s)) return Sandwich;
+  if (/postre|dulce|helado|tarta|dessert/.test(s)) return IceCreamCone;
+  if (/bebida|refresco|drink|batido|zumo/.test(s)) return CupSoda;
+  if (/caf|desayuno|coffee|merienda|t[ée]\b/.test(s)) return Coffee;
+  if (/pizza/.test(s)) return Pizza;
+  if (/ensalada|salad|veggie|verdura/.test(s)) return Salad;
+  if (/carne|parrilla|grill|meat/.test(s)) return Beef;
+  if (/entrante|aperitivo|starter|tapa|snack|patata|frit/.test(s)) return Utensils;
+  return UtensilsCrossed;
+}
 
 export default function MenuFilters({menu}: {menu: Menu}) {
   const locale = useLocale();
@@ -21,12 +37,12 @@ export default function MenuFilters({menu}: {menu: Menu}) {
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
       <div className={`sticky top-[58px] z-30 border-b border-line bg-bg/95 backdrop-blur transition-transform duration-300 ease-out ${hidden ? '-translate-y-[9rem]' : ''}`}>
-        <div className="mx-auto flex max-w-5xl gap-2 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <Chip active={active === 'all'} onClick={() => setActive('all')}>
-            Todo
+        <div className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
+            Todos
           </Chip>
           {cats.map((c) => (
-            <Chip key={c.id} active={active === c.id} onClick={() => setActive(c.id)}>
+            <Chip key={c.id} active={active === c.id} onClick={() => setActive(c.id)} icon={catIcon(tx(c.name, locale))}>
               {tx(c.name, locale)}
             </Chip>
           ))}
@@ -49,14 +65,15 @@ export default function MenuFilters({menu}: {menu: Menu}) {
   );
 }
 
-function Chip({active, onClick, children}: {active: boolean; onClick: () => void; children: React.ReactNode}) {
+function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick: () => void; icon: LucideIcon; children: React.ReactNode}) {
   return (
     <button
       onClick={onClick}
-      className={`whitespace-nowrap rounded-full border px-4 py-1.5 font-adam text-[0.8125rem] uppercase tracking-[0.08em] transition ${
-        active ? 'border-transparent bg-brand text-on-primary shadow-sm' : 'border-line-strong bg-surface text-ink-2 hover:border-brand'
+      className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 font-adam text-[0.8125rem] uppercase tracking-[0.06em] transition ${
+        active ? 'border-brand bg-brand text-on-primary shadow-sm' : 'border-brand/35 bg-transparent text-brand hover:border-brand hover:bg-brand/5'
       }`}
     >
+      <Icon className="size-[18px] shrink-0" strokeWidth={2} />
       {children}
     </button>
   );
