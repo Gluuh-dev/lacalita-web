@@ -5,6 +5,7 @@ import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
+import BurgerOfferCarousel from './burger-offer-carousel';
 import BurgerData from './burger-data';
 import type {MenuItem} from '@/components/menu/store';
 
@@ -38,11 +39,6 @@ function Chip({a, locale}: {a: Allergen; locale: string}) {
   );
 }
 
-const OFFER_STYLES: Record<string, {card: string; text: string; sub: string; btn: string; btnText: string; ribbon: string; ribbonText: string}> = {
-  orange: {card: 'linear-gradient(150deg,#f26b21,#c9531a)', text: '#fff', sub: 'rgba(255,255,255,.85)', btn: '#1a1209', btnText: '#fff', ribbon: '#f4d58c', ribbonText: '#7a3a10'},
-  dark: {card: 'linear-gradient(150deg,#2a1d11,#15100a)', text: '#f4ede2', sub: 'rgba(244,237,226,.7)', btn: '#e7b46a', btnText: '#1a1209', ribbon: '#e7b46a', ribbonText: '#1a1209'},
-  gold: {card: 'linear-gradient(150deg,#dcb069,#b98e44)', text: '#231708', sub: 'rgba(35,23,8,.75)', btn: '#1a1209', btnText: '#fff', ribbon: '#1a1209', ribbonText: '#e7b46a'}
-};
 
 export default function BurgerLanding({menu, allergens, slides, offers, locale}: {menu: Menu | null; allergens: Allergen[]; slides: BurgerSlide[]; offers: BurgerOffer[]; locale: string}) {
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
@@ -98,53 +94,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       />
 
       {/* ---- Ofertas ---- */}
-      <section id="ofertas" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-16">
-        <div className="mb-8 flex items-end justify-between">
-          <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">ofertas</h2>
-          <span className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>Solo en La Calita Burger</span>
-        </div>
-        {offers.length === 0 ? (
-          <p style={{color: C.muted}}>Aún no hay ofertas. Créalas en el admin → Hamburguesería.</p>
-        ) : (
-          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
-            {offers.map((o) => {
-              const st = OFFER_STYLES[o.color_style] ?? OFFER_STYLES.orange;
-              const oTitle = tx(o.title, locale);
-              const oEyebrow = tx(o.eyebrow, locale);
-              const oDesc = tx(o.description, locale);
-              return (
-                <article key={o.id} className="relative flex min-h-[340px] w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] p-6 md:w-auto md:shrink" style={{background: st.card, color: st.text}}>
-                  {o.discount_label && (
-                    <span className="absolute -right-9 top-5 z-10 rotate-45 px-10 py-1 text-center text-xs font-bold" style={{background: st.ribbon, color: st.ribbonText}}>{o.discount_label}</span>
-                  )}
-                  {o.image && (
-                    <div className="pointer-events-none absolute -bottom-2 -top-2 right-[-0.75rem] w-44 opacity-95">
-                      <Image src={o.image} alt={oTitle} fill sizes="180px" className="object-contain object-bottom drop-shadow-2xl" />
-                    </div>
-                  )}
-                  <div className="relative z-[1] flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em]" style={{color: st.sub}}>
-                    {oEyebrow || 'Oferta'}
-                    {o.rating != null && (
-                      <span className="inline-flex items-center gap-0.5" style={{color: st.text}}>
-                        <Star className="size-3 fill-current" /> {o.rating}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{oTitle}</h3>
-                  {oDesc && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{oDesc}</p>}
-                  <Link href={`/burguer/oferta/${o.id}`} className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
-                    Ver la oferta <ArrowRight className="size-4" />
-                  </Link>
-                  <div className="relative z-[1] mt-3 flex items-end gap-2 font-eight text-2xl">
-                    {o.price != null && <span>{euro(o.price, locale)}</span>}
-                    {o.old_price != null && <span className="text-base line-through opacity-60">{euro(o.old_price, locale)}</span>}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <BurgerOfferCarousel offers={offers} locale={locale} />
 
       {/* ---- Favoritas de la gente ---- */}
       <section className="mx-auto max-w-7xl px-5 py-10">

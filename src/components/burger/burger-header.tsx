@@ -49,9 +49,10 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   const pathname = usePathname();
   // Detalle de un producto de la carta → logo se convierte en "volver".
   const onDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
-  // La carta ahora tiene fondo claro → navbar en color de marca (oscuro), siempre visible.
-  const navStyle = {color: `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
-  const logoColor = `var(--lc-nav, ${navColor || '#c36148'})`;
+  // En el hero (sin scroll) usa el color del slide (--lc-nav). Al hacer scroll aparece el
+  // fondo claro del navbar → vuelve al color por defecto de marca para que se lea bien.
+  const navStyle = {color: scrolled ? 'rgba(42,23,19,.85)' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
+  const logoColor = scrolled ? '#c36148' : `var(--lc-nav, ${navColor || '#c36148'})`;
 
   useEffect(() => {
     document.body.style.overflow = show ? 'hidden' : '';
