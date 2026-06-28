@@ -5,6 +5,9 @@ import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
+import {Suspense} from 'react';
+import MenuTabBar from '@/components/menu/menu-tabbar';
+import type {MenuItem} from '@/components/menu/store';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
 const C = {
@@ -44,6 +47,23 @@ const OFFER_STYLES: Record<string, {card: string; text: string; sub: string; btn
 
 export default function BurgerLanding({menu, allergens, slides, offers, locale}: {menu: Menu | null; allergens: Allergen[]; slides: BurgerSlide[]; offers: BurgerOffer[]; locale: string}) {
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
+  const videos: MenuItem[] = products
+    .filter((p) => p.video)
+    .map((p) => ({
+      id: p.id,
+      name: tx(p.name, locale),
+      price: p.price != null ? Number(p.price) : null,
+      image: p.image ?? null,
+      slug: p.slug,
+      menuSlug: menu?.slug ?? 'hamburgueseria',
+      video: p.video,
+      desc: p.description ? tx(p.description, locale) : undefined,
+      ingredients: p.ingredients ?? [],
+      allergens: (p.product_allergens ?? [])
+        .map((pa) => pa.allergens)
+        .filter((a): a is NonNullable<typeof a> => !!a)
+        .map((a) => ({code: a.code, icon: a.icon, name: a.name}))
+    }));
   const favorites = [...products].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).filter((p) => p.featured || (p.votes ?? 0) > 0).slice(0, 3);
   // Hero: diapositivas configuradas en el admin; si no hay, derivar de productos nuevos/destacados.
   const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale), font: s.title_font, color: s.title_color, behind: s.title_behind, bgEffect: s.bg_effect, bgImage: s.bg_image, titleScale: s.title_scale, eyebrowScale: s.eyebrow_scale, priceScale: s.price_scale, showRings: s.show_rings, overlayFx: s.overlay_fx, gradient: s.title_gradient, fxSparks: s.fx_sparks, fxSmoke: s.fx_smoke, priceFont: s.price_font, priceColor: s.price_color, priceGradient: s.price_gradient, titleY: s.title_y, priceY: s.price_y, fxVideo: s.fx_video, fxVideoBehind: s.fx_video_behind, fxVideoX: s.fx_video_x, fxVideoY: s.fx_video_y, fxVideoScale: s.fx_video_scale, bgColor: s.bg_color, textShadow: s.text_shadow, titleOutline: s.title_outline, priceOutline: s.price_outline, hideTitle: s.hide_title, hidePrice: s.hide_price, accentColor: s.accent_color, buttonColor: s.button_color, textColor: s.text_color, navColor: s.nav_color, edgeColors: s.edge_colors, edgePoints: s.edge_points, mediaY: s.media_y}));
@@ -199,6 +219,9 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         </div>
       </section>
       <div className="h-16 md:hidden" />
+      <Suspense fallback={null}>
+        <MenuTabBar videos={videos} locale={locale} menuSlug={menu?.slug ?? 'hamburgueseria'} />
+      </Suspense>
     </main>
   );
 }

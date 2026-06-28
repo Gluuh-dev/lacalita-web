@@ -11,6 +11,7 @@ export default function BurgerTabBar() {
   const s = useMenuStore();
   const v = params.get('v');
   const onCarta = pathname.startsWith('/carta/hamburgueseria');
+  const base = onCarta ? '/carta/hamburgueseria' : '/hamburgueseria';
 
   const favCount = Object.values(s.favs).filter((i) => i.menuSlug === 'hamburgueseria').length;
   const listCount = Object.values(s.list).filter((x) => x.item.menuSlug === 'hamburgueseria').reduce((n, x) => n + x.qty, 0);
@@ -18,9 +19,9 @@ export default function BurgerTabBar() {
   const tabs = [
     {label: 'Inicio', href: '/hamburgueseria', icon: Home, active: pathname === '/hamburgueseria', badge: 0},
     {label: 'Carta', href: '/carta/hamburgueseria', icon: UtensilsCrossed, active: onCarta && !v, badge: 0},
-    {label: 'Vídeo', href: '/carta/hamburgueseria?v=video', icon: PlayCircle, active: v === 'video', badge: 0},
-    {label: 'Favoritos', href: '/carta/hamburgueseria?v=favs', icon: Heart, active: v === 'favs', badge: favCount},
-    {label: 'Mi lista', href: '/carta/hamburgueseria?v=list', icon: ListChecks, active: v === 'list', badge: listCount}
+    {label: 'Vídeo', href: `${base}?v=video`, icon: PlayCircle, active: v === 'video', badge: 0},
+    {label: 'Favoritos', href: `${base}?v=favs`, icon: Heart, active: v === 'favs', badge: favCount},
+    {label: 'Mi lista', href: `${base}?v=list`, icon: ListChecks, active: v === 'list', badge: listCount}
   ];
 
   return (
