@@ -51,10 +51,24 @@ export default async function MenuView({
   return (
     <div data-theme={menu.theme} className="min-h-screen bg-bg pb-24 text-ink md:pb-10">
       {menu.slug === 'hamburgueseria' ? (
-        <header className="px-5 pb-5 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
-          <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita Burger</div>
-          <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
-          {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
+        <header className="relative overflow-hidden px-5 pb-7 pt-24 text-center">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-0 h-[230%] w-[185%] -translate-x-1/2 rotate-[-7deg] opacity-[0.13]"
+            style={{
+              backgroundImage: 'url(/brand/motivo-carta.svg)',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center top',
+              WebkitMaskImage: 'linear-gradient(180deg,#000 38%,transparent 100%)',
+              maskImage: 'linear-gradient(180deg,#000 38%,transparent 100%)'
+            }}
+          />
+          <div className="relative z-10 duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
+            <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita Burger</div>
+            <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
+            {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
+          </div>
         </header>
       ) : (
         <header className="relative overflow-hidden px-6 pb-12 pt-24 text-center text-white">

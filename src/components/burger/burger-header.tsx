@@ -47,13 +47,11 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   const [show, setShow] = useState(false);
   const {scrolled} = useHideOnScroll();
   const pathname = usePathname();
-  // En la carta, en reposo (sin scroll) hay una banda roja detrás → navbar en claro para que se vea.
   // Detalle de un producto de la carta → logo se convierte en "volver".
   const onDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
-  // Solo la carta (lista) tiene banda roja detrás → navbar en claro. El detalle es claro.
-  const overDark = !scrolled && /\/burguer\/carta\/?$/.test(pathname) && !onDetail;
-  const navStyle = {color: overDark ? '#fdfbf7' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
-  const logoColor = overDark ? '#fdfbf7' : `var(--lc-nav, ${navColor || '#c94a3c'})`;
+  // La carta ahora tiene fondo claro → navbar en color de marca (oscuro), siempre visible.
+  const navStyle = {color: `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
+  const logoColor = `var(--lc-nav, ${navColor || '#c94a3c'})`;
 
   useEffect(() => {
     document.body.style.overflow = show ? 'hidden' : '';
