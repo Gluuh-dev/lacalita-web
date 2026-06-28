@@ -19,6 +19,7 @@ export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOff
   return (
     <section id="ofertas" className="scroll-mt-20 py-14">
       <div className="mx-auto mb-5 max-w-7xl px-5 text-center md:text-left">
+        <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em] text-[#c36148]">Solo en La Calita Burger</div>
         <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">ofertas</h2>
       </div>
 
