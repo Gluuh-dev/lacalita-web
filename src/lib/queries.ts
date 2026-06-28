@@ -31,6 +31,7 @@ export type Category = {
   menu_id: string;
   name: I18n;
   description: I18n | null;
+  image: string | null;
   position: number;
   visible: boolean;
   products: Product[];
@@ -96,7 +97,7 @@ export async function getMenu(slug: string): Promise<Menu | null> {
     .select(
       `id, slug, name, subtitle, theme, header_image, header_video, position,
        categories (
-         id, menu_id, name, description, position, visible,
+         id, menu_id, name, description, position, visible, image,
          products (
            id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
            product_variants ( id, name, price, position ),

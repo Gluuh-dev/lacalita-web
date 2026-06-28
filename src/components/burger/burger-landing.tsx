@@ -90,7 +90,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
 
       {/* ---- Carrusel de categorías ("Nuestra carta") ---- */}
       <BurgerCategoryCarousel
-        categories={(menu?.categories ?? []).filter((c) => c.visible !== false && (c.products?.length ?? 0) > 0)}
+        categories={(menu?.categories ?? []).filter((c) => c.visible !== false && ((c.products?.length ?? 0) > 0 || !!c.image))}
         locale={locale}
       />
 
