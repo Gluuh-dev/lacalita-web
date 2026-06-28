@@ -6,6 +6,7 @@ import MenuFilters from './menu-filters';
 import AllergenIcon from './allergen-icon';
 import {type MenuItem} from '@/components/menu/store';
 import MenuTabBar from '@/components/menu/menu-tabbar';
+import BurgerData from '@/components/burger/burger-data';
 
 export default async function MenuView({
   menu,
@@ -100,9 +101,13 @@ export default async function MenuView({
         </div>
       )}
 
-      <Suspense fallback={null}>
-        <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
-      </Suspense>
+      {menu.slug === 'hamburgueseria' ? (
+        <BurgerData videos={videos} />
+      ) : (
+        <Suspense fallback={null}>
+          <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
+        </Suspense>
+      )}
     </div>
   );
 }

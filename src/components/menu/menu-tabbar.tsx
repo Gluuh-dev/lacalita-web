@@ -131,7 +131,7 @@ function Thumb({item}: {item: MenuItem}) {
   );
 }
 
-function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
+export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
   const s = useMenuStore();
   if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Aún no tienes favoritos. Pulsa el ♥ en los platos.</p>;
   return (
@@ -153,7 +153,7 @@ function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
   );
 }
 
-function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
+export function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   const s = useMenuStore();
   if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Tu lista está vacía. Pulsa “Añadir” en los platos.</p>;
   const total = items.reduce((sum, x) => sum + (x.item.price ?? 0) * x.qty, 0);
@@ -184,7 +184,7 @@ function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   );
 }
 
-function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: string; onClose: () => void}) {
+export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: string; onClose: () => void}) {
   const s = useMenuStore();
   const favGate = useFavGate();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -296,7 +296,7 @@ function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: stri
   );
 }
 
-function ProductModal({locale}: {locale: string}) {
+export function ProductModal({locale}: {locale: string}) {
   const s = useMenuStore();
   const it = s.open;
   const n = it ? s.qty(it.id) : 0;

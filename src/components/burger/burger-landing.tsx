@@ -5,8 +5,7 @@ import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
-import {Suspense} from 'react';
-import MenuTabBar from '@/components/menu/menu-tabbar';
+import BurgerData from './burger-data';
 import type {MenuItem} from '@/components/menu/store';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
@@ -219,9 +218,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         </div>
       </section>
       <div className="h-16 md:hidden" />
-      <Suspense fallback={null}>
-        <MenuTabBar videos={videos} locale={locale} menuSlug={menu?.slug ?? 'hamburgueseria'} />
-      </Suspense>
+      <BurgerData videos={videos} />
     </main>
   );
 }

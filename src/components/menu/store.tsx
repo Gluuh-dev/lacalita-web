@@ -1,6 +1,16 @@
 'use client';
 
 import {createContext, useCallback, useContext, useEffect, useState} from 'react';
+import {createClient} from '@/lib/supabase/client';
+
+let _sb: ReturnType<typeof createClient> | null = null;
+function bumpLikes(id: string, delta: number) {
+  try {
+    (_sb ??= createClient()).rpc('bump_likes', {pid: id, delta}).then(() => {}, () => {});
+  } catch {
+    /* no-op */
+  }
+}
 
 export type MenuItem = {
   id: string;
@@ -31,6 +41,11 @@ type Store = {
   listCount: number;
   open: MenuItem | null;
   setOpen: (i: MenuItem | null) => void;
+  videos: MenuItem[];
+  setVideos: (v: MenuItem[]) => void;
+  videoOpen: boolean;
+  openVideo: () => void;
+  closeVideo: () => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -42,6 +57,8 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
   const [list, setList] = useState<Record<string, ListEntry>>({});
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState<MenuItem | null>(null);
+  const [videos, setVideos] = useState<MenuItem[]>([]);
+  const [videoOpen, setVideoOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -60,13 +77,15 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
   }, [list, ready]);
 
   const toggleFav = useCallback((i: MenuItem) => {
+    const adding = !favs[i.id];
     setFavs((f) => {
       const n = {...f};
-      if (n[i.id]) delete n[i.id];
-      else n[i.id] = i;
+      if (adding) n[i.id] = i;
+      else delete n[i.id];
       return n;
     });
-  }, []);
+    bumpLikes(i.id, adding ? 1 : -1);
+  }, [favs]);
   const add = useCallback((i: MenuItem) => {
     setList((l) => ({...l, [i.id]: {item: i, qty: (l[i.id]?.qty ?? 0) + 1, note: l[i.id]?.note}}));
   }, []);
@@ -107,7 +126,12 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     favCount: Object.keys(favs).length,
     listCount: Object.values(list).reduce((s, x) => s + x.qty, 0),
     open,
-    setOpen
+    setOpen,
+    videos,
+    setVideos,
+    videoOpen,
+    openVideo: () => setVideoOpen(true),
+    closeVideo: () => setVideoOpen(false)
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
