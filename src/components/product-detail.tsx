@@ -58,7 +58,7 @@ export default function ProductDetail({
       <div className="mx-auto max-w-3xl px-4 pb-32 pt-20">
         <div className="flex items-center justify-between gap-3">
           <Link
-            href={`/carta/${menuSlug}`}
+            href={menuSlug === 'hamburgueseria' ? '/burguer/carta' : `/carta/${menuSlug}`}
             className="inline-flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] text-ink-2 hover:text-ink"
           >
             ← {t('back')}

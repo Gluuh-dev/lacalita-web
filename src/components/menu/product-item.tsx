@@ -23,7 +23,7 @@ export default function ProductItem({
   // En la hamburguesería abrimos PÁGINA (no modal): más funcional para la compra futura.
   const usePage = menuSlug === 'hamburgueseria';
   const openIt = () => {
-    if (usePage) router.push(`/carta/${menuSlug}/${product.slug}`);
+    if (usePage) router.push(`/burguer/carta/${product.slug}`);
     else setOpen(item);
   };
   const item: MenuItem = {

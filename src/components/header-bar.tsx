@@ -32,7 +32,7 @@ export default function HeaderBar({
         {href: '/', label: 'Inicio', active: false},
         {href: '/carta/desayunos', label: 'Desayunos', active: currentCarta === 'desayunos'},
         {href: '/carta/restaurante', label: 'Restaurante', active: currentCarta === 'restaurante'},
-        {href: '/carta/hamburgueseria', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
+        {href: '/burguer/carta', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
       ]
     : [
         {href: '/carta', label: labels.menu, active: false},
@@ -46,7 +46,7 @@ export default function HeaderBar({
   ];
   const {hidden, scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
-  const backHref = currentCarta === 'hamburgueseria' ? '/hamburgueseria' : '/';
+  const backHref = currentCarta === 'hamburgueseria' ? '/burguer' : '/';
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';

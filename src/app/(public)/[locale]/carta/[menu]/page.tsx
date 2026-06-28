@@ -1,5 +1,5 @@
 import {setRequestLocale} from 'next-intl/server';
-import {notFound} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
 import {getMenu} from '@/lib/queries';
 import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
@@ -31,6 +31,7 @@ export default async function MenuPage({
   params: Promise<{locale: string; menu: string}>;
 }) {
   const {locale, menu} = await params;
+  if (menu === 'hamburgueseria') redirect(`/${locale}/burguer/carta`);
   setRequestLocale(locale);
   const data = await getMenu(menu);
   if (!data) notFound();

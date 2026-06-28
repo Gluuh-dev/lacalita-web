@@ -1,5 +1,5 @@
 import {setRequestLocale} from 'next-intl/server';
-import {notFound, redirect} from 'next/navigation';
+import {notFound} from 'next/navigation';
 import {getMenu} from '@/lib/queries';
 import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
@@ -8,10 +8,7 @@ import ProductDetail from '@/components/product-detail';
 
 export const revalidate = 300;
 
-function findProduct(
-  categories: {products: Product[]}[],
-  slug: string
-): Product | null {
+function findProduct(categories: {products: Product[]}[], slug: string): Product | null {
   for (const c of categories ?? []) {
     const found = (c.products ?? []).find((p) => p.slug === slug);
     if (found) return found;
@@ -19,36 +16,27 @@ function findProduct(
   return null;
 }
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{locale: string; menu: string; producto: string}>;
-}) {
-  const {locale, menu, producto} = await params;
-  const data = await getMenu(menu);
+export async function generateMetadata({params}: {params: Promise<{locale: string; producto: string}>}) {
+  const {locale, producto} = await params;
+  const data = await getMenu('hamburgueseria');
   const product = data ? findProduct(data.categories, producto) : null;
   if (!product) return {};
-  const title = `${tx(product.name, locale)} · La Calita`;
+  const title = `${tx(product.name, locale)} · La Calita Burger`;
   const description = product.description ? tx(product.description, locale) : undefined;
   return {
     title,
     description,
-    alternates: altLanguages(`/carta/${menu}/${producto}`),
+    alternates: altLanguages(`/burguer/carta/${producto}`),
     openGraph: {title, description, images: product.image ? [product.image] : undefined}
   };
 }
 
-export default async function ProductPage({
-  params
-}: {
-  params: Promise<{locale: string; menu: string; producto: string}>;
-}) {
-  const {locale, menu, producto} = await params;
-  if (menu === 'hamburgueseria') redirect(`/${locale}/burguer/carta/${producto}`);
+export default async function Page({params}: {params: Promise<{locale: string; producto: string}>}) {
+  const {locale, producto} = await params;
   setRequestLocale(locale);
-  const data = await getMenu(menu);
+  const data = await getMenu('hamburgueseria');
   if (!data) notFound();
   const product = findProduct(data.categories, producto);
   if (!product) notFound();
-  return <ProductDetail product={product} menuSlug={menu} theme={data.theme} />;
+  return <ProductDetail product={product} menuSlug="hamburgueseria" theme={data.theme} />;
 }

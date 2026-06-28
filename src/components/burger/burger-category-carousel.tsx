@@ -178,7 +178,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
             return (
               <div key={c.id} className="lc-cat-card w-[70vw] max-w-[300px] shrink-0 sm:w-[300px] lg:w-[330px]">
                 <Link
-                  href={`/carta/hamburgueseria?cat=${c.id}`}
+                  href={`/burguer/carta?cat=${c.id}`}
                   draggable={false}
                   className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] bg-[#ece0cd]"
                 >
@@ -212,7 +212,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
             <ChevronRight className="size-5" />
           </button>
         </div>
-        <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em] transition hover:brightness-105" style={{background: ORANGE, color: '#fdfbf7'}}>
+        <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-semibold uppercase tracking-[0.08em] transition hover:brightness-105" style={{background: ORANGE, color: '#fdfbf7'}}>
           Ver toda la carta <ArrowRight className="size-4" />
         </Link>
       </div>

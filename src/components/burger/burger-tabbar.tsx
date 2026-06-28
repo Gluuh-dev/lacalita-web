@@ -26,11 +26,11 @@ export default function BurgerTabBar() {
   }, [listCount]);
 
   const items = [
-    {label: 'Inicio', icon: Home, href: '/hamburgueseria', active: pathname === '/hamburgueseria', badge: 0},
-    {label: 'Carta', icon: UtensilsCrossed, href: '/carta/hamburgueseria', active: pathname.startsWith('/carta/hamburgueseria'), badge: 0},
+    {label: 'Inicio', icon: Home, href: '/burguer', active: pathname === '/burguer', badge: 0},
+    {label: 'Carta', icon: UtensilsCrossed, href: '/burguer/carta', active: pathname.startsWith('/burguer/carta'), badge: 0},
     {label: 'Vídeo', icon: PlayCircle, onClick: s.openVideo, active: s.videoOpen, badge: 0},
-    {label: 'Favoritos', icon: Heart, href: '/hamburgueseria/favoritos', active: pathname === '/hamburgueseria/favoritos', badge: favCount},
-    {label: 'Mi lista', icon: ListChecks, href: '/hamburgueseria/mi-lista', active: pathname === '/hamburgueseria/mi-lista', badge: listCount}
+    {label: 'Favoritos', icon: Heart, href: '/burguer/fav', active: pathname === '/burguer/fav', badge: favCount},
+    {label: 'Mi lista', icon: ListChecks, href: '/burguer/list', active: pathname === '/burguer/list', badge: listCount}
   ];
 
   return (

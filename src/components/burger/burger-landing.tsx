@@ -132,7 +132,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                   </div>
                   <h3 className="relative z-[1] mt-2 max-w-[6.5em] font-eight text-3xl leading-[0.95]">{oTitle}</h3>
                   {oDesc && <p className="relative z-[1] mt-2 line-clamp-3 max-w-[10em] text-sm" style={{color: st.sub}}>{oDesc}</p>}
-                  <Link href={`/hamburgueseria/oferta/${o.id}`} className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
+                  <Link href={`/burguer/oferta/${o.id}`} className="relative z-[1] mt-auto inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold" style={{background: st.btn, color: st.btnText}}>
                     Ver la oferta <ArrowRight className="size-4" />
                   </Link>
                   <div className="relative z-[1] mt-3 flex items-end gap-2 font-eight text-2xl">
@@ -154,7 +154,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">favoritas de la gente</h2>
-            <Link href="/carta/hamburgueseria" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
+            <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
               Ir a la carta <ArrowRight className="size-4" />
             </Link>
           </div>
@@ -164,7 +164,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         ) : (
           <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
             {favorites.map((p, i) => (
-              <Link key={p.id} href={`/carta/hamburgueseria/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
+              <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
