@@ -120,6 +120,24 @@ export async function getMenu(slug: string): Promise<Menu | null> {
   return menu;
 }
 
+// Un solo producto (para el detalle): mucho más ligero que cargar el menú entero.
+export async function getProduct(slug: string): Promise<{product: Product; theme: string} | null> {
+  const {data} = await supabasePublic
+    .from('products')
+    .select(
+      `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
+       product_variants ( id, name, price, position ),
+       product_allergens ( allergens ( id, code, name, icon ) ),
+       categories ( menus ( slug, theme ) )`
+    )
+    .eq('slug', slug)
+    .maybeSingle();
+  if (!data) return null;
+  const d = data as unknown as Product & {categories?: {menus?: {slug: string; theme: string}}};
+  d.product_variants?.sort((a, b) => a.position - b.position);
+  return {product: d as Product, theme: d.categories?.menus?.theme ?? 'default'};
+}
+
 export async function getSettings(): Promise<Settings | null> {
   const supabase = supabasePublic;
   const {data} = await supabase.from('settings').select('*').eq('id', 1).maybeSingle();
