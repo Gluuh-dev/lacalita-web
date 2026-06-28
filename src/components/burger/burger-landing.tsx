@@ -6,6 +6,7 @@ import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/quer
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
 import BurgerOfferCarousel from './burger-offer-carousel';
+import SnapCarousel from './snap-carousel';
 import BurgerData from './burger-data';
 import type {MenuItem} from '@/components/menu/store';
 
@@ -112,9 +113,9 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         {favorites.length === 0 ? (
           <p style={{color: C.muted}}>Marca productos como destacados (o con votos) para que salgan aquí.</p>
         ) : (
-          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+          <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdCols="md:grid-cols-3">
             {favorites.map((p, i) => (
-              <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm sm:w-auto sm:shrink" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
+              <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
@@ -144,7 +145,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                 </div>
               </Link>
             ))}
-          </div>
+          </SnapCarousel>
         )}
       </section>
 
