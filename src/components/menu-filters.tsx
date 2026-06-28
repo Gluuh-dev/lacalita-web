@@ -70,7 +70,7 @@ function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick
     <button
       onClick={onClick}
       className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 font-adam text-[0.8125rem] uppercase tracking-[0.06em] transition ${
-        active ? 'border-brand bg-brand text-on-primary shadow-sm' : 'border-black/5 bg-white text-brand shadow-sm hover:border-brand/40'
+        active ? 'border-brand bg-brand text-on-primary' : 'border-black/5 bg-white text-brand hover:border-brand/40'
       }`}
     >
       <Icon className="size-[18px] shrink-0" strokeWidth={2} />
