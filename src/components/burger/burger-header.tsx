@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
+import {usePathname} from 'next/navigation';
 import {Link} from '@/i18n/navigation';
 import {Settings} from 'lucide-react';
 import LangSwitcher from '@/components/lang-switcher';
@@ -45,8 +46,11 @@ const CLIP_CLOSED = `circle(0px at ${ORIGIN})`;
 export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: string; navColor?: string}) {
   const [show, setShow] = useState(false);
   const {hidden, scrolled} = useHideOnScroll();
-  const navStyle = {color: `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
-  const logoColor = `var(--lc-nav, ${navColor || '#c94a3c'})`;
+  const pathname = usePathname();
+  // En la carta, en reposo (sin scroll) hay una banda roja detrás → navbar en claro para que se vea.
+  const overDark = !scrolled && /\/carta\/hamburgueseria/.test(pathname);
+  const navStyle = {color: overDark ? '#fdfbf7' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
+  const logoColor = overDark ? '#fdfbf7' : `var(--lc-nav, ${navColor || '#c94a3c'})`;
 
   useEffect(() => {
     document.body.style.overflow = show ? 'hidden' : '';
