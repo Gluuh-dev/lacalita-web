@@ -1,8 +1,8 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {usePathname, useRouter} from 'next/navigation';
-import {Link} from '@/i18n/navigation';
+import {useRouter} from 'next/navigation';
+import {Link, usePathname} from '@/i18n/navigation';
 import {Settings, ChevronLeft} from 'lucide-react';
 import LangSwitcher from '@/components/lang-switcher';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
@@ -124,7 +124,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {showBack ? (
-            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5" style={navStyle}>
+            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5" style={{color: show ? '#c36148' : logoColor}}>
               <ChevronLeft strokeWidth={2.4} style={{width: 30, height: 30}} />
               <span className="font-eight text-2xl leading-none">Volver</span>
             </button>
