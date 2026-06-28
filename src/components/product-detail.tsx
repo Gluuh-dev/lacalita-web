@@ -60,7 +60,7 @@ export default function ProductDetail({
 
   return (
     <div data-theme={theme} className="min-h-screen bg-bg text-ink">
-      <div className="mx-auto max-w-3xl px-4 pb-32 pt-20">
+      <div className="mx-auto max-w-3xl px-4 pb-32 pt-16">
         <motion.div
           {...(reduce
             ? {}
@@ -70,7 +70,7 @@ export default function ProductDetail({
                 transition: {duration: 0.5}
               })}
           onClick={() => hasMedia && setZoom(true)}
-          className={`relative mt-4 aspect-video overflow-hidden rounded-3xl bg-brand/15 ${hasMedia ? 'cursor-zoom-in' : ''}`}
+          className={`relative aspect-[4/5] max-h-[68svh] overflow-hidden rounded-3xl bg-brand/15 ${hasMedia ? 'cursor-zoom-in' : ''}`}
         >
           {hasMedia && (
             <span className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
