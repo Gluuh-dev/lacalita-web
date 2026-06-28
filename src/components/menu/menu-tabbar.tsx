@@ -192,7 +192,14 @@ export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; local
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [idx, setIdx] = useState(0);
   const [controls, setControls] = useState(false);
+  const router = useRouter();
   useBackClose(true, onClose);
+
+  const goDetail = (v: MenuItem) => {
+    onClose();
+    const href = v.menuSlug === 'hamburgueseria' ? `/burguer/carta/${v.slug}` : `/carta/${v.menuSlug}/${v.slug}`;
+    router.push(`/${locale}${href}`);
+  };
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -265,7 +272,7 @@ export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; local
                   <h3 className="font-serif text-2xl font-bold">{v.name}</h3>
                   {v.price != null && <p className="mt-0.5 font-bold text-brand">{euro(v.price, locale)}</p>}
                   {v.desc && <p className="mt-1 line-clamp-2 max-w-md text-sm text-white/85">{v.desc}</p>}
-                  <button onClick={() => s.setOpen(v)} className="mt-1 inline-block text-sm font-medium text-brand">Ver más</button>
+                  <button onClick={() => goDetail(v)} className="mt-1 inline-block text-sm font-medium text-brand">Ver más</button>
                   {v.allergens && v.allergens.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {v.allergens.map((a) => (

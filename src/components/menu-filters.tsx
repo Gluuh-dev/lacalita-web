@@ -20,7 +20,7 @@ export default function MenuFilters({menu}: {menu: Menu}) {
   return (
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
-      <div className={`sticky top-14 z-30 border-b border-line bg-bg/85 backdrop-blur transition-transform duration-300 ${hidden ? '-translate-y-[160%]' : ''}`}>
+      <div className={`sticky top-[58px] z-30 border-b border-line bg-bg/95 backdrop-blur transition-transform duration-300 ease-out ${hidden ? '-translate-y-[9rem]' : ''}`}>
         <div className="mx-auto flex max-w-5xl gap-2 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')}>
             Todo
