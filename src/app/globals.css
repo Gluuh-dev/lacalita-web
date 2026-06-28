@@ -369,6 +369,9 @@
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
 /* Relleno de progreso del punto activo del paginador (sincronizado con el autoplay) */
 @keyframes lc-prog { from { width: 0; } to { width: 100%; } }
+/* "Pop" del botón Mi lista al añadir un producto */
+@keyframes lc-pop { 0% { transform: scale(1); } 35% { transform: scale(1.38); } 70% { transform: scale(0.92); } 100% { transform: scale(1); } }
+.lc-pop { animation: lc-pop 0.5s cubic-bezier(.22,1,.36,1); }
 /* Aparición suave de la hamburguesa al cambiar de diapositiva */
 @keyframes lc-bsoft { from { opacity: 0; transform: scale(0.992); } to { opacity: 1; transform: none; } }
 .lc-bsoft { animation: lc-bsoft 1s cubic-bezier(0.22, 1, 0.36, 1) both; }

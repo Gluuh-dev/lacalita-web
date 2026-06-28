@@ -1,5 +1,6 @@
 'use client';
 
+import {useEffect, useRef, useState} from 'react';
 import {Home, UtensilsCrossed, PlayCircle, Heart, ListChecks} from 'lucide-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {useMenuStore} from '@/components/menu/store';
@@ -10,6 +11,19 @@ export default function BurgerTabBar() {
 
   const favCount = Object.values(s.favs).filter((i) => i.menuSlug === 'hamburgueseria').length;
   const listCount = Object.values(s.list).filter((x) => x.item.menuSlug === 'hamburgueseria').reduce((n, x) => n + x.qty, 0);
+
+  // "Pop" del botón Mi lista cuando se añade algo.
+  const [pop, setPop] = useState(false);
+  const prevList = useRef(listCount);
+  useEffect(() => {
+    if (listCount > prevList.current) {
+      setPop(true);
+      const t = setTimeout(() => setPop(false), 520);
+      prevList.current = listCount;
+      return () => clearTimeout(t);
+    }
+    prevList.current = listCount;
+  }, [listCount]);
 
   const items = [
     {label: 'Inicio', icon: Home, href: '/hamburgueseria', active: pathname === '/hamburgueseria', badge: 0},
@@ -26,7 +40,7 @@ export default function BurgerTabBar() {
         const cls = `relative flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${t.active ? 'text-[#c94a3c]' : 'text-[#2a1713]/55'}`;
         const inner = (
           <>
-            <Icon className="size-[21px]" strokeWidth={t.active ? 2.4 : 1.8} />
+            <Icon className={`size-[21px] ${t.label === 'Mi lista' && pop ? 'lc-pop' : ''}`} strokeWidth={t.active ? 2.4 : 1.8} />
             {t.label}
             {t.badge > 0 && (
               <span className="absolute right-[18%] top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c94a3c] px-1 text-[0.58rem] font-bold text-[#fdfbf7]">{t.badge}</span>
