@@ -1,5 +1,6 @@
 'use client';
 
+import {Suspense} from 'react';
 import {usePathname} from 'next/navigation';
 import BurgerHeader from './burger-header';
 import BurgerTabBar from './burger-tabbar';
@@ -14,7 +15,9 @@ export default function BurgerChrome({locale}: {locale: string}) {
   return (
     <>
       <BurgerHeader locale={locale} />
-      {onLanding && <BurgerTabBar />}
+      <Suspense fallback={null}>
+        <BurgerTabBar />
+      </Suspense>
     </>
   );
 }

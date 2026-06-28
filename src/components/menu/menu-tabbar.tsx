@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useRef, useState} from 'react';
+import {useSearchParams, useRouter, usePathname} from 'next/navigation';
 import Image from 'next/image';
 import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2, ChevronUp, ChevronDown} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
@@ -18,6 +19,21 @@ type ListEntry = {item: MenuItem; qty: number; note?: string};
 export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem[]; locale: string; menuSlug: string}) {
   const s = useMenuStore();
   const [view, setView] = useState<View>('none');
+  // En hamburguesería la barra visible es el BurgerTabBar (en el layout); aquí solo
+  // dejamos las vistas (vídeo/favoritos/lista), abiertas por el parámetro ?v=.
+  const isBurger = menuSlug === 'hamburgueseria';
+  const params = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (!isBurger) return;
+    const v = params.get('v');
+    setView(v === 'video' ? 'video' : v === 'favs' ? 'favs' : v === 'list' ? 'list' : 'none');
+  }, [params, isBurger]);
+  const closeView = () => {
+    setView('none');
+    if (isBurger && params.get('v')) router.replace(pathname, {scroll: false});
+  };
 
   useScrollLock(view !== 'none' || !!s.open);
 
@@ -37,6 +53,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
 
   return (
     <>
+      {!isBurger && (
       <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-line bg-surface/95 px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:inset-x-auto md:bottom-5 md:left-1/2 md:-translate-x-1/2 md:gap-1 md:rounded-full md:border md:px-3 md:pb-2 md:shadow-lg">
         {tabs.map((tb) => {
           const active = tb.key === activeKey;
@@ -55,13 +72,14 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
           );
         })}
       </nav>
+      )}
 
       {(view === 'favs' || view === 'list') && (
-        <Sheet title={view === 'favs' ? 'Favoritos' : 'Mi lista'} onClose={() => setView('none')}>
+        <Sheet title={view === 'favs' ? 'Favoritos' : 'Mi lista'} onClose={closeView}>
           {view === 'favs' ? <FavsView items={favs} locale={locale} /> : <ListView items={listItems} locale={locale} />}
         </Sheet>
       )}
-      {view === 'video' && <VideoReels videos={videos} locale={locale} onClose={() => setView('none')} />}
+      {view === 'video' && <VideoReels videos={videos} locale={locale} onClose={closeView} />}
 
       <ProductModal locale={locale} />
     </>

@@ -100,7 +100,9 @@ export default async function MenuView({
         </div>
       )}
 
-      <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
+      <Suspense fallback={null}>
+        <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
+      </Suspense>
     </div>
   );
 }
