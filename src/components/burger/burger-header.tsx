@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {usePathname} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import {Link} from '@/i18n/navigation';
 import {Settings, ChevronLeft} from 'lucide-react';
 import LangSwitcher from '@/components/lang-switcher';
@@ -47,8 +47,11 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   const [show, setShow] = useState(false);
   const {scrolled} = useHideOnScroll();
   const pathname = usePathname();
-  // Detalle de un producto de la carta → logo se convierte en "volver".
-  const onDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
+  const router = useRouter();
+  // En el detalle (carta u oferta) el logo se convierte en "volver".
+  const onCartaDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
+  const onOfferDetail = /\/burguer\/oferta\/[^/]+/.test(pathname);
+  const showBack = (onCartaDetail || onOfferDetail) && !show;
   // En el hero (sin scroll) usa el color del slide (--lc-nav). Al hacer scroll aparece el
   // fondo claro del navbar → vuelve al color por defecto de marca para que se lea bien.
   const navStyle = {color: scrolled ? 'rgba(42,23,19,.85)' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
@@ -108,10 +111,16 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
       <header className="fixed inset-x-0 top-0 z-50 animate-in fade-in slide-in-from-top">
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
-          {onDetail && !show ? (
-            <Link href="/burguer/carta" aria-label="Volver a la carta" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
-              <ChevronLeft className="size-6" /> Volver
-            </Link>
+          {showBack ? (
+            onOfferDetail ? (
+              <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
+                <ChevronLeft className="size-6" /> Volver
+              </button>
+            ) : (
+              <Link href="/burguer/carta" aria-label="Volver a la carta" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
+                <ChevronLeft className="size-6" /> Volver
+              </Link>
+            )
           ) : (
             <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1">
               <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />

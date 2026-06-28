@@ -24,8 +24,9 @@ export default function BurgerTabBar() {
   // En el detalle hay barra de acciones propia (favorito + añadir).
   const onDetail = pathname.startsWith('/burguer/carta/');
   const onCarta = pathname.startsWith('/burguer/carta');
-  // Inicio, Ofertas y Local comparten el mismo set de tabbar: al entrar no cambia.
-  const landingCtx = pathname === '/burguer' || pathname === '/burguer/ofertas' || pathname === '/burguer/local';
+  // Inicio, Ofertas (y su detalle) y Local comparten el mismo set de tabbar: al entrar no cambia.
+  const onOferta = pathname === '/burguer/ofertas' || pathname.startsWith('/burguer/oferta/');
+  const landingCtx = pathname === '/burguer' || pathname === '/burguer/local' || onOferta;
 
   const favCount = Object.values(s.favs).filter((i) => i.menuSlug === 'hamburgueseria').length;
   const listCount = Object.values(s.list).filter((x) => x.item.menuSlug === 'hamburgueseria').reduce((n, x) => n + x.qty, 0);
@@ -51,7 +52,7 @@ export default function BurgerTabBar() {
   ];
   // Estos dos cambian según el contexto (con animación suave).
   const dyn1: Tab = landingCtx
-    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: pathname === '/burguer/ofertas', badge: 0, animated: true}
+    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: onOferta, badge: 0, animated: true}
     : {key: 'fav', label: 'Favoritos', icon: Heart, href: '/burguer/fav', active: pathname === '/burguer/fav', badge: favCount, animated: true};
   const dyn2: Tab = landingCtx
     ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer/local', active: pathname === '/burguer/local', badge: 0, animated: true}

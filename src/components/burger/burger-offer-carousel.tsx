@@ -5,13 +5,8 @@ import {Link} from '@/i18n/navigation';
 import {ArrowRight, Star, UtensilsCrossed} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import type {BurgerOffer} from '@/lib/queries';
+import {offerPanel} from '@/lib/offer-panel';
 import SnapCarousel from './snap-carousel';
-
-const PANELS = [
-  'radial-gradient(120% 120% at 80% 0%, #d67a63, #c36148 52%, #a8503a 100%)',
-  'radial-gradient(120% 120% at 80% 0%, #e0a08a, #d67a63 50%, #c36148 100%)',
-  'linear-gradient(135deg, #2a1713 0%, #5a2b22 55%, #a8503a 100%)'
-];
 
 export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOffer[]; locale: string}) {
   if (!offers.length) return null;
@@ -25,7 +20,7 @@ export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOff
 
       <div className="mx-auto max-w-7xl md:px-5">
         <SnapCarousel itemClass="w-[85vw] max-w-[420px]" mdCols="md:grid-cols-2">
-          {offers.map((o, i) => {
+          {offers.map((o) => {
             const cents = o.price != null ? Math.round((o.price % 1) * 100) : null;
             const intPart = o.price != null ? Math.floor(o.price) : null;
             return (
@@ -33,7 +28,7 @@ export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOff
                 key={o.id}
                 href={`/burguer/oferta/${o.id}`}
                 draggable={false}
-                style={{background: PANELS[i % PANELS.length]}}
+                style={{background: offerPanel(o.color_style)}}
                 className="group relative flex h-full items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white"
               >
                 {o.discount_label && (

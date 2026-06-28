@@ -2,17 +2,12 @@ import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {ArrowLeft, MapPin, Star, UtensilsCrossed} from 'lucide-react';
+import {MapPin, Star, UtensilsCrossed} from 'lucide-react';
 import {getBurgerOffer} from '@/lib/queries';
 import {tx, euro} from '@/lib/localize';
+import {offerPanel} from '@/lib/offer-panel';
 
 export const revalidate = 300;
-
-const PANELS: Record<string, string> = {
-  orange: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #c36148 50%, #a8503a 100%)',
-  dark: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #a8503a 90%)',
-  gold: 'radial-gradient(120% 90% at 50% 20%, #e0a08a, #d67a63 55%, #c36148 100%)'
-};
 
 export async function generateMetadata({params}: {params: Promise<{locale: string; id: string}>}) {
   const {locale, id} = await params;
@@ -29,27 +24,13 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
   const title = tx(o.title, locale);
   const eyebrow = tx(o.eyebrow, locale);
   const desc = tx(o.description, locale);
-  const panel = PANELS[o.color_style] ?? PANELS.orange;
+  const panel = offerPanel(o.color_style);
   const cents = o.price != null ? Math.round((o.price % 1) * 100) : null;
   const intPart = o.price != null ? Math.floor(o.price) : null;
 
   return (
     <main className="min-h-screen" style={{background: '#fdfbf7', color: '#2a1713'}}>
-      <div className="relative z-10 overflow-hidden pt-24" style={{background: '#c36148', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
-        <div className="lc-mq py-2" style={{animationDuration: '16s'}}>
-          {[0, 1].map((k) => (
-            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.3rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
-              {'oferta · oferta · oferta · '.repeat(8)}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <section className="mx-auto max-w-2xl px-5 pb-24 pt-8">
-        <Link href="/burguer" className="mb-5 inline-flex items-center gap-2 text-sm text-[#2a1713]/70 transition hover:text-[#2a1713]">
-          <ArrowLeft className="size-4" /> Volver
-        </Link>
-
+      <section className="mx-auto max-w-2xl px-5 pb-24 pt-24">
         <div className="relative overflow-hidden rounded-[28px] p-7 text-center shadow-2xl" style={{background: panel}}>
           {o.discount_label && (
             <span className="absolute right-5 top-5 rounded-full bg-[#1a1209] px-3 py-1 text-xs font-bold text-[#e7b46a]">{o.discount_label}</span>

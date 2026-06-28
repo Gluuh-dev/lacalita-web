@@ -5,14 +5,9 @@ import {Tag, UtensilsCrossed, ArrowRight, Star} from 'lucide-react';
 import {getBurgerOffers} from '@/lib/queries';
 import {tx, euro} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
+import {offerPanel} from '@/lib/offer-panel';
 
 export const revalidate = 300;
-
-const PANELS = [
-  'radial-gradient(120% 120% at 80% 0%, #d67a63, #c36148 52%, #a8503a 100%)',
-  'radial-gradient(120% 120% at 80% 0%, #e0a08a, #d67a63 50%, #c36148 100%)',
-  'linear-gradient(135deg, #2a1713 0%, #5a2b22 55%, #a8503a 100%)'
-];
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
   await params;
@@ -47,7 +42,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
                 <Link
                   key={o.id}
                   href={`/burguer/oferta/${o.id}`}
-                  style={{background: PANELS[i % PANELS.length], animationDelay: `${i * 70}ms`}}
+                  style={{background: offerPanel(o.color_style), animationDelay: `${i * 70}ms`}}
                   className="group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white shadow-[0_18px_40px_-18px_rgba(168,80,58,.7)] duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both"
                 >
                   {o.discount_label && (
