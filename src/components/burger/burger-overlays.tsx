@@ -10,7 +10,7 @@ export default function BurgerOverlays({locale}: {locale: string}) {
   return (
     <>
       <ProductModal locale={locale} />
-      {s.videoOpen && s.videos.length > 0 && <VideoReels videos={s.videos} locale={locale} onClose={s.closeVideo} />}
+      {s.videoOpen && <VideoReels videos={s.videos} locale={locale} onClose={s.closeVideo} />}
     </>
   );
 }

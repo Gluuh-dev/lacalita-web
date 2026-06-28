@@ -247,6 +247,11 @@ export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; local
         </div>
       )}
 
+      {!videos.length && (
+        <div className="flex h-full items-center justify-center px-10 text-center text-white/80">
+          Aún no hay vídeos de platos. Sube un vídeo a las hamburguesas desde el admin.
+        </div>
+      )}
       <div ref={scrollRef} onClick={() => setControls((c) => !c)} className="h-full snap-y snap-mandatory overflow-y-auto overscroll-contain">
         {videos.map((v, i) => {
           const fav = s.isFav(v.id);
