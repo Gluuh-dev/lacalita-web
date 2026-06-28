@@ -23,7 +23,9 @@ export default function BurgerTabBar() {
   const s = useMenuStore();
   // En el detalle hay barra de acciones propia (favorito + añadir).
   const onDetail = pathname.startsWith('/burguer/carta/');
-  const landing = pathname === '/burguer';
+  const onCarta = pathname.startsWith('/burguer/carta');
+  // Inicio, Ofertas y Local comparten el mismo set de tabbar: al entrar no cambia.
+  const landingCtx = pathname === '/burguer' || pathname === '/burguer/ofertas' || pathname === '/burguer/local';
 
   const favCount = Object.values(s.favs).filter((i) => i.menuSlug === 'hamburgueseria').length;
   const listCount = Object.values(s.list).filter((x) => x.item.menuSlug === 'hamburgueseria').reduce((n, x) => n + x.qty, 0);
@@ -44,15 +46,15 @@ export default function BurgerTabBar() {
   if (onDetail) return null;
 
   const left: Tab[] = [
-    {key: 'inicio', label: 'Inicio', icon: Home, href: '/burguer', active: landing, badge: 0},
+    {key: 'inicio', label: 'Inicio', icon: Home, href: '/burguer', active: pathname === '/burguer', badge: 0},
     {key: 'video', label: 'Vídeo', icon: PlayCircle, onClick: s.openVideo, active: s.videoOpen, badge: 0}
   ];
-  // Estos dos cambian según la página (con animación suave).
-  const dyn1: Tab = landing
-    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: false, badge: 0, animated: true}
+  // Estos dos cambian según el contexto (con animación suave).
+  const dyn1: Tab = landingCtx
+    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: pathname === '/burguer/ofertas', badge: 0, animated: true}
     : {key: 'fav', label: 'Favoritos', icon: Heart, href: '/burguer/fav', active: pathname === '/burguer/fav', badge: favCount, animated: true};
-  const dyn2: Tab = landing
-    ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer/local', active: false, badge: 0, animated: true}
+  const dyn2: Tab = landingCtx
+    ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer/local', active: pathname === '/burguer/local', badge: 0, animated: true}
     : {key: 'list', label: 'Mi lista', icon: ListChecks, href: '/burguer/list', active: pathname === '/burguer/list', badge: listCount, pop, animated: true};
 
   return (
@@ -61,14 +63,14 @@ export default function BurgerTabBar() {
         <Item key={t.key} tab={t} />
       ))}
 
-      {/* Carta: botón central destacado */}
+      {/* Carta: botón central destacado (gris por defecto, rojo al entrar) */}
       <Link href="/burguer/carta" className="relative flex flex-1 flex-col items-center gap-1">
         <span
-          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-[#fdfbf7] shadow-[0_8px_24px_-6px_rgba(201,74,60,.7)] ring-4 ring-[#fdfbf7] transition active:scale-95 ${pathname.startsWith('/burguer/carta') ? 'bg-[#ad3d31]' : 'bg-[#c94a3c]'}`}
+          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-[#fdfbf7] ring-4 ring-[#fdfbf7] transition active:scale-95 ${onCarta ? 'bg-[#c94a3c] shadow-[0_8px_24px_-6px_rgba(201,74,60,.7)]' : 'bg-[#b3aaa0] shadow-[0_8px_20px_-8px_rgba(0,0,0,.35)]'}`}
         >
           <UtensilsCrossed className="size-6" strokeWidth={2.1} />
         </span>
-        <span className="text-[0.62rem] font-bold text-[#c94a3c]">Carta</span>
+        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-[#c94a3c]' : 'text-[#2a1713]/55'}`}>Carta</span>
       </Link>
 
       <Item key={dyn1.key} tab={dyn1} />
