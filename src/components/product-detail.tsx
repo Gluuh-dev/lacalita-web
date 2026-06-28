@@ -6,12 +6,12 @@ import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
 import {Heart, Plus, Minus, X, Maximize2} from 'lucide-react';
 import {toast} from 'sonner';
-import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import type {Product} from '@/lib/queries';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
 import {useFavGate} from '@/lib/use-fav-gate';
+import {useBackClose} from '@/lib/use-back-close';
 import {useMenuStore, type MenuItem} from '@/components/menu/store';
 
 export default function ProductDetail({
@@ -39,6 +39,8 @@ export default function ProductDetail({
     video: product.video ?? null
   };
   const [zoom, setZoom] = useState(false);
+  // Atrás (Android) cierra la imagen ampliada en vez de salir de la página.
+  useBackClose(zoom, () => setZoom(false));
   const n = qty(product.id);
   const fav = isFav(product.id);
   const hasMedia = !!(product.video || product.image);
@@ -59,23 +61,6 @@ export default function ProductDetail({
   return (
     <div data-theme={theme} className="min-h-screen bg-bg text-ink">
       <div className="mx-auto max-w-3xl px-4 pb-32 pt-20">
-        <div className="flex items-center justify-between gap-3">
-          <Link
-            href={menuSlug === 'hamburgueseria' ? '/burguer/carta' : `/carta/${menuSlug}`}
-            className="inline-flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] text-ink-2 hover:text-ink"
-          >
-            ← {t('back')}
-          </Link>
-          {isAdmin && (
-            <a
-              href={`/admin/productos/${menuSlug}`}
-              className="rounded-full bg-black/70 px-3 py-1 text-xs font-medium text-white hover:bg-black"
-            >
-              ✎ Editar producto
-            </a>
-          )}
-        </div>
-
         <motion.div
           {...(reduce
             ? {}
@@ -162,6 +147,15 @@ export default function ProductDetail({
               ))}
             </ul>
           </motion.div>
+        )}
+
+        {isAdmin && (
+          <a
+            href={`/admin/productos/${menuSlug}`}
+            className="mt-12 block text-center font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink-3 underline decoration-ink-3/40 underline-offset-4 hover:text-ink"
+          >
+            ✎ Editar producto
+          </a>
         )}
       </div>
 
