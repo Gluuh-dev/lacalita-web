@@ -50,37 +50,31 @@ export default async function MenuView({
 
   return (
     <div data-theme={menu.theme} className="min-h-screen bg-bg pb-24 text-ink md:pb-10">
-      <header className="relative overflow-hidden px-6 pb-12 pt-24 text-center text-white">
-        {!headerMedia && (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
-        )}
-        {menu.header_video ? (
-          <video
-            className="absolute inset-0 h-full w-full object-cover"
-            src={menu.header_video}
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : menu.header_image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            className="absolute inset-0 h-full w-full object-cover"
-            src={menu.header_image}
-            alt=""
-          />
-        ) : null}
-        {headerMedia && <div className="absolute inset-0 bg-black/40" />}
-
-        <div className="relative z-10">
-          <h1 className="font-serif text-4xl sm:text-5xl">{tx(menu.name, locale)}</h1>
-          {menu.subtitle && <p className="mt-2 text-white/90">{tx(menu.subtitle, locale)}</p>}
-        </div>
-      </header>
+      {menu.slug === 'hamburgueseria' ? (
+        <header className="px-5 pb-5 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
+          <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita Burger</div>
+          <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
+          {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
+        </header>
+      ) : (
+        <header className="relative overflow-hidden px-6 pb-12 pt-24 text-center text-white">
+          {!headerMedia && <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />}
+          {menu.header_video ? (
+            <video className="absolute inset-0 h-full w-full object-cover" src={menu.header_video} autoPlay muted loop playsInline />
+          ) : menu.header_image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="absolute inset-0 h-full w-full object-cover" src={menu.header_image} alt="" />
+          ) : null}
+          {headerMedia && <div className="absolute inset-0 bg-black/40" />}
+          <div className="relative z-10">
+            <h1 className="font-serif text-4xl sm:text-5xl">{tx(menu.name, locale)}</h1>
+            {menu.subtitle && <p className="mt-2 text-white/90">{tx(menu.subtitle, locale)}</p>}
+          </div>
+        </header>
+      )}
 
       <Suspense fallback={null}>
-        <MenuFilters menu={menu} />
+        <MenuFilters menu={menu} pinned={menu.slug === 'hamburgueseria'} />
       </Suspense>
 
       {used.size > 0 && (

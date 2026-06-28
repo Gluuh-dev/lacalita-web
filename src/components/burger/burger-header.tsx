@@ -45,7 +45,7 @@ const CLIP_CLOSED = `circle(0px at ${ORIGIN})`;
 
 export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: string; navColor?: string}) {
   const [show, setShow] = useState(false);
-  const {hidden, scrolled} = useHideOnScroll();
+  const {scrolled} = useHideOnScroll();
   const pathname = usePathname();
   // En la carta, en reposo (sin scroll) hay una banda roja detrás → navbar en claro para que se vea.
   // Detalle de un producto de la carta → logo se convierte en "volver".
@@ -106,7 +106,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         </nav>
       </div>
 
-      <header className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-out animate-in fade-in slide-in-from-top ${hidden && !show ? '-translate-y-[9rem]' : ''}`}>
+      <header className="fixed inset-x-0 top-0 z-50 animate-in fade-in slide-in-from-top">
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {onDetail && !show ? (

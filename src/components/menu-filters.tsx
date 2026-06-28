@@ -24,7 +24,7 @@ function catIcon(name: string): LucideIcon {
   return UtensilsCrossed;
 }
 
-export default function MenuFilters({menu}: {menu: Menu}) {
+export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?: boolean}) {
   const locale = useLocale();
   const {hidden} = useHideOnScroll();
   const params = useSearchParams();
@@ -36,7 +36,7 @@ export default function MenuFilters({menu}: {menu: Menu}) {
   return (
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
-      <div className={`sticky top-[58px] z-30 border-b border-line bg-bg/95 backdrop-blur transition-transform duration-300 ease-out ${hidden ? '-translate-y-[9rem]' : ''}`}>
+      <div className={`sticky z-30 border-b transition-transform duration-300 ease-out ${pinned ? 'top-[58px] border-black/5 bg-[#fdfbf7]/85 backdrop-blur-md' : `top-[3.5rem] border-line bg-bg/95 backdrop-blur ${hidden ? '-translate-y-[9rem]' : ''}`}`}>
         <div className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
             Todos
