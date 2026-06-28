@@ -133,7 +133,16 @@ function Thumb({item}: {item: MenuItem}) {
 
 export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
   const s = useMenuStore();
-  if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Aún no tienes favoritos. Pulsa el ♥ en los platos.</p>;
+  if (!items.length)
+    return (
+      <div className="flex flex-col items-center gap-3 py-16 text-center duration-500 animate-in fade-in zoom-in-95">
+        <span className="flex size-20 items-center justify-center rounded-full bg-brand/10 text-brand">
+          <Heart className="size-9" />
+        </span>
+        <p className="font-serif text-xl text-ink">Aún no tienes favoritos</p>
+        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa el ♥ en las hamburguesas que más te gusten y las verás aquí.</p>
+      </div>
+    );
   return (
     <div className="flex flex-col gap-2">
       {items.map((it) => (
@@ -155,7 +164,16 @@ export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
 
 export function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   const s = useMenuStore();
-  if (!items.length) return <p className="py-8 text-center text-sm text-ink-3">Tu lista está vacía. Pulsa “Añadir” en los platos.</p>;
+  if (!items.length)
+    return (
+      <div className="flex flex-col items-center gap-3 py-16 text-center duration-500 animate-in fade-in zoom-in-95">
+        <span className="flex size-20 items-center justify-center rounded-full bg-brand/10 text-brand">
+          <ListChecks className="size-9" />
+        </span>
+        <p className="font-serif text-xl text-ink">Tu lista está vacía</p>
+        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa “Añadir” en los platos para guardarlos y enseñárselos al camarero.</p>
+      </div>
+    );
   const total = items.reduce((sum, x) => sum + (x.item.price ?? 0) * x.qty, 0);
   return (
     <div className="flex flex-col gap-2">
