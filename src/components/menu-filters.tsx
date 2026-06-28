@@ -6,9 +6,11 @@ import {useLocale} from 'next-intl';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
+import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 export default function MenuFilters({menu}: {menu: Menu}) {
   const locale = useLocale();
+  const {hidden} = useHideOnScroll();
   const params = useSearchParams();
   const cats = (menu.categories ?? []).filter((c) => c.products?.length);
   const catParam = params.get('cat');
@@ -18,7 +20,7 @@ export default function MenuFilters({menu}: {menu: Menu}) {
   return (
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
-      <div className="sticky top-14 z-30 border-b border-line bg-bg/85 backdrop-blur">
+      <div className={`sticky top-14 z-30 border-b border-line bg-bg/85 backdrop-blur transition-transform duration-300 ${hidden ? '-translate-y-[160%]' : ''}`}>
         <div className="mx-auto flex max-w-5xl gap-2 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')}>
             Todo
