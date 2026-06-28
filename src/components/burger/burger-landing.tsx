@@ -7,6 +7,8 @@ import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
 import BurgerOfferCarousel from './burger-offer-carousel';
 import SnapCarousel from './snap-carousel';
+import VoteButton from './vote-button';
+import AllergenIcon from '@/components/allergen-icon';
 import BurgerData from './burger-data';
 import type {MenuItem} from '@/components/menu/store';
 
@@ -115,31 +117,38 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         ) : (
           <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdCols="md:grid-cols-3">
             {favorites.map((p, i) => (
-              <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[20px] border border-black/5 shadow-sm" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
+              <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-black/15"><UtensilsCrossed className="size-10" /></div>
+                    <div className="flex h-full items-center justify-center bg-[#f3e7da] text-black/15"><UtensilsCrossed className="size-10" /></div>
                   )}
                   {i === 0 && p.featured && (
-                    <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.62rem] font-bold uppercase" style={{background: C.gold, color: '#1a1209'}}>
+                    <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.62rem] font-bold uppercase shadow-sm" style={{background: C.gold, color: '#1a1209'}}>
                       <Star className="size-3 fill-current" /> Favorita
                     </span>
                   )}
-                  <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
-                    <Heart className="size-3.5 fill-current" style={{color: C.orange}} /> {p.votes ?? 0}
-                  </span>
+                  <div className="absolute right-3 top-3">
+                    <VoteButton id={p.id} votes={p.votes ?? 0} />
+                  </div>
                 </div>
                 <div className="flex flex-1 flex-col p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-serif text-lg font-bold text-[#2a1713]">{tx(p.name, locale)}</h3>
-                    {p.price != null && <span className="shrink-0 font-bold" style={{color: C.orange}}>{euro(p.price, locale)}</span>}
+                    <h3 className="font-eight text-xl leading-tight text-[#2a1713]">{tx(p.name, locale)}</h3>
+                    {p.price != null && <span className="shrink-0 font-eight text-lg" style={{color: C.orange}}>{euro(p.price, locale)}</span>}
                   </div>
                   {p.description && <p className="mt-1 line-clamp-2 text-sm" style={{color: C.muted}}>{tx(p.description, locale)}</p>}
                   {p.product_allergens?.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-1">
-                      {p.product_allergens.map((pa) => pa.allergens && <Chip key={pa.allergens.code} a={pa.allergens} locale={locale} />)}
+                    <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
+                      {p.product_allergens.map(
+                        (pa) =>
+                          pa.allergens && (
+                            <span key={pa.allergens.code} className="flex size-7 items-center justify-center rounded-full bg-[#f3e7da]" title={tx(pa.allergens.name, locale)}>
+                              <AllergenIcon src={pa.allergens.icon} label={tx(pa.allergens.name, locale)} size={18} />
+                            </span>
+                          )
+                      )}
                     </div>
                   )}
                 </div>

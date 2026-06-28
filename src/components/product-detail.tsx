@@ -12,6 +12,7 @@ import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
 import {useFavGate} from '@/lib/use-fav-gate';
 import {useBackClose} from '@/lib/use-back-close';
+import VoteButton from '@/components/burger/vote-button';
 import {useMenuStore, type MenuItem} from '@/components/menu/store';
 
 export default function ProductDetail({
@@ -120,6 +121,13 @@ export default function ProductDetail({
           >
             {euro(Number(product.price), locale)}
           </motion.p>
+        )}
+
+        {menuSlug === 'hamburgueseria' && (
+          <div className="mt-4 flex items-center gap-2">
+            <VoteButton id={product.id} votes={product.votes ?? 0} />
+            <span className="text-sm text-ink-3">¿Te gusta? Vótala</span>
+          </div>
         )}
 
         {variants.length > 0 && (
