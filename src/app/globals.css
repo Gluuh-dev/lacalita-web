@@ -372,6 +372,12 @@
 /* "Pop" del botón Mi lista al añadir un producto */
 @keyframes lc-pop { 0% { transform: scale(1); } 35% { transform: scale(1.38); } 70% { transform: scale(0.92); } 100% { transform: scale(1); } }
 .lc-pop { animation: lc-pop 0.5s cubic-bezier(.22,1,.36,1); }
+/* Gota que cae sobre el icono de Mi lista al añadir */
+@keyframes lc-drop { 0% { transform: translate(-50%, -16px) scale(0.5); opacity: 0; } 30% { opacity: 1; } 65% { transform: translate(-50%, 1px) scale(1.15); opacity: 1; } 100% { transform: translate(-50%, 0) scale(0.6); opacity: 0; } }
+.lc-drop { animation: lc-drop 0.6s ease-out; }
+/* Parpadeo del número/badge */
+@keyframes lc-flash { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.5); filter: brightness(1.4); } }
+.lc-flash { animation: lc-flash 0.5s ease; }
 /* Aparición suave de la hamburguesa al cambiar de diapositiva */
 @keyframes lc-bsoft { from { opacity: 0; transform: scale(0.992); } to { opacity: 1; transform: none; } }
 .lc-bsoft { animation: lc-bsoft 1s cubic-bezier(0.22, 1, 0.36, 1) both; }

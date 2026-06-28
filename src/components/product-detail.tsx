@@ -1,9 +1,10 @@
 'use client';
 
+import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Heart, Plus, Minus} from 'lucide-react';
+import {Heart, Plus, Minus, X, Maximize2} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
@@ -37,8 +38,10 @@ export default function ProductDetail({
     menuSlug,
     video: product.video ?? null
   };
+  const [zoom, setZoom] = useState(false);
   const n = qty(product.id);
   const fav = isFav(product.id);
+  const hasMedia = !!(product.video || product.image);
   const variants = product.product_variants ?? [];
   const allergens = (product.product_allergens ?? [])
     .map((pa) => pa.allergens)
@@ -81,8 +84,14 @@ export default function ProductDetail({
                 animate: {opacity: 1, scale: 1},
                 transition: {duration: 0.5}
               })}
-          className="relative mt-4 aspect-video overflow-hidden rounded-3xl bg-brand/15"
+          onClick={() => hasMedia && setZoom(true)}
+          className={`relative mt-4 aspect-video overflow-hidden rounded-3xl bg-brand/15 ${hasMedia ? 'cursor-zoom-in' : ''}`}
         >
+          {hasMedia && (
+            <span className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
+              <Maximize2 className="size-4" />
+            </span>
+          )}
           {product.video ? (
             <video
               src={product.video}
@@ -185,6 +194,21 @@ export default function ProductDetail({
           )}
         </div>
       </div>
+
+      {/* Lightbox: imagen/vídeo a pantalla grande */}
+      {zoom && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 duration-200 animate-in fade-in" onClick={() => setZoom(false)}>
+          <button aria-label="Cerrar" className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+            <X className="size-5" />
+          </button>
+          {product.video ? (
+            <video src={product.video} autoPlay muted loop playsInline controls onClick={(e) => e.stopPropagation()} className="max-h-[88vh] max-w-full rounded-2xl" />
+          ) : product.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={product.image} alt={tx(product.name, locale)} onClick={(e) => e.stopPropagation()} className="max-h-[88vh] max-w-full rounded-2xl object-contain" />
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }
