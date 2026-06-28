@@ -185,7 +185,7 @@ export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOff
                   href={`/burguer/oferta/${o.id}`}
                   draggable={false}
                   style={{background: PANELS[i % PANELS.length]}}
-                  className="group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white shadow-[0_18px_40px_-18px_rgba(168,80,58,.7)]"
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white"
                 >
                   {o.discount_label && (
                     <span className="absolute right-4 top-4 z-10 rounded-full bg-[#1a1209] px-3 py-1 text-xs font-bold text-[#e7b46a]">{o.discount_label}</span>
