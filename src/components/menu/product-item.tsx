@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import {Heart, Info, Plus, Minus, UtensilsCrossed} from 'lucide-react';
+import {Heart, Info, Plus, Minus} from 'lucide-react';
 import {useRouter} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import {useFavGate} from '@/lib/use-fav-gate';
@@ -58,9 +58,7 @@ export default function ProductItem({
           />
         ) : item.image ? (
           <Image src={item.image} alt={item.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
-        ) : (
-          <UtensilsCrossed className="size-7" strokeWidth={1.25} />
-        )}
+        ) : null}
         <span className="absolute left-1.5 top-1.5 flex flex-wrap gap-1">
           {product.tag && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[0.6rem] font-bold text-white shadow-sm">{product.tag}</span>}
           {product.is_new && <span className="rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-semibold text-white shadow-sm">Nuevo</span>}

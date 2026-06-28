@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useState, type CSSProperties} from 'react';
 import {useRouter} from 'next/navigation';
 import {Link, usePathname} from '@/i18n/navigation';
 import {Settings, ChevronLeft} from 'lucide-react';
@@ -43,27 +43,54 @@ const ORIGIN = 'calc(100% - 2.6rem) 2.4rem';
 const CLIP_OPEN = `circle(150% at ${ORIGIN})`;
 const CLIP_CLOSED = `circle(0px at ${ORIGIN})`;
 
-export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: string; navColor?: string}) {
+// Títulos del navbar como SVG (tipografía del logo). ar = ancho/alto del viewBox.
+type SvgEntry = {f: string; ar: number};
+const NAV_SVG: Record<string, Record<string, SvgEntry>> = {
+  carta: {es: {f: 'carta-es', ar: 4.54}, en: {f: 'carta-en', ar: 4.13}, fr: {f: 'carta-fr', ar: 4.11}},
+  ofertas: {es: {f: 'ofertas-es', ar: 6.22}, en: {f: 'ofertas-en', ar: 4.53}, fr: {f: 'ofertas-fr', ar: 9.38}},
+  favoritos: {es: {f: 'favoritos-es', ar: 7.71}, en: {f: 'favoritos-en', ar: 7.65}, fr: {f: 'favoritos-fr', ar: 5.77}},
+  'mi-lista': {es: {f: 'mi-lista-es', ar: 5.5}, en: {f: 'mi-lista-en', ar: 5.45}, fr: {f: 'mi-lista-fr', ar: 6.44}},
+  local: {es: {f: 'local-es', ar: 4.68}, en: {f: 'local-en', ar: 4.69}, fr: {f: 'local-fr', ar: 4.69}},
+  volver: {es: {f: 'volver-es', ar: 5.05}, en: {f: 'volver-en', ar: 3.54}, fr: {f: 'volver-fr', ar: 5.17}}
+};
+const labelMask = (e: SvgEntry, height: number, color: string): CSSProperties => ({
+  display: 'block',
+  height,
+  aspectRatio: String(e.ar),
+  backgroundColor: color,
+  WebkitMaskImage: `url(/brand/navbar/${e.f}.svg)`,
+  maskImage: `url(/brand/navbar/${e.f}.svg)`,
+  WebkitMaskSize: 'contain',
+  maskSize: 'contain',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskPosition: 'left center',
+  maskPosition: 'left center'
+});
+
+export default function BurgerHeader({locale, navColor = ''}: {locale: string; navColor?: string}) {
   const [show, setShow] = useState(false);
   const {scrolled} = useHideOnScroll();
   const pathname = usePathname();
   const router = useRouter();
+  const lang = locale === 'en' || locale === 'fr' ? locale : 'es';
   // En el detalle (carta u oferta) el logo se convierte en "volver".
   const onCartaDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
   const onOfferDetail = /\/burguer\/oferta\/[^/]+/.test(pathname);
   const showBack = (onCartaDetail || onOfferDetail) && !show;
-  // En Inicio se ve "LA CALITA"; en el resto, el nombre de la sección junto al logo.
-  const pageLabel = pathname.startsWith('/burguer/carta')
-    ? 'Carta'
+  // En Inicio se ve "LA CALITA"; en el resto, el título de la sección (SVG con la tipo del logo).
+  const pageKey = pathname.startsWith('/burguer/carta')
+    ? 'carta'
     : pathname.startsWith('/burguer/ofertas')
-      ? 'Ofertas'
+      ? 'ofertas'
       : pathname === '/burguer/fav'
-        ? 'Favoritos'
+        ? 'favoritos'
         : pathname === '/burguer/list'
-          ? 'Mi lista'
+          ? 'mi-lista'
           : pathname === '/burguer/local'
-            ? 'Local'
+            ? 'local'
             : '';
+  const labelEntry = pageKey ? NAV_SVG[pageKey][lang] : null;
   // En el hero (sin scroll) usa el color del slide (--lc-nav). Al hacer scroll aparece el
   // fondo claro del navbar → vuelve al color por defecto de marca para que se lea bien.
   const navStyle = {color: scrolled ? 'rgba(42,23,19,.85)' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
@@ -124,18 +151,18 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {showBack ? (
-            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5" style={{color: show ? '#c36148' : logoColor}}>
+            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-2" style={{color: show ? '#c36148' : logoColor}}>
               <ChevronLeft strokeWidth={2.4} style={{width: 30, height: 30}} />
-              <span className="font-eight text-2xl leading-none">Volver</span>
+              <span aria-hidden style={labelMask(NAV_SVG.volver[lang], 17, show ? '#c36148' : logoColor)} />
             </button>
           ) : (
-            <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1.5">
+            <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-2">
               <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', transform: 'translateY(-1px)', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />
               {pathname === '/burguer' ? (
                 <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c36148' : logoColor, ...TEXT_MASK}} />
-              ) : (
-                <span className="font-eight text-2xl leading-none" style={{color: show ? '#c36148' : logoColor}}>{pageLabel}</span>
-              )}
+              ) : labelEntry ? (
+                <span aria-hidden style={labelMask(labelEntry, 18, show ? '#c36148' : logoColor)} />
+              ) : null}
             </Link>
           )}
 

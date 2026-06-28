@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {UtensilsCrossed, MapPin, Star, Heart, ArrowRight} from 'lucide-react';
+import {MapPin, Star, Heart, ArrowRight} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
@@ -119,10 +119,8 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
             {favorites.map((p, i) => (
               <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
                 <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">
-                  {p.image ? (
+                  {p.image && (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-[#f3e7da] text-black/15"><UtensilsCrossed className="size-10" /></div>
                   )}
                   {i === 0 && p.featured && (
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.62rem] font-bold uppercase shadow-sm" style={{background: C.gold, color: '#1a1209'}}>

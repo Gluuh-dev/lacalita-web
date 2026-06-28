@@ -103,11 +103,7 @@ export default function ProductDetail({
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-cover"
             />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center font-serif text-7xl text-brand-deep/30">
-              {tx(product.name, locale).charAt(0)}
-            </div>
-          )}
+          ) : null}
         </motion.div>
 
         <motion.h1 {...fade(0.1)} className="mt-6 font-serif text-4xl">

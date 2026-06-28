@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import {Link} from '@/i18n/navigation';
-import {UtensilsCrossed} from 'lucide-react';
 import {tx} from '@/lib/localize';
 import type {Category} from '@/lib/queries';
 import SnapCarousel from './snap-carousel';
@@ -35,9 +34,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
                     <Image src={img} alt={tx(c.name, locale)} fill sizes="(min-width:1024px) 22rem, 72vw" draggable={false} className="pointer-events-none object-cover transition duration-500 group-hover:scale-105" />
                     <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(0,0,0,.62), transparent 52%)'}} />
                   </>
-                ) : (
-                  <div className="flex h-full items-center justify-center text-[#2a1713]/15"><UtensilsCrossed className="size-14" /></div>
-                )}
+                ) : null}
                 <h3 className="absolute inset-x-5 bottom-5 font-eight text-3xl drop-shadow-lg" style={{color: img ? '#ffffff' : 'rgba(42,23,19,.65)'}}>{tx(c.name, locale)}</h3>
               </Link>
             );
