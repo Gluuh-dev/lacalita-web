@@ -111,6 +111,8 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     });
   }, []);
   const clear = useCallback(() => setList({}), []);
+  const openVideo = useCallback(() => setVideoOpen(true), []);
+  const closeVideo = useCallback(() => setVideoOpen(false), []);
 
   const value: Store = {
     favs,
@@ -130,8 +132,8 @@ export function MenuStoreProvider({children}: {children: React.ReactNode}) {
     videos,
     setVideos,
     videoOpen,
-    openVideo: () => setVideoOpen(true),
-    closeVideo: () => setVideoOpen(false)
+    openVideo,
+    closeVideo
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

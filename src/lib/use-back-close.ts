@@ -20,5 +20,7 @@ export function useBackClose(open: boolean, onClose: () => void) {
       // Cerrado sin "atrás": quita la entrada que empujamos.
       if (window.history.state?.modal) window.history.back();
     };
-  }, [open, onClose]);
+    // onClose se lee por ref (cb), NO va en deps: si fuera, cada render del store
+    // recrearía onClose, reiniciaría el efecto y el history.back() cerraría el modal.
+  }, [open]);
 }
