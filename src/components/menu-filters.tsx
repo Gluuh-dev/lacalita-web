@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {useLocale} from 'next-intl';
 import type {LucideIcon} from 'lucide-react';
@@ -32,12 +32,22 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   const catParam = params.get('cat');
   const [active, setActive] = useState<string>(catParam && cats.some((c) => c.id === catParam) ? catParam : 'all');
   const groups = active === 'all' ? cats : cats.filter((c) => c.id === active);
+  const rowRef = useRef<HTMLDivElement>(null);
+
+  // Al entrar desde Inicio con ?cat=, centra el chip activo en el slider de filtros.
+  useEffect(() => {
+    if (active === 'all') return;
+    const row = rowRef.current;
+    const chip = row?.querySelector('[data-active]') as HTMLElement | null;
+    if (row && chip) row.scrollTo({left: chip.offsetLeft - row.clientWidth / 2 + chip.clientWidth / 2, behavior: 'smooth'});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
       <div className={`sticky z-30 transition-[background-color,transform] duration-300 ease-out ${pinned ? `top-[58px] ${scrolled ? 'bg-[#fdfbf7]/85 backdrop-blur-md' : 'bg-transparent'}` : `top-[3.5rem] border-b border-line bg-bg/95 backdrop-blur ${hidden ? '-translate-y-[9rem]' : ''}`}`}>
-        <div className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
             Todos
           </Chip>
@@ -69,6 +79,7 @@ function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick
   return (
     <button
       onClick={onClick}
+      data-active={active || undefined}
       className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 font-adam text-[0.8125rem] uppercase tracking-[0.06em] transition ${
         active ? 'border-brand bg-brand text-on-primary' : 'border-black/5 bg-white text-brand hover:border-brand/40'
       }`}

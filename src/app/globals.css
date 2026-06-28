@@ -353,6 +353,8 @@
 .lc-cat-card.is-active { transform: scale(1); opacity: 1; }
 .lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(42,23,19,.22); transition: all .35s cubic-bezier(.22,.61,.36,1); }
 .lc-cat-dot.is-active { width: 26px; background: #c36148; }
+/* Placeholder con el logo de La Calita mientras carga la imagen (la foto lo tapa al cargar) */
+.lc-img-loading { background-color: #f3e7da; background-image: url('/brand/logo-solo.svg'); background-repeat: no-repeat; background-position: center; background-size: 30%; }
 @media (prefers-reduced-motion: reduce) { .lc-cat-card, .lc-cat-dot { transition: none; } }
 /* Efectos de fondo del hero hamburguesería */
 @keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }

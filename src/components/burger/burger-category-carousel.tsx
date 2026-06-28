@@ -28,7 +28,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
                 key={c.id}
                 href={`/burguer/carta?cat=${c.id}`}
                 draggable={false}
-                className="group relative block aspect-[5/6] overflow-hidden rounded-[26px] bg-[#ece0cd]"
+                className="lc-img-loading group relative block aspect-[5/6] overflow-hidden rounded-[26px]"
               >
                 {img ? (
                   <>

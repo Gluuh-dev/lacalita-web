@@ -52,6 +52,18 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   const onCartaDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
   const onOfferDetail = /\/burguer\/oferta\/[^/]+/.test(pathname);
   const showBack = (onCartaDetail || onOfferDetail) && !show;
+  // En Inicio se ve "LA CALITA"; en el resto, el nombre de la sección junto al logo.
+  const pageLabel = pathname.startsWith('/burguer/carta')
+    ? 'Carta'
+    : pathname.startsWith('/burguer/ofertas')
+      ? 'Ofertas'
+      : pathname === '/burguer/fav'
+        ? 'Favoritos'
+        : pathname === '/burguer/list'
+          ? 'Mi lista'
+          : pathname === '/burguer/local'
+            ? 'Local'
+            : '';
   // En el hero (sin scroll) usa el color del slide (--lc-nav). Al hacer scroll aparece el
   // fondo claro del navbar → vuelve al color por defecto de marca para que se lea bien.
   const navStyle = {color: scrolled ? 'rgba(42,23,19,.85)' : `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
@@ -112,13 +124,18 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {showBack ? (
-            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
-              <ChevronLeft className="size-6" /> Volver
+            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5" style={navStyle}>
+              <ChevronLeft strokeWidth={2.4} style={{width: 30, height: 30}} />
+              <span className="font-eight text-2xl leading-none">Volver</span>
             </button>
           ) : (
-            <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1">
-              <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />
-              <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c36148' : logoColor, ...TEXT_MASK}} />
+            <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1.5">
+              <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', transform: 'translateY(-1px)', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />
+              {pathname === '/burguer' ? (
+                <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c36148' : logoColor, ...TEXT_MASK}} />
+              ) : (
+                <span className="font-eight text-2xl leading-none" style={{color: show ? '#c36148' : logoColor}}>{pageLabel}</span>
+              )}
             </Link>
           )}
 

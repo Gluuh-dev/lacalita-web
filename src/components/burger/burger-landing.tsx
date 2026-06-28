@@ -118,7 +118,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdCols="md:grid-cols-3">
             {favorites.map((p, i) => (
               <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">
                   {p.image ? (
                     <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
                   ) : (

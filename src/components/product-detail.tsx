@@ -71,7 +71,7 @@ export default function ProductDetail({
                 transition: {duration: 0.5}
               })}
           onClick={() => product.image && !product.video && setZoom(true)}
-          className={`relative aspect-[4/5] max-h-[68svh] overflow-hidden rounded-3xl bg-brand/15 ${product.image && !product.video ? 'cursor-zoom-in' : ''}`}
+          className={`lc-img-loading relative aspect-[4/5] max-h-[68svh] overflow-hidden rounded-3xl ${product.image && !product.video ? 'cursor-zoom-in' : ''}`}
         >
           {hasMedia && (
             <button
@@ -147,6 +147,17 @@ export default function ProductDetail({
           <motion.p {...fade(0.2)} className="mt-4 text-lg leading-relaxed text-ink-2">
             {tx(product.description, locale)}
           </motion.p>
+        )}
+
+        {product.ingredients && product.ingredients.length > 0 && (
+          <motion.div {...fade(0.22)} className="mt-5">
+            <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">Lleva</div>
+            <div className="flex flex-wrap gap-1.5">
+              {product.ingredients.map((ing, i) => (
+                <span key={i} className="rounded-full bg-surface-2 px-3 py-1 text-sm text-ink-2">{ing}</span>
+              ))}
+            </div>
+          </motion.div>
         )}
 
         {allergens.length > 0 && (
