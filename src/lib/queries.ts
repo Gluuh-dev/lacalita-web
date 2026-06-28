@@ -1,3 +1,4 @@
+import {unstable_cache} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {supabasePublic} from '@/lib/supabase/public';
 
@@ -91,6 +92,14 @@ export async function getMenus() {
 }
 
 export async function getMenu(slug: string): Promise<Menu | null> {
+  return unstable_cache(
+    () => fetchMenu(slug),
+    ['menu', slug],
+    {revalidate: 300, tags: ['menu']}
+  )();
+}
+
+async function fetchMenu(slug: string): Promise<Menu | null> {
   const supabase = supabasePublic;
   const {data} = await supabase
     .from('menus')
