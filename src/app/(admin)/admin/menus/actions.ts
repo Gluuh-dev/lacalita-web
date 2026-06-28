@@ -31,7 +31,7 @@ export async function saveMenu(id: string | null, form: MenuInput) {
     : await supabase.from('menus').insert(row);
   if (res.error) return {ok: false, error: res.error.message};
   revalidatePath('/', 'layout');
-  revalidateTag('menu');
+  revalidateTag('menu', 'max');
   revalidatePath('/admin/menus');
   return {ok: true};
 }
@@ -41,7 +41,7 @@ export async function deleteMenu(id: string) {
   const {error} = await supabase.from('menus').delete().eq('id', id);
   if (error) return {ok: false, error: error.message};
   revalidatePath('/', 'layout');
-  revalidateTag('menu');
+  revalidateTag('menu', 'max');
   revalidatePath('/admin/menus');
   return {ok: true};
 }

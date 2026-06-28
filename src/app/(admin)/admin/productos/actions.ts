@@ -104,7 +104,7 @@ export async function saveProduct(id: string | null, form: ProductInput) {
   }
 
   revalidatePath('/', 'layout');
-  revalidateTag('menu');
+  revalidateTag('menu', 'max');
   revalidatePath('/admin/productos');
   return {ok: true};
 }
@@ -118,7 +118,7 @@ export async function toggleAvailable(id: string, available: boolean) {
   const {error} = await supabase.from('products').update({available, updated_at: new Date().toISOString()}).eq('id', id).select('id');
   if (error) return {ok: false, error: error.message};
   revalidatePath('/', 'layout');
-  revalidateTag('menu');
+  revalidateTag('menu', 'max');
   revalidatePath('/admin/productos');
   return {ok: true};
 }
@@ -130,7 +130,7 @@ export async function deleteProduct(id: string) {
   if (error) return {ok: false, error: error.message};
   if (row) await removeMediaServer(supabase, [row.image, row.video]);
   revalidatePath('/', 'layout');
-  revalidateTag('menu');
+  revalidateTag('menu', 'max');
   revalidatePath('/admin/productos');
   return {ok: true};
 }
