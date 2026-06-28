@@ -93,14 +93,14 @@ export default async function MenuView({
 
       {used.size > 0 && (
         <div className="mx-auto max-w-5xl px-4 pb-12">
-          <section className="border-t border-line pt-8">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">
+          <section className="border-t border-line pt-8 text-center">
+            <h2 className="mb-5 text-sm font-semibold uppercase tracking-[0.12em] text-ink-2">
               {t('allergens')}
             </h2>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-2">
+            <ul className="flex flex-wrap justify-center gap-2.5 text-sm text-ink-2">
               {[...used.values()].map((a) => (
-                <li key={a.code} className="flex items-center gap-1.5">
-                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={22} />
+                <li key={a.code} className="flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5">
+                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={20} />
                   {tx(a.name, locale)}
                 </li>
               ))}

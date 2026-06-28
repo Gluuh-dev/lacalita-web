@@ -12,7 +12,7 @@ export default function BurgerMiLista({locale}: {locale: string}) {
     <main className="min-h-screen bg-[#fdfbf7] px-4 pb-28 pt-20 text-[#2a1713]">
       <div className="mx-auto max-w-md duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both">
         <div className="mb-4 flex items-center gap-3">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-[#c94a3c]/12 text-[#c94a3c]">
+          <span className="flex size-12 items-center justify-center rounded-2xl bg-[#c36148]/12 text-[#c36148]">
             <ListChecks className="size-6" />
           </span>
           <div>
@@ -20,7 +20,7 @@ export default function BurgerMiLista({locale}: {locale: string}) {
             <p className="mt-1 text-sm text-[#2a1713]/55">{count} {count === 1 ? 'producto' : 'productos'}</p>
           </div>
         </div>
-        <p className="mb-5 rounded-2xl bg-[#c94a3c]/8 px-4 py-3 text-sm text-[#2a1713]/70">
+        <p className="mb-5 rounded-2xl bg-[#c36148]/8 px-4 py-3 text-sm text-[#2a1713]/70">
           Guarda lo que te apetece y enséñaselo al camarero. No es un pedido.
         </p>
         <ListView items={items} locale={locale} />

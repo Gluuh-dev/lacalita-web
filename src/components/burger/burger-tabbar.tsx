@@ -66,11 +66,11 @@ export default function BurgerTabBar() {
       {/* Carta: botón central destacado (gris por defecto, rojo al entrar) */}
       <Link href="/burguer/carta" className="relative flex flex-1 flex-col items-center gap-1">
         <span
-          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-[#fdfbf7] ring-4 ring-[#fdfbf7] transition active:scale-95 ${onCarta ? 'bg-[#c94a3c] shadow-[0_8px_24px_-6px_rgba(201,74,60,.7)]' : 'bg-[#b3aaa0] shadow-[0_8px_20px_-8px_rgba(0,0,0,.35)]'}`}
+          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-[#fdfbf7] ring-4 ring-[#fdfbf7] transition active:scale-95 ${onCarta ? 'bg-[#c36148] shadow-[0_8px_24px_-6px_rgba(195,97,72,.7)]' : 'bg-[#b3aaa0] shadow-[0_8px_20px_-8px_rgba(0,0,0,.35)]'}`}
         >
           <UtensilsCrossed className="size-6" strokeWidth={2.1} />
         </span>
-        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-[#c94a3c]' : 'text-[#2a1713]/55'}`}>Carta</span>
+        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-[#c36148]' : 'text-[#2a1713]/55'}`}>Carta</span>
       </Link>
 
       <Item key={dyn1.key} tab={dyn1} />
@@ -81,16 +81,16 @@ export default function BurgerTabBar() {
 
 function Item({tab}: {tab: Tab}) {
   const {label, icon: Icon, href, onClick, active, badge, pop, animated} = tab;
-  const cls = `relative flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${active || pop ? 'text-[#c94a3c]' : 'text-[#2a1713]/55'} ${animated ? 'duration-300 animate-in fade-in slide-in-from-bottom-1 fill-mode-both' : ''}`;
+  const cls = `relative flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${active || pop ? 'text-[#c36148]' : 'text-[#2a1713]/55'} ${animated ? 'duration-300 animate-in fade-in slide-in-from-bottom-1 fill-mode-both' : ''}`;
   const inner = (
     <>
       <span className="relative">
-        {pop && <span className="lc-drop absolute left-1/2 top-[-9px] size-2.5 rounded-full bg-[#c94a3c]" />}
+        {pop && <span className="lc-drop absolute left-1/2 top-[-9px] size-2.5 rounded-full bg-[#c36148]" />}
         <Icon className={`size-[21px] ${pop ? 'lc-pop' : ''}`} strokeWidth={active ? 2.4 : 1.8} />
       </span>
       {label}
       {badge > 0 && (
-        <span className={`absolute right-[18%] top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c94a3c] px-1 text-[0.58rem] font-bold text-[#fdfbf7] ${pop ? 'lc-flash' : ''}`}>{badge}</span>
+        <span className={`absolute right-[18%] top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c36148] px-1 text-[0.58rem] font-bold text-[#fdfbf7] ${pop ? 'lc-flash' : ''}`}>{badge}</span>
       )}
     </>
   );

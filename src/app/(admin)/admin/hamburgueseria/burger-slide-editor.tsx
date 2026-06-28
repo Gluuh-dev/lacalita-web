@@ -24,7 +24,7 @@ const FONTS: [string, string][] = [
   ['adam', 'Adam'],
   ['sans', 'Geist']
 ];
-const COLORS = ['#c94a3c', '#d67a63', '#9a2f24', '#f26b21', '#e9ae74', '#3a7d44', '#2e6e8e', '#2a1713', '#fdfbf7'];
+const COLORS = ['#c36148', '#d67a63', '#9a2f24', '#f26b21', '#e9ae74', '#3a7d44', '#2e6e8e', '#2a1713', '#fdfbf7'];
 const BG_PRESETS: [string, string][] = [
   ['/burger/bg/swirl-centro.webp', 'Remolino'],
   ['/burger/bg/swirl-esquinas.webp', 'Esquinas'],
@@ -229,7 +229,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
   const [mediaY] = useState(slide?.media_y ?? 0);
   const [active, setActive] = useState(slide?.active ?? true);
   const [titleFont, setTitleFont] = useState(slide?.title_font ?? 'eight');
-  const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#c94a3c');
+  const [titleColor, setTitleColor] = useState(slide?.title_color ?? '#c36148');
   const [titleBehind, setTitleBehind] = useState(slide?.title_behind ?? false);
   const [bgEffect, setBgEffect] = useState(slide?.bg_effect ?? 'none');
   const [bgImage, setBgImage] = useState<string | null>(slide?.bg_image ?? null);
@@ -611,7 +611,7 @@ export default function BurgerSlideEditor({slide}: {slide: BurgerSlide | null}) 
             <div className="mt-1 grid gap-2">
               {([
                 ['Logo y lema', accentColor, setAccentColor, '#d67a63'],
-                ['Botones', buttonColor, setButtonColor, '#c94a3c'],
+                ['Botones', buttonColor, setButtonColor, '#c36148'],
                 ['Texto', textColor, setTextColor, '#2a1713']
               ] as [string, string, (v: string) => void, string][]).map(([label, val, set, def]) => (
                 <div key={label} className="flex items-center gap-2 text-sm">

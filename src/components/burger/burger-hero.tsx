@@ -52,7 +52,7 @@ export type HeroSlide = {
 };
 
 const GOLD = '#d67a63'; // terracota (acento)
-const RED = '#c94a3c'; // rojo principal
+const RED = '#c36148'; // rojo principal
 
 const BURGER_FONT: Record<string, string> = {
   eight: "'Eight One', sans-serif",

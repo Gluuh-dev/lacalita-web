@@ -51,7 +51,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
   const onDetail = /\/burguer\/carta\/[^/]+/.test(pathname);
   // La carta ahora tiene fondo claro → navbar en color de marca (oscuro), siempre visible.
   const navStyle = {color: `var(--lc-nav, ${navColor || 'rgba(42,23,19,.8)'})`};
-  const logoColor = `var(--lc-nav, ${navColor || '#c94a3c'})`;
+  const logoColor = `var(--lc-nav, ${navColor || '#c36148'})`;
 
   useEffect(() => {
     document.body.style.overflow = show ? 'hidden' : '';
@@ -79,7 +79,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
               key={n.label}
               href={n.href}
               onClick={() => setShow(false)}
-              className="font-adam text-3xl uppercase tracking-[0.04em] text-[#2a1713] transition-colors hover:text-[#c94a3c] md:text-5xl"
+              className="font-adam text-3xl uppercase tracking-[0.04em] text-[#2a1713] transition-colors hover:text-[#c36148] md:text-5xl"
               style={{
                 opacity: show ? 1 : 0,
                 transform: show ? 'translateY(0)' : 'translateY(18px)',
@@ -93,7 +93,7 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
           <a
             href="/admin"
             onClick={() => setShow(false)}
-            className="mt-6 flex items-center gap-2 font-adam text-sm uppercase tracking-[0.16em] text-[#2a1713]/70 transition-colors hover:text-[#c94a3c]"
+            className="mt-6 flex items-center gap-2 font-adam text-sm uppercase tracking-[0.16em] text-[#2a1713]/70 transition-colors hover:text-[#c36148]"
             style={{opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(18px)', transition: 'opacity 400ms ease, transform 400ms ease', transitionDelay: show ? `${240 + NAV.length * 70}ms` : '0ms'}}
           >
             <Settings className="size-4" /> Admin
@@ -113,8 +113,8 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
             </Link>
           ) : (
             <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1">
-              <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c94a3c' : logoColor, ...LOGO_MASK}} />
-              <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c94a3c' : logoColor, ...TEXT_MASK}} />
+              <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />
+              <span aria-hidden className="block" style={{height: 15, aspectRatio: '7', backgroundColor: show ? '#c36148' : logoColor, ...TEXT_MASK}} />
             </Link>
           )}
 

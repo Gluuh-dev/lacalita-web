@@ -9,9 +9,9 @@ import {tx, euro} from '@/lib/localize';
 export const revalidate = 300;
 
 const PANELS: Record<string, string> = {
-  orange: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #c94a3c 50%, #ad3d31 100%)',
-  dark: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #ad3d31 90%)',
-  gold: 'radial-gradient(120% 90% at 50% 20%, #e0a08a, #d67a63 55%, #c94a3c 100%)'
+  orange: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #c36148 50%, #a8503a 100%)',
+  dark: 'radial-gradient(120% 90% at 50% 20%, #d67a63, #a8503a 90%)',
+  gold: 'radial-gradient(120% 90% at 50% 20%, #e0a08a, #d67a63 55%, #c36148 100%)'
 };
 
 export async function generateMetadata({params}: {params: Promise<{locale: string; id: string}>}) {
@@ -35,7 +35,7 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
 
   return (
     <main className="min-h-screen" style={{background: '#fdfbf7', color: '#2a1713'}}>
-      <div className="relative z-10 overflow-hidden pt-24" style={{background: '#c94a3c', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
+      <div className="relative z-10 overflow-hidden pt-24" style={{background: '#c36148', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
         <div className="lc-mq py-2" style={{animationDuration: '16s'}}>
           {[0, 1].map((k) => (
             <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.3rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
@@ -88,10 +88,10 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold" style={{background: '#c94a3c', color: '#fdfbf7'}}>
+          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold" style={{background: '#c36148', color: '#fdfbf7'}}>
             <MapPin className="size-4" /> Cómo llegar
           </a>
-          <Link href="/burguer/carta" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-[#c94a3c] px-6 py-3.5 font-semibold text-[#c94a3c] transition hover:bg-[#c94a3c]/10">
+          <Link href="/burguer/carta" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-[#c36148] px-6 py-3.5 font-semibold text-[#c36148] transition hover:bg-[#c36148]/10">
             Ver la carta
           </Link>
         </div>

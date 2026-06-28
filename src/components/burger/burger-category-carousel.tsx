@@ -7,7 +7,7 @@ import {ChevronLeft, ChevronRight, ArrowRight, UtensilsCrossed} from 'lucide-rea
 import {tx} from '@/lib/localize';
 import type {Category} from '@/lib/queries';
 
-const ORANGE = '#c94a3c';
+const ORANGE = '#c36148';
 
 export default function BurgerCategoryCarousel({categories, locale}: {categories: Category[]; locale: string}) {
   const viewportRef = useRef<HTMLDivElement>(null);

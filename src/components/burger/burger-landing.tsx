@@ -13,7 +13,7 @@ const C = {
   bg: '#fdfbf7',
   ink: '#2a1713',
   muted: 'rgba(42,23,19,.6)',
-  orange: '#c94a3c',
+  orange: '#c36148',
   orangeHi: '#d67a63',
   gold: '#d67a63'
 };
@@ -212,7 +212,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-sm" style={{color: C.muted}}>
           <span>La Calita Burger · Salobreña, Granada</span>
-          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#c94a3c] px-5 py-2.5 font-semibold text-[#c94a3c] transition hover:bg-[#c94a3c]/10">
+          <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#c36148] px-5 py-2.5 font-semibold text-[#c36148] transition hover:bg-[#c36148]/10">
             <MapPin className="size-4" /> Cómo llegar
           </a>
         </div>

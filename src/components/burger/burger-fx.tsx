@@ -1,7 +1,7 @@
 import type {CSSProperties} from 'react';
 
 export const TITLE_GRADIENTS: Record<string, string> = {
-  red: 'linear-gradient(180deg,#e0705f,#c94a3c 55%,#9a2f24)',
+  red: 'linear-gradient(180deg,#e0705f,#c36148 55%,#9a2f24)',
   terra: 'linear-gradient(180deg,#e9a591,#d67a63 55%,#b85a44)',
   gold: 'linear-gradient(180deg,#f7e6bd,#e9ae74 45%,#b9853f)',
   orange: 'linear-gradient(180deg,#ffb16b,#f26b21 60%,#c9531a)',
@@ -72,7 +72,7 @@ export function edgeBackgroundAt(ec: Record<string, string> | null | undefined, 
  *  color con 'auto'), o color plano. */
 export function titleColorStyle(color: string, gradient?: string | null, outline?: boolean): CSSProperties {
   if (outline) {
-    return {color: 'transparent', WebkitTextFillColor: 'transparent', WebkitTextStroke: `1.5px ${color || '#c94a3c'}`};
+    return {color: 'transparent', WebkitTextFillColor: 'transparent', WebkitTextStroke: `1.5px ${color || '#c36148'}`};
   }
   const grad = gradient === 'auto' && color
     ? `linear-gradient(180deg, color-mix(in srgb, ${color} 58%, white), ${color} 52%, color-mix(in srgb, ${color} 80%, black))`
@@ -98,14 +98,14 @@ export function BurgerAura() {
       {/* Resplandor */}
       <div
         className="absolute size-[80%] rounded-full"
-        style={{background: 'radial-gradient(circle, rgba(214,122,99,.38), rgba(201,74,60,.14) 45%, transparent 68%)', filter: 'blur(10px)'}}
+        style={{background: 'radial-gradient(circle, rgba(214,122,99,.38), rgba(195,97,72,.14) 45%, transparent 68%)', filter: 'blur(10px)'}}
       />
       {/* Anillos que laten */}
       {[0, 1, 2].map((k) => (
         <span
           key={k}
           className="lc-pulse absolute rounded-full"
-          style={{width: '44%', height: '44%', border: '1.5px solid rgba(201,74,60,.30)', animationDelay: `${k * 1.7}s`}}
+          style={{width: '44%', height: '44%', border: '1.5px solid rgba(195,97,72,.30)', animationDelay: `${k * 1.7}s`}}
         />
       ))}
     </div>
@@ -120,7 +120,7 @@ export function Sparks() {
         <span
           key={k}
           className="lc-ember-dot absolute bottom-[8%] rounded-full"
-          style={{left: `${(k * 53) % 96}%`, width: k % 4 ? 3 : 5, height: k % 4 ? 3 : 5, background: k % 3 ? '#d67a63' : '#c94a3c', boxShadow: '0 0 7px rgba(201,74,60,.55)', animation: `lc-ember ${4 + (k % 5)}s linear ${(k % 6) * 0.5}s infinite`}}
+          style={{left: `${(k * 53) % 96}%`, width: k % 4 ? 3 : 5, height: k % 4 ? 3 : 5, background: k % 3 ? '#d67a63' : '#c36148', boxShadow: '0 0 7px rgba(195,97,72,.55)', animation: `lc-ember ${4 + (k % 5)}s linear ${(k % 6) * 0.5}s infinite`}}
         />
       ))}
     </div>
@@ -161,7 +161,7 @@ export function Smoke() {
   return (
     <div
       className="lc-smoke pointer-events-none absolute inset-0 z-[5]"
-      style={{background: 'radial-gradient(38% 42% at 52% 42%, rgba(214,122,99,.18), transparent 70%), radial-gradient(30% 36% at 60% 60%, rgba(201,74,60,.12), transparent 72%)', filter: 'blur(8px)'}}
+      style={{background: 'radial-gradient(38% 42% at 52% 42%, rgba(214,122,99,.18), transparent 70%), radial-gradient(30% 36% at 60% 60%, rgba(195,97,72,.12), transparent 72%)', filter: 'blur(8px)'}}
     />
   );
 }

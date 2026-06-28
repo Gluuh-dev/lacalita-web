@@ -9,9 +9,9 @@ import {altLanguages} from '@/lib/site';
 export const revalidate = 300;
 
 const PANELS = [
-  'radial-gradient(120% 120% at 80% 0%, #d67a63, #c94a3c 52%, #ad3d31 100%)',
-  'radial-gradient(120% 120% at 80% 0%, #e0a08a, #d67a63 50%, #c94a3c 100%)',
-  'linear-gradient(135deg, #2a1713 0%, #5a2b22 55%, #ad3d31 100%)'
+  'radial-gradient(120% 120% at 80% 0%, #d67a63, #c36148 52%, #a8503a 100%)',
+  'radial-gradient(120% 120% at 80% 0%, #e0a08a, #d67a63 50%, #c36148 100%)',
+  'linear-gradient(135deg, #2a1713 0%, #5a2b22 55%, #a8503a 100%)'
 ];
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
@@ -31,7 +31,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   return (
     <main className="min-h-screen bg-[#fdfbf7] pb-28 pt-16 text-[#2a1713]">
       {/* Marquesina diagonal */}
-      <div className="relative z-10 overflow-hidden" style={{background: '#c94a3c', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
+      <div className="relative z-10 overflow-hidden" style={{background: '#c36148', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
         <div className="lc-mq py-2" style={{animationDuration: '18s'}}>
           {[0, 1].map((k) => (
             <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.25rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
@@ -43,7 +43,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
 
       <div className="mx-auto max-w-2xl px-4 pt-8">
         <div className="mb-6 flex items-center gap-3 duration-500 animate-in fade-in slide-in-from-bottom-2 fill-mode-both">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-[#c94a3c]/12 text-[#c94a3c]">
+          <span className="flex size-12 items-center justify-center rounded-2xl bg-[#c36148]/12 text-[#c36148]">
             <Tag className="size-6" />
           </span>
           <div>
@@ -54,7 +54,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
 
         {offers.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
-            <span className="flex size-20 items-center justify-center rounded-full bg-[#c94a3c]/10 text-[#c94a3c]"><Tag className="size-9" /></span>
+            <span className="flex size-20 items-center justify-center rounded-full bg-[#c36148]/10 text-[#c36148]"><Tag className="size-9" /></span>
             <p className="font-eight text-2xl">Aún no hay ofertas</p>
             <p className="max-w-[17rem] text-sm text-[#2a1713]/55">Vuelve pronto: preparamos combos a pie de playa.</p>
           </div>
@@ -68,7 +68,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
                   key={o.id}
                   href={`/burguer/oferta/${o.id}`}
                   style={{background: PANELS[i % PANELS.length], animationDelay: `${i * 70}ms`}}
-                  className="group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white shadow-[0_18px_40px_-18px_rgba(173,61,49,.7)] duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both"
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-[26px] p-5 text-white shadow-[0_18px_40px_-18px_rgba(168,80,58,.7)] duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both"
                 >
                   {o.discount_label && (
                     <span className="absolute right-4 top-4 z-10 rounded-full bg-[#1a1209] px-3 py-1 text-xs font-bold text-[#e7b46a]">{o.discount_label}</span>

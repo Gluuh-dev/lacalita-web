@@ -6,7 +6,7 @@ import {Sparks, Smoke, titleColorStyle, edgeBackgroundPts, autoPoints, type Edge
 import {isVideoUrl} from '@/lib/utils';
 
 const GOLD = '#d67a63'; // terracota (acento)
-const RED = '#c94a3c'; // rojo principal
+const RED = '#c36148'; // rojo principal
 const FONT_CSS: Record<string, string> = {
   eight: "'Eight One', sans-serif",
   display: 'var(--font-playfair), serif',
@@ -69,7 +69,7 @@ function Bg({c}: {c: PreviewCfg}) {
         </>
       )}
       {c.bgEffect === 'smoke' && <div className="lc-smoke pointer-events-none absolute inset-0" style={{background: 'radial-gradient(45% 55% at 62% 42%, rgba(214,122,99,.16), transparent 70%)', filter: 'blur(8px)'}} />}
-      {c.bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 62% 100%, rgba(201,74,60,.2), transparent 68%)'}} />}
+      {c.bgEffect === 'embers' && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{background: 'radial-gradient(60% 80% at 62% 100%, rgba(195,97,72,.2), transparent 68%)'}} />}
     </>
   );
 }
