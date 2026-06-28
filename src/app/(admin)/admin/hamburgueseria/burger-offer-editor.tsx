@@ -29,6 +29,7 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
     discount_label: offer?.discount_label ?? '',
     price: offer?.price != null ? String(offer.price) : '',
     old_price: offer?.old_price != null ? String(offer.old_price) : '',
+    code: offer?.code ?? '',
     position: String(offer?.position ?? 0)
   });
   const [title, setTitle] = useState<Record<string, string>>(offer?.title ?? {es: ''});
@@ -51,6 +52,7 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
         old_price: f.old_price === '' ? null : Number(f.old_price),
         color_style: colorStyle,
         image,
+        code: f.code.trim() || null,
         position: Number(f.position) || 0,
         active
       });
@@ -109,6 +111,10 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
                 </SelectGroup>
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <Label>Código</Label>
+            <Input value={f.code} onChange={(e) => setF({...f, code: e.target.value.toUpperCase()})} placeholder="H256" />
           </div>
           <div>
             <Label>Orden</Label>

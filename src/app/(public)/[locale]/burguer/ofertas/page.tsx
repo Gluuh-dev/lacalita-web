@@ -29,29 +29,9 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   const offers = await getBurgerOffers();
 
   return (
-    <main className="min-h-screen bg-[#fdfbf7] pb-28 pt-16 text-[#2a1713]">
-      {/* Marquesina diagonal */}
-      <div className="relative z-10 overflow-hidden" style={{background: '#c36148', transform: 'rotate(-2.2deg)', width: '112%', marginLeft: '-6%'}}>
-        <div className="lc-mq py-2" style={{animationDuration: '18s'}}>
-          {[0, 1].map((k) => (
-            <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.25rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
-              {'ofertas · combos · a pie de playa · '.repeat(6)}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-2xl px-4 pt-8">
-        <div className="mb-6 flex items-center gap-3 duration-500 animate-in fade-in slide-in-from-bottom-2 fill-mode-both">
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-[#c36148]/12 text-[#c36148]">
-            <Tag className="size-6" />
-          </span>
-          <div>
-            <h1 className="font-eight text-4xl leading-none">Ofertas</h1>
-            <p className="mt-1 text-sm text-[#2a1713]/55">{offers.length} {offers.length === 1 ? 'oferta activa' : 'ofertas activas'}</p>
-          </div>
-        </div>
-
+    <main className="min-h-screen bg-[#fdfbf7] px-4 pb-28 pt-20 text-[#2a1713]">
+      <h1 className="sr-only">Ofertas · La Calita Burger</h1>
+      <div className="mx-auto max-w-2xl">
         {offers.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <span className="flex size-20 items-center justify-center rounded-full bg-[#c36148]/10 text-[#c36148]"><Tag className="size-9" /></span>
@@ -74,13 +54,14 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
                     <span className="absolute right-4 top-4 z-10 rounded-full bg-[#1a1209] px-3 py-1 text-xs font-bold text-[#e7b46a]">{o.discount_label}</span>
                   )}
                   <div className="relative z-10 min-w-0 flex-1">
-                    <div className="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/80">
+                    <div className="flex flex-wrap items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/80">
+                      {o.code && <span className="rounded-md bg-black/25 px-2 py-0.5 font-mono tracking-[0.15em] text-white">{o.code}</span>}
                       {tx(o.eyebrow, locale) || 'Oferta'}
                       {o.rating != null && (
                         <span className="inline-flex items-center gap-0.5"><Star className="size-3 fill-current" /> {o.rating}</span>
                       )}
                     </div>
-                    <h2 className="mt-0.5 font-eight text-2xl leading-tight">{tx(o.title, locale)}</h2>
+                    <h2 className="mt-1 font-eight text-2xl leading-tight">{tx(o.title, locale)}</h2>
                     {o.price != null && (
                       <div className="mt-1 flex items-end gap-2">
                         <span className="font-eight text-4xl leading-none">{intPart}<span className="text-2xl">&apos;{String(cents).padStart(2, '0')}€</span></span>

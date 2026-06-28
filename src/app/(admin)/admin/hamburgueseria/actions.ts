@@ -61,6 +61,7 @@ export type OfferInput = {
   old_price: number | null;
   color_style: string;
   image: string | null;
+  code: string | null;
   position: number;
   active: boolean;
 };
