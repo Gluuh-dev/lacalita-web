@@ -30,7 +30,7 @@ export default async function OfertaPage({params}: {params: Promise<{locale: str
 
   return (
     <main className="min-h-screen" style={{background: '#fdfbf7', color: '#2a1713'}}>
-      <section className="mx-auto max-w-2xl px-5 pb-24 pt-16">
+      <section className="mx-auto max-w-2xl px-5 pb-24 pt-14">
         <div className="relative overflow-hidden rounded-[28px] p-7 text-center shadow-2xl" style={{background: panel}}>
           {o.discount_label && (
             <span className="absolute right-5 top-5 rounded-full bg-[#1a1209] px-3 py-1 text-xs font-bold text-[#e7b46a]">{o.discount_label}</span>

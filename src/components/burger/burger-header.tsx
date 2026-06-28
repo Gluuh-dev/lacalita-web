@@ -112,15 +112,9 @@ export default function BurgerHeader({locale: _locale, navColor = ''}: {locale: 
         <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {showBack ? (
-            onOfferDetail ? (
-              <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
-                <ChevronLeft className="size-6" /> Volver
-              </button>
-            ) : (
-              <Link href="/burguer/carta" aria-label="Volver a la carta" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
-                <ChevronLeft className="size-6" /> Volver
-              </Link>
-            )
+            <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]" style={navStyle}>
+              <ChevronLeft className="size-6" /> Volver
+            </button>
           ) : (
             <Link href="/burguer" aria-label="La Calita Burger" className="flex items-center gap-1">
               <span aria-hidden style={{display: 'block', height: 30, aspectRatio: '1.15', backgroundColor: show ? '#c36148' : logoColor, ...LOGO_MASK}} />
