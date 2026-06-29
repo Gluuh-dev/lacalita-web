@@ -63,7 +63,7 @@ export default async function SiteFooter() {
           )}
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-[#fbf7f0]/50">
+      <div className="border-t border-white/10 py-5 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)+3.75rem))] text-center text-xs text-[#fbf7f0]/50 md:pb-5">
         © {year} La Calita Beach Club · Salobreña
       </div>
     </footer>

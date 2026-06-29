@@ -225,7 +225,7 @@ export default async function Home({
       {/* Galería */}
       {gallery.length > 0 && (
         <Reveal>
-          <section className="mx-auto max-w-6xl px-4 py-16">
+          <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
             <div className="eyebrow mb-8 text-center">Galería</div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
