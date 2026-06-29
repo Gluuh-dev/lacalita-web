@@ -1,11 +1,12 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
-import {Calendar, Clock, Music, MapPin} from 'lucide-react';
+import {Calendar, Clock, Music, MapPin, Navigation} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getPublicEvent, getUpcomingEvents, getEventTickets} from '@/lib/queries';
 import {tx, euro} from '@/lib/localize';
-import {altLanguages} from '@/lib/site';
+import {altLanguages, SITE_URL} from '@/lib/site';
 import EventCard from '@/components/event-card';
+import EventActions from '@/components/event-actions';
 
 export const revalidate = 300;
 
@@ -44,9 +45,45 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   const images = event.images?.length ? event.images : event.image ? [event.image] : [];
   const others = upcoming.filter((e) => e.id !== event.id).slice(0, 3);
   const title = tx(event.title, locale);
+  const desc = event.description ? tx(event.description, locale) : undefined;
+
+  // Cuenta atrás (granularidad de días).
+  const now = new Date();
+  const startDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((startDay.getTime() - today.getTime()) / 86400000);
+  const countdown = days === 0 ? '¡Hoy!' : days === 1 ? 'Mañana' : days > 1 ? `Faltan ${days} días` : null;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: title,
+    startDate: event.starts_at,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    image: images.length ? images : undefined,
+    description: desc,
+    url: `${SITE_URL}/${locale}/eventos/${event.id}`,
+    location: {
+      '@type': 'Place',
+      name: 'La Calita Beach Club',
+      address: {'@type': 'PostalAddress', addressLocality: 'Salobreña', addressRegion: 'Granada', addressCountry: 'ES'}
+    },
+    performer: event.artist ? {'@type': 'PerformingGroup', name: event.artist} : undefined,
+    offers: tickets.length
+      ? tickets.map((tkt) => ({
+          '@type': 'Offer',
+          name: tx(tkt.name, locale),
+          price: Number(tkt.price),
+          priceCurrency: 'EUR',
+          availability: tkt.capacity != null && tkt.sold >= tkt.capacity ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock'
+        }))
+      : undefined
+  };
 
   return (
     <main className="flex-1">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
       {/* hero con media */}
       <section className="relative flex min-h-[56vh] items-end overflow-hidden">
         {event.video ? (
@@ -66,6 +103,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
           <div className="mb-3 flex flex-wrap gap-2">
             <span className="rounded-full bg-brand px-3 py-1 text-sm font-semibold text-on-primary">{tk(kind)}</span>
             <span className="rounded-full bg-accent px-3 py-1 text-sm font-semibold capitalize text-white">{fecha} · {time}</span>
+            {countdown && <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold text-white backdrop-blur">{countdown}</span>}
           </div>
           <h1 className="font-modern text-[clamp(2.4rem,6vw,4rem)] leading-none">{title}</h1>
           {event.artist && <p className="mt-2 font-eight text-xl tracking-wide text-brand">con {event.artist}</p>}
@@ -128,6 +166,16 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
                 <p className="mt-2 text-center text-xs text-ink-3">Pago online disponible próximamente.</p>
               </div>
             )}
+
+            <a
+              href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 flex items-center justify-center gap-2 rounded-full border border-line bg-bg py-2.5 text-sm font-medium text-ink transition hover:border-brand"
+            >
+              <Navigation className="size-4" /> Cómo llegar
+            </a>
+            <EventActions id={event.id} title={title} startsAt={event.starts_at} description={desc} />
           </aside>
         </div>
       </section>
