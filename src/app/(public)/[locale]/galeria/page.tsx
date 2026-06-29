@@ -1,7 +1,7 @@
 import {setRequestLocale} from 'next-intl/server';
-import Image from 'next/image';
 import {getSettings} from '@/lib/queries';
 import {altLanguages} from '@/lib/site';
+import GalleryGrid from '@/components/gallery-grid';
 
 export const revalidate = 300;
 
@@ -23,13 +23,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
         {gallery.length === 0 ? (
           <p className="py-16 text-center text-ink-3">Aún no hay fotos en la galería.</p>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {gallery.map((url, i) => (
-              <div key={i} className="ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
-                <Image src={url} alt="" fill sizes="(min-width:1024px) 18rem, (min-width:640px) 30vw, 45vw" className="object-cover" />
-              </div>
-            ))}
-          </div>
+          <GalleryGrid images={gallery} />
         )}
       </div>
     </main>
