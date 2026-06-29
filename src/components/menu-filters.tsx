@@ -4,10 +4,11 @@ import {useState, useEffect, useRef} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {useLocale} from 'next-intl';
 import type {LucideIcon} from 'lucide-react';
-import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed} from 'lucide-react';
+import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed, Search, X, SlidersHorizontal} from 'lucide-react';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
+import AllergenIcon from '@/components/allergen-icon';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 // Las categorías no tienen icono en BD: lo inferimos por el nombre.
@@ -34,6 +35,36 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   const groups = active === 'all' ? cats : cats.filter((c) => c.id === active);
   const rowRef = useRef<HTMLDivElement>(null);
 
+  const [query, setQuery] = useState('');
+  const [excluded, setExcluded] = useState<Set<string>>(new Set());
+  const [showAllergens, setShowAllergens] = useState(false);
+
+  // Alérgenos presentes en esta carta (para el filtro).
+  const allergenMap = new Map<string, {code: string; name: Record<string, string>; icon: string}>();
+  for (const c of cats) for (const p of c.products) for (const pa of p.product_allergens ?? []) if (pa.allergens) allergenMap.set(pa.allergens.code, pa.allergens);
+  const allergens = [...allergenMap.values()];
+
+  const q = query.trim().toLowerCase();
+  const filtering = q.length > 0 || excluded.size > 0;
+  const results = filtering
+    ? cats.flatMap((c) => c.products).filter((p) => {
+        if (excluded.size && (p.product_allergens ?? []).some((pa) => pa.allergens && excluded.has(pa.allergens.code))) return false;
+        if (q) {
+          const n = tx(p.name, locale).toLowerCase();
+          const d = p.description ? tx(p.description, locale).toLowerCase() : '';
+          if (!n.includes(q) && !d.includes(q)) return false;
+        }
+        return true;
+      })
+    : [];
+  const toggleEx = (code: string) =>
+    setExcluded((prev) => {
+      const next = new Set(prev);
+      if (next.has(code)) next.delete(code);
+      else next.add(code);
+      return next;
+    });
+
   // Al entrar desde Inicio con ?cat=, centra el chip activo en el slider de filtros.
   useEffect(() => {
     if (active === 'all') return;
@@ -47,6 +78,48 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
       <div className={`sticky z-30 transition-[background-color,transform] duration-300 ease-out ${pinned ? `top-[58px] ${scrolled ? 'bg-[#fdfbf7]/85 backdrop-blur-md' : 'bg-transparent'}` : `top-[3.5rem] border-b border-line bg-bg/95 backdrop-blur ${hidden ? '-translate-y-[9rem]' : ''}`}`}>
+        <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 pt-3">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar plato…"
+              aria-label="Buscar"
+              className="w-full rounded-full border border-line bg-white py-2 pl-9 pr-9 text-sm text-ink shadow-sm outline-none transition focus:border-brand"
+            />
+            {query && (
+              <button type="button" onClick={() => setQuery('')} aria-label="Limpiar" className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-ink-3 hover:text-ink">
+                <X className="size-4" />
+              </button>
+            )}
+          </div>
+          {allergens.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowAllergens((s) => !s)}
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-2 text-sm font-medium transition ${excluded.size || showAllergens ? 'border-brand bg-brand text-on-primary' : 'border-line bg-white text-ink-2'}`}
+            >
+              <SlidersHorizontal className="size-4" />
+              {excluded.size ? `Alérgenos · ${excluded.size}` : 'Alérgenos'}
+            </button>
+          )}
+        </div>
+        {showAllergens && allergens.length > 0 && (
+          <div className="mx-auto max-w-5xl px-4 pt-3">
+            <p className="mb-2 text-xs text-ink-3">Ocultar platos que contengan:</p>
+            <div className="flex flex-wrap gap-2">
+              {allergens.map((a) => {
+                const on = excluded.has(a.code);
+                return (
+                  <button key={a.code} type="button" onClick={() => toggleEx(a.code)} className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs transition ${on ? 'border-danger bg-danger/10 text-danger' : 'border-line bg-white text-ink-2'}`}>
+                    <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={16} /> {tx(a.name, locale)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
             Todos
@@ -59,18 +132,35 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
         </div>
       </div>
 
-      <div key={active} className="ds-grid-enter mx-auto max-w-5xl px-4 py-8">
-        {groups.map((c) => (
-          <div key={c.id} className="mb-9">
-            {active === 'all' && <h2 className="eyebrow mb-4">{tx(c.name, locale)}</h2>}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {c.products.map((p) => (
-                <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />
-              ))}
+      {filtering ? (
+        <div className="mx-auto max-w-5xl px-4 py-8">
+          {results.length === 0 ? (
+            <p className="py-16 text-center text-ink-3">No hay platos que coincidan.</p>
+          ) : (
+            <>
+              <p className="mb-4 text-sm text-ink-3">{results.length} {results.length === 1 ? 'resultado' : 'resultados'}</p>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {results.map((p) => (
+                  <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <div key={active} className="ds-grid-enter mx-auto max-w-5xl px-4 py-8">
+          {groups.map((c) => (
+            <div key={c.id} className="mb-9">
+              {active === 'all' && <h2 className="eyebrow mb-4">{tx(c.name, locale)}</h2>}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {c.products.map((p) => (
+                  <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
