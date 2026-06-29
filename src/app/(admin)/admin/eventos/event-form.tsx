@@ -147,8 +147,9 @@ export default function EventForm({
         )}
         <MediaUpload
           value={null}
-          onChange={(u) => u && setImages([...images, u])}
-          label="+ Añadir imagen"
+          multiple
+          onChange={(u) => u && setImages((prev) => [...prev, u])}
+          label="+ Añadir imágenes (varias a la vez)"
         />
       </div>
 

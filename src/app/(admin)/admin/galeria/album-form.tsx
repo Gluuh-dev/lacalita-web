@@ -67,7 +67,7 @@ export default function AlbumForm({id, album, onSaved}: {id: string | null; albu
             ))}
           </div>
         )}
-        <MediaUpload value={null} onChange={(u) => u && setImages([...images, u])} label="+ Añadir foto" />
+        <MediaUpload value={null} multiple onChange={(u) => u && setImages((prev) => [...prev, u])} label="+ Añadir fotos (varias a la vez)" />
       </div>
       <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
     </form>

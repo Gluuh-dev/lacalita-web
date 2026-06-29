@@ -14,76 +14,77 @@ export default function MediaUpload({
   onChange,
   onPoster,
   kind = 'image',
-  label
+  label,
+  multiple = false
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
   onPoster?: (url: string | null) => void;
   kind?: 'image' | 'video';
   label?: string;
+  multiple?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [note, setNote] = useState('');
   const [drag, setDrag] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  async function handleFile(file: File) {
-    if (kind === 'image' && !file.type.startsWith('image/')) {
-      toast.error('Eso no es una imagen');
-      return;
+  // Sube un archivo (comprime imágenes a WebP) y devuelve su URL pública.
+  async function uploadOne(file: File): Promise<string | null> {
+    const supabase = createClient();
+    let body: Blob = file;
+    let ext = (file.name.split('.').pop() || 'bin').toLowerCase();
+    if (kind === 'image') {
+      body = await compressImage(file);
+      if (body.type === 'image/webp') ext = 'webp';
     }
-    if (kind === 'video' && !file.type.startsWith('video/')) {
-      toast.error('Eso no es un vídeo');
+    const path = `${kind}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const {error} = await supabase.storage.from('media').upload(path, body, {contentType: body.type || file.type});
+    if (error) {
+      toast.error(error.message);
+      return null;
+    }
+    const url = supabase.storage.from('media').getPublicUrl(path).data.publicUrl;
+    if (kind === 'video' && onPoster) {
+      const poster = await captureVideoPoster(file);
+      if (poster) {
+        const ppath = `poster/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+        const {error: perr} = await supabase.storage.from('media').upload(ppath, poster, {contentType: 'image/webp'});
+        if (!perr) onPoster(supabase.storage.from('media').getPublicUrl(ppath).data.publicUrl);
+      }
+    }
+    return url;
+  }
+
+  async function handleFiles(list: File[]) {
+    const valid = list.filter((f) => (kind === 'image' ? f.type.startsWith('image/') : f.type.startsWith('video/')));
+    if (valid.length === 0) {
+      toast.error(kind === 'video' ? 'Eso no es un vídeo' : 'Eso no es una imagen');
       return;
     }
     setBusy(true);
-    setProgress(10);
-    const timer = setInterval(
-      () => setProgress((p) => Math.min(p + Math.random() * 14, 92)),
-      220
-    );
-    try {
-      const supabase = createClient();
-      let body: Blob = file;
-      let ext = (file.name.split('.').pop() || 'bin').toLowerCase();
-      if (kind === 'image') {
-        body = await compressImage(file);
-        if (body.type === 'image/webp') ext = 'webp';
-        setProgress((p) => Math.max(p, 45));
+    if (value && !multiple) removeMedia(value); // al reemplazar (modo único)
+    let done = 0;
+    let ok = 0;
+    for (const file of valid) {
+      setProgress(Math.round((done / valid.length) * 100) + 4);
+      setNote(valid.length > 1 ? `Comprimiendo y subiendo ${done + 1}/${valid.length}` : '');
+      const url = await uploadOne(file);
+      if (url) {
+        onChange(url);
+        ok++;
       }
-      const path = `${kind}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const {error} = await supabase.storage
-        .from('media')
-        .upload(path, body, {contentType: body.type || file.type});
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-      const {data} = supabase.storage.from('media').getPublicUrl(path);
-      setProgress(100);
-      if (value) removeMedia(value); // borra el anterior al reemplazar
-      onChange(data.publicUrl);
-      toast.success(kind === 'video' ? 'Vídeo subido' : 'Imagen subida');
-
-      // Poster automático (primer fotograma) para vídeos
-      if (kind === 'video' && onPoster) {
-        const poster = await captureVideoPoster(file);
-        if (poster) {
-          const ppath = `poster/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
-          const {error: perr} = await supabase.storage
-            .from('media')
-            .upload(ppath, poster, {contentType: 'image/webp'});
-          if (!perr) onPoster(supabase.storage.from('media').getPublicUrl(ppath).data.publicUrl);
-        }
-      }
-    } finally {
-      clearInterval(timer);
-      if (inputRef.current) inputRef.current.value = '';
-      setTimeout(() => {
-        setBusy(false);
-        setProgress(0);
-      }, 500);
+      done++;
+      setProgress(Math.round((done / valid.length) * 100));
     }
+    if (ok > 0) toast.success(ok > 1 ? `${ok} imágenes subidas` : kind === 'video' ? 'Vídeo subido' : 'Imagen subida');
+    if (inputRef.current) inputRef.current.value = '';
+    setTimeout(() => {
+      setBusy(false);
+      setProgress(0);
+      setNote('');
+    }, 400);
   }
 
   return (
@@ -127,8 +128,7 @@ export default function MediaUpload({
         onDrop={(e) => {
           e.preventDefault();
           setDrag(false);
-          const file = e.dataTransfer.files?.[0];
-          if (file) handleFile(file);
+          handleFiles(Array.from(e.dataTransfer.files ?? []));
         }}
         className={cn(
           'flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed px-4 py-6 text-center transition',
@@ -141,26 +141,22 @@ export default function MediaUpload({
           {label ?? (value ? 'Cambiar' : 'Arrastra aquí o haz clic')}
         </span>
         <span className="text-xs text-muted-foreground">
-          {kind === 'video' ? 'Vídeo (MP4)' : 'Imagen — se comprime sola'}
+          {kind === 'video' ? 'Vídeo (MP4)' : multiple ? 'Imágenes — se comprimen solas (puedes elegir varias)' : 'Imagen — se comprime sola'}
         </span>
         <input
           ref={inputRef}
           type="file"
           accept={kind === 'video' ? 'video/*' : 'image/*'}
+          multiple={multiple && kind === 'image'}
           className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleFile(file);
-          }}
+          onChange={(e) => handleFiles(Array.from(e.target.files ?? []))}
         />
       </div>
 
       {busy && (
         <div className="space-y-1">
           <Progress value={progress} />
-          <p className="text-xs text-muted-foreground">
-            Subiendo… {Math.round(progress)}%
-          </p>
+          <p className="text-xs text-muted-foreground">{note || `Subiendo… ${Math.round(progress)}%`}</p>
         </div>
       )}
     </div>
