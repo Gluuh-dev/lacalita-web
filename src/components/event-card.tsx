@@ -32,6 +32,17 @@ export default async function EventCard({
   const KindIcon = KIND_ICON[kind] ?? Disc3;
   const title = tx(event.title, locale);
 
+  // Badge de relevancia: HOY / MAÑANA / ESTE FINDE.
+  const now = new Date();
+  const startDay = ok ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : null;
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = startDay ? Math.round((startDay.getTime() - today.getTime()) / 86400000) : -1;
+  const dow = ok ? d.getDay() : -1;
+  const flag = days === 0 ? 'Hoy' : days === 1 ? 'Mañana' : days >= 0 && days <= 6 && (dow === 5 || dow === 6 || dow === 0) ? 'Este finde' : null;
+  const Flag = flag ? (
+    <span className="absolute right-2.5 top-2.5 z-[2] rounded-full bg-brand px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-on-primary shadow">{flag}</span>
+  ) : null;
+
   const Media = (
     <div className="ds-media-zoom absolute inset-0">
       {event.image ? (
@@ -58,6 +69,7 @@ export default async function EventCard({
         <div className="relative aspect-[3/2] overflow-hidden">
           {Media}
           {DateChip}
+          {Flag}
           <span className="absolute bottom-2.5 left-2.5 z-[2] rounded-full bg-brand px-2.5 py-0.5 text-xs font-semibold text-on-primary">{t(kind)}</span>
         </div>
         <div className="flex flex-1 flex-col gap-1 p-4">
@@ -81,6 +93,7 @@ export default async function EventCard({
       <div className="relative overflow-hidden">
         {Media}
         {DateChip}
+        {Flag}
       </div>
       <div className="flex flex-col justify-center gap-1 p-4">
         <span className="eyebrow">{t(kind)} · {time}</span>
