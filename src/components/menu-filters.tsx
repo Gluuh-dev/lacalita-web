@@ -86,7 +86,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar plato…"
               aria-label="Buscar"
-              className="w-full rounded-full border border-line bg-white py-2 pl-9 pr-9 text-sm text-ink shadow-sm outline-none transition focus:border-brand"
+              className="w-full rounded-full border border-line bg-white py-2 pl-9 pr-9 text-sm text-ink outline-none transition focus:border-brand"
             />
             {query && (
               <button type="button" onClick={() => setQuery('')} aria-label="Limpiar" className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-ink-3 hover:text-ink">
