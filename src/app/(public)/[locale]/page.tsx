@@ -79,7 +79,10 @@ export default async function Home({
       postalCode: '18680',
       addressCountry: 'ES'
     },
-    sameAs: [settings?.social?.instagram, settings?.social?.facebook].filter(Boolean)
+    sameAs: [settings?.social?.instagram, settings?.social?.facebook].filter(Boolean),
+    image: settings?.hero_image ? [settings.hero_image] : undefined,
+    hasMenu: `${SITE_URL}/carta`,
+    acceptsReservations: false
   };
 
   return (
