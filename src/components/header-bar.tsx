@@ -51,7 +51,7 @@ export default function HeaderBar({
     ...(isAdmin && cartaLabel ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
     ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])
   ];
-  const {hidden, scrolled} = useHideOnScroll();
+  const {scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
   const backHref = currentCarta === 'hamburgueseria' ? '/burguer' : '/';
 
@@ -70,8 +70,7 @@ export default function HeaderBar({
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[transform,background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500',
-          hidden && !open && '-translate-y-full',
+          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500',
           onMedia
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
