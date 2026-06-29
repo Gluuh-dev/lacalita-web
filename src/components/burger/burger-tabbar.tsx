@@ -48,7 +48,7 @@ export default function BurgerTabBar() {
 
   const left: Tab[] = [
     {key: 'inicio', label: 'Inicio', icon: Home, href: '/burguer', active: pathname === '/burguer', badge: 0},
-    {key: 'video', label: 'Vídeo', icon: PlayCircle, onClick: s.openVideo, active: s.videoOpen, badge: 0}
+    {key: 'video', label: 'Vídeo', icon: PlayCircle, href: '/burguer/video', active: pathname === '/burguer/video', badge: 0}
   ];
   // Estos dos cambian según el contexto (con animación suave).
   const dyn1: Tab = landingCtx

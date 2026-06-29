@@ -4,7 +4,6 @@ import {Suspense, useEffect} from 'react';
 import {usePathname} from 'next/navigation';
 import BurgerHeader from './burger-header';
 import BurgerTabBar from './burger-tabbar';
-import BurgerOverlays from './burger-overlays';
 
 const BURGER_THEME = '#c36148';
 
@@ -40,7 +39,6 @@ export default function BurgerChrome({locale}: {locale: string}) {
       <Suspense fallback={null}>
         <BurgerTabBar />
       </Suspense>
-      <BurgerOverlays locale={locale} />
     </>
   );
 }

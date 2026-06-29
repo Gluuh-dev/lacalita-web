@@ -122,10 +122,16 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
   );
 }
 
-function Thumb({item}: {item: MenuItem}) {
+function Thumb({item, locale}: {item: MenuItem; locale: string}) {
   const s = useMenuStore();
+  const router = useRouter();
+  const open = () => {
+    // En hamburguesería el detalle es una PÁGINA (sin modal); el resto abre la hoja.
+    if (item.menuSlug === 'hamburgueseria') router.push(`/${locale}/burguer/carta/${item.slug}`);
+    else s.setOpen(item);
+  };
   return (
-    <button onClick={() => s.setOpen(item)} className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong">
+    <button onClick={open} className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong">
       {item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : <UtensilsCrossed className="size-6" />}
     </button>
   );
@@ -147,7 +153,7 @@ export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
     <div className="flex flex-col gap-2">
       {items.map((it) => (
         <div key={it.id} className="flex items-center gap-3 rounded-[16px] border border-line bg-surface p-2.5">
-          <Thumb item={it} />
+          <Thumb item={it} locale={locale} />
           <div className="min-w-0 flex-1">
             <div className="truncate font-medium">{it.name}</div>
             {it.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(it.price, locale)}</div>}
@@ -179,7 +185,7 @@ export function ListView({items, locale}: {items: ListEntry[]; locale: string}) 
     <div className="flex flex-col gap-2">
       {items.map(({item, qty, note}) => (
         <div key={item.id} className="flex items-center gap-3 rounded-[16px] border border-line bg-surface p-2.5">
-          <Thumb item={item} />
+          <Thumb item={item} locale={locale} />
           <div className="min-w-0 flex-1">
             <div className="truncate font-medium">{item.name}</div>
             {item.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(item.price, locale)}</div>}
@@ -202,7 +208,7 @@ export function ListView({items, locale}: {items: ListEntry[]; locale: string}) 
   );
 }
 
-export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; locale: string; onClose: () => void}) {
+export function VideoReels({videos, locale, onClose, asPage = false}: {videos: MenuItem[]; locale: string; onClose: () => void; asPage?: boolean}) {
   const s = useMenuStore();
   const favGate = useFavGate();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -211,7 +217,7 @@ export function VideoReels({videos, locale, onClose}: {videos: MenuItem[]; local
   const [idx, setIdx] = useState(0);
   const [controls, setControls] = useState(false);
   const router = useRouter();
-  useBackClose(true, onClose);
+  useBackClose(!asPage, onClose);
 
   const goDetail = (v: MenuItem) => {
     onClose();
