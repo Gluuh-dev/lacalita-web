@@ -9,12 +9,19 @@ export type AlbumInput = {title: string; date: string | null; images: string[]; 
 export async function saveAlbum(id: string | null, input: AlbumInput) {
   const supabase = await createClient();
   const row = {title: input.title, date: input.date || null, images: input.images, position: input.position};
-  const res = id ? await supabase.from('gallery_albums').update(row).eq('id', id) : await supabase.from('gallery_albums').insert(row);
-  if (res.error) return {ok: false, error: res.error.message};
+  let savedId = id;
+  if (id) {
+    const {error} = await supabase.from('gallery_albums').update(row).eq('id', id);
+    if (error) return {ok: false, error: error.message};
+  } else {
+    const {data, error} = await supabase.from('gallery_albums').insert(row).select('id').single();
+    if (error) return {ok: false, error: error.message};
+    savedId = data?.id ?? null;
+  }
   revalidatePath('/', 'layout');
   revalidateTag('gallery', 'max');
   revalidatePath('/admin/galeria');
-  return {ok: true};
+  return {ok: true, id: savedId};
 }
 
 export async function deleteAlbum(id: string) {

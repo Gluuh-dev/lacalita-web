@@ -436,18 +436,14 @@ export async function getBurgerOffersAdmin(): Promise<BurgerOffer[]> {
 export type GalleryAlbum = {id: string; title: string; date: string | null; images: string[]; position: number};
 
 export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
-  return unstable_cache(
-    async () => {
-      const {data} = await supabasePublic
-        .from('gallery_albums')
-        .select('*')
-        .order('date', {ascending: false, nullsFirst: false})
-        .order('position');
-      return (data as GalleryAlbum[]) ?? [];
-    },
-    ['gallery-albums'],
-    {revalidate: 300, tags: ['gallery']}
-  )();
+  // Sin caché de consulta: la galería es poco frecuentada y así los álbumes nuevos
+  // se ven al instante (la página /galeria ya hace ISR + se revalida al guardar).
+  const {data} = await supabasePublic
+    .from('gallery_albums')
+    .select('*')
+    .order('date', {ascending: false, nullsFirst: false})
+    .order('position');
+  return (data as GalleryAlbum[]) ?? [];
 }
 
 export async function getGalleryAlbumsAdmin(): Promise<GalleryAlbum[]> {
