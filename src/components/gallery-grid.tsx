@@ -1,12 +1,14 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {X, ChevronLeft, ChevronRight} from 'lucide-react';
 
 export default function GalleryGrid({images}: {images: string[]}) {
   const [idx, setIdx] = useState<number | null>(null);
   const open = idx !== null;
+  const touchX = useRef<number | null>(null);
+  const go = (dir: number) => setIdx((i) => (i === null ? i : (i + dir + images.length) % images.length));
 
   useEffect(() => {
     if (!open) return;
@@ -75,7 +77,21 @@ export default function GalleryGrid({images}: {images: string[]}) {
             </>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={images[idx]} alt="" onClick={(e) => e.stopPropagation()} className="max-h-[88vh] max-w-full rounded-2xl object-contain" />
+          <img
+            src={images[idx]}
+            alt=""
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => {
+              touchX.current = e.touches[0].clientX;
+            }}
+            onTouchEnd={(e) => {
+              if (touchX.current === null) return;
+              const dx = e.changedTouches[0].clientX - touchX.current;
+              touchX.current = null;
+              if (Math.abs(dx) > 40 && images.length > 1) go(dx < 0 ? 1 : -1);
+            }}
+            className="max-h-[88vh] max-w-full touch-pan-y select-none rounded-2xl object-contain"
+          />
         </div>
       )}
     </>
