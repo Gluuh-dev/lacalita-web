@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {Menu, X, ChevronLeft} from 'lucide-react';
+import {ChevronLeft} from 'lucide-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
@@ -14,6 +14,11 @@ const CARTA_LABELS: Record<string, string> = {
 import LangSwitcher from './lang-switcher';
 import {useHeaderMode} from './header-mode';
 import {useIsAdmin} from '@/lib/use-is-admin';
+
+// Origen del círculo del menú (donde está el botón, arriba a la derecha).
+const M_ORIGIN = 'calc(100% - 2.05rem) 1.75rem';
+const M_OPEN = `circle(150% at ${M_ORIGIN})`;
+const M_CLOSED = `circle(0px at ${M_ORIGIN})`;
 
 export default function HeaderBar({
   labels
@@ -35,9 +40,11 @@ export default function HeaderBar({
         {href: '/burguer/carta', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
       ]
     : [
-        {href: '/carta', label: labels.menu, active: false},
-        {href: '/eventos', label: labels.events, active: false},
-        {href: '/#info', label: labels.location, active: false}
+        {href: '/', label: 'Inicio', active: pathname === '/'},
+        {href: '/carta', label: labels.menu, active: pathname === '/carta'},
+        {href: '/eventos', label: labels.events, active: pathname.startsWith('/eventos')},
+        {href: '/galeria', label: 'Galería', active: pathname === '/galeria'},
+        {href: '/ubicacion', label: labels.location, active: pathname === '/ubicacion'}
       ];
   const overlayLinks = [
     ...menuLinks,
@@ -69,7 +76,8 @@ export default function HeaderBar({
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
               ? 'bg-transparent'
-              : 'border-b border-black/5 bg-bg/85 backdrop-blur'
+              : 'border-b border-black/5 bg-bg/85 backdrop-blur',
+          open && 'border-transparent bg-transparent'
         )}
       >
         <div className="flex items-center gap-1">
@@ -116,47 +124,61 @@ export default function HeaderBar({
 
         <button
           type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Menú"
-          className={cn(
-            'flex size-9 items-center justify-center rounded-full sm:hidden',
-            light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink'
-          )}
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? 'Cerrar menú' : 'Menú'}
+          className={cn('relative z-[46] flex size-9 items-center justify-center rounded-full sm:hidden', open ? 'text-ink' : light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink')}
         >
-          <Menu className="size-6" />
+          <span className="relative block h-4 w-6" aria-hidden>
+            <span className={cn('absolute left-0 h-[2px] w-6 rounded-full bg-current transition-all duration-300', open ? 'top-1/2 -translate-y-1/2 rotate-45' : 'top-0')} />
+            <span className={cn('absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 rounded-full bg-current transition-all duration-300', open ? 'opacity-0' : 'opacity-100')} />
+            <span className={cn('absolute left-0 h-[2px] w-6 rounded-full bg-current transition-all duration-300', open ? 'top-1/2 -translate-y-1/2 -rotate-45' : 'bottom-0')} />
+          </span>
         </button>
       </header>
 
-      {/* Menú móvil: hero borroso de fondo + capa blanca con mix-blend-difference
-          encima que invierte todo según el color de detrás (auto-contraste). */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-black/45 text-white backdrop-blur-2xl sm:hidden">
-          <div className="flex h-14 items-center justify-between px-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/logo-solo.svg" alt="La Calita" className="h-8 w-auto brightness-0 invert" />
-            <button type="button" onClick={() => setOpen(false)} aria-label="Cerrar" className="rounded-md p-1">
-              <X className="size-7" />
-            </button>
-          </div>
-          <nav className="flex flex-1 flex-col items-center justify-center gap-7">
-            {overlayLinks.map((f) => {
-              const cls = cn('font-adam text-4xl capitalize tracking-wide transition', f.active ? 'text-brand' : 'text-white');
-              return f.href.startsWith('/admin') ? (
-                <a key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls}>
-                  {f.label}
-                </a>
-              ) : (
-                <Link key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls}>
-                  {f.label}
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="flex scale-125 justify-center pb-14">
+      {/* Menú móvil: círculo que se expande desde el botón (como en hamburguesería). */}
+      <div
+        aria-hidden={!open}
+        className="fixed inset-0 z-[45] bg-bg sm:hidden"
+        style={{
+          clipPath: open ? M_OPEN : M_CLOSED,
+          WebkitClipPath: open ? M_OPEN : M_CLOSED,
+          transition: 'clip-path 520ms cubic-bezier(.4,0,.2,1), -webkit-clip-path 520ms cubic-bezier(.4,0,.2,1)',
+          pointerEvents: open ? 'auto' : 'none'
+        }}
+      >
+        <nav className="flex h-full flex-col items-center justify-center gap-7 px-6">
+          {overlayLinks.map((f, i) => {
+            const cls = cn('font-adam text-4xl capitalize tracking-wide transition-colors', f.active ? 'text-brand-deep' : 'text-ink');
+            const style = {
+              opacity: open ? 1 : 0,
+              transform: open ? 'translateY(0)' : 'translateY(18px)',
+              transition: 'opacity 400ms ease, transform 400ms ease',
+              transitionDelay: open ? `${200 + i * 70}ms` : '0ms'
+            };
+            return f.href.startsWith('/admin') ? (
+              <a key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls} style={style}>
+                {f.label}
+              </a>
+            ) : (
+              <Link key={f.href} href={f.href} onClick={() => setOpen(false)} className={cls} style={style}>
+                {f.label}
+              </Link>
+            );
+          })}
+          <div
+            className="mt-2 scale-125"
+            style={{
+              opacity: open ? 1 : 0,
+              transform: open ? 'translateY(0)' : 'translateY(18px)',
+              transition: 'opacity 400ms ease, transform 400ms ease',
+              transitionDelay: open ? `${200 + overlayLinks.length * 70}ms` : '0ms'
+            }}
+          >
             <LangSwitcher />
           </div>
-        </div>
-      )}
+        </nav>
+      </div>
     </>
   );
 }

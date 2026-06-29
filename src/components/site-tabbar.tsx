@@ -14,8 +14,8 @@ export default function SiteTabBar() {
     {label: 'Inicio', icon: Home, href: '/', active: pathname === '/'},
     {label: 'Carta', icon: UtensilsCrossed, href: '/carta', active: pathname === '/carta'},
     {label: 'Eventos', icon: CalendarDays, href: '/eventos', active: pathname.startsWith('/eventos')},
-    {label: 'Galería', icon: Images, href: '/#galeria', active: false},
-    {label: 'Ubicación', icon: MapPin, href: '/#info', active: false}
+    {label: 'Galería', icon: Images, href: '/galeria', active: pathname === '/galeria'},
+    {label: 'Ubicación', icon: MapPin, href: '/ubicacion', active: pathname === '/ubicacion'}
   ];
 
   return (
