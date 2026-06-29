@@ -184,6 +184,16 @@ export async function getUpcomingEvents(limit = 20): Promise<EventRow[]> {
   return (data as EventRow[]) ?? [];
 }
 
+export async function getPastEvents(limit = 30): Promise<EventRow[]> {
+  const {data} = await supabasePublic
+    .from('events')
+    .select('*')
+    .lt('starts_at', new Date().toISOString())
+    .order('starts_at', {ascending: false})
+    .limit(limit);
+  return (data as EventRow[]) ?? [];
+}
+
 // ---------- Admin (autenticado: RLS deja ver/editar todo) ----------
 
 export async function getAllergens(): Promise<Allergen[]> {
