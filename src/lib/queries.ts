@@ -83,12 +83,17 @@ export type Settings = {
 // ---------- Público ----------
 
 export async function getMenus() {
-  const supabase = supabasePublic;
-  const {data} = await supabase
-    .from('menus')
-    .select('id, slug, name, subtitle, theme, header_image, header_video, position')
-    .order('position');
-  return data ?? [];
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('menus')
+        .select('id, slug, name, subtitle, theme, header_image, header_video, position')
+        .order('position');
+      return data ?? [];
+    },
+    ['menus'],
+    {revalidate: 300, tags: ['menu']}
+  )();
 }
 
 export async function getMenu(slug: string): Promise<Menu | null> {
@@ -148,12 +153,20 @@ export async function getProduct(slug: string): Promise<{product: Product; theme
 }
 
 export async function getSettings(): Promise<Settings | null> {
-  const supabase = supabasePublic;
-  const {data} = await supabase.from('settings').select('*').eq('id', 1).maybeSingle();
-  return (data as Settings) ?? null;
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic.from('settings').select('*').eq('id', 1).maybeSingle();
+      return (data as Settings) ?? null;
+    },
+    ['settings'],
+    {revalidate: 300, tags: ['settings']}
+  )();
 }
 
 export async function getFeaturedProducts(limit = 4) {
+  return unstable_cache(_fetchFeatured, ['featured', String(limit)], {revalidate: 300, tags: ['menu']})(limit);
+}
+async function _fetchFeatured(limit: number) {
   const {data} = await supabasePublic
     .from('products')
     .select('id, slug, name, price, image, categories ( menus ( slug ) )')
@@ -174,24 +187,35 @@ export async function getFeaturedProducts(limit = 4) {
 }
 
 export async function getUpcomingEvents(limit = 20): Promise<EventRow[]> {
-  const supabase = supabasePublic;
-  const {data} = await supabase
-    .from('events')
-    .select('*')
-    .gte('starts_at', new Date().toISOString())
-    .order('starts_at')
-    .limit(limit);
-  return (data as EventRow[]) ?? [];
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('events')
+        .select('*')
+        .gte('starts_at', new Date().toISOString())
+        .order('starts_at')
+        .limit(limit);
+      return (data as EventRow[]) ?? [];
+    },
+    ['events-upcoming', String(limit)],
+    {revalidate: 120, tags: ['events']}
+  )();
 }
 
 export async function getPastEvents(limit = 30): Promise<EventRow[]> {
-  const {data} = await supabasePublic
-    .from('events')
-    .select('*')
-    .lt('starts_at', new Date().toISOString())
-    .order('starts_at', {ascending: false})
-    .limit(limit);
-  return (data as EventRow[]) ?? [];
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('events')
+        .select('*')
+        .lt('starts_at', new Date().toISOString())
+        .order('starts_at', {ascending: false})
+        .limit(limit);
+      return (data as EventRow[]) ?? [];
+    },
+    ['events-past', String(limit)],
+    {revalidate: 300, tags: ['events']}
+  )();
 }
 
 // ---------- Admin (autenticado: RLS deja ver/editar todo) ----------
@@ -284,14 +308,14 @@ export async function getEventById(id: string) {
 
 // Público: solo eventos publicados.
 export async function getPublicEvent(id: string) {
-  const supabase = supabasePublic;
-  const {data} = await supabase
-    .from('events')
-    .select('*')
-    .eq('id', id)
-    .eq('published', true)
-    .maybeSingle();
-  return (data as EventRow) ?? null;
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic.from('events').select('*').eq('id', id).eq('published', true).maybeSingle();
+      return (data as EventRow) ?? null;
+    },
+    ['event', id],
+    {revalidate: 300, tags: ['events']}
+  )();
 }
 
 // ---- Entradas de eventos ----
@@ -307,8 +331,14 @@ export type EventTicket = {
   position: number;
 };
 export async function getEventTickets(eventId: string): Promise<EventTicket[]> {
-  const {data} = await supabasePublic.from('event_tickets').select('*').eq('event_id', eventId).eq('active', true).order('position');
-  return (data as EventTicket[]) ?? [];
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic.from('event_tickets').select('*').eq('event_id', eventId).eq('active', true).order('position');
+      return (data as EventTicket[]) ?? [];
+    },
+    ['event-tickets', eventId],
+    {revalidate: 300, tags: ['events']}
+  )();
 }
 export async function getEventTicketsAdmin(eventId: string): Promise<EventTicket[]> {
   const supabase = await createClient();
