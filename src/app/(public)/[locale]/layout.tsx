@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import {Geist} from 'next/font/google';
 import {Playfair_Display} from 'next/font/google';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
@@ -34,6 +34,8 @@ export const metadata: Metadata = {
     description: 'Beach Club, restaurante y cafetería en Salobreña, Granada.'
   }
 };
+
+export const viewport: Viewport = {themeColor: '#1c160e'};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));
