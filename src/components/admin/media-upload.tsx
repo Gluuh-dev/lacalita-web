@@ -15,7 +15,8 @@ export default function MediaUpload({
   onPoster,
   kind = 'image',
   label,
-  multiple = false
+  multiple = false,
+  maxDim = 2000
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
@@ -23,6 +24,7 @@ export default function MediaUpload({
   kind?: 'image' | 'video';
   label?: string;
   multiple?: boolean;
+  maxDim?: number;
 }) {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -36,7 +38,7 @@ export default function MediaUpload({
     let body: Blob = file;
     let ext = (file.name.split('.').pop() || 'bin').toLowerCase();
     if (kind === 'image') {
-      body = await compressImage(file);
+      body = await compressImage(file, maxDim);
       if (body.type === 'image/webp') ext = 'webp';
     }
     const path = `${kind}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
