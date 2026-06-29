@@ -431,3 +431,27 @@ export async function getBurgerOffersAdmin(): Promise<BurgerOffer[]> {
   const {data} = await supabase.from('burger_offers').select('*').order('position');
   return (data as BurgerOffer[]) ?? [];
 }
+
+// ---- Galería: álbumes (independientes de eventos) ----
+export type GalleryAlbum = {id: string; title: string; date: string | null; images: string[]; position: number};
+
+export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('gallery_albums')
+        .select('*')
+        .order('date', {ascending: false, nullsFirst: false})
+        .order('position');
+      return (data as GalleryAlbum[]) ?? [];
+    },
+    ['gallery-albums'],
+    {revalidate: 300, tags: ['gallery']}
+  )();
+}
+
+export async function getGalleryAlbumsAdmin(): Promise<GalleryAlbum[]> {
+  const supabase = await createClient();
+  const {data} = await supabase.from('gallery_albums').select('*').order('date', {ascending: false, nullsFirst: false}).order('position');
+  return (data as GalleryAlbum[]) ?? [];
+}

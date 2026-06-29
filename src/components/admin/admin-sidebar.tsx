@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import Link from 'next/link';
 import {usePathname, useRouter} from 'next/navigation';
-import {LayoutDashboard, Image as ImageIcon, UtensilsCrossed, LayoutGrid, BookOpen, Calendar, FileText, Settings, LogOut, Menu, ExternalLink, Sandwich} from 'lucide-react';
+import {LayoutDashboard, Image as ImageIcon, Images, UtensilsCrossed, LayoutGrid, BookOpen, Calendar, FileText, Settings, LogOut, Menu, ExternalLink, Sandwich} from 'lucide-react';
 import {createClient} from '@/lib/supabase/client';
 
 const NAV = [
@@ -14,6 +14,7 @@ const NAV = [
   {href: '/admin/menus', label: 'Menús / Cartas', Icon: BookOpen},
   {href: '/admin/hamburgueseria', label: 'Hamburguesería', Icon: Sandwich},
   {href: '/admin/eventos', label: 'Eventos', Icon: Calendar},
+  {href: '/admin/galeria', label: 'Galería', Icon: Images},
   {href: '/admin/contenido', label: 'Contenido', Icon: FileText},
   {href: '/admin/ajustes', label: 'Ajustes', Icon: Settings}
 ];

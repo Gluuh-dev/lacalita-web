@@ -10,7 +10,7 @@ export default function GalleryAdminCta() {
   return (
     <div className="mb-2 flex justify-center">
       <a
-        href="/admin/eventos"
+        href="/admin/galeria"
         className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
       >
         <Upload className="size-4" /> Subir imágenes
