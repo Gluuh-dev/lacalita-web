@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote, Star} from 'lucide-react';
+import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Quote, Star} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
@@ -42,10 +42,8 @@ export default async function Home({
   const content = settings?.content ?? {};
   const about = {...DEFAULT_CONTENT.about, ...content.about};
   const story = {...DEFAULT_CONTENT.story, ...content.story};
-  const features = about.features ?? DEFAULT_CONTENT.about.features ?? [];
   const reviews = content.reviews ?? [];
   const gallery = content.gallery ?? [];
-  const featureIcons = [Waves, UtensilsCrossed, Music];
 
   const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false);
   const heroSlides: HeroSlide[] = activeHero.length
@@ -119,7 +117,7 @@ export default async function Home({
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
           <span
             aria-hidden
-            className="mx-auto mt-8 block h-16"
+            className="mx-auto mt-8 block h-32 sm:h-40"
             style={{
               aspectRatio: '281.53 / 312.4',
               backgroundColor: '#E9AE74',
@@ -133,21 +131,6 @@ export default async function Home({
               maskPosition: 'center'
             }}
           />
-          {features.length > 0 && (
-            <div className="mt-9 grid gap-4 sm:grid-cols-3">
-              {features.map((f, idx) => {
-                const Ic = featureIcons[idx % featureIcons.length];
-                return (
-                  <div key={idx} className="flex flex-col items-center gap-2.5 rounded-[18px] border border-line bg-surface p-6 shadow-sm">
-                    <span className="flex size-11 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <Ic className="size-5" />
-                    </span>
-                    <span className="font-medium">{f}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </section>
       </Reveal>
 
