@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote, Star} from 'lucide-react';
+import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote, Star} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
@@ -158,12 +158,9 @@ export default async function Home({
         <section id="carta" className="relative scroll-mt-20 overflow-hidden py-20">
           <span aria-hidden className="pointer-events-none absolute inset-x-0 top-4 select-none text-center font-serif text-[26vw] font-bold leading-none text-ink/[0.04]">Sabores</span>
           <div className="relative z-10 mx-auto max-w-6xl px-4">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <div className="eyebrow mb-2">Nuestra cocina</div>
-                <h2 className="font-serif text-5xl font-bold leading-none sm:text-6xl">Sabores<span className="text-brand">.</span></h2>
-              </div>
-              <ActionLink href="/carta" label={t('menu.title')} />
+            <div className="mb-10 text-center md:text-left">
+              <div className="eyebrow mb-2">Nuestra cocina</div>
+              <h2 className="font-serif text-5xl font-bold leading-none sm:text-6xl">Sabores<span className="text-brand">.</span></h2>
             </div>
             <SnapCarousel itemClass="w-[72vw] max-w-[290px]" mdCols="md:grid-cols-3" accent="#c98a4e" ink="#243b53">
             {menus.map((m) => {
@@ -195,6 +192,7 @@ export default async function Home({
               );
             })}
             </SnapCarousel>
+            <MoreLink href="/carta" label={t('menu.title')} />
           </div>
         </section>
       </Reveal>
@@ -203,24 +201,28 @@ export default async function Home({
       {featured.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
-            <SectionHead eyebrow="De nuestra carta" title="Platos para repetir" action={<ActionLink href="/carta" label={t('menu.title')} />} />
-            <SnapCarousel itemClass="w-[60vw] max-w-[240px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
+            <SectionHead eyebrow="De nuestra carta" title="Platos para repetir" />
+            <SnapCarousel itemClass="w-[64vw] max-w-[260px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
               {featured.map((p) => (
                 <Link
                   key={p.id}
                   href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
-                  className="ds-card--link group flex flex-col overflow-hidden rounded-[20px] border border-line bg-surface shadow-sm"
+                  className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-4 text-white shadow-md"
                 >
-                  <div className="ds-media-zoom relative aspect-[4/3] overflow-hidden">
-                    {p.image && <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 50vw, 280px" className="object-cover" />}
-                  </div>
-                  <div className="flex items-baseline justify-between gap-2 p-4">
-                    <h3 className="font-serif text-lg leading-tight">{tx(p.name, locale)}</h3>
-                    {p.price != null && <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(Number(p.price), locale)}</span>}
+                  {p.image ? (
+                    <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 64vw, 260px" className="object-cover transition duration-500 group-hover:scale-105" />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
+                  <div className="relative z-10">
+                    <h3 className="font-serif text-xl leading-tight">{tx(p.name, locale)}</h3>
+                    {p.price != null && <span className="mt-1 block font-bold tabular-nums text-white/95">{euro(Number(p.price), locale)}</span>}
                   </div>
                 </Link>
               ))}
             </SnapCarousel>
+            <MoreLink href="/carta" label={t('menu.title')} />
           </section>
         </Reveal>
       )}
@@ -230,16 +232,13 @@ export default async function Home({
         <Reveal>
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
             <div className="mx-auto max-w-6xl px-4 py-16">
-              <SectionHead
-                eyebrow={t('events.upcoming')}
-                title="Música a pie de playa"
-                action={<ActionLink href="/eventos" label={t('events.all')} />}
-              />
+              <SectionHead eyebrow={t('events.upcoming')} title="Música a pie de playa" />
               <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdCols="md:grid-cols-2" accent="#c98a4e" ink="#243b53">
                 {events.slice(0, 4).map((e) => (
                   <EventCard key={e.id} event={e} locale={locale} layout="tile" />
                 ))}
               </SnapCarousel>
+              <MoreLink href="/eventos" label={t('events.all')} />
             </div>
           </section>
         </Reveal>
@@ -387,17 +386,24 @@ export default async function Home({
 const ICONS: Record<string, typeof Coffee> = {
   desayunos: Coffee,
   restaurante: UtensilsCrossed,
+  cocteles: Martini,
   hamburgueseria: Sandwich
 };
 
-function SectionHead({eyebrow, title, action}: {eyebrow: string; title: string; action?: React.ReactNode}) {
+function SectionHead({eyebrow, title}: {eyebrow: string; title: string}) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <div className="eyebrow mb-2">{eyebrow}</div>
-        <h2 className="font-serif text-3xl sm:text-4xl">{title}</h2>
-      </div>
-      {action}
+    <div className="mb-8 text-center md:text-left">
+      <div className="eyebrow mb-2">{eyebrow}</div>
+      <h2 className="font-serif text-3xl sm:text-4xl">{title}</h2>
+    </div>
+  );
+}
+
+// CTA "ver todo" debajo de las cards, centrado.
+function MoreLink({href, label}: {href: string; label: string}) {
+  return (
+    <div className="mt-7 flex justify-center">
+      <ActionLink href={href} label={label} />
     </div>
   );
 }
