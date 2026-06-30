@@ -52,7 +52,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
                   <h2 className="font-serif text-2xl">{s.title}</h2>
                   {s.dateLabel && <span className="font-adam text-[0.72rem] uppercase tracking-[0.1em] text-ink-3">{s.dateLabel}</span>}
                 </div>
-                <GalleryGrid images={s.imgs} />
+                <GalleryGrid images={s.imgs} alt={s.title} />
               </section>
             ))}
             {legacy.length > 0 && (

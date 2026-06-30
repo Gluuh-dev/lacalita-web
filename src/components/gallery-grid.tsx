@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import {X, ChevronLeft, ChevronRight} from 'lucide-react';
 
-export default function GalleryGrid({images}: {images: string[]}) {
+export default function GalleryGrid({images, alt = ''}: {images: string[]; alt?: string}) {
   const [idx, setIdx] = useState<number | null>(null);
   const open = idx !== null;
   const touchX = useRef<number | null>(null);
@@ -42,7 +42,7 @@ export default function GalleryGrid({images}: {images: string[]}) {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images.map((url, i) => (
           <button key={i} onClick={() => setIdx(i)} className="lc-img-loading ds-media-zoom relative aspect-square cursor-zoom-in overflow-hidden rounded-[16px] border border-line">
-            <Image src={url} alt="" fill sizes="(min-width:1024px) 18rem, (min-width:640px) 30vw, 45vw" className="object-cover" />
+            <Image src={url} alt={alt ? `${alt} — foto ${i + 1}` : ''} fill sizes="(min-width:1024px) 18rem, (min-width:640px) 30vw, 45vw" className="object-cover" />
           </button>
         ))}
       </div>
@@ -79,7 +79,7 @@ export default function GalleryGrid({images}: {images: string[]}) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={images[idx]}
-            alt=""
+            alt={alt ? `${alt} — foto ${idx + 1}` : ''}
             onClick={(e) => e.stopPropagation()}
             onTouchStart={(e) => {
               touchX.current = e.touches[0].clientX;
