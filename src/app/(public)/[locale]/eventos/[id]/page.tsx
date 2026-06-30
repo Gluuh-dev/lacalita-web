@@ -126,8 +126,9 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
                 <div className="eyebrow mb-3 mt-8">Galería</div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {images.slice(1).map((url, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img key={i} src={url} alt="" className="aspect-square w-full rounded-[14px] border border-line object-cover" />
+                    <div key={i} className="lc-img-loading relative aspect-square overflow-hidden rounded-[14px] border border-line">
+                      <Image src={url} alt={`${title} — foto ${i + 2}`} fill sizes="(min-width:640px) 12rem, 45vw" className="object-cover" />
+                    </div>
                   ))}
                 </div>
               </>
@@ -171,7 +172,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
               href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"
               target="_blank"
               rel="noreferrer"
-              className="mt-5 flex items-center justify-center gap-2 rounded-full border border-line bg-bg py-2.5 text-sm font-medium text-ink transition hover:border-brand"
+              className="ds-btn ds-btn-outline mt-5 w-full text-sm"
             >
               <Navigation className="size-4" /> Cómo llegar
             </a>

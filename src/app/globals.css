@@ -385,3 +385,17 @@
 .lc-bsoft { animation: lc-bsoft 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) { .lc-bsoft { animation: none; } }
 .lc-hero-slide { animation: lc-hero-slide var(--dur-slow) var(--ease-out) both; }
+/* ---- Sistema de botones del beach club (respeta el tema vía variables) ---- */
+.ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 9999px; padding: 0.8rem 1.6rem; font-weight: 600; line-height: 1; transition: background-color .2s, border-color .2s, color .2s, transform .15s, filter .2s; cursor: pointer; }
+.ds-btn:active { transform: scale(0.97); }
+.ds-btn-primary { background: var(--brand); color: var(--on-primary); }
+.ds-btn-primary:hover { background: var(--brand-deep); }
+.ds-btn-outline { border: 1px solid var(--line-strong); color: var(--ink); background: transparent; }
+.ds-btn-outline:hover { border-color: var(--brand); }
+.ds-btn-ghost { color: var(--brand-deep); }
+.ds-btn-ghost:hover { background: color-mix(in srgb, var(--brand) 14%, transparent); }
+/* Foco visible accesible en toda la web */
+a:focus-visible, button:focus-visible, [role="button"]:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--brand-deep); outline-offset: 2px; border-radius: 6px;
+}
+@media (prefers-reduced-motion: reduce) { .ds-btn:active { transform: none; } }

@@ -32,7 +32,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
         </div>
 
         {settings?.maps_url && (
-          <a href={settings.maps_url} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 font-semibold text-on-primary transition hover:bg-brand-deep">
+          <a href={settings.maps_url} target="_blank" rel="noreferrer" className="ds-btn ds-btn-primary mt-3 w-full">
             <Navigation className="size-4" /> Cómo llegar
           </a>
         )}
