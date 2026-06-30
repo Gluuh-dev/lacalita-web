@@ -2,7 +2,7 @@
 
 import {useState, useTransition} from 'react';
 import {toast} from 'sonner';
-import {Plus, Trash2} from 'lucide-react';
+import {Plus, Trash2, Star} from 'lucide-react';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import MediaUpload from '@/components/admin/media-upload';
 import {removeMedia} from '@/lib/storage';
@@ -86,9 +86,21 @@ export default function ContentForm({initial}: {initial: LandingContent}) {
                   <Trash2 className="size-4" />
                 </button>
               </div>
+              <div className="mt-2 flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    aria-label={`${n} estrella${n > 1 ? 's' : ''}`}
+                    onClick={() => setReviews((arr) => arr.map((x, j) => (j === i ? {...x, rating: n} : x)))}
+                  >
+                    <Star className={`size-5 ${(r.rating ?? 5) >= n ? 'fill-amber-400 text-amber-400' : 'text-ink-3'}`} />
+                  </button>
+                ))}
+              </div>
             </div>
           ))}
-          <button onClick={() => setReviews((arr) => [...arr, {quote: '', author: ''}])} className={`${btnGhost} inline-flex w-fit items-center gap-1.5`}>
+          <button onClick={() => setReviews((arr) => [...arr, {quote: '', author: '', rating: 5}])} className={`${btnGhost} inline-flex w-fit items-center gap-1.5`}>
             <Plus className="size-4" /> Añadir reseña
           </button>
         </div>

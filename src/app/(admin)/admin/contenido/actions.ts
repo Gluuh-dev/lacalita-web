@@ -12,7 +12,7 @@ export async function saveContent(input: {
   features: string[];
   storyTitle: string;
   storyText: string;
-  reviews: {quote: string; author: string}[];
+  reviews: {quote: string; author: string; rating?: number}[];
   gallery: string[];
 }) {
   const supabase = await createClient();

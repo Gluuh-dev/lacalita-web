@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote} from 'lucide-react';
+import {Coffee, UtensilsCrossed, Sandwich, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Music, Quote, Star} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
@@ -82,7 +82,23 @@ export default async function Home({
     sameAs: [settings?.social?.instagram, settings?.social?.facebook].filter(Boolean),
     image: settings?.hero_image ? [settings.hero_image] : undefined,
     hasMenu: `${SITE_URL}/carta`,
-    acceptsReservations: false
+    acceptsReservations: false,
+    ...(reviews.length
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: (reviews.reduce((s, r) => s + (r.rating ?? 5), 0) / reviews.length).toFixed(1),
+            reviewCount: reviews.length,
+            bestRating: 5
+          },
+          review: reviews.map((r) => ({
+            '@type': 'Review',
+            reviewRating: {'@type': 'Rating', ratingValue: r.rating ?? 5, bestRating: 5},
+            author: {'@type': 'Person', name: r.author},
+            reviewBody: r.quote
+          }))
+        }
+      : {})
   };
 
   return (
@@ -215,8 +231,15 @@ export default async function Home({
             <div className="grid gap-5 md:grid-cols-3">
               {reviews.map((r, idx) => (
                 <figure key={idx} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
-                  <Quote className="size-6 text-brand" />
-                  <blockquote className="mt-3 leading-relaxed text-ink-2">{r.quote}</blockquote>
+                  <div className="mb-3 flex items-center justify-between">
+                    <div className="flex gap-0.5">
+                      {Array.from({length: 5}).map((_, s) => (
+                        <Star key={s} className={`size-4 ${(r.rating ?? 5) > s ? 'fill-amber-400 text-amber-400' : 'text-line-strong'}`} />
+                      ))}
+                    </div>
+                    <Quote className="size-5 text-brand/60" />
+                  </div>
+                  <blockquote className="leading-relaxed text-ink-2">{r.quote}</blockquote>
                   <figcaption className="mt-4 font-semibold text-brand-deep">— {r.author}</figcaption>
                 </figure>
               ))}

@@ -1,6 +1,6 @@
 // Contenido editable de la landing (sin dependencias de servidor).
 export type I18nText = Record<string, string>;
-export type Review = {quote: string; author: string};
+export type Review = {quote: string; author: string; rating?: number};
 
 export type LandingContent = {
   about?: {title?: I18nText; text?: I18nText; features?: string[]};
