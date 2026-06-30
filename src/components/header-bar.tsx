@@ -144,7 +144,7 @@ export default function HeaderBar({
       {/* Menú móvil: círculo que se expande desde el botón (como en hamburguesería). */}
       <div
         aria-hidden={!open}
-        className="fixed inset-0 z-[45] bg-white sm:hidden"
+        className="fixed inset-0 z-[45] bg-bg sm:hidden"
         style={{
           clipPath: open ? M_OPEN : M_CLOSED,
           WebkitClipPath: open ? M_OPEN : M_CLOSED,
