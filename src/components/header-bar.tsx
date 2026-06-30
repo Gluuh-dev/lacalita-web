@@ -1,10 +1,11 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {ChevronLeft} from 'lucide-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
+import {useScrollLock} from '@/lib/use-scroll-lock';
 
 const CARTA_LABELS: Record<string, string> = {
   desayunos: 'Desayunos & Meriendas',
@@ -55,12 +56,7 @@ export default function HeaderBar({
   const [open, setOpen] = useState(false);
   const backHref = currentCarta === 'hamburgueseria' ? '/burguer' : '/';
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [open]);
+  useScrollLock(open);
 
   const overlay = mode.overHero && !scrolled;
   const onMedia = overlay && mode.hasMedia;

@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   }
 };
 
-export const viewport: Viewport = {themeColor: '#1c160e'};
+export const viewport: Viewport = {themeColor: '#faf6ef'};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));

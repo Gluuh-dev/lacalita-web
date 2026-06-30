@@ -5,6 +5,7 @@ import {ChevronUp, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
+import {useScrollLock} from '@/lib/use-scroll-lock';
 import type {HeroSlide} from '@/lib/hero-types';
 
 const FONT: Record<string, string> = {
@@ -311,16 +312,13 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   }, [agenda, evs.length]);
   useEffect(() => {
     if (sheet) setDrag(0);
-    document.body.style.overflow = sheet ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [sheet]);
+  useScrollLock(sheet);
 
   const showAgenda = agenda && hasEvents;
 
   return (
-    <div className="relative flex h-full w-full items-center overflow-hidden">
+    <div className="relative flex h-full w-full items-center overflow-hidden pb-28 lg:pb-0">
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
         <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
@@ -440,7 +438,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         <>
           <button
             onClick={() => setSheet(true)}
-            className="absolute inset-x-4 bottom-5 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
+            className="absolute inset-x-4 bottom-[5.5rem] z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
           >
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />
