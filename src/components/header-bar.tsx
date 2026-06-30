@@ -95,7 +95,7 @@ export default function HeaderBar({
               src="/brand/logo-solo.svg"
               alt="La Calita"
               style={{transform: 'translateY(-1px)'}}
-              className={cn('h-[30px] w-auto transition', light && 'brightness-0 invert')}
+              className={cn('h-[30px] w-auto transition', light && !open && 'brightness-0 invert')}
             />
             {!cartaLabel && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -103,7 +103,7 @@ export default function HeaderBar({
                 src="/brand/texto-lacalita-derecha.svg"
                 alt=""
                 aria-hidden
-                className={cn('h-[15px] w-auto transition', light && 'brightness-0 invert')}
+                className={cn('h-[15px] w-auto transition', light && !open && 'brightness-0 invert')}
               />
             )}
           </Link>
