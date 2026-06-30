@@ -117,6 +117,22 @@ export default async function Home({
           <div className="eyebrow mb-3">Bienvenidos a La Calita</div>
           <h2 className="font-serif text-3xl sm:text-4xl">{tx(about.title ?? {}, locale)}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
+          <span
+            aria-hidden
+            className="mx-auto mt-8 block h-16"
+            style={{
+              aspectRatio: '281.53 / 312.4',
+              backgroundColor: '#E9AE74',
+              WebkitMaskImage: 'url(/brand/ornament.svg)',
+              maskImage: 'url(/brand/ornament.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center'
+            }}
+          />
           {features.length > 0 && (
             <div className="mt-9 grid gap-4 sm:grid-cols-3">
               {features.map((f, idx) => {
