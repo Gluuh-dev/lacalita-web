@@ -71,7 +71,7 @@ export default async function MenuView({
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
       ) : (
-        <header className="relative flex min-h-[42svh] items-end overflow-hidden px-6 pb-10 pt-28 text-white">
+        <header className="lc-img-loading relative flex min-h-[42svh] items-end overflow-hidden px-6 pb-10 pt-28 text-white">
           {!headerMedia && <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />}
           {menu.header_video ? (
             <video className="absolute inset-0 h-full w-full object-cover" src={menu.header_video} autoPlay muted loop playsInline />

@@ -44,7 +44,7 @@ export default async function EventCard({
   ) : null;
 
   const Media = (
-    <div className="ds-media-zoom absolute inset-0">
+    <div className="lc-img-loading ds-media-zoom absolute inset-0">
       {event.image ? (
         <Image src={event.image} alt={title} fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover" />
       ) : (

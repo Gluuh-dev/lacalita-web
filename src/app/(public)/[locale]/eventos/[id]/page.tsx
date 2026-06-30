@@ -85,7 +85,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
     <main className="flex-1">
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
       {/* hero con media */}
-      <section className="relative flex min-h-[56vh] items-end overflow-hidden">
+      <section className="lc-img-loading relative flex min-h-[56vh] items-end overflow-hidden">
         {event.video ? (
           <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
         ) : images[0] ? (
