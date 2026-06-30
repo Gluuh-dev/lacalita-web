@@ -155,14 +155,11 @@ export default async function Home({
 
       {/* Cartas */}
       <Reveal>
-        <section id="carta" className="relative scroll-mt-20 overflow-hidden py-20">
-          <span aria-hidden className="pointer-events-none absolute inset-x-0 top-4 select-none text-center font-serif text-[26vw] font-bold leading-none text-ink/[0.04]">Sabores</span>
-          <div className="relative z-10 mx-auto max-w-6xl px-4">
-            <div className="mb-10 text-center md:text-left">
-              <div className="eyebrow mb-2">Nuestra cocina</div>
-              <h2 className="font-serif text-5xl font-bold leading-none sm:text-6xl">Sabores<span className="text-brand">.</span></h2>
-            </div>
-            <SnapCarousel itemClass="w-[72vw] max-w-[290px]" mdCols="md:grid-cols-3" accent="#c98a4e" ink="#243b53">
+        <section id="carta" className="scroll-mt-20 py-20">
+          <div className="mx-auto max-w-6xl px-4">
+            <SectionHead eyebrow="Nuestra cocina" title="Sabores" />
+            <div className="-mx-4 md:mx-0">
+            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdCols="md:grid-cols-3" accent="#c98a4e" ink="#243b53">
             {menus.map((m) => {
               const Icon = ICONS[m.slug] ?? UtensilsCrossed;
               return (
@@ -192,6 +189,7 @@ export default async function Home({
               );
             })}
             </SnapCarousel>
+            </div>
             <MoreLink href="/carta" label={t('menu.title')} />
           </div>
         </section>
@@ -201,8 +199,9 @@ export default async function Home({
       {featured.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
-            <SectionHead eyebrow="De nuestra carta" title="Platos para repetir" />
-            <SnapCarousel itemClass="w-[64vw] max-w-[260px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
+            <SectionHead eyebrow="De nuestra carta" title="Platos" />
+            <div className="-mx-4 md:mx-0">
+            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
               {featured.map((p) => (
                 <Link
                   key={p.id}
@@ -222,6 +221,7 @@ export default async function Home({
                 </Link>
               ))}
             </SnapCarousel>
+            </div>
             <MoreLink href="/carta" label={t('menu.title')} />
           </section>
         </Reveal>
@@ -232,12 +232,14 @@ export default async function Home({
         <Reveal>
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
             <div className="mx-auto max-w-6xl px-4 py-16">
-              <SectionHead eyebrow={t('events.upcoming')} title="Música a pie de playa" />
+              <SectionHead eyebrow={t('events.upcoming')} title="Música" />
+              <div className="-mx-4 md:mx-0">
               <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdCols="md:grid-cols-2" accent="#c98a4e" ink="#243b53">
                 {events.slice(0, 4).map((e) => (
                   <EventCard key={e.id} event={e} locale={locale} layout="tile" />
                 ))}
               </SnapCarousel>
+              </div>
               <MoreLink href="/eventos" label={t('events.all')} />
             </div>
           </section>
@@ -259,7 +261,7 @@ export default async function Home({
       {reviews.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
-            <div className="eyebrow mb-8 text-center">Lo que dicen</div>
+            <SectionHead eyebrow="Lo que dicen" title="Opiniones" />
             <div className="grid gap-5 md:grid-cols-3">
               {reviews.map((r, idx) => (
                 <figure key={idx} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
@@ -284,7 +286,7 @@ export default async function Home({
       {gallery.length > 0 && (
         <Reveal>
           <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-            <div className="eyebrow mb-8 text-center">Galería</div>
+            <SectionHead eyebrow="Momentos" title="Galería" />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="ds-media-zoom aspect-square overflow-hidden rounded-[16px] border border-line">
@@ -300,7 +302,7 @@ export default async function Home({
       {/* Ubicación */}
       <Reveal>
         <section id="info" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-          <SectionHead eyebrow="Dónde estamos" title="A pie de playa, en Salobreña" />
+          <SectionHead eyebrow="Dónde estamos" title="Ubicación" />
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
             {/* Horario */}
             <div className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
@@ -390,11 +392,23 @@ const ICONS: Record<string, typeof Coffee> = {
   hamburgueseria: Sandwich
 };
 
-function SectionHead({eyebrow, title}: {eyebrow: string; title: string}) {
+// Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
+function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   return (
-    <div className="mb-8 text-center md:text-left">
-      <div className="eyebrow mb-2">{eyebrow}</div>
-      <h2 className="font-serif text-3xl sm:text-4xl">{title}</h2>
+    <div className="relative mb-10 overflow-hidden py-4 text-center">
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[clamp(4.5rem,17vw,9rem)] font-bold leading-none ${dark ? 'text-white/[0.05]' : 'text-ink/[0.05]'}`}
+      >
+        {bg ?? title}
+      </span>
+      <div className="relative">
+        <div className="eyebrow mb-1.5">{eyebrow}</div>
+        <h2 className="font-serif text-4xl font-bold sm:text-5xl">
+          {title}
+          <span className="text-brand">.</span>
+        </h2>
+      </div>
     </div>
   );
 }
