@@ -134,15 +134,37 @@ export default async function Home({
         </section>
       </Reveal>
 
+      {/* Manifesto */}
+      <Reveal>
+        <section className="relative overflow-hidden bg-[#15110b] py-24 text-white sm:py-28">
+          <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center font-serif text-[34vw] font-bold leading-none text-white/[0.045]">ritmo</span>
+          <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+            <Waves className="mx-auto mb-8 size-9 text-brand" strokeWidth={2.2} />
+            <blockquote className="font-serif text-[clamp(1.8rem,5.6vw,3.25rem)] font-bold italic leading-[1.15]">
+              “No somos un club de playa. Somos el <span className="text-brand">latido</span> del Mediterráneo capturado en una copa.”
+            </blockquote>
+            <div className="mt-10 flex items-center justify-center gap-4">
+              <span className="h-px w-10 bg-white/25" />
+              <span className="font-adam text-[0.62rem] uppercase tracking-[0.28em] text-white/45">La Calita · Manifesto</span>
+              <span className="h-px w-10 bg-white/25" />
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
       {/* Cartas */}
       <Reveal>
-        <section id="carta" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-          <SectionHead
-            eyebrow="Nuestra cocina"
-            title="Tres cartas, un mismo mar"
-            action={<ActionLink href="/carta" label={t('menu.title')} />}
-          />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <section id="carta" className="relative scroll-mt-20 overflow-hidden py-20">
+          <span aria-hidden className="pointer-events-none absolute inset-x-0 top-4 select-none text-center font-serif text-[26vw] font-bold leading-none text-ink/[0.04]">Sabores</span>
+          <div className="relative z-10 mx-auto max-w-6xl px-4">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <div className="eyebrow mb-2">Nuestra cocina</div>
+                <h2 className="font-serif text-5xl font-bold leading-none sm:text-6xl">Sabores<span className="text-brand">.</span></h2>
+              </div>
+              <ActionLink href="/carta" label={t('menu.title')} />
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {menus.map((m) => {
               const Icon = ICONS[m.slug] ?? UtensilsCrossed;
               return (
@@ -150,19 +172,28 @@ export default async function Home({
                   key={m.id}
                   href={m.slug === 'hamburgueseria' ? '/burguer' : `/carta/${m.slug}`}
                   data-theme={m.theme}
-                  className="ds-card--link group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-[28px] bg-gradient-to-br from-brand to-brand-deep p-6 text-white shadow-md"
+                  className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md"
                 >
-                  <span className="mb-3 flex size-12 items-center justify-center rounded-full bg-white/20 backdrop-blur">
-                    <Icon className="size-6" />
+                  {m.header_image ? (
+                    <Image src={m.header_image} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
+                  <span className="absolute left-4 top-4 z-10 flex size-10 items-center justify-center rounded-full bg-white/15 backdrop-blur">
+                    <Icon className="size-5" />
                   </span>
-                  <h3 className="font-serif text-2xl">{tx(m.name, locale)}</h3>
-                  {m.subtitle && <p className="mt-1 text-sm text-white/90">{tx(m.subtitle, locale)}</p>}
-                  <span className="mt-3 inline-flex items-center gap-1.5 font-adam text-[0.72rem] uppercase tracking-[0.12em]">
-                    Ver carta <ArrowRight className="size-4" />
-                  </span>
+                  <div className="relative z-10">
+                    <h3 className="font-serif text-3xl leading-tight">{tx(m.name, locale)}</h3>
+                    {m.subtitle && <p className="mt-1 text-sm text-white/85">{tx(m.subtitle, locale)}</p>}
+                    <span className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-white py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink transition group-hover:bg-white/90">
+                      Ver carta <ArrowRight className="size-4" />
+                    </span>
+                  </div>
                 </Link>
               );
             })}
+            </div>
           </div>
         </section>
       </Reveal>
