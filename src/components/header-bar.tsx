@@ -89,13 +89,23 @@ export default function HeaderBar({
               <ChevronLeft className="size-6" />
             </Link>
           )}
-          <Link href="/" aria-label="La Calita" className="flex items-center">
+          <Link href="/" aria-label="La Calita" className="flex items-center gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/logo-solo.svg"
               alt="La Calita"
-              className={cn('h-8 w-auto transition sm:h-9', light && 'brightness-0 invert')}
+              style={{transform: 'translateY(-1px)'}}
+              className={cn('h-[30px] w-auto transition', light && 'brightness-0 invert')}
             />
+            {!cartaLabel && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/brand/texto-lacalita-derecha.svg"
+                alt=""
+                aria-hidden
+                className={cn('h-[15px] w-auto transition', light && 'brightness-0 invert')}
+              />
+            )}
           </Link>
         </div>
 
