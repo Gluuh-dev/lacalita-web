@@ -1,5 +1,6 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
+import Image from 'next/image';
 import {Calendar, Clock, Music, MapPin, Navigation} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getPublicEvent, getUpcomingEvents, getEventTickets} from '@/lib/queries';
@@ -89,8 +90,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
         {event.video ? (
           <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
         ) : images[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={images[0]} alt={title} className="absolute inset-0 h-full w-full object-cover" />
+          <Image src={images[0]} alt={title} fill priority sizes="100vw" className="object-cover" />
         ) : (
           <div className="absolute inset-0" style={{background: GRAD[kind] ?? GRAD.dj}} />
         )}
