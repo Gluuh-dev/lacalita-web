@@ -12,6 +12,7 @@ import {SITE_URL, altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
+import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
 
@@ -272,9 +273,12 @@ export default async function Home({
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
             {/* Horario */}
             <div className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-2">
-                <Clock className="size-5 text-brand-deep" />
-                <h3 className="font-serif text-xl">{t('info.hours')}</h3>
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Clock className="size-5 text-brand-deep" />
+                  <h3 className="font-serif text-xl">{t('info.hours')}</h3>
+                </div>
+                <OpenStatus hours={hours} />
               </div>
               {hours.notice && (
                 <div className="mb-4 flex items-start gap-2 rounded-[14px] bg-amber-50 px-3 py-2.5 text-sm font-medium text-amber-700">

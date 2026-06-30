@@ -39,3 +39,50 @@ export function normalizeHours(raw: unknown): Hours {
 export function formatRanges(row: HoursRow): string {
   return row.ranges.map((r) => `${r.from} – ${r.to}`).join('  ·  ');
 }
+
+const toMin = (s: string) => {
+  const [h, m] = s.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+};
+
+// Días de la semana mencionados en una etiqueta libre ("Lunes a Viernes", "Sábado"…).
+// Índice = getDay() (0 domingo … 6 sábado).
+function labelDays(label: string): Set<number> {
+  const s = label.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const order = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+  const mentioned = order.map((d, i) => (s.includes(d) ? i : -1)).filter((i) => i >= 0);
+  const set = new Set<number>();
+  if (mentioned.length >= 2 && /\ba\b|–|-|hasta/.test(s)) {
+    for (let d = mentioned[0]; d <= mentioned[mentioned.length - 1]; d++) set.add(d);
+  } else {
+    mentioned.forEach((d) => set.add(d));
+  }
+  return set;
+}
+
+// ¿Está abierto ahora? Devuelve también a qué hora cierra. Maneja rangos que cruzan
+// medianoche (p. ej. 09:00 – 02:00).
+export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; closesAt: string | null} {
+  const day = now.getDay();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  for (const row of hours.rows) {
+    if (row.closed) continue;
+    const days = labelDays(row.label);
+    if (days.has(day)) {
+      for (const r of row.ranges) {
+        const from = toMin(r.from);
+        const to = toMin(r.to);
+        if (to > from ? mins >= from && mins < to : mins >= from) return {open: true, closesAt: r.to};
+      }
+    }
+    // Cierre que viene del día anterior (rango nocturno que cruza medianoche).
+    if (days.has((day + 6) % 7)) {
+      for (const r of row.ranges) {
+        const from = toMin(r.from);
+        const to = toMin(r.to);
+        if (to <= from && mins < to) return {open: true, closesAt: r.to};
+      }
+    }
+  }
+  return {open: false, closesAt: null};
+}

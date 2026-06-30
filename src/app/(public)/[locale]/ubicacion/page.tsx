@@ -3,6 +3,7 @@ import {MapPin, Phone, Mail, Clock, Navigation} from 'lucide-react';
 import {getSettings} from '@/lib/queries';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {altLanguages} from '@/lib/site';
+import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
 
@@ -21,7 +22,10 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
     <main className="min-h-screen bg-bg pb-28 pt-20 text-ink">
       <div className="mx-auto max-w-3xl px-4">
         <div className="eyebrow mb-2 text-center">Dónde estamos</div>
-        <h1 className="mb-8 text-center font-serif text-4xl sm:text-5xl">A pie de playa, en Salobreña</h1>
+        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">A pie de playa, en Salobreña</h1>
+        <div className="mb-8 flex justify-center">
+          <OpenStatus hours={hours} />
+        </div>
 
         <div className="overflow-hidden rounded-[20px] border border-line shadow-sm">
           <iframe title="Mapa La Calita" src={`https://www.google.com/maps?q=${q}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-72 w-full border-0" />
