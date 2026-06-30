@@ -138,7 +138,8 @@ export default async function Home({
       {/* Manifesto */}
       <Reveal>
         <section className="relative overflow-hidden bg-[#15110b] py-24 text-white sm:py-28">
-          <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center font-serif text-[34vw] font-bold leading-none text-white/[0.045]">ritmo</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/manifesto.svg" alt="" aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 select-none object-cover opacity-[0.1]" />
           <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
             <Waves className="mx-auto mb-8 size-9 text-brand" strokeWidth={2.2} />
             <blockquote className="font-serif text-[clamp(1.8rem,5.6vw,3.25rem)] font-bold italic leading-[1.15]">
@@ -395,14 +396,14 @@ const ICONS: Record<string, typeof Coffee> = {
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   return (
-    <div className="relative mb-10 overflow-hidden py-6 text-center">
+    <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
       <span
         aria-hidden
         className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[clamp(6rem,32vw,20rem)] font-bold leading-none ${dark ? 'text-white/[0.06]' : 'text-ink/[0.055]'}`}
       >
         {bg ?? title}
       </span>
-      <div className="relative">
+      <div className="relative mx-auto max-w-6xl px-4">
         <div className="eyebrow mb-2">{eyebrow}</div>
         <h2 className="font-serif text-5xl font-bold sm:text-6xl">
           {title}
