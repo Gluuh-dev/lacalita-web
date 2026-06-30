@@ -395,16 +395,16 @@ const ICONS: Record<string, typeof Coffee> = {
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   return (
-    <div className="relative mb-10 overflow-hidden py-4 text-center">
+    <div className="relative mb-10 overflow-hidden py-6 text-center">
       <span
         aria-hidden
-        className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[clamp(4.5rem,17vw,9rem)] font-bold leading-none ${dark ? 'text-white/[0.05]' : 'text-ink/[0.05]'}`}
+        className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[clamp(6rem,32vw,20rem)] font-bold leading-none ${dark ? 'text-white/[0.06]' : 'text-ink/[0.055]'}`}
       >
         {bg ?? title}
       </span>
       <div className="relative">
-        <div className="eyebrow mb-1.5">{eyebrow}</div>
-        <h2 className="font-serif text-4xl font-bold sm:text-5xl">
+        <div className="eyebrow mb-2">{eyebrow}</div>
+        <h2 className="font-serif text-5xl font-bold sm:text-6xl">
           {title}
           <span className="text-brand">.</span>
         </h2>
