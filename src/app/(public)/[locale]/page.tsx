@@ -139,7 +139,7 @@ export default async function Home({
       <Reveal>
         <section className="relative overflow-hidden bg-[#15110b] py-24 text-white sm:py-28">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/manifesto.svg" alt="" aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 select-none object-cover opacity-[0.1]" />
+          <img src="/brand/manifesto.svg" alt="" aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 select-none object-cover opacity-[0.18]" />
           <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
             <Waves className="mx-auto mb-8 size-9 text-brand" strokeWidth={2.2} />
             <blockquote className="font-serif text-[clamp(1.8rem,5.6vw,3.25rem)] font-bold italic leading-[1.15]">
