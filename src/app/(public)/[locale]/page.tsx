@@ -10,6 +10,7 @@ import {toHeroEvents} from '@/lib/hero';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {SITE_URL, altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
+import SnapCarousel from '@/components/burger/snap-carousel';
 import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
 import OpenStatus from '@/components/open-status';
@@ -164,7 +165,7 @@ export default async function Home({
               </div>
               <ActionLink href="/carta" label={t('menu.title')} />
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <SnapCarousel itemClass="w-[72vw] max-w-[290px]" mdCols="md:grid-cols-3" accent="#c98a4e" ink="#243b53">
             {menus.map((m) => {
               const Icon = ICONS[m.slug] ?? UtensilsCrossed;
               return (
@@ -193,7 +194,7 @@ export default async function Home({
                 </Link>
               );
             })}
-            </div>
+            </SnapCarousel>
           </div>
         </section>
       </Reveal>
@@ -203,7 +204,7 @@ export default async function Home({
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
             <SectionHead eyebrow="De nuestra carta" title="Platos para repetir" action={<ActionLink href="/carta" label={t('menu.title')} />} />
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <SnapCarousel itemClass="w-[60vw] max-w-[240px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
               {featured.map((p) => (
                 <Link
                   key={p.id}
@@ -219,7 +220,7 @@ export default async function Home({
                   </div>
                 </Link>
               ))}
-            </div>
+            </SnapCarousel>
           </section>
         </Reveal>
       )}
@@ -234,11 +235,11 @@ export default async function Home({
                 title="Música a pie de playa"
                 action={<ActionLink href="/eventos" label={t('events.all')} />}
               />
-              <div className="grid gap-5 md:grid-cols-2">
+              <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdCols="md:grid-cols-2" accent="#c98a4e" ink="#243b53">
                 {events.slice(0, 4).map((e) => (
-                  <EventCard key={e.id} event={e} locale={locale} />
+                  <EventCard key={e.id} event={e} locale={locale} layout="tile" />
                 ))}
-              </div>
+              </SnapCarousel>
             </div>
           </section>
         </Reveal>

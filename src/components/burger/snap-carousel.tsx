@@ -8,11 +8,15 @@ import {ChevronLeft, ChevronRight} from 'lucide-react';
 export default function SnapCarousel({
   children,
   itemClass = 'w-[80vw] max-w-[340px]',
-  mdCols = 'md:grid-cols-3'
+  mdCols = 'md:grid-cols-3',
+  accent = '#c36148',
+  ink = '#2a1713'
 }: {
   children: React.ReactNode[];
   itemClass?: string;
   mdCols?: string;
+  accent?: string;
+  ink?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -63,15 +67,15 @@ export default function SnapCarousel({
 
       {n > 1 && (
         <div className="mt-5 flex items-center justify-center gap-4 md:hidden">
-          <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/20 text-[#2a1713] transition disabled:opacity-30">
+          <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" style={{borderColor: `${ink}33`, color: ink}} className="flex size-11 items-center justify-center rounded-full border transition disabled:opacity-30">
             <ChevronLeft className="size-5" />
           </button>
           <div className="flex items-center gap-2">
             {items.map((_, i) => (
-              <button key={i} onClick={() => go(i)} aria-label={`Ir a ${i + 1}`} className={`h-2 rounded-full transition-all ${i === active ? 'w-6 bg-[#c36148]' : 'w-2 bg-[#2a1713]/25'}`} />
+              <button key={i} onClick={() => go(i)} aria-label={`Ir a ${i + 1}`} style={{background: i === active ? accent : `${ink}40`}} className={`h-2 rounded-full transition-all ${i === active ? 'w-6' : 'w-2'}`} />
             ))}
           </div>
-          <button onClick={() => go(active + 1)} disabled={active >= n - 1} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full border border-[#2a1713]/20 text-[#2a1713] transition disabled:opacity-30">
+          <button onClick={() => go(active + 1)} disabled={active >= n - 1} aria-label="Siguiente" style={{borderColor: `${ink}33`, color: ink}} className="flex size-11 items-center justify-center rounded-full border transition disabled:opacity-30">
             <ChevronRight className="size-5" />
           </button>
         </div>
