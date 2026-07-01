@@ -17,15 +17,12 @@ export default function ProductItem({
   menuSlug: string;
   locale: string;
 }) {
-  const {isFav, qty, add, dec, setOpen} = useMenuStore();
+  const {isFav, qty, add, dec} = useMenuStore();
   const favGate = useFavGate();
   const router = useRouter();
-  // En la hamburguesería abrimos PÁGINA (no modal): más funcional para la compra futura.
-  const usePage = menuSlug === 'hamburgueseria';
-  const openIt = () => {
-    if (usePage) router.push(`/burguer/carta/${product.slug}`);
-    else setOpen(item);
-  };
+  // Todas las cartas abren el detalle como PÁGINA (no modal), como la hamburguesería.
+  const detailHref = menuSlug === 'hamburgueseria' ? `/burguer/carta/${product.slug}` : `/carta/${menuSlug}/${product.slug}`;
+  const openIt = () => router.push(detailHref);
   const item: MenuItem = {
     id: product.id,
     name: tx(product.name, locale),

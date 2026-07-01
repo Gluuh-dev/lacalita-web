@@ -5,7 +5,6 @@ import type {Menu, Allergen} from '@/lib/queries';
 import MenuFilters from './menu-filters';
 import AllergenIcon from './allergen-icon';
 import {type MenuItem} from '@/components/menu/store';
-import MenuTabBar from '@/components/menu/menu-tabbar';
 import BurgerData from '@/components/burger/burger-data';
 import CartaEmpty from './carta-empty';
 
@@ -99,7 +98,7 @@ export default async function MenuView({
       ) : (
         <>
           <Suspense fallback={null}>
-            <MenuFilters menu={menu} pinned={menu.slug === 'hamburgueseria'} />
+            <MenuFilters menu={menu} pinned />
           </Suspense>
 
           {used.size > 0 && (
@@ -120,13 +119,7 @@ export default async function MenuView({
             </div>
           )}
 
-          {menu.slug === 'hamburgueseria' ? (
-            <BurgerData videos={videos} />
-          ) : (
-            <Suspense fallback={null}>
-              <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
-            </Suspense>
-          )}
+          {menu.slug === 'hamburgueseria' && <BurgerData videos={videos} />}
         </>
       )}
     </div>

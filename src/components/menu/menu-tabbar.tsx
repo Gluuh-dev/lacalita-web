@@ -123,12 +123,11 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
 }
 
 function Thumb({item, locale}: {item: MenuItem; locale: string}) {
-  const s = useMenuStore();
   const router = useRouter();
   const open = () => {
-    // En hamburguesería el detalle es una PÁGINA (sin modal); el resto abre la hoja.
-    if (item.menuSlug === 'hamburgueseria') router.push(`/${locale}/burguer/carta/${item.slug}`);
-    else s.setOpen(item);
+    // El detalle es una PÁGINA en todas las cartas.
+    const href = item.menuSlug === 'hamburgueseria' ? `/burguer/carta/${item.slug}` : `/carta/${item.menuSlug}/${item.slug}`;
+    router.push(`/${locale}${href}`);
   };
   return (
     <button onClick={open} className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-sunken text-line-strong">
