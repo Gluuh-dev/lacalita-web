@@ -8,6 +8,12 @@ import {type MenuItem} from '@/components/menu/store';
 import BurgerData from '@/components/burger/burger-data';
 import CartaEmpty from './carta-empty';
 
+// Motivo de fondo propio por carta (ilustración multicolor, estilo hamburguesería).
+// Se irán añadiendo desayunos/restaurante cuando lleguen sus SVG.
+const MOTIVO: Record<string, string> = {
+  cocteles: '/brand/motivo-cocteles.svg'
+};
+
 export default async function MenuView({
   menu,
   locale
@@ -62,23 +68,37 @@ export default async function MenuView({
           }}
         />
       )}
-      {menu.slug !== 'hamburgueseria' && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-6deg] opacity-[0.1]"
-          style={{
-            backgroundColor: '#E9AE74',
-            WebkitMaskImage: 'url(/brand/manifesto.svg)',
-            maskImage: 'url(/brand/manifesto.svg)',
-            WebkitMaskRepeat: 'no-repeat',
-            maskRepeat: 'no-repeat',
-            WebkitMaskSize: 'contain',
-            maskSize: 'contain',
-            WebkitMaskPosition: 'center',
-            maskPosition: 'center'
-          }}
-        />
-      )}
+      {menu.slug !== 'hamburgueseria' &&
+        (MOTIVO[menu.slug] ? (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-7deg] opacity-[0.13]"
+            style={{
+              backgroundImage: `url(${MOTIVO[menu.slug]})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center top',
+              WebkitMaskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)',
+              maskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)'
+            }}
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-6deg] opacity-[0.1]"
+            style={{
+              backgroundColor: '#E9AE74',
+              WebkitMaskImage: 'url(/brand/manifesto.svg)',
+              maskImage: 'url(/brand/manifesto.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center'
+            }}
+          />
+        ))}
       {menu.slug === 'hamburgueseria' ? (
         <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
           {/* eslint-disable-next-line @next/next/no-img-element */}
