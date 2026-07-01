@@ -1,63 +1,104 @@
 'use client';
 
+import {useState} from 'react';
 import type {Icon as TablerIcon} from '@tabler/icons-react';
 import {
   IconHome,
   IconHomeFilled,
   IconTicket,
   IconTicketFilled,
-  IconToolsKitchen2,
   IconPhoto,
   IconPhotoFilled,
   IconLocation,
-  IconLocationFilled
+  IconLocationFilled,
+  IconToolsKitchen2,
+  IconCoffee,
+  IconGlassCocktail,
+  IconBurger
 } from '@tabler/icons-react';
 import {Link, usePathname} from '@/i18n/navigation';
 
 // Se oculta donde hay otra barra inferior (cartas de menú, burguer) y en admin.
 const HIDE = /^\/(burguer|admin)(\/|$)|^\/carta\/[^/]+/;
 
-// Forma de la barra: esquinas superiores redondeadas + muesca central con hombros
-// redondeados (curvas Bézier con tangente horizontal → sin picos) que abraza el FAB.
-// Bolsillo circular central (cuello estrecho + hombros redondeados) que abraza el FAB.
+// Barra con bolsillo circular central (hombros redondeados) que abraza el FAB (del prototipo).
 const BAR_PATH =
-  'M0,24 Q0,0 24,0 H164 Q170,0 172,10 A34,34 0 1 0 218,10 Q220,0 226,0 H366 Q390,0 390,24 V72 H0 Z';
+  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
+
+// Las 4 cartas que se despliegan en abanico desde el botón central.
+const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
+  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
+  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
+  {href: '/burguer', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+];
 
 export default function SiteTabBar() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   if (HIDE.test(pathname)) return null;
 
-  const onCarta = pathname === '/carta';
-
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around px-1 pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-3 md:hidden">
-      <svg aria-hidden viewBox="0 0 390 72" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" style={{filter: 'drop-shadow(0 -2px 7px rgba(0,0,0,.10))'}}>
-        <path d={BAR_PATH} fill="var(--bg)" />
-      </svg>
+    <>
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in md:hidden" onClick={() => setOpen(false)} />}
 
-      <Item href="/" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
-      <Item href="/eventos" label="Eventos" Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
+      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:hidden">
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 -2px 8px rgba(0,0,0,.10))'}}>
+          <path d={BAR_PATH} fill="var(--bg)" />
+        </svg>
 
-      {/* Hueco central para el FAB */}
-      <div className="flex-1" aria-hidden />
+        {/* Pestañas (izquierda / hueco central / derecha) */}
+        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
+          <div className="flex flex-1 justify-around">
+            <Item href="/" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
+            <Item href="/eventos" label="Eventos" Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
+          </div>
+          <div className="w-[74px] shrink-0" aria-hidden />
+          <div className="flex flex-1 justify-around">
+            <Item href="/galeria" label="Galería" Icon={IconPhoto} IconFilled={IconPhotoFilled} active={pathname === '/galeria'} />
+            <Item href="/ubicacion" label="Ubicación" Icon={IconLocation} IconFilled={IconLocationFilled} active={pathname === '/ubicacion'} />
+          </div>
+        </div>
 
-      <Item href="/galeria" label="Galería" Icon={IconPhoto} IconFilled={IconPhotoFilled} active={pathname === '/galeria'} />
-      <Item href="/ubicacion" label="Ubicación" Icon={IconLocation} IconFilled={IconLocationFilled} active={pathname === '/ubicacion'} />
+        {/* Abanico de cartas */}
+        {CARTAS.map((c, i) => (
+          <Link
+            key={c.href}
+            href={c.href}
+            aria-label={c.label}
+            onClick={() => setOpen(false)}
+            className="absolute left-1/2 top-[32px] z-40 flex size-14 items-center justify-center rounded-full border-2 border-brand bg-bg text-ink shadow-lg"
+            style={{
+              transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
+              opacity: open ? 1 : 0,
+              pointerEvents: open ? 'auto' : 'none',
+              transition: 'transform .32s cubic-bezier(.34,1.56,.64,1), opacity .22s',
+              transitionDelay: open ? `${i * 0.05}s` : `${(3 - i) * 0.04}s`
+            }}
+          >
+            <c.Icon size={22} stroke={1.9} />
+          </Link>
+        ))}
 
-      {/* Carta: FAB central elevado que encaja en la muesca */}
-      <Link href="/carta" aria-label="Carta" className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
-        <span className={`flex size-14 items-center justify-center rounded-full ring-[3px] ring-bg transition active:scale-95 ${onCarta ? 'bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(201,138,78,.55)]' : 'bg-line-strong text-ink'}`}>
-          <IconToolsKitchen2 size={26} stroke={2} />
-        </span>
-      </Link>
-    </nav>
+        {/* FAB central: abre/cierra el abanico */}
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-label="Cartas"
+          aria-expanded={open}
+          className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-brand bg-bg text-ink transition active:scale-95"
+        >
+          <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
+        </button>
+      </nav>
+    </>
   );
 }
 
 function Item({href, label, Icon, IconFilled, active}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean}) {
   const I = active ? IconFilled : Icon;
   return (
-    <Link href={href} className={`relative z-10 flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
+    <Link href={href} className={`flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
       <I size={22} stroke={1.8} />
       {label}
     </Link>
