@@ -10,6 +10,7 @@ import {useScrollLock} from '@/lib/use-scroll-lock';
 const CARTA_LABELS: Record<string, string> = {
   desayunos: 'Desayunos & Meriendas',
   restaurante: 'Restaurante',
+  cocteles: 'Cócteles',
   hamburgueseria: 'Hamburguesería'
 };
 import LangSwitcher from './lang-switcher';
@@ -29,15 +30,20 @@ export default function HeaderBar({
   const {mode} = useHeaderMode();
   const isAdmin = useIsAdmin();
   const pathname = usePathname();
-  const cartaMatch = pathname.match(/^\/carta\/([^/]+)/);
+  const cartaMatch = pathname.match(/^\/carta\/([^/]+)(?:\/([^/]+))?/);
   const currentCarta = cartaMatch ? cartaMatch[1] : null;
+  const cartaSub = cartaMatch ? cartaMatch[2] : undefined;
+  // El botón atrás solo aparece en el DETALLE de producto (/carta/[menu]/[producto]).
+  // En carta / vídeo / favoritos / lista aparece el logo.
+  const onCartaDetail = !!currentCarta && !!cartaSub && !['fav', 'list', 'video'].includes(cartaSub);
   const cartaLabel = currentCarta ? CARTA_LABELS[currentCarta] ?? null : null;
 
-  const menuLinks = cartaLabel
+  const menuLinks = currentCarta
     ? [
         {href: '/', label: 'Inicio', active: false},
         {href: '/carta/desayunos', label: 'Desayunos', active: currentCarta === 'desayunos'},
         {href: '/carta/restaurante', label: 'Restaurante', active: currentCarta === 'restaurante'},
+        {href: '/carta/cocteles', label: 'Cócteles', active: currentCarta === 'cocteles'},
         {href: '/burguer/carta', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
       ]
     : [
@@ -49,12 +55,12 @@ export default function HeaderBar({
       ];
   const overlayLinks = [
     ...menuLinks,
-    ...(isAdmin && cartaLabel ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
+    ...(isAdmin && currentCarta ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
     ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])
   ];
   const {scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
-  const backHref = currentCarta === 'hamburgueseria' ? '/burguer' : '/';
+  const backHref = onCartaDetail && currentCarta ? `/carta/${currentCarta}` : '/';
 
   useScrollLock(open);
 
@@ -76,7 +82,7 @@ export default function HeaderBar({
         )}
       >
         <div className="flex items-center gap-1">
-          {cartaLabel && (
+          {onCartaDetail && (
             <Link
               href={backHref}
               aria-label="Volver"
@@ -93,7 +99,7 @@ export default function HeaderBar({
               style={{transform: 'translateY(-1px)'}}
               className={cn('h-[30px] w-auto transition', light && !open && 'brightness-0 invert')}
             />
-            {!cartaLabel && (
+            {!onCartaDetail && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src="/brand/texto-lacalita-derecha.svg"
@@ -106,7 +112,7 @@ export default function HeaderBar({
         </div>
 
         <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
-          {cartaLabel ? (
+          {onCartaDetail ? (
             <span className="font-adam text-[0.8rem] uppercase tracking-[0.13em]">{cartaLabel}</span>
           ) : (
             <>
@@ -121,7 +127,7 @@ export default function HeaderBar({
           <LangSwitcher />
         </nav>
 
-        {cartaLabel && (
+        {onCartaDetail && (
           <span className={cn('pointer-events-none absolute left-1/2 -translate-x-1/2 font-adam text-xs uppercase tracking-[0.12em] sm:hidden', light ? 'text-white' : 'text-ink')}>
             {cartaLabel}
           </span>
