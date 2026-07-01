@@ -5,7 +5,8 @@ import {usePathname} from 'next/navigation';
 import BurgerHeader from './burger-header';
 import BurgerTabBar from './burger-tabbar';
 
-const BURGER_THEME = '#c36148';
+// Barra de estado igual que el navbar de la hamburguesería (crema), no terracota.
+const BURGER_THEME = '#fdfbf7';
 
 // Navbar + tab-bar de hamburguesería montados en el layout: persisten al navegar
 // (parece la misma app, solo cambia el contenido).
