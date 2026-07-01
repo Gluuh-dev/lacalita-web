@@ -27,10 +27,10 @@ const BAR_PATH =
 
 // Las 4 cartas que se despliegan en abanico desde el botón central.
 const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
-  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
-  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
-  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
-  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -132, dy: -62},
+  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -50, dy: -116},
+  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 50, dy: -116},
+  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
 export default function SiteTabBar() {

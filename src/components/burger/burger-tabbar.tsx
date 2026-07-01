@@ -23,10 +23,10 @@ const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
 
 const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
-  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
-  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
-  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
-  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -132, dy: -62},
+  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -50, dy: -116},
+  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 50, dy: -116},
+  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
 // Colores de la hamburguesería.
