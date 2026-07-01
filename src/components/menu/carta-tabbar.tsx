@@ -29,6 +29,13 @@ const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: nu
   {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
+// Icono + color del botón central según la carta actual.
+const MENU_STYLE: Record<string, {Icon: TablerIcon; color: string}> = {
+  desayunos: {Icon: IconCoffee, color: '#c9922f'},
+  restaurante: {Icon: IconToolsKitchen2, color: '#b5651d'},
+  cocteles: {Icon: IconGlassCocktail, color: '#2e6e8e'}
+};
+
 export default function CartaTabBar() {
   const pathname = usePathname();
   const s = useMenuStore();
@@ -48,6 +55,8 @@ export default function CartaTabBar() {
 
   const base = `/carta/${menu}`;
   const onCartaIndex = sub === ''; // estamos en la carta → el centro abre el abanico
+  const cur = MENU_STYLE[menu] ?? {Icon: IconToolsKitchen2, color: '#c98a4e'};
+  const CurIcon = cur.Icon;
 
   return (
     <>
@@ -101,17 +110,19 @@ export default function CartaTabBar() {
             onClick={() => setOpen((o) => !o)}
             aria-label="Elegir carta"
             aria-expanded={open}
-            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
+            style={{backgroundColor: cur.color, transition: 'background-color .45s ease, transform .12s'}}
           >
-            <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
+            <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
           </button>
         ) : (
           <Link
             href={base}
             aria-label="Carta"
-            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-line-strong text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
+            style={{backgroundColor: cur.color, transition: 'background-color .45s ease, transform .12s'}}
           >
-            <IconToolsKitchen2 size={26} stroke={2} />
+            <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" />
           </Link>
         )}
       </nav>

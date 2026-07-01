@@ -108,16 +108,16 @@ export default function BurgerTabBar() {
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
             style={{background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
-            <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
+            <IconBurger size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
           </button>
         ) : (
           <Link
             href="/burguer/carta"
             aria-label="Carta"
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
-            style={{background: C.neutral, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
+            style={{background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
-            <IconToolsKitchen2 size={26} stroke={2} />
+            <IconBurger size={26} stroke={2} />
           </Link>
         )}
       </nav>
