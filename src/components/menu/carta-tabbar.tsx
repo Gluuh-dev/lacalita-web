@@ -26,7 +26,7 @@ const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: nu
   {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
   {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
   {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
-  {href: '/burguer', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
 ];
 
 export default function CartaTabBar() {

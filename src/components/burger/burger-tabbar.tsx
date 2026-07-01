@@ -1,103 +1,135 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
-import type {LucideIcon} from 'lucide-react';
-import {Home, UtensilsCrossed, PlayCircle, Heart, ListChecks, Percent, MapPin} from 'lucide-react';
+import {useState} from 'react';
+import type {Icon as TablerIcon} from '@tabler/icons-react';
+import {
+  IconHome,
+  IconHomeFilled,
+  IconVideo,
+  IconVideoFilled,
+  IconHeart,
+  IconHeartFilled,
+  IconClipboardList,
+  IconClipboardListFilled,
+  IconToolsKitchen2,
+  IconCoffee,
+  IconGlassCocktail,
+  IconBurger
+} from '@tabler/icons-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {useMenuStore} from '@/components/menu/store';
 
-type Tab = {
-  key: string;
-  label: string;
-  icon: LucideIcon;
-  href?: string;
-  onClick?: () => void;
-  active: boolean;
-  badge: number;
-  pop?: boolean;
-  animated?: boolean;
-};
+const BAR_PATH =
+  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
+
+const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
+  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
+  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
+  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+];
+
+// Colores de la hamburguesería.
+const C = {bg: '#fdfbf7', brand: '#c36148', neutral: '#b3aaa0', ink: '#2a1713', dim: 'rgba(42,23,19,.55)'};
 
 export default function BurgerTabBar() {
   const pathname = usePathname();
   const s = useMenuStore();
-  // En el detalle hay barra de acciones propia (favorito + añadir).
-  const onDetail = pathname.startsWith('/burguer/carta/');
-  const onCarta = pathname.startsWith('/burguer/carta');
-  // Inicio, Ofertas (y su detalle) y Local comparten el mismo set de tabbar: al entrar no cambia.
-  const onOferta = pathname === '/burguer/ofertas' || pathname.startsWith('/burguer/oferta/');
-  const landingCtx = pathname === '/burguer' || pathname === '/burguer/local' || onOferta;
+  const [open, setOpen] = useState(false);
+
+  // El detalle de producto tiene su propia barra de acciones.
+  if (pathname.startsWith('/burguer/carta/')) return null;
 
   const favCount = Object.values(s.favs).filter((i) => i.menuSlug === 'hamburgueseria').length;
-  const listCount = Object.values(s.list).filter((x) => x.item.menuSlug === 'hamburgueseria').reduce((n, x) => n + x.qty, 0);
+  const listCount = Object.values(s.list)
+    .filter((x) => x.item.menuSlug === 'hamburgueseria')
+    .reduce((n, x) => n + x.qty, 0);
 
-  // "Pop" del botón Mi lista al añadir.
-  const [pop, setPop] = useState(false);
-  const prevList = useRef(listCount);
-  useEffect(() => {
-    if (listCount > prevList.current) {
-      setPop(true);
-      const t = setTimeout(() => setPop(false), 520);
-      prevList.current = listCount;
-      return () => clearTimeout(t);
-    }
-    prevList.current = listCount;
-  }, [listCount]);
-
-  if (onDetail) return null;
-
-  const left: Tab[] = [
-    {key: 'inicio', label: 'Inicio', icon: Home, href: '/burguer', active: pathname === '/burguer', badge: 0},
-    {key: 'video', label: 'Vídeo', icon: PlayCircle, href: '/burguer/video', active: pathname === '/burguer/video', badge: 0}
-  ];
-  // Estos dos cambian según el contexto (con animación suave).
-  const dyn1: Tab = landingCtx
-    ? {key: 'ofertas', label: 'Ofertas', icon: Percent, href: '/burguer/ofertas', active: onOferta, badge: 0, animated: true}
-    : {key: 'fav', label: 'Favoritos', icon: Heart, href: '/burguer/fav', active: pathname === '/burguer/fav', badge: favCount, animated: true};
-  const dyn2: Tab = landingCtx
-    ? {key: 'local', label: 'Local', icon: MapPin, href: '/burguer/local', active: pathname === '/burguer/local', badge: 0, animated: true}
-    : {key: 'list', label: 'Mi lista', icon: ListChecks, href: '/burguer/list', active: pathname === '/burguer/list', badge: listCount, pop, animated: true};
+  const onCarta = pathname === '/burguer/carta';
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around border-t border-black/5 bg-[#fdfbf7]/95 px-1 pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md md:hidden">
-      {left.map((t) => (
-        <Item key={t.key} tab={t} />
-      ))}
+    <>
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in md:hidden" onClick={() => setOpen(false)} />}
 
-      {/* Carta: botón central destacado (gris por defecto, rojo al entrar) */}
-      <Link href="/burguer/carta" className="relative flex flex-1 flex-col items-center gap-1">
-        <span
-          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-[#fdfbf7] ring-4 ring-[#fdfbf7] transition active:scale-95 ${onCarta ? 'bg-[#c36148] shadow-[0_8px_24px_-6px_rgba(195,97,72,.7)]' : 'bg-[#b3aaa0] shadow-[0_8px_20px_-8px_rgba(0,0,0,.35)]'}`}
-        >
-          <UtensilsCrossed className="size-6" strokeWidth={2.1} />
-        </span>
-        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-[#c36148]' : 'text-[#2a1713]/55'}`}>Carta</span>
-      </Link>
+      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:hidden">
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 -2px 8px rgba(0,0,0,.10))'}}>
+          <path d={BAR_PATH} fill={C.bg} />
+        </svg>
 
-      <Item key={dyn1.key} tab={dyn1} />
-      <Item key={dyn2.key} tab={dyn2} />
-    </nav>
+        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
+          <div className="flex flex-1 justify-around">
+            <Item href="/burguer" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/burguer'} />
+            <Item href="/burguer/video" label="Vídeo" Icon={IconVideo} IconFilled={IconVideoFilled} active={pathname === '/burguer/video'} />
+          </div>
+          <div className="w-[74px] shrink-0" aria-hidden />
+          <div className="flex flex-1 justify-around">
+            <Item href="/burguer/fav" label="Favoritos" Icon={IconHeart} IconFilled={IconHeartFilled} active={pathname === '/burguer/fav'} badge={favCount} />
+            <Item href="/burguer/list" label="Mi lista" Icon={IconClipboardList} IconFilled={IconClipboardListFilled} active={pathname === '/burguer/list'} badge={listCount} />
+          </div>
+        </div>
+
+        {/* Abanico de cartas (solo en la carta) */}
+        {onCarta &&
+          CARTAS.map((c, i) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              aria-label={c.label}
+              onClick={() => setOpen(false)}
+              className="absolute left-1/2 top-[32px] z-40 flex size-14 items-center justify-center rounded-full shadow-lg"
+              style={{
+                border: `2px solid ${C.brand}`,
+                background: C.bg,
+                color: C.ink,
+                transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
+                opacity: open ? 1 : 0,
+                pointerEvents: open ? 'auto' : 'none',
+                transition: 'transform .32s cubic-bezier(.34,1.56,.64,1), opacity .22s',
+                transitionDelay: open ? `${i * 0.05}s` : `${(3 - i) * 0.04}s`
+              }}
+            >
+              <c.Icon size={22} stroke={1.9} />
+            </Link>
+          ))}
+
+        {/* Centro: en la carta abre el abanico; en el resto lleva a /burguer/carta */}
+        {onCarta ? (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Elegir carta"
+            aria-expanded={open}
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            style={{border: `3px solid ${C.brand}`, background: C.brand, color: C.bg}}
+          >
+            <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
+          </button>
+        ) : (
+          <Link
+            href="/burguer/carta"
+            aria-label="Carta"
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            style={{border: `3px solid ${C.brand}`, background: C.neutral, color: C.bg}}
+          >
+            <IconToolsKitchen2 size={26} stroke={2} />
+          </Link>
+        )}
+      </nav>
+    </>
   );
 }
 
-function Item({tab}: {tab: Tab}) {
-  const {label, icon: Icon, href, onClick, active, badge, pop, animated} = tab;
-  const cls = `relative flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${active || pop ? 'text-[#c36148]' : 'text-[#2a1713]/55'} ${animated ? 'duration-300 animate-in fade-in slide-in-from-bottom-1 fill-mode-both' : ''}`;
-  const inner = (
-    <>
+function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number}) {
+  const I = active ? IconFilled : Icon;
+  return (
+    <Link href={href} className="flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide" style={{color: active ? C.brand : C.dim}}>
       <span className="relative">
-        {pop && <span className="lc-drop absolute left-1/2 top-[-9px] size-2.5 rounded-full bg-[#c36148]" />}
-        <Icon className={`size-[21px] ${pop ? 'lc-pop' : ''}`} strokeWidth={active ? 2.4 : 1.8} />
+        <I size={22} stroke={1.8} />
+        {badge > 0 && (
+          <span className="absolute -right-2.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.55rem] font-bold" style={{background: C.brand, color: C.bg}}>{badge}</span>
+        )}
       </span>
       {label}
-      {badge > 0 && (
-        <span className={`absolute right-[18%] top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c36148] px-1 text-[0.58rem] font-bold text-[#fdfbf7] ${pop ? 'lc-flash' : ''}`}>{badge}</span>
-      )}
-    </>
-  );
-  return href ? (
-    <Link href={href} className={cls}>{inner}</Link>
-  ) : (
-    <button type="button" onClick={onClick} className={cls}>{inner}</button>
+    </Link>
   );
 }
