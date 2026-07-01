@@ -1,15 +1,39 @@
 'use client';
 
-import type {LucideIcon} from 'lucide-react';
-import {UtensilsCrossed, PlayCircle, Heart, ListChecks, Home} from 'lucide-react';
+import {useState} from 'react';
+import type {Icon as TablerIcon} from '@tabler/icons-react';
+import {
+  IconHome,
+  IconHomeFilled,
+  IconVideo,
+  IconVideoFilled,
+  IconHeart,
+  IconHeartFilled,
+  IconClipboardList,
+  IconClipboardListFilled,
+  IconToolsKitchen2,
+  IconCoffee,
+  IconGlassCocktail,
+  IconBurger
+} from '@tabler/icons-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {useMenuStore} from '@/components/menu/store';
 
-// Tabbar de las cartas del beach club (desayunos/restaurante/cócteles), con el mismo
-// funcionamiento que la de la hamburguesería: navega a páginas (favoritos, lista, vídeo).
+const BAR_PATH =
+  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
+
+const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -95, dy: -56},
+  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -36, dy: -104},
+  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 36, dy: -104},
+  {href: '/burguer', label: 'Hamburguesería', Icon: IconBurger, dx: 95, dy: -56}
+];
+
 export default function CartaTabBar() {
-  const pathname = usePathname(); // sin prefijo de idioma, p. ej. /carta/desayunos/fav
+  const pathname = usePathname();
   const s = useMenuStore();
+  const [open, setOpen] = useState(false);
+
   const parts = pathname.split('/'); // ['', 'carta', menu, sub?]
   const menu = parts[2] || '';
   const sub = parts[3] || '';
@@ -23,46 +47,83 @@ export default function CartaTabBar() {
   if (!menu || onDetail) return null;
 
   const base = `/carta/${menu}`;
-  const left: Tab[] = [
-    {key: 'inicio', label: 'Inicio', icon: Home, href: '/', active: false, badge: 0},
-    {key: 'video', label: 'Vídeo', icon: PlayCircle, href: `${base}/video`, active: sub === 'video', badge: 0}
-  ];
-  const right: Tab[] = [
-    {key: 'fav', label: 'Favoritos', icon: Heart, href: `${base}/fav`, active: sub === 'fav', badge: favCount},
-    {key: 'list', label: 'Mi lista', icon: ListChecks, href: `${base}/list`, active: sub === 'list', badge: listCount}
-  ];
-  const onCarta = sub === '';
+  const onCartaIndex = sub === ''; // estamos en la carta → el centro abre el abanico
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around border-t border-line bg-bg px-1 pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-1.5 md:hidden">
-      {left.map((t) => (
-        <Item key={t.key} tab={t} />
-      ))}
-      <Link href={base} className="relative flex flex-1 flex-col items-center gap-1">
-        <span
-          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-on-primary ring-4 ring-bg transition active:scale-95 ${onCarta ? 'bg-brand shadow-[0_8px_24px_-6px_rgba(201,138,78,.6)]' : 'bg-line-strong'}`}
-        >
-          <UtensilsCrossed className="size-6" strokeWidth={2.1} />
-        </span>
-        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-brand-deep' : 'text-ink-3'}`}>Carta</span>
-      </Link>
-      {right.map((t) => (
-        <Item key={t.key} tab={t} />
-      ))}
-    </nav>
+    <>
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in md:hidden" onClick={() => setOpen(false)} />}
+
+      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:hidden">
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 -2px 8px rgba(0,0,0,.10))'}}>
+          <path d={BAR_PATH} fill="var(--bg)" />
+        </svg>
+
+        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
+          <div className="flex flex-1 justify-around">
+            <Item href="/" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={false} />
+            <Item href={`${base}/video`} label="Vídeo" Icon={IconVideo} IconFilled={IconVideoFilled} active={sub === 'video'} />
+          </div>
+          <div className="w-[74px] shrink-0" aria-hidden />
+          <div className="flex flex-1 justify-around">
+            <Item href={`${base}/fav`} label="Favoritos" Icon={IconHeart} IconFilled={IconHeartFilled} active={sub === 'fav'} badge={favCount} />
+            <Item href={`${base}/list`} label="Mi lista" Icon={IconClipboardList} IconFilled={IconClipboardListFilled} active={sub === 'list'} badge={listCount} />
+          </div>
+        </div>
+
+        {/* Abanico de cartas (solo cuando estamos en la carta) */}
+        {onCartaIndex &&
+          CARTAS.map((c, i) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              aria-label={c.label}
+              onClick={() => setOpen(false)}
+              className="absolute left-1/2 top-[32px] z-40 flex size-14 items-center justify-center rounded-full border-2 border-brand bg-bg text-ink shadow-lg"
+              style={{
+                transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
+                opacity: open ? 1 : 0,
+                pointerEvents: open ? 'auto' : 'none',
+                transition: 'transform .32s cubic-bezier(.34,1.56,.64,1), opacity .22s',
+                transitionDelay: open ? `${i * 0.05}s` : `${(3 - i) * 0.04}s`
+              }}
+            >
+              <c.Icon size={22} stroke={1.9} />
+            </Link>
+          ))}
+
+        {/* Centro: en la carta abre el abanico; en fav/list/video vuelve a la carta */}
+        {onCartaIndex ? (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Elegir carta"
+            aria-expanded={open}
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-brand bg-brand text-on-primary transition active:scale-95"
+          >
+            <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
+          </button>
+        ) : (
+          <Link
+            href={base}
+            aria-label="Carta"
+            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[3px] border-brand bg-line-strong text-ink transition active:scale-95"
+          >
+            <IconToolsKitchen2 size={26} stroke={2} />
+          </Link>
+        )}
+      </nav>
+    </>
   );
 }
 
-type Tab = {key: string; label: string; icon: LucideIcon; href: string; active: boolean; badge: number};
-
-function Item({tab}: {tab: Tab}) {
-  const {label, icon: Icon, href, active, badge} = tab;
+function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number}) {
+  const I = active ? IconFilled : Icon;
   return (
-    <Link href={href} className={`relative flex flex-1 flex-col items-center gap-0.5 py-1 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
+    <Link href={href} className={`flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
       <span className="relative">
-        <Icon className="size-[21px]" strokeWidth={active ? 2.4 : 1.8} />
+        <I size={22} stroke={1.8} />
         {badge > 0 && (
-          <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[0.58rem] font-bold text-on-primary">{badge}</span>
+          <span className="absolute -right-2.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[0.55rem] font-bold text-on-primary">{badge}</span>
         )}
       </span>
       {label}
