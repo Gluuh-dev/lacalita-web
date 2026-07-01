@@ -25,6 +25,12 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
 
   const fmtDate = (iso: string) => new Intl.DateTimeFormat(locale, {weekday: 'long', day: 'numeric', month: 'long'}).format(new Date(iso));
   const fmtTime = (iso: string) => new Intl.DateTimeFormat(locale, {hour: '2-digit', minute: '2-digit'}).format(new Date(iso));
+  const countdown = (iso: string) => {
+    const d = new Date(iso);
+    const now = new Date();
+    const days = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()) / 86400000);
+    return days === 0 ? '¡Hoy!' : days === 1 ? 'Mañana' : days > 1 ? `Faltan ${days} días` : null;
+  };
 
   // Próximos: evento destacado + resto agrupado por mes.
   const feat = up[0];
@@ -59,6 +65,9 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
             <div className="relative z-10 p-6 sm:p-10">
               <div className="mb-3 flex flex-wrap items-center gap-2.5">
                 <span className="rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-[0.1em] text-on-primary">Próximo</span>
+                {countdown(feat.starts_at) && (
+                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur">{countdown(feat.starts_at)}</span>
+                )}
                 <span className="font-adam text-[0.72rem] uppercase capitalize tracking-[0.12em] text-white/80">{fmtDate(feat.starts_at)} · {fmtTime(feat.starts_at)}</span>
               </div>
               <h2 className="font-serif text-3xl font-bold leading-none sm:text-5xl">{tx(feat.title, locale)}</h2>
