@@ -86,7 +86,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
     <main className="flex-1">
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
       {/* hero con media */}
-      <section className="lc-img-loading relative flex min-h-[56vh] items-end overflow-hidden">
+      <section className="lc-img-loading relative flex min-h-[62vh] items-end overflow-hidden">
         {event.video ? (
           <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
         ) : images[0] ? (
@@ -136,6 +136,12 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
           </div>
 
           <aside className="rounded-[20px] border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-20">
+            {countdown && (
+              <div className="mb-5 rounded-[14px] bg-brand/12 px-4 py-3 text-center">
+                <div className="font-adam text-[0.6rem] uppercase tracking-[0.16em] text-brand-deep">Cuenta atrás</div>
+                <div className="mt-0.5 font-serif text-2xl font-bold text-ink">{countdown}</div>
+              </div>
+            )}
             <div className="flex flex-col gap-4">
               <InfoRow Icon={Calendar} label="Fecha" value={fecha} />
               <InfoRow Icon={Clock} label="Hora" value={time} />
@@ -168,11 +174,14 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
               </div>
             )}
 
+            <div className="mt-5 overflow-hidden rounded-[14px] border border-line">
+              <iframe title="Mapa La Calita" src="https://www.google.com/maps?q=La+Calita+Salobre%C3%B1a&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-40 w-full border-0" />
+            </div>
             <a
               href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"
               target="_blank"
               rel="noreferrer"
-              className="ds-btn ds-btn-outline mt-5 w-full text-sm"
+              className="ds-btn ds-btn-outline mt-3 w-full text-sm"
             >
               <Navigation className="size-4" /> Cómo llegar
             </a>
