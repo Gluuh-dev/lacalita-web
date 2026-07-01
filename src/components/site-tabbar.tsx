@@ -18,11 +18,13 @@ import {Link, usePathname} from '@/i18n/navigation';
 const HIDE = /^\/(burguer|admin)(\/|$)|^\/carta\/[^/]+/;
 // Muesca cóncava suave en el centro (círculo grande centrado por encima del borde
 // → los extremos entran tangentes y quedan redondeados, no en pico).
-const NOTCH = 'radial-gradient(circle 42px at 50% -14px, transparent 41px, #000 42px)';
+const NOTCH = 'radial-gradient(circle 44px at 50% -20px, transparent 43px, #000 44px)';
 
 export default function SiteTabBar() {
   const pathname = usePathname();
   if (HIDE.test(pathname)) return null;
+
+  const onCarta = pathname === '/carta';
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around px-1 pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-2 md:hidden">
@@ -37,7 +39,7 @@ export default function SiteTabBar() {
 
       {/* Carta: FAB central que encaja en la muesca */}
       <Link href="/carta" aria-label="Carta" className="relative z-10 flex flex-1 flex-col items-center justify-center">
-        <span className="-mt-10 flex size-14 items-center justify-center rounded-full bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(201,138,78,.55)] transition active:scale-95">
+        <span className={`-mt-12 flex size-14 items-center justify-center rounded-full transition active:scale-95 ${onCarta ? 'bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(201,138,78,.55)]' : 'bg-line-strong text-ink'}`}>
           <IconToolsKitchen2 size={26} stroke={2} />
         </span>
       </Link>
