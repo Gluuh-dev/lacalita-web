@@ -92,7 +92,7 @@ export default async function MenuView({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/logo-solo.svg" alt="La Calita" className="mx-auto mb-3 h-9 w-auto" />
           <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita · Carta</div>
-          <h1 className="font-serif text-5xl leading-[1.05] text-ink sm:text-6xl">{tx(menu.name, locale)}</h1>
+          <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
       )}

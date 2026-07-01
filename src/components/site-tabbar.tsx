@@ -76,7 +76,7 @@ export default function SiteTabBar() {
               transitionDelay: open ? `${i * 0.05}s` : `${(3 - i) * 0.04}s`
             }}
           >
-            <span className="flex size-14 items-center justify-center rounded-full border-2 border-brand bg-bg text-ink shadow-lg">
+            <span className="flex size-14 items-center justify-center rounded-full bg-bg text-ink shadow-lg">
               <c.Icon size={22} stroke={1.9} />
             </span>
             <span className="whitespace-nowrap rounded-full bg-ink px-2 py-0.5 text-[0.55rem] font-semibold text-bg">{c.label}</span>

@@ -88,7 +88,6 @@ export default function BurgerTabBar() {
               <span
                 className="flex size-14 items-center justify-center rounded-full shadow-lg"
                 style={{
-                  border: `2px solid ${C.brand}`,
                   background: c.href === '/burguer/carta' ? C.brand : C.bg,
                   color: c.href === '/burguer/carta' ? C.bg : C.ink
                 }}
