@@ -71,7 +71,7 @@ export default function HeaderBar({
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
               ? 'bg-transparent'
-              : 'border-b border-black/5 bg-bg/85 backdrop-blur',
+              : 'border-b border-black/5 bg-bg',
           open && 'border-transparent bg-transparent'
         )}
       >

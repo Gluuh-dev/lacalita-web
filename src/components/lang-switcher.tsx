@@ -16,7 +16,10 @@ export default function LangSwitcher() {
       {routing.locales.map((l) => (
         <button
           key={l}
-          onClick={() => router.replace(pathname, {locale: l})}
+          onClick={() => {
+            document.cookie = `NEXT_LOCALE=${l}; path=/; max-age=31536000; samesite=lax`;
+            router.replace(pathname, {locale: l});
+          }}
           aria-label={l}
           className={`rounded-md px-1.5 py-1 text-base leading-none transition ${
             l === locale ? 'opacity-100' : 'opacity-40 hover:opacity-80'
