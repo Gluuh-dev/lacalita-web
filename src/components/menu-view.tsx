@@ -12,7 +12,8 @@ import CartaEmpty from './carta-empty';
 // Se irán añadiendo desayunos/restaurante cuando lleguen sus SVG.
 const MOTIVO: Record<string, string> = {
   cocteles: '/brand/motivo-cocteles.svg',
-  desayunos: '/brand/motivo-desayunos.svg'
+  desayunos: '/brand/motivo-desayunos.svg',
+  restaurante: '/brand/motivo-restaurante.svg'
 };
 
 export default async function MenuView({
