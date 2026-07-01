@@ -148,7 +148,7 @@ export default function BurgerHeader({locale, navColor = ''}: {locale: string; n
       </div>
 
       <header className="fixed inset-x-0 top-0 z-50 animate-in fade-in slide-in-from-top">
-        <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7]/85 backdrop-blur-md transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
+        <div className="pointer-events-none absolute inset-0 bg-[#fdfbf7] transition-opacity duration-500 ease-out" style={{opacity: !show && scrolled ? 1 : 0}} />
         <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5">
           {showBack ? (
             <button type="button" onClick={() => router.back()} aria-label="Volver" className="flex items-center gap-2" style={{color: show ? '#c36148' : logoColor}}>
