@@ -91,7 +91,8 @@ export default function HeaderBar({
 
   useScrollLock(open);
 
-  const overlay = mode.overHero && !scrolled;
+  // En las cartas (como en la hamburguesería) el navbar es transparente mientras no hay scroll.
+  const overlay = (mode.overHero || !!currentCarta) && !scrolled;
   const onMedia = overlay && mode.hasMedia;
   const light = onMedia;
 
