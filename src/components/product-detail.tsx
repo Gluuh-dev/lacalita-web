@@ -4,7 +4,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Heart, Plus, Minus, X, Maximize2} from 'lucide-react';
+import {Heart, Plus, Minus, X, Maximize2, Share2} from 'lucide-react';
 import {toast} from 'sonner';
 import {tx, euro} from '@/lib/localize';
 import type {Product} from '@/lib/queries';
@@ -44,6 +44,19 @@ export default function ProductDetail({
   useBackClose(zoom, () => setZoom(false));
   const n = qty(product.id);
   const fav = isFav(product.id);
+
+  async function share() {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    try {
+      if (navigator.share) await navigator.share({title: item.name, url});
+      else {
+        await navigator.clipboard.writeText(url);
+        toast.success('Enlace copiado');
+      }
+    } catch {
+      /* cancelado */
+    }
+  }
   const hasMedia = !!(product.video || product.image);
   const variants = product.product_variants ?? [];
   const allergens = (product.product_allergens ?? [])
@@ -191,6 +204,13 @@ export default function ProductDetail({
             className={`flex size-12 shrink-0 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >
             <Heart className="size-5" fill={fav ? 'currentColor' : 'none'} />
+          </button>
+          <button
+            onClick={share}
+            aria-label="Compartir"
+            className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line text-ink-3 transition hover:border-brand active:scale-90"
+          >
+            <Share2 className="size-5" />
           </button>
           {n === 0 ? (
             <button

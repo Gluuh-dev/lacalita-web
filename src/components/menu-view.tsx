@@ -7,6 +7,7 @@ import AllergenIcon from './allergen-icon';
 import {type MenuItem} from '@/components/menu/store';
 import MenuTabBar from '@/components/menu/menu-tabbar';
 import BurgerData from '@/components/burger/burger-data';
+import CartaEmpty from './carta-empty';
 
 export default async function MenuView({
   menu,
@@ -64,6 +65,23 @@ export default async function MenuView({
           }}
         />
       )}
+      {menu.slug !== 'hamburgueseria' && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-[40svh] -z-10 h-[24rem] w-[180%] -translate-x-1/2 rotate-[-4deg] opacity-[0.08]"
+          style={{
+            backgroundColor: '#E9AE74',
+            WebkitMaskImage: 'url(/brand/manifesto.svg)',
+            maskImage: 'url(/brand/manifesto.svg)',
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+            WebkitMaskSize: 'contain',
+            maskSize: 'contain',
+            WebkitMaskPosition: 'center',
+            maskPosition: 'center'
+          }}
+        />
+      )}
       {menu.slug === 'hamburgueseria' ? (
         <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
           <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita Burger</div>
@@ -88,34 +106,40 @@ export default async function MenuView({
         </header>
       )}
 
-      <Suspense fallback={null}>
-        <MenuFilters menu={menu} pinned={menu.slug === 'hamburgueseria'} />
-      </Suspense>
-
-      {used.size > 0 && (
-        <div className="mx-auto max-w-5xl px-4 pb-12">
-          <section className="border-t border-line pt-8 text-center">
-            <h2 className="mb-5 text-sm font-semibold uppercase tracking-[0.12em] text-ink-2">
-              {t('allergens')}
-            </h2>
-            <ul className="flex flex-wrap justify-center gap-2.5 text-sm text-ink-2">
-              {[...used.values()].map((a) => (
-                <li key={a.code} className="flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5">
-                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={20} />
-                  {tx(a.name, locale)}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
-      )}
-
-      {menu.slug === 'hamburgueseria' ? (
-        <BurgerData videos={videos} />
+      {cats.length === 0 ? (
+        <CartaEmpty name={tx(menu.name, locale)} />
       ) : (
-        <Suspense fallback={null}>
-          <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
-        </Suspense>
+        <>
+          <Suspense fallback={null}>
+            <MenuFilters menu={menu} pinned={menu.slug === 'hamburgueseria'} />
+          </Suspense>
+
+          {used.size > 0 && (
+            <div className="mx-auto max-w-5xl px-4 pb-12">
+              <section className="border-t border-line pt-8 text-center">
+                <h2 className="mb-5 text-sm font-semibold uppercase tracking-[0.12em] text-ink-2">
+                  {t('allergens')}
+                </h2>
+                <ul className="flex flex-wrap justify-center gap-2.5 text-sm text-ink-2">
+                  {[...used.values()].map((a) => (
+                    <li key={a.code} className="flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5">
+                      <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={20} />
+                      {tx(a.name, locale)}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+          )}
+
+          {menu.slug === 'hamburgueseria' ? (
+            <BurgerData videos={videos} />
+          ) : (
+            <Suspense fallback={null}>
+              <MenuTabBar videos={videos} locale={locale} menuSlug={menu.slug} />
+            </Suspense>
+          )}
+        </>
       )}
     </div>
   );
