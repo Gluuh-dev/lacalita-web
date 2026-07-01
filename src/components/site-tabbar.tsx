@@ -16,9 +16,8 @@ import {Link, usePathname} from '@/i18n/navigation';
 
 // Se oculta donde hay otra barra inferior (cartas de menú, burguer) y en admin.
 const HIDE = /^\/(burguer|admin)(\/|$)|^\/carta\/[^/]+/;
-// Muesca cóncava suave en el centro (círculo grande centrado por encima del borde
-// → los extremos entran tangentes y quedan redondeados, no en pico).
-const NOTCH = 'radial-gradient(circle 44px at 50% -20px, transparent 43px, #000 44px)';
+// Muesca cóncava suave: círculo grande centrado por encima del borde → hombros redondeados.
+const NOTCH = 'radial-gradient(circle 40px at 50% -4px, transparent 39px, #000 40px)';
 
 export default function SiteTabBar() {
   const pathname = usePathname();
@@ -37,15 +36,22 @@ export default function SiteTabBar() {
       <Item href="/" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
       <Item href="/eventos" label="Eventos" Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
 
-      {/* Carta: FAB central que encaja en la muesca */}
-      <Link href="/carta" aria-label="Carta" className="relative z-10 flex flex-1 flex-col items-center justify-center">
-        <span className={`-mt-12 flex size-14 items-center justify-center rounded-full transition active:scale-95 ${onCarta ? 'bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(201,138,78,.55)]' : 'bg-line-strong text-ink'}`}>
-          <IconToolsKitchen2 size={26} stroke={2} />
-        </span>
-      </Link>
+      {/* Hueco central para el FAB */}
+      <div className="flex-1" aria-hidden />
 
       <Item href="/galeria" label="Galería" Icon={IconPhoto} IconFilled={IconPhotoFilled} active={pathname === '/galeria'} />
       <Item href="/ubicacion" label="Ubicación" Icon={IconLocation} IconFilled={IconLocationFilled} active={pathname === '/ubicacion'} />
+
+      {/* Carta: FAB central elevado que encaja en la muesca */}
+      <Link
+        href="/carta"
+        aria-label="Carta"
+        className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2"
+      >
+        <span className={`flex size-14 items-center justify-center rounded-full ring-[6px] ring-bg transition active:scale-95 ${onCarta ? 'bg-brand text-on-primary shadow-[0_6px_16px_-4px_rgba(201,138,78,.55)]' : 'bg-line-strong text-ink'}`}>
+          <IconToolsKitchen2 size={26} stroke={2} />
+        </span>
+      </Link>
     </nav>
   );
 }
