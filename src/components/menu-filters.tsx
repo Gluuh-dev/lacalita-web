@@ -77,7 +77,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   return (
     <>
       {/* Filtros: no desplazan, filtran en el sitio. bg sólido para que no “tiemble” al fijarse */}
-      <div className={`sticky z-30 transition-[background-color,transform] duration-300 ease-out ${pinned ? `top-[58px] ${scrolled ? 'bg-[#fdfbf7]/85 backdrop-blur-md' : 'bg-transparent'}` : `top-[3.5rem] border-b border-line bg-bg/95 backdrop-blur ${hidden ? '-translate-y-[9rem]' : ''}`}`}>
+      <div className={`sticky z-30 transition-[background-color,transform] duration-300 ease-out ${pinned ? `top-[56px] ${scrolled ? 'border-b border-line bg-bg' : 'bg-transparent'}` : `top-[3.5rem] border-b border-line bg-bg ${hidden ? '-translate-y-[9rem]' : ''}`}`}>
         <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 pt-3">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" />
@@ -174,7 +174,7 @@ function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick
         active ? 'border-brand bg-brand text-on-primary' : 'border-black/5 bg-white text-brand hover:border-brand/40'
       }`}
     >
-      <Icon className="size-[18px] shrink-0" strokeWidth={2} />
+      <Icon className="size-4 shrink-0" strokeWidth={2} />
       {children}
     </button>
   );
