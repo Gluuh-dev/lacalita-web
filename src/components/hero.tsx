@@ -80,18 +80,22 @@ function Marquee({slide, pc}: {slide: HeroSlide; pc: boolean}) {
   );
 }
 
-function EvRow({e, on, onClick}: {e: HeroEvent; on: boolean; onClick: () => void}) {
+function EvRow({e, on, onClick, light = false}: {e: HeroEvent; on: boolean; onClick: () => void; light?: boolean}) {
+  const txt = light ? '#2a1713' : '#fff';
+  const sub = light ? 'rgba(42,23,19,.6)' : 'rgba(255,255,255,.62)';
+  const idleBg = light ? 'rgba(42,23,19,.07)' : 'rgba(255,255,255,.08)';
+  const idleArrow = light ? 'rgba(42,23,19,.4)' : 'rgba(255,255,255,.4)';
   return (
     <div onClick={onClick} style={{display: 'flex', alignItems: 'center', gap: 11, cursor: 'pointer', background: on ? 'rgba(233,174,116,.16)' : 'transparent', borderRadius: 14, padding: 9}}>
-      <span style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44, padding: '5px 0', borderRadius: 8, background: on ? '#e9ae74' : 'rgba(255,255,255,.08)', color: on ? '#3a2606' : '#fff', lineHeight: 1}}>
+      <span style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44, padding: '5px 0', borderRadius: 8, background: on ? '#e9ae74' : idleBg, color: on ? '#3a2606' : txt, lineHeight: 1}}>
         <span style={{fontFamily: FONT.display, fontWeight: 700, fontSize: 17}}>{e.day}</span>
         <span style={{fontFamily: "'Adam',serif", fontSize: 9, letterSpacing: '0.1em', marginTop: 2}}>{e.month}</span>
       </span>
       <span style={{flex: 1, minWidth: 0}}>
-        <span style={{display: 'block', fontFamily: FONT.display, fontWeight: 600, fontSize: 15, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{e.title}</span>
-        <span style={{display: 'block', fontSize: 12, color: 'rgba(255,255,255,.62)'}}>{e.artist}{e.artist && ' · '}{e.time}</span>
+        <span style={{display: 'block', fontFamily: FONT.display, fontWeight: 600, fontSize: 15, color: txt, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{e.title}</span>
+        <span style={{display: 'block', fontSize: 12, color: sub}}>{e.artist}{e.artist && ' · '}{e.time}</span>
       </span>
-      <ArrowRight className="size-4 shrink-0" style={{color: on ? '#e9ae74' : 'rgba(255,255,255,.4)'}} />
+      <ArrowRight className="size-4 shrink-0" style={{color: on ? '#e9ae74' : idleArrow}} />
     </div>
   );
 }
@@ -451,9 +455,9 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
           </button>
 
           <div className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'hidden'}`}>
-            <div onClick={() => setSheet(false)} className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
+            <div onClick={() => setSheet(false)} className={`absolute inset-x-0 bottom-0 top-14 bg-black/50 transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
             <div
-              className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-[#1c160e] p-4 pb-8 text-white shadow-2xl"
+              className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-bg p-4 pb-8 text-ink shadow-2xl"
               style={{transform: sheet ? `translateY(${drag}px)` : 'translateY(100%)', transition: drag ? 'none' : 'transform .34s cubic-bezier(0.16,1,0.3,1)'}}
               onTouchStart={(e) => (dragY.current = e.touches[0].clientY)}
               onTouchMove={(e) => {
@@ -468,15 +472,15 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                 dragY.current = null;
               }}
             >
-              <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-white/30" />
+              <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-ink/20" />
               <div className="mb-3 flex items-center justify-between">
                 <span className="font-serif text-xl">Próximos eventos</span>
-                <button onClick={() => setSheet(false)} aria-label="Cerrar" className="rounded-full bg-white/10 p-1.5"><X className="size-5" /></button>
+                <button onClick={() => setSheet(false)} aria-label="Cerrar" className="rounded-full bg-ink/10 p-1.5"><X className="size-5" /></button>
               </div>
               <ul className="flex flex-col">
                 {evs.map((e) => (
                   <li key={e.id}>
-                    <EvRow e={e} on={false} onClick={() => setSheet(false)} />
+                    <EvRow e={e} on={false} onClick={() => setSheet(false)} light />
                   </li>
                 ))}
               </ul>
