@@ -28,8 +28,6 @@ export default async function MenuView({
     }
   }
 
-  const headerMedia = menu.header_video || menu.header_image;
-
   const videos: MenuItem[] = cats
     .flatMap((c) => c.products)
     .filter((p) => p.video)
@@ -68,7 +66,7 @@ export default async function MenuView({
       {menu.slug !== 'hamburgueseria' && (
         <span
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[40svh] -z-10 h-[24rem] w-[180%] -translate-x-1/2 rotate-[-4deg] opacity-[0.08]"
+          className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-6deg] opacity-[0.1]"
           style={{
             backgroundColor: '#E9AE74',
             WebkitMaskImage: 'url(/brand/manifesto.svg)',
@@ -89,20 +87,10 @@ export default async function MenuView({
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
       ) : (
-        <header className="lc-img-loading relative flex min-h-[42svh] items-end overflow-hidden px-6 pb-10 pt-28 text-white">
-          {!headerMedia && <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />}
-          {menu.header_video ? (
-            <video className="absolute inset-0 h-full w-full object-cover" src={menu.header_video} autoPlay muted loop playsInline />
-          ) : menu.header_image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="absolute inset-0 h-full w-full object-cover" src={menu.header_image} alt="" />
-          ) : null}
-          <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(20,15,8,.8) 0%, rgba(20,15,8,.1) 58%, rgba(20,15,8,.4) 100%)'}} />
-          <div className="relative z-10 mx-auto w-full max-w-5xl text-center duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both">
-            <div className="eyebrow mb-2 !text-white/85">La Calita · Carta</div>
-            <h1 className="font-serif text-5xl leading-[1.05] sm:text-6xl">{tx(menu.name, locale)}</h1>
-            {menu.subtitle && <p className="mx-auto mt-3 max-w-md text-white/90">{tx(menu.subtitle, locale)}</p>}
-          </div>
+        <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
+          <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita · Carta</div>
+          <h1 className="font-serif text-5xl leading-[1.05] text-ink sm:text-6xl">{tx(menu.name, locale)}</h1>
+          {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
       )}
 
