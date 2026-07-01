@@ -2,7 +2,6 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import Image from 'next/image';
 import {Calendar, Clock, Music, MapPin, Navigation} from 'lucide-react';
-import {Link} from '@/i18n/navigation';
 import {getPublicEvent, getUpcomingEvents, getEventTickets} from '@/lib/queries';
 import {tx, euro} from '@/lib/localize';
 import {altLanguages, SITE_URL} from '@/lib/site';
@@ -10,12 +9,6 @@ import EventCard from '@/components/event-card';
 import EventActions from '@/components/event-actions';
 
 export const revalidate = 300;
-
-const GRAD: Record<string, string> = {
-  dj: 'radial-gradient(120% 100% at 70% 0%, #3f88a6, #1a2c3b 80%)',
-  concierto: 'radial-gradient(120% 100% at 30% 0%, #6a4a86, #241a3b 80%)',
-  otro: 'radial-gradient(120% 100% at 60% 0%, #c98a4e, #5a3a18 80%)'
-};
 
 export async function generateMetadata({params}: {params: Promise<{locale: string; id: string}>}) {
   const {locale, id} = await params;
@@ -34,7 +27,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
 export default async function EventoDetalle({params}: {params: Promise<{locale: string; id: string}>}) {
   const {locale, id} = await params;
   setRequestLocale(locale);
-  const [t, tk] = [await getTranslations('events'), await getTranslations('events.kind')];
+  const tk = await getTranslations('events.kind');
   const [event, upcoming] = await Promise.all([getPublicEvent(id), getUpcomingEvents(8)]);
   if (!event) notFound();
   const tickets = await getEventTickets(id);
@@ -44,6 +37,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   const fecha = new Intl.DateTimeFormat(locale, {weekday: 'long', day: 'numeric', month: 'long'}).format(date);
   const time = new Intl.DateTimeFormat(locale, {hour: '2-digit', minute: '2-digit'}).format(date);
   const images = event.images?.length ? event.images : event.image ? [event.image] : [];
+  const hasMedia = !!(event.video || images[0]);
   const others = upcoming.filter((e) => e.id !== event.id).slice(0, 3);
   const title = tx(event.title, locale);
   const desc = event.description ? tx(event.description, locale) : undefined;
@@ -85,27 +79,27 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   return (
     <main className="flex-1">
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
-      {/* hero con media */}
-      <section className="lc-img-loading relative flex min-h-[62vh] items-end overflow-hidden">
+      {/* hero */}
+      <section className={`lc-img-loading relative flex items-end overflow-hidden ${hasMedia ? 'min-h-[60vh]' : 'min-h-[40vh]'}`}>
         {event.video ? (
           <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
         ) : images[0] ? (
           <Image src={images[0]} alt={title} fill priority sizes="100vw" className="object-cover" />
         ) : (
-          <div className="absolute inset-0" style={{background: GRAD[kind] ?? GRAD.dj}} />
-        )}
-        <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(20,15,8,.78) 0%, rgba(20,15,8,.15) 55%, rgba(20,15,8,.35) 100%)'}} />
-
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-10 pt-24 text-white">
-          <Link href="/eventos" className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3.5 py-1.5 font-adam text-[0.72rem] uppercase tracking-[0.1em] backdrop-blur transition hover:bg-white/30">
-            ← {t('title')}
-          </Link>
-          <div className="mb-3 flex flex-wrap gap-2">
-            <span className="rounded-full bg-brand px-3 py-1 text-sm font-semibold text-on-primary">{tk(kind)}</span>
-            <span className="rounded-full bg-accent px-3 py-1 text-sm font-semibold capitalize text-white">{fecha} · {time}</span>
-            {countdown && <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold text-white backdrop-blur">{countdown}</span>}
+          <div className="absolute inset-0 bg-gradient-to-br from-accent to-ink">
+            <Music className="absolute -bottom-10 -right-6 size-64 text-white/[0.05]" strokeWidth={1} />
+            <div className="absolute -left-16 -top-16 size-64 rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.22), transparent 70%)'}} />
           </div>
-          <h1 className="font-modern text-[clamp(2.4rem,6vw,4rem)] leading-none">{title}</h1>
+        )}
+        <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(20,15,8,.82) 0%, rgba(20,15,8,.12) 60%, rgba(20,15,8,.32) 100%)'}} />
+
+        <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-9 pt-24 text-white">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-brand px-3 py-1 text-sm font-semibold text-on-primary">{tk(kind)}</span>
+            <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-white backdrop-blur first-letter:uppercase">{fecha} · {time}</span>
+            {countdown && <span className="rounded-full bg-brand/25 px-3 py-1 text-sm font-semibold text-white backdrop-blur">{countdown}</span>}
+          </div>
+          <h1 className="font-modern text-[clamp(2.2rem,6vw,4rem)] leading-none">{title}</h1>
           {event.artist && <p className="mt-2 font-eight text-xl tracking-wide text-brand">con {event.artist}</p>}
         </div>
       </section>
