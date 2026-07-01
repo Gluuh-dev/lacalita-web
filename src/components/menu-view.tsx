@@ -72,7 +72,7 @@ export default async function MenuView({
         (MOTIVO[menu.slug] ? (
           <span
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-7deg] opacity-[0.13]"
+            className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[38rem] w-[240%] -translate-x-1/2 rotate-[-7deg] opacity-[0.17]"
             style={{
               backgroundImage: `url(${MOTIVO[menu.slug]})`,
               backgroundRepeat: 'no-repeat',
