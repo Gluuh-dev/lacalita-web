@@ -42,7 +42,7 @@ export default function ProductItem({
   const fav = isFav(item.id);
 
   return (
-    <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 shadow-sm sm:flex-col sm:gap-0 sm:p-0">
+    <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 sm:flex-col sm:gap-0 sm:p-0">
       <button onClick={() => openIt()} className="lc-img-loading ds-media-zoom relative flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl text-line-strong sm:aspect-[4/3] sm:w-full sm:rounded-none">
         {item.video ? (
           <video
