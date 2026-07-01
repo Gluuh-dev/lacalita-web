@@ -18,14 +18,13 @@ export default function SiteTabBar() {
       <Item href="/" label="Inicio" icon={Home} active={pathname === '/'} />
       <Item href="/eventos" label="Eventos" icon={CalendarDays} active={pathname.startsWith('/eventos')} />
 
-      {/* Carta: botón central destacado que lleva a la selección de cartas */}
-      <Link href="/carta" className="relative flex flex-1 flex-col items-center gap-1">
+      {/* Carta: botón central destacado (sin sombra ni texto) que lleva a la selección de cartas */}
+      <Link href="/carta" aria-label="Carta" className="relative flex flex-1 flex-col items-center justify-center pb-1">
         <span
-          className={`-mt-6 flex size-14 items-center justify-center rounded-full text-on-primary ring-4 ring-bg transition active:scale-95 ${onCarta ? 'bg-brand shadow-[0_8px_24px_-6px_rgba(201,138,78,.6)]' : 'bg-line-strong'}`}
+          className={`-mt-7 flex size-14 items-center justify-center rounded-full text-on-primary ring-[5px] ring-bg transition active:scale-95 ${onCarta ? 'bg-brand' : 'bg-line-strong'}`}
         >
           <UtensilsCrossed className="size-6" strokeWidth={2.1} />
         </span>
-        <span className={`text-[0.62rem] font-bold transition-colors ${onCarta ? 'text-brand-deep' : 'text-ink-3'}`}>Carta</span>
       </Link>
 
       <Item href="/galeria" label="Galería" icon={Images} active={pathname === '/galeria'} />
