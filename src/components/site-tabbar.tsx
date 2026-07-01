@@ -19,7 +19,7 @@ export default function SiteTabBar() {
   ];
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t border-line bg-bg/95 pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md md:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t border-line bg-bg pb-[max(0.3rem,env(safe-area-inset-bottom))] pt-1.5 md:hidden">
       {items.map((t) => {
         const Icon = t.icon;
         return (
