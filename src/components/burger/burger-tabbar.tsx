@@ -115,7 +115,7 @@ export default function BurgerTabBar() {
             href="/burguer/carta"
             aria-label="Carta"
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
-            style={{background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
+            style={{background: `color-mix(in srgb, ${C.brand} 52%, #fff)`, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconBurger size={26} stroke={2} />
           </Link>

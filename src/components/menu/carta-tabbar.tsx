@@ -120,7 +120,7 @@ export default function CartaTabBar() {
             href={base}
             aria-label="Carta"
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
-            style={{backgroundColor: cur.color, transition: 'background-color .45s ease, transform .12s'}}
+            style={{backgroundColor: `color-mix(in srgb, ${cur.color} 52%, #fff)`, transition: 'background-color .45s ease, transform .12s'}}
           >
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" />
           </Link>
