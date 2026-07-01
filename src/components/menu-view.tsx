@@ -11,7 +11,8 @@ import CartaEmpty from './carta-empty';
 // Motivo de fondo propio por carta (ilustración multicolor, estilo hamburguesería).
 // Se irán añadiendo desayunos/restaurante cuando lleguen sus SVG.
 const MOTIVO: Record<string, string> = {
-  cocteles: '/brand/motivo-cocteles.svg'
+  cocteles: '/brand/motivo-cocteles.svg',
+  desayunos: '/brand/motivo-desayunos.svg'
 };
 
 export default async function MenuView({
