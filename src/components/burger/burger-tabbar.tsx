@@ -79,8 +79,8 @@ export default function BurgerTabBar() {
               className="absolute left-1/2 top-[32px] z-40 flex size-14 items-center justify-center rounded-full shadow-lg"
               style={{
                 border: `2px solid ${C.brand}`,
-                background: C.bg,
-                color: C.ink,
+                background: c.href === '/burguer/carta' ? C.brand : C.bg,
+                color: c.href === '/burguer/carta' ? C.bg : C.ink,
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
                 opacity: open ? 1 : 0,
                 pointerEvents: open ? 'auto' : 'none',
@@ -100,7 +100,7 @@ export default function BurgerTabBar() {
             aria-label="Elegir carta"
             aria-expanded={open}
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
-            style={{border: `3px solid ${C.brand}`, background: C.brand, color: C.bg}}
+            style={{border: `3px solid ${C.brand}`, background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
           </button>
@@ -109,7 +109,7 @@ export default function BurgerTabBar() {
             href="/burguer/carta"
             aria-label="Carta"
             className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
-            style={{border: `3px solid ${C.brand}`, background: C.neutral, color: C.bg}}
+            style={{border: `3px solid ${C.brand}`, background: C.neutral, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconToolsKitchen2 size={26} stroke={2} />
           </Link>
