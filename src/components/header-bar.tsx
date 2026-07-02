@@ -83,9 +83,10 @@ export default function HeaderBar({
         <Link href="/" aria-label="La Calita" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/texto-lacalita-derecha.svg"
+            src="/brand/logo-solo.svg"
             alt="La Calita"
-            className={cn('h-[18px] w-auto transition', light && !open && 'brightness-0 invert')}
+            style={{transform: 'translateY(-1px)'}}
+            className={cn('h-[32px] w-auto transition', light && !open && 'brightness-0 invert')}
           />
         </Link>
 
