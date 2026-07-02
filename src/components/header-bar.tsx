@@ -6,12 +6,6 @@ import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 import {useScrollLock} from '@/lib/use-scroll-lock';
 
-const CARTA_LABELS: Record<string, string> = {
-  desayunos: 'Desayunos & Meriendas',
-  restaurante: 'Restaurante',
-  cocteles: 'Cócteles',
-  hamburgueseria: 'Hamburguesería'
-};
 import LangSwitcher from './lang-switcher';
 import {useHeaderMode} from './header-mode';
 import {useIsAdmin} from '@/lib/use-is-admin';
@@ -31,11 +25,6 @@ export default function HeaderBar({
   const pathname = usePathname();
   const cartaMatch = pathname.match(/^\/carta\/([^/]+)(?:\/([^/]+))?/);
   const currentCarta = cartaMatch ? cartaMatch[1] : null;
-  const cartaSub = cartaMatch ? cartaMatch[2] : undefined;
-  // El botón atrás solo aparece en el DETALLE de producto (/carta/[menu]/[producto]).
-  // En carta / vídeo / favoritos / lista aparece el logo.
-  const onCartaDetail = !!currentCarta && !!cartaSub && !['fav', 'list', 'video'].includes(cartaSub);
-  const cartaLabel = currentCarta ? CARTA_LABELS[currentCarta] ?? null : null;
 
   const menuLinks = currentCarta
     ? [
@@ -90,28 +79,11 @@ export default function HeaderBar({
           />
         </Link>
 
-        <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
-          {onCartaDetail ? (
-            <span className="font-adam text-[0.8rem] uppercase tracking-[0.13em]">{cartaLabel}</span>
-          ) : (
-            <>
-              <Link href="/carta" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.menu}</Link>
-              <Link href="/eventos" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.events}</Link>
-              <Link href="/#info" className="ds-navlink font-adam text-[0.8rem] uppercase tracking-[0.13em]">{labels.location}</Link>
-            </>
-          )}
-          {isAdmin && (
-            <a href="/admin" className="rounded-full bg-ink px-3 py-1 text-xs font-medium text-white hover:opacity-90">Admin</a>
-          )}
-          <LangSwitcher />
-        </nav>
-
-
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Cerrar menú' : 'Menú'}
-          className={cn('relative z-[46] flex size-9 items-center justify-center rounded-full sm:hidden', open ? 'text-ink' : light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink')}
+          className={cn('relative z-[46] flex size-9 items-center justify-center rounded-full', open ? 'text-ink' : light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink')}
         >
           <span className="relative block h-4 w-6" aria-hidden>
             <span className={cn('absolute left-0 h-[2px] w-6 rounded-full bg-current transition-all duration-300', open ? 'top-1/2 -translate-y-1/2 rotate-45' : 'top-0')} />
@@ -124,7 +96,7 @@ export default function HeaderBar({
       {/* Menú móvil: círculo que se expande desde el botón (como en hamburguesería). */}
       <div
         aria-hidden={!open}
-        className="fixed inset-0 z-[45] bg-bg sm:hidden"
+        className="fixed inset-0 z-[45] bg-bg"
         style={{
           clipPath: open ? M_OPEN : M_CLOSED,
           WebkitClipPath: open ? M_OPEN : M_CLOSED,
