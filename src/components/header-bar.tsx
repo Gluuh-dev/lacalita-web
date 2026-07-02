@@ -80,21 +80,12 @@ export default function HeaderBar({
           open && 'border-transparent bg-transparent'
         )}
       >
-        <Link href="/" aria-label="La Calita" className="flex items-center gap-1.5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/logo-solo.svg"
-            alt="La Calita"
-            style={{transform: 'translateY(-1px)'}}
-            className={cn('h-[30px] w-auto transition', light && !open && 'brightness-0 invert')}
-          />
-          {/* Wordmark junto al logo solo en escritorio; en móvil va centrado. */}
+        <Link href="/" aria-label="La Calita" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/texto-lacalita-derecha.svg"
-            alt=""
-            aria-hidden
-            className={cn('hidden h-[15px] w-auto transition sm:block', light && !open && 'brightness-0 invert')}
+            alt="La Calita"
+            className={cn('h-[18px] w-auto transition', light && !open && 'brightness-0 invert')}
           />
         </Link>
 
@@ -114,13 +105,6 @@ export default function HeaderBar({
           <LangSwitcher />
         </nav>
 
-        {/* "LA CALITA" siempre centrado en móvil */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/texto-lacalita-derecha.svg"
-          alt="La Calita"
-          className={cn('pointer-events-none absolute left-1/2 h-[16px] w-auto -translate-x-1/2 transition sm:hidden', light && !open && 'brightness-0 invert')}
-        />
 
         <button
           type="button"
