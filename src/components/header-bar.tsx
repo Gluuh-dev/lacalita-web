@@ -1,34 +1,10 @@
 'use client';
 
-import {useState, type CSSProperties} from 'react';
-import {useLocale} from 'next-intl';
-import {ChevronLeft} from 'lucide-react';
+import {useState} from 'react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 import {useScrollLock} from '@/lib/use-scroll-lock';
-
-// Títulos del navbar como SVG (tipografía del logo), como en la hamburguesería. ar = ancho/alto.
-type SvgEntry = {f: string; ar: number};
-const NAV_SVG: Record<string, Record<string, SvgEntry>> = {
-  carta: {es: {f: 'carta-es', ar: 4.54}, en: {f: 'carta-en', ar: 4.13}, fr: {f: 'carta-fr', ar: 4.11}},
-  favoritos: {es: {f: 'favoritos-es', ar: 7.71}, en: {f: 'favoritos-en', ar: 7.65}, fr: {f: 'favoritos-fr', ar: 5.77}},
-  'mi-lista': {es: {f: 'mi-lista-es', ar: 5.5}, en: {f: 'mi-lista-en', ar: 5.45}, fr: {f: 'mi-lista-fr', ar: 6.44}}
-};
-const labelMask = (e: SvgEntry, height: number, color: string): CSSProperties => ({
-  display: 'block',
-  height,
-  aspectRatio: String(e.ar),
-  backgroundColor: color,
-  WebkitMaskImage: `url(/brand/navbar/${e.f}.svg)`,
-  maskImage: `url(/brand/navbar/${e.f}.svg)`,
-  WebkitMaskSize: 'contain',
-  maskSize: 'contain',
-  WebkitMaskRepeat: 'no-repeat',
-  maskRepeat: 'no-repeat',
-  WebkitMaskPosition: 'left center',
-  maskPosition: 'left center'
-});
 
 const CARTA_LABELS: Record<string, string> = {
   desayunos: 'Desayunos & Meriendas',
@@ -60,10 +36,6 @@ export default function HeaderBar({
   // En carta / vídeo / favoritos / lista aparece el logo.
   const onCartaDetail = !!currentCarta && !!cartaSub && !['fav', 'list', 'video'].includes(cartaSub);
   const cartaLabel = currentCarta ? CARTA_LABELS[currentCarta] ?? null : null;
-  const locale = useLocale();
-  const lang = locale === 'en' || locale === 'fr' ? locale : 'es';
-  // Título del navbar como SVG según la sub-página de la carta (como en la hamburguesería).
-  const cartaPageKey = currentCarta && !onCartaDetail ? (cartaSub === 'fav' ? 'favoritos' : cartaSub === 'list' ? 'mi-lista' : 'carta') : null;
 
   const menuLinks = currentCarta
     ? [
@@ -87,7 +59,6 @@ export default function HeaderBar({
   ];
   const {scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
-  const backHref = onCartaDetail && currentCarta ? `/carta/${currentCarta}` : '/';
 
   useScrollLock(open);
 
@@ -109,37 +80,23 @@ export default function HeaderBar({
           open && 'border-transparent bg-transparent'
         )}
       >
-        <div className="flex items-center gap-1">
-          {onCartaDetail && (
-            <Link
-              href={backHref}
-              aria-label="Volver"
-              className={cn('-ml-1 flex size-9 items-center justify-center rounded-full transition', light ? 'text-white' : 'text-ink')}
-            >
-              <ChevronLeft className="size-6" />
-            </Link>
-          )}
-          <Link href="/" aria-label="La Calita" className="flex items-center gap-1.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/logo-solo.svg"
-              alt="La Calita"
-              style={{transform: 'translateY(-1px)'}}
-              className={cn('h-[30px] w-auto transition', light && !open && 'brightness-0 invert')}
-            />
-            {cartaPageKey ? (
-              <span aria-hidden style={labelMask(NAV_SVG[cartaPageKey][lang], 15, light && !open ? '#ffffff' : '#4c2f08')} />
-            ) : !onCartaDetail ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src="/brand/texto-lacalita-derecha.svg"
-                alt=""
-                aria-hidden
-                className={cn('h-[15px] w-auto transition', light && !open && 'brightness-0 invert')}
-              />
-            ) : null}
-          </Link>
-        </div>
+        <Link href="/" aria-label="La Calita" className="flex items-center gap-1.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-solo.svg"
+            alt="La Calita"
+            style={{transform: 'translateY(-1px)'}}
+            className={cn('h-[30px] w-auto transition', light && !open && 'brightness-0 invert')}
+          />
+          {/* Wordmark junto al logo solo en escritorio; en móvil va centrado. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/texto-lacalita-derecha.svg"
+            alt=""
+            aria-hidden
+            className={cn('hidden h-[15px] w-auto transition sm:block', light && !open && 'brightness-0 invert')}
+          />
+        </Link>
 
         <nav className={cn('hidden items-center gap-5 text-sm transition-colors sm:flex', light ? 'text-white' : 'text-ink')}>
           {onCartaDetail ? (
@@ -157,11 +114,13 @@ export default function HeaderBar({
           <LangSwitcher />
         </nav>
 
-        {onCartaDetail && (
-          <span className={cn('pointer-events-none absolute left-1/2 -translate-x-1/2 font-adam text-xs uppercase tracking-[0.12em] sm:hidden', light ? 'text-white' : 'text-ink')}>
-            {cartaLabel}
-          </span>
-        )}
+        {/* "LA CALITA" siempre centrado en móvil */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/texto-lacalita-derecha.svg"
+          alt="La Calita"
+          className={cn('pointer-events-none absolute left-1/2 h-[16px] w-auto -translate-x-1/2 transition sm:hidden', light && !open && 'brightness-0 invert')}
+        />
 
         <button
           type="button"
