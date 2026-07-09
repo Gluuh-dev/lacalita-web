@@ -225,16 +225,6 @@ export function HeroStage({
       <div style={{...cover, background: '#140f08', opacity: (slide.darken || 0) / 100}} />
       <div style={{position: 'absolute', top: '-14%', right: '-6%', width: pc ? 560 : 280, height: pc ? 560 : 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,174,116,.5), transparent 65%)'}} />
 
-      {/* Palmeras negras en las esquinas */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palmera-01.svg" alt="" style={{position: 'absolute', left: -18, top: -22, width: pc ? 170 : 82, opacity: 0.45, zIndex: 1}} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palmera-02.svg" alt="" style={{position: 'absolute', right: -18, top: -28, width: pc ? 170 : 82, opacity: 0.45, transform: 'scaleX(-1)', zIndex: 1}} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palmera-05.svg" alt="" style={{position: 'absolute', left: -22, bottom: -18, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palmera-03.svg" alt="" style={{position: 'absolute', right: -22, bottom: -24, width: pc ? 190 : 92, opacity: 0.45, transform: 'scaleX(-1)', zIndex: 1}} />
-
       <Marquee slide={slide} pc={pc} />
 
       {/* contenido */}
@@ -411,18 +401,6 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />
       <div className="pointer-events-none absolute -right-20 -top-24 size-[clamp(220px,40vw,520px)] rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.45), transparent 65%)'}} />
-
-      {/* Palmeras negras (siluetas) en las esquinas, sutiles */}
-      <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palmera-01.svg" alt="" className="absolute -left-5 -top-6 w-[clamp(78px,11vw,180px)] opacity-45" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palmera-02.svg" alt="" className="absolute -right-5 -top-8 w-[clamp(78px,11vw,180px)] -scale-x-100 opacity-45" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palmera-05.svg" alt="" className="absolute -bottom-5 -left-6 w-[clamp(88px,12vw,200px)] opacity-45" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palmera-03.svg" alt="" className="absolute -bottom-7 -right-6 w-[clamp(88px,12vw,200px)] -scale-x-100 opacity-45" />
-      </div>
 
       <Marquee slide={slide} pc />
 
