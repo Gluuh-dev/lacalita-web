@@ -225,6 +225,16 @@ export function HeroStage({
       <div style={{...cover, background: '#140f08', opacity: (slide.darken || 0) / 100}} />
       <div style={{position: 'absolute', top: '-14%', right: '-6%', width: pc ? 560 : 280, height: pc ? 560 : 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,174,116,.5), transparent 65%)'}} />
 
+      {/* Palmeras negras en las 4 esquinas */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palmeras/palm-sup-iz.svg" alt="" style={{position: 'absolute', left: 0, top: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palmeras/palm-sup-der.svg" alt="" style={{position: 'absolute', right: 0, top: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palmeras/palm-inf-iz.svg" alt="" style={{position: 'absolute', left: 0, bottom: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palmeras/palm-inf-der.svg" alt="" style={{position: 'absolute', right: 0, bottom: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+
       <Marquee slide={slide} pc={pc} />
 
       {/* contenido */}
@@ -401,6 +411,18 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />
       <div className="pointer-events-none absolute -right-20 -top-24 size-[clamp(220px,40vw,520px)] rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.45), transparent 65%)'}} />
+
+      {/* Palmeras negras (siluetas) en las 4 esquinas, 45% */}
+      <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/palmeras/palm-sup-iz.svg" alt="" className="absolute left-0 top-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/palmeras/palm-sup-der.svg" alt="" className="absolute right-0 top-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/palmeras/palm-inf-iz.svg" alt="" className="absolute bottom-0 left-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/palmeras/palm-inf-der.svg" alt="" className="absolute bottom-0 right-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+      </div>
 
       <Marquee slide={slide} pc />
 
