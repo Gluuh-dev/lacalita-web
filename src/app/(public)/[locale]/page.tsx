@@ -45,8 +45,11 @@ export default async function Home({
   const reviews = content.reviews ?? [];
   const gallery = content.gallery ?? [];
 
-  const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false);
-  const heroSlides: HeroSlide[] = activeHero.length
+  const heroEvents = toHeroEvents(events, locale);
+  // Slides fijos del admin (se descarta el modo 'poster' manual: los eventos se
+  // generan solos abajo, cada uno con su imagen).
+  const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false && s.heroMode !== 'poster');
+  const baseSlides: HeroSlide[] = activeHero.length
     ? activeHero
     : [
         {
@@ -59,9 +62,29 @@ export default async function Home({
           bienvenida: intro,
           button: t('home.cta'),
           link: '/carta',
-          heroMode: events.length > 0 ? 'agenda' : 'boton'
+          heroMode: 'boton'
         }
       ];
+  // Un slide por evento próximo, con la imagen del evento de fondo (o fondo de
+  // marca si aún no tiene imagen). Se rellena solo desde /admin/eventos.
+  const eventSlides: HeroSlide[] = events.map((e, i) => {
+    const he = heroEvents[i];
+    return {
+      ...DEFAULT_HERO_SLIDE,
+      id: 'ev-' + e.id,
+      name: he.title,
+      media: e.image ?? '',
+      mediaType: 'image',
+      darken: e.image ? 38 : 14,
+      eyebrow: `${he.day} ${he.month}${he.time ? ' · ' + he.time : ''}`,
+      lema: he.title,
+      bienvenida: he.artist ? `Con ${he.artist}` : '',
+      button: 'Ver el evento',
+      link: `/eventos/${e.id}`,
+      heroMode: 'boton'
+    };
+  });
+  const heroSlides: HeroSlide[] = [...baseSlides, ...eventSlides];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -107,7 +130,7 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
       />
-      <Hero slides={heroSlides} events={toHeroEvents(events, locale)} />
+      <Hero slides={heroSlides} events={heroEvents} />
 
       {/* Sobre el sitio */}
       <Reveal>
