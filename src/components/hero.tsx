@@ -139,10 +139,11 @@ function PosterView({slide}: {slide: HeroSlide}) {
         <img src={slide.media} alt="" style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'}} />
       ) : null}
       {slide.darken ? <div style={{position: 'absolute', inset: 0, background: '#140f08', opacity: (slide.darken || 0) / 100}} /> : null}
+      {/* Palmeras como sombras suaves a los lados */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palm.svg" alt="" style={{position: 'absolute', left: '-2%', top: '-6%', width: '20cqw', zIndex: 2, transform: 'scaleX(-1)', filter: 'drop-shadow(0 8px 12px rgba(74,47,8,.22))'}} />
+      <img src="/brand/palmeras/palmera-05.svg" alt="" style={{position: 'absolute', left: '-5%', bottom: '-8%', height: '92cqh', zIndex: 1, opacity: 0.12, filter: 'blur(0.5px)'}} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palm.svg" alt="" style={{position: 'absolute', right: '-3%', bottom: '-10%', width: '19cqw', zIndex: 2, filter: 'drop-shadow(0 8px 12px rgba(74,47,8,.22))'}} />
+      <img src="/brand/palmeras/palmera-03.svg" alt="" style={{position: 'absolute', right: '-6%', bottom: '-10%', height: '96cqh', zIndex: 1, opacity: 0.12, transform: 'scaleX(-1)', filter: 'blur(0.5px)'}} />
       <div style={{position: 'absolute', inset: 0, zIndex: 4, display: 'grid', gridTemplateColumns: '1fr 40%', alignItems: 'center', padding: '0 5cqw', boxSizing: 'border-box'}}>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0}}>
           {logoSrc && (
