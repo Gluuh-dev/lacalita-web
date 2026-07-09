@@ -37,6 +37,7 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
   const [pending, start] = useTransition();
 
   const slide = slides.find((s) => s.id === sel) ?? slides[0];
+  const isPoster = slide?.heroMode === 'poster';
 
   useEffect(() => {
     if (!slides.find((s) => s.id === sel) && slides[0]) setSel(slides[0].id);
@@ -124,6 +125,16 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           </div>
         </Card>
 
+        {/* Tipo de diapositiva */}
+        <Card>
+          <div className="eyebrow">Tipo de diapositiva</div>
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => set('heroMode', 'boton')} className={cn('rounded-[14px] border p-3 text-sm font-semibold', !isPoster ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>Normal</button>
+            <button type="button" onClick={() => set('heroMode', 'poster')} className={cn('rounded-[14px] border p-3 text-sm font-semibold', isPoster ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>Póster de evento</button>
+          </div>
+          {isPoster && <p className="text-sm text-ink-3">Cartel de evento: fondo + palmeras + foto del artista + textos. El fondo y el color del logo se ponen en la tarjeta “Fondo”.</p>}
+        </Card>
+
         {/* Fondo */}
         <Card>
           <Field label="Nombre de la diapositiva">
@@ -160,6 +171,8 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           )}
         </Card>
 
+        {!isPoster && (
+          <>
         {/* Textos */}
         <Card>
           <div className="eyebrow">Textos</div>
@@ -362,6 +375,45 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
             </>
           )}
         </Card>
+          </>
+        )}
+
+        {isPoster && (
+          <Card>
+            <div className="eyebrow">Póster del evento</div>
+            <Field label="Foto del artista (PNG recortado, fondo transparente)">
+              <HeroMedia
+                media={slide.posterPhoto ?? ''}
+                mediaType="image"
+                onSet={(m) => set('posterPhoto', m.media)}
+                onClear={() => set('posterPhoto', '')}
+              />
+            </Field>
+            <Field label="Presenta (rótulo superior)">
+              <input className={inputCls} value={slide.eyebrow} onChange={(e) => set('eyebrow', e.target.value)} placeholder="Presenta" />
+            </Field>
+            <Field label="Título grande">
+              <input className={inputCls} value={slide.posterTitle ?? ''} onChange={(e) => set('posterTitle', e.target.value)} placeholder="MONÓLOGO" />
+            </Field>
+            <Field label="Subtítulo manuscrito">
+              <input className={inputCls} value={slide.posterScript ?? ''} onChange={(e) => set('posterScript', e.target.value)} placeholder="en La Calita" />
+            </Field>
+            <Field label="Nombre del artista">
+              <input className={inputCls} value={slide.posterName ?? ''} onChange={(e) => set('posterName', e.target.value)} placeholder="Pepe Molina" />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Fecha">
+                <input className={inputCls} value={slide.posterDate ?? ''} onChange={(e) => set('posterDate', e.target.value)} placeholder="Jueves 23 Julio" />
+              </Field>
+              <Field label="Hora">
+                <input className={inputCls} value={slide.posterTime ?? ''} onChange={(e) => set('posterTime', e.target.value)} placeholder="23:30h" />
+              </Field>
+            </div>
+            <Field label="Ubicación">
+              <input className={inputCls} value={slide.posterLoc ?? ''} onChange={(e) => set('posterLoc', e.target.value)} placeholder="Paseo Marítimo · Salobreña" />
+            </Field>
+          </Card>
+        )}
 
         <button onClick={save} disabled={pending} className={`${btn} inline-flex items-center justify-center gap-1.5`}>
           <Check className="size-4" /> {pending ? 'Guardando…' : 'Guardar portada'}

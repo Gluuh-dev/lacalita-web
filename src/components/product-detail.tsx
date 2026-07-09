@@ -169,6 +169,22 @@ export default function ProductDetail({
           </motion.div>
         )}
 
+        {(product.extras?.length ?? 0) > 0 && (
+          <motion.div {...fade(0.24)} className="mt-8">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
+              Salsas para acompañar
+            </h2>
+            <ul className="divide-y divide-line rounded-2xl border border-line">
+              {product.extras!.map((s, i) => (
+                <li key={i} className="flex items-center justify-between px-4 py-2.5">
+                  <span className="text-ink-2">{tx(s.name, locale)}</span>
+                  <span className="font-semibold text-brand-deep">{euro(Number(s.price), locale)}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+
         {allergens.length > 0 && (
           <motion.div {...fade(0.25)} className="mt-8">
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">

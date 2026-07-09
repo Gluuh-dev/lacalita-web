@@ -6,6 +6,7 @@ type I18n = Record<string, string>;
 
 export type Allergen = {id?: string; code: string; name: I18n; icon: string};
 export type Variant = {id: string; name: I18n; price: number; position: number};
+export type Extra = {name: I18n; price: number};
 export type Product = {
   id: string;
   slug: string;
@@ -26,6 +27,7 @@ export type Product = {
   rating: number | null;
   product_variants: Variant[];
   product_allergens: {allergens: Allergen}[];
+  extras?: Extra[]; // salsas de la categoría, copiadas al producto para el detalle
 };
 export type Category = {
   id: string;
@@ -35,6 +37,7 @@ export type Category = {
   image: string | null;
   position: number;
   visible: boolean;
+  extras: Extra[];
   products: Product[];
 };
 export type Menu = {
@@ -111,7 +114,7 @@ async function fetchMenu(slug: string): Promise<Menu | null> {
     .select(
       `id, slug, name, subtitle, theme, header_image, header_video, position,
        categories (
-         id, menu_id, name, description, position, visible, image,
+         id, menu_id, name, description, position, visible, image, extras,
          products (
            id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
            product_variants ( id, name, price, position ),
@@ -129,6 +132,7 @@ async function fetchMenu(slug: string): Promise<Menu | null> {
     c.products?.sort((a, b) => a.position - b.position);
     for (const p of c.products ?? []) {
       p.product_variants?.sort((a, b) => a.position - b.position);
+      p.extras = c.extras ?? []; // el detalle lee las salsas desde el producto
     }
   }
   return menu;
@@ -142,13 +146,14 @@ export async function getProduct(slug: string): Promise<{product: Product; theme
       `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
        product_variants ( id, name, price, position ),
        product_allergens ( allergens ( id, code, name, icon ) ),
-       categories ( menus ( slug, theme ) )`
+       categories ( extras, menus ( slug, theme ) )`
     )
     .eq('slug', slug)
     .maybeSingle();
   if (!data) return null;
-  const d = data as unknown as Product & {categories?: {menus?: {slug: string; theme: string}}};
+  const d = data as unknown as Product & {categories?: {extras?: Extra[]; menus?: {slug: string; theme: string}}};
   d.product_variants?.sort((a, b) => a.position - b.position);
+  d.extras = d.categories?.extras ?? [];
   return {product: d as Product, theme: d.categories?.menus?.theme ?? 'default'};
 }
 

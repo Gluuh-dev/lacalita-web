@@ -121,6 +121,67 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
   );
 }
 
+// Modo 'poster': cartel de evento. Fondo (slide.media) + palmeras SVG + logo +
+// textos del evento + foto del artista. Se dimensiona con container queries
+// (cqw) para escalar igual en la web y en el preview escalado del admin.
+function PosterView({slide}: {slide: HeroSlide}) {
+  const BROWN = '#4c2f08';
+  const TERRA = '#a2502b';
+  const SUN = '#c0683d';
+  const logoSrc = logoOf(slide);
+  const rawLogo = slide.logoColor || 'white';
+  const logoCol =
+    rawLogo === 'white' || rawLogo === '#ffffff' ? BROWN : LOGO_NAMED[rawLogo] ?? rawLogo;
+  return (
+    <div style={{position: 'absolute', inset: 0, overflow: 'hidden', containerType: 'size', background: '#f9e4c6', color: BROWN}}>
+      {slide.media ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={slide.media} alt="" style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'}} />
+      ) : null}
+      {slide.darken ? <div style={{position: 'absolute', inset: 0, background: '#140f08', opacity: (slide.darken || 0) / 100}} /> : null}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palm.svg" alt="" style={{position: 'absolute', left: '-2%', top: '-6%', width: '20cqw', zIndex: 2, transform: 'scaleX(-1)', filter: 'drop-shadow(0 8px 12px rgba(74,47,8,.22))'}} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/palm.svg" alt="" style={{position: 'absolute', right: '-3%', bottom: '-10%', width: '19cqw', zIndex: 2, filter: 'drop-shadow(0 8px 12px rgba(74,47,8,.22))'}} />
+      <div style={{position: 'absolute', inset: 0, zIndex: 4, display: 'grid', gridTemplateColumns: '1fr 40%', alignItems: 'center', padding: '0 5cqw', boxSizing: 'border-box'}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0}}>
+          {logoSrc && (
+            <span
+              style={{
+                display: 'block', height: '5cqw', width: `${5 * (LOGO_ASPECT[slide.logoVariant ?? 'debajo'] ?? 1)}cqw`,
+                marginBottom: '1cqw', backgroundColor: logoCol,
+                WebkitMaskImage: `url(${logoSrc})`, maskImage: `url(${logoSrc})`,
+                WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+                WebkitMaskSize: 'contain', maskSize: 'contain',
+                WebkitMaskPosition: 'left center', maskPosition: 'left center'
+              }}
+            />
+          )}
+          {slide.eyebrow ? <div style={{fontFamily: FONT.adam, textTransform: 'uppercase', letterSpacing: '0.4em', color: TERRA, fontSize: '1.15cqw', marginTop: '1.4cqw'}}>{slide.eyebrow}</div> : null}
+          {slide.posterTitle ? <div style={{fontFamily: FONT.eight, textTransform: 'uppercase', color: BROWN, lineHeight: 0.84, fontSize: '7cqw', marginTop: '0.5cqw'}}>{slide.posterTitle}</div> : null}
+          {slide.posterScript ? <div style={{fontFamily: FONT.romance, color: SUN, fontSize: '4cqw', lineHeight: 1, marginTop: '0.2cqw'}}>{slide.posterScript}</div> : null}
+          {slide.posterName ? <div style={{fontFamily: FONT.romance, color: BROWN, fontSize: '4.4cqw', lineHeight: 0.9, marginTop: '1.6cqw', textShadow: '0 2px 10px rgba(251,243,228,.6)'}}>{slide.posterName}</div> : null}
+          {slide.posterDate || slide.posterTime ? (
+            <div style={{display: 'flex', border: '0.14cqw solid rgba(74,47,8,.55)', borderRadius: '1cqw', overflow: 'hidden', marginTop: '1.6cqw', background: 'rgba(251,243,228,.4)'}}>
+              {slide.posterDate ? <div style={{padding: '0.7cqw 1.3cqw', fontFamily: FONT.eight, color: BROWN, fontSize: '1.5cqw'}}>{slide.posterDate}</div> : null}
+              {slide.posterTime ? <div style={{padding: '0.7cqw 1.3cqw', fontFamily: FONT.eight, color: BROWN, fontSize: '1.5cqw', borderLeft: '0.14cqw solid rgba(74,47,8,.4)'}}>{slide.posterTime}</div> : null}
+            </div>
+          ) : null}
+          {slide.posterLoc ? <div style={{fontFamily: FONT.adam, textTransform: 'uppercase', letterSpacing: '0.2em', color: BROWN, fontSize: '1cqw', marginTop: '1.6cqw'}}>◆ {slide.posterLoc}</div> : null}
+        </div>
+        <div style={{position: 'relative', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 3}}>
+          {slide.posterPhoto ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={slide.posterPhoto} alt={slide.posterName || ''} style={{maxWidth: '100%', maxHeight: '92%', objectFit: 'contain', objectPosition: 'bottom center'}} />
+          ) : (
+            <div style={{width: '80%', height: '86%', alignSelf: 'flex-end', border: '0.2cqw dashed rgba(74,47,8,.45)', borderRadius: '50% 50% 44% 44%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT.adam, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(58,36,8,.55)', fontSize: '1.1cqw', textAlign: 'center', lineHeight: 1.5}}>Foto del<br />artista</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function HeroStage({
   slide,
   events = [],
@@ -134,6 +195,7 @@ export function HeroStage({
   animKey?: number;
   preview?: boolean;
 }) {
+  if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
   const bc = slide.btnColor || '#e9ae74';
   const bt = inkOn(bc);
   const agenda = slide.heroMode === 'agenda';
@@ -156,7 +218,7 @@ export function HeroStage({
       ) : slide.media ? (
         <div style={{...cover, background: `center/cover url(${slide.media})`}} />
       ) : (
-        <div style={{...cover, background: 'radial-gradient(120% 90% at 70% 10%, #3f88a6 0%, #2e6e8e 35%, #243b53 80%)'}} />
+        <div style={{...cover, background: 'radial-gradient(120% 95% at 72% 8%, #f4cd97 0%, #e9ae74 28%, #c07a44 62%, #6b3a21 100%)'}} />
       )}
       <div style={{...cover, background: 'linear-gradient(to bottom, rgba(20,15,8,.3) 0%, rgba(20,15,8,.1) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div style={{...cover, background: '#140f08', opacity: (slide.darken || 0) / 100}} />
@@ -319,6 +381,8 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   }, [sheet]);
   useScrollLock(sheet);
 
+  if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
+
   const showAgenda = agenda && hasEvents;
 
   return (
@@ -330,7 +394,8 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={slide.media} alt="" className="absolute inset-0 h-full w-full object-cover" />
       ) : (
-        <div className="absolute inset-0" style={{background: 'radial-gradient(120% 90% at 70% 10%, #3f88a6 0%, #2e6e8e 35%, #243b53 80%)'}} />
+        // Sin media: atardecer de playa (marca), no el azul marino de relleno.
+        <div className="absolute inset-0" style={{background: 'radial-gradient(120% 95% at 72% 8%, #f4cd97 0%, #e9ae74 28%, #c07a44 62%, #6b3a21 100%)'}} />
       )}
       <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />

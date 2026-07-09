@@ -30,7 +30,16 @@ export type HeroSlide = {
   link: string;
   btnColor: string;
   contentAlign: 'left' | 'center' | 'right';
-  heroMode: 'boton' | 'rotulo' | 'agenda';
+  heroMode: 'boton' | 'rotulo' | 'agenda' | 'poster';
+  // Modo 'poster': cartel de evento (fondo + palmeras + foto del artista + textos).
+  // El fondo usa `media`; el rótulo superior usa `eyebrow`.
+  posterPhoto?: string; // foto del artista recortada (PNG) que sube el usuario
+  posterTitle?: string; // titular grande, ej "MONÓLOGO"
+  posterScript?: string; // subtítulo manuscrito, ej "en La Calita"
+  posterName?: string; // nombre del artista, ej "Pepe Molina"
+  posterDate?: string; // ej "Jueves 23 Julio"
+  posterTime?: string; // ej "23:30h"
+  posterLoc?: string; // ej "Paseo Marítimo · Salobreña"
   rotulo: string;
   sub: string;
   rotuloY: number;
@@ -100,5 +109,12 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   marqueeBg: '',
   marqueeOrient: 'horizontal',
   marqueeDir: 'left',
-  marqueePos: 50
+  marqueePos: 50,
+  posterPhoto: '',
+  posterTitle: 'MONÓLOGO',
+  posterScript: 'en La Calita',
+  posterName: 'Nombre del artista',
+  posterDate: 'Jueves 23 Julio',
+  posterTime: '23:30h',
+  posterLoc: 'Paseo Marítimo · Salobreña'
 };
