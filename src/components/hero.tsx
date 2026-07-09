@@ -394,6 +394,29 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
 
   if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
 
+  // Cartel vertical completo: imagen a tamaño real (contain) sobre una copia
+  // de sí misma ampliada y difuminada de fondo. Todo el slide enlaza al evento.
+  if (slide.mediaFit === 'contain' && slide.media) {
+    const Poster = (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={slide.media} alt="" className="max-h-full max-w-full rounded-2xl object-contain shadow-2xl" />
+    );
+    return (
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-ink">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={slide.media} alt="" className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl" />
+        <div className="absolute inset-0 bg-black/30" />
+        {slide.link ? (
+          <Link href={slide.link} className="relative z-10 flex h-full w-full items-center justify-center p-5 pb-28 lg:p-10 lg:pb-10">
+            {Poster}
+          </Link>
+        ) : (
+          <div className="relative z-10 flex h-full w-full items-center justify-center p-5 pb-28 lg:p-10 lg:pb-10">{Poster}</div>
+        )}
+      </div>
+    );
+  }
+
   const showAgenda = agenda && hasEvents;
 
   return (

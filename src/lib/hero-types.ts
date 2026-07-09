@@ -9,6 +9,7 @@ export type HeroSlide = {
   active: boolean; // si está desactivada no aparece en la web
   media: string;
   mediaType: 'image' | 'video';
+  mediaFit?: 'cover' | 'contain'; // 'contain' = imagen completa + fondo difuminado (carteles verticales)
   poster?: string;
   darken: number;
   showLogo: boolean; // legado (compat)
@@ -66,6 +67,7 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   active: true,
   media: '',
   mediaType: 'image',
+  mediaFit: 'cover',
   darken: 45,
   showLogo: true,
   logoVariant: 'debajo',

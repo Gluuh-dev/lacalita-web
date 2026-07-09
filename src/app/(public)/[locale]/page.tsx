@@ -75,7 +75,8 @@ export default async function Home({
       name: he.title,
       media: e.image ?? '',
       mediaType: 'image',
-      darken: e.image ? 38 : 14,
+      mediaFit: e.image ? 'contain' : 'cover', // cartel completo + fondo difuminado
+      darken: e.image ? 0 : 14,
       eyebrow: `${he.day} ${he.month}${he.time ? ' · ' + he.time : ''}`,
       lema: he.title,
       bienvenida: he.artist ? `Con ${he.artist}` : '',
