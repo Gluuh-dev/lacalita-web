@@ -7,6 +7,8 @@ import {tx, euro} from '@/lib/localize';
 import {altLanguages, SITE_URL} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import EventActions from '@/components/event-actions';
+import {countdownLabel} from '@/lib/event-time';
+import CountdownBar from './countdown-bar';
 
 export const revalidate = 300;
 
@@ -37,17 +39,11 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   const fecha = new Intl.DateTimeFormat(locale, {weekday: 'long', day: 'numeric', month: 'long'}).format(date);
   const time = new Intl.DateTimeFormat(locale, {hour: '2-digit', minute: '2-digit'}).format(date);
   const images = event.images?.length ? event.images : event.image ? [event.image] : [];
-  const hasMedia = !!(event.video || images[0]);
   const others = upcoming.filter((e) => e.id !== event.id).slice(0, 3);
   const title = tx(event.title, locale);
   const desc = event.description ? tx(event.description, locale) : undefined;
 
-  // Cuenta atrás (granularidad de días).
-  const now = new Date();
-  const startDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const days = Math.round((startDay.getTime() - today.getTime()) / 86400000);
-  const countdown = days === 0 ? '¡Hoy!' : days === 1 ? 'Mañana' : days > 1 ? `Faltan ${days} días` : null;
+  const countdown = countdownLabel(event.starts_at);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -79,28 +75,42 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   return (
     <main className="flex-1">
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
-      {/* hero */}
-      <section className={`lc-img-loading relative flex items-end overflow-hidden ${hasMedia ? 'min-h-[60vh]' : 'min-h-[40vh]'}`}>
-        {event.video ? (
-          <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
-        ) : images[0] ? (
-          <Image src={images[0]} alt={title} fill priority sizes="100vw" className="object-cover" />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-accent to-ink">
-            <Music className="absolute -bottom-10 -right-6 size-64 text-white/[0.05]" strokeWidth={1} />
-            <div className="absolute -left-16 -top-16 size-64 rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.22), transparent 70%)'}} />
-          </div>
-        )}
-        <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(20,15,8,.82) 0%, rgba(20,15,8,.12) 60%, rgba(20,15,8,.32) 100%)'}} />
+      <CountdownBar startsAt={event.starts_at} />
+      {/* Hero: cartel a todo el ancho y anclado arriba. Los datos van debajo,
+          nunca encima, porque el cartel ya trae su propio texto. */}
+      <section className="relative overflow-hidden bg-black text-white">
+        <div className="lc-img-loading relative h-[68svh] w-full sm:h-[70vh] lg:h-[78vh]">
+          {event.video ? (
+            <video src={event.video} poster={images[0]} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover object-top" />
+          ) : images[0] ? (
+            <Image src={images[0]} alt={title} fill priority sizes="100vw" className="object-cover object-top" />
+          ) : (
+            <div className="absolute inset-0" style={{background: 'linear-gradient(150deg, #e0955a 0%, #b96e42 45%, #5e3620 100%)'}}>
+              <Music className="absolute -bottom-10 -right-6 size-64 text-white/[0.05]" strokeWidth={1} />
+            </div>
+          )}
+          {/* Arriba, para que los iconos del navbar se lean; abajo, funde a negro. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black" />
+        </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-9 pt-24 text-white">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-brand px-3 py-1 text-sm font-semibold text-on-primary">{tk(kind)}</span>
-            <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-white backdrop-blur first-letter:uppercase">{fecha} · {time}</span>
-            {countdown && <span className="rounded-full bg-brand/25 px-3 py-1 text-sm font-semibold text-white backdrop-blur">{countdown}</span>}
+        <div className="relative z-10 mx-auto -mt-8 w-full max-w-5xl px-4 pb-12 text-center md:pb-16">
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="rounded-full bg-brand px-3 py-1 font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-on-primary">{tk(kind)}</span>
+            {countdown && (
+              <span className="rounded-full bg-white/15 px-3 py-1 font-montserrat text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur">{countdown}</span>
+            )}
           </div>
-          <h1 className="font-modern text-[clamp(2.2rem,6vw,4rem)] leading-none">{title}</h1>
-          {event.artist && <p className="mt-2 font-eight text-xl tracking-wide text-brand">con {event.artist}</p>}
+          <span className="block font-montserrat text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-[0.78rem]">
+            {fecha} · {time}
+          </span>
+          <h1 className="mt-2 font-serif text-[clamp(2.1rem,5.5vw,3.6rem)] font-bold leading-[1.03] tracking-tight">{title}</h1>
+          {/* Great Vibes solo tiene un grosor: la negrita se consigue engrosando
+              el trazo, no con font-bold (que el navegador falsearía deformándola). */}
+          {event.artist && (
+            <p className="-mt-2 font-vibes text-[3.4rem] leading-tight text-brand sm:-mt-4 sm:text-[5.5rem]" style={{WebkitTextStroke: '1.2px currentColor'}}>
+              {event.artist}
+            </p>
+          )}
         </div>
       </section>
 
@@ -108,16 +118,18 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
       <section className="mx-auto max-w-5xl px-4 py-14">
         <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-start">
           <div>
-            <div className="eyebrow mb-3">Sobre el evento</div>
-            {event.description ? (
-              <p className="text-lg leading-relaxed text-ink-2">{tx(event.description, locale)}</p>
-            ) : (
-              <p className="text-ink-3">Una noche a pie de playa con la cocina de La Calita abierta y la mejor música frente al mar.</p>
-            )}
+            <div className="text-center">
+              <div className="mb-3 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">Sobre el evento</div>
+              {event.description ? (
+                <p className="mx-auto max-w-2xl font-montserrat text-[1.02rem] leading-[1.75] text-ink-2">{tx(event.description, locale)}</p>
+              ) : (
+                <p className="mx-auto max-w-2xl font-montserrat leading-[1.75] text-ink-3">Una noche a pie de playa con la cocina de La Calita abierta y la mejor música frente al mar.</p>
+              )}
+            </div>
 
             {images.length > 1 && (
               <>
-                <div className="eyebrow mb-3 mt-8">Galería</div>
+                <div className="mb-3 mt-8 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">Galería</div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {images.slice(1).map((url, i) => (
                     <div key={i} className="lc-img-loading relative aspect-square overflow-hidden rounded-[14px] border border-line">
@@ -132,7 +144,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
           <aside className="rounded-[20px] border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-20">
             {countdown && (
               <div className="mb-5 rounded-[14px] bg-brand/12 px-4 py-3 text-center">
-                <div className="font-adam text-[0.6rem] uppercase tracking-[0.16em] text-brand-deep">Cuenta atrás</div>
+                <div className="font-montserrat text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-brand-deep">Cuenta atrás</div>
                 <div className="mt-0.5 font-serif text-2xl font-bold text-ink">{countdown}</div>
               </div>
             )}
@@ -208,7 +220,7 @@ function InfoRow({Icon, label, value}: {Icon: typeof Calendar; label: string; va
         <Icon className="size-4" />
       </span>
       <span className="min-w-0">
-        <span className="block font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">{label}</span>
+        <span className="block font-montserrat text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink-3">{label}</span>
         <span className="block font-semibold capitalize text-ink">{value}</span>
       </span>
     </div>

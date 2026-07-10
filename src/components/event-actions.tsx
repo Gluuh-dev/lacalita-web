@@ -61,12 +61,14 @@ export default function EventActions({id, title, startsAt, description}: {id: st
     }
   };
 
+  const btn = 'flex items-center justify-center gap-1.5 rounded-full border border-line bg-bg py-2.5 font-montserrat text-sm font-medium text-ink transition hover:border-brand';
+
   return (
     <div className="mt-5 grid grid-cols-2 gap-2 border-t border-line pt-5">
-      <button onClick={addToCalendar} className="flex items-center justify-center gap-1.5 rounded-full border border-line bg-bg py-2.5 text-sm font-medium text-ink transition hover:border-brand">
+      <button onClick={addToCalendar} className={btn}>
         <CalendarPlus className="size-4" /> Calendario
       </button>
-      <button onClick={share} className="flex items-center justify-center gap-1.5 rounded-full border border-line bg-bg py-2.5 text-sm font-medium text-ink transition hover:border-brand">
+      <button onClick={share} className={btn}>
         {copied ? <Check className="size-4 text-green-600" /> : <Share2 className="size-4" />} {copied ? 'Copiado' : 'Compartir'}
       </button>
     </div>

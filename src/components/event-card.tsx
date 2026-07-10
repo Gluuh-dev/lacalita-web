@@ -65,20 +65,29 @@ export default async function EventCard({
 
   if (layout === 'tile') {
     return (
-      <Link href={`/eventos/${event.id}`} className="ds-card--link flex flex-col overflow-hidden rounded-[20px] border border-line bg-surface shadow-sm">
-        <div className="relative aspect-[3/2] overflow-hidden">
-          {Media}
-          {DateChip}
-          {Flag}
-          <span className="absolute bottom-2.5 left-2.5 z-[2] rounded-full bg-brand px-2.5 py-0.5 text-xs font-semibold text-on-primary">{t(kind)}</span>
-        </div>
-        <div className="flex flex-1 flex-col gap-1 p-4">
-          <span className="eyebrow">{time}</span>
-          <h3 className="line-clamp-2 font-serif text-xl font-bold leading-snug">{title}</h3>
-          {event.artist && <p className="text-sm font-semibold text-brand-deep">{event.artist}</p>}
-          {event.description && (
-            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-2">{tx(event.description, locale)}</p>
-          )}
+      <Link
+        href={`/eventos/${event.id}`}
+        className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[20px] bg-ink text-white shadow-md"
+      >
+        {/* Ajustada a lo ancho y anclada arriba: el recorte se lo lleva la parte
+            baja del cartel, no la cabecera. */}
+        {event.image ? (
+          <Image src={event.image} alt={title} fill sizes="(max-width: 640px) 50vw, 300px" className="object-cover object-top transition duration-500 group-hover:scale-[1.03]" />
+        ) : (
+          <div className="absolute inset-0" style={{background: GRADIENTS[kind] ?? GRADIENTS.dj}}>
+            <div className="absolute inset-0" style={{background: 'radial-gradient(120% 90% at 80% 10%, rgba(233,174,116,.28), transparent 60%)'}} />
+            <KindIcon className="absolute -bottom-2 -right-2 size-14 text-white/15" strokeWidth={1.25} />
+          </div>
+        )}
+        {DateChip}
+        {Flag}
+        {/* Panel de cristal oscuro: legible aunque el cartel lleve su propio texto. */}
+        <div className="relative z-[2] m-2 flex flex-col gap-0.5 rounded-[14px] border border-white/12 bg-black/55 px-3 py-2.5 text-center backdrop-blur-md sm:m-2.5 sm:px-3.5 sm:py-3">
+          <span className="truncate font-montserrat text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-brand sm:text-[0.66rem]">
+            {t(kind)} · {time}
+          </span>
+          <h3 className="line-clamp-2 font-serif text-base font-bold leading-tight sm:text-lg">{title}</h3>
+          {event.artist && <p className="truncate text-xs font-medium text-white/75 sm:text-sm">{event.artist}</p>}
         </div>
       </Link>
     );

@@ -51,10 +51,14 @@ export default function HeaderBar({
 
   useScrollLock(open);
 
+  // Páginas que empiezan con una cabecera oscura a sangre: el navbar va encima.
+  const darkHeader = pathname === '/eventos' || pathname.startsWith('/eventos/');
   // En las cartas (como en la hamburguesería) el navbar es transparente mientras no hay scroll.
-  const overlay = (mode.overHero || !!currentCarta) && !scrolled;
-  const onMedia = overlay && mode.hasMedia;
+  const overlay = (mode.overHero || !!currentCarta || darkHeader) && !scrolled;
+  const onMedia = overlay && (mode.hasMedia || darkHeader);
   const light = onMedia;
+  // Sobre el hero ya se ve el logo grande: el de la barra estorba hasta el scroll.
+  const hideLogo = mode.overHero && !scrolled && !open;
 
   return (
     <>
@@ -72,12 +76,12 @@ export default function HeaderBar({
         {/* pl-1.5 = los mismos 6px que el icono del menú queda metido dentro de
             su botón (36px de botón, 24px de glifo). Así ambos tienen el mismo
             margen óptico respecto al borde y comparten centro vertical. */}
-        <Link href="/" aria-label="La Calita" className="flex items-center pl-1.5">
+        <Link href="/" aria-label="La Calita" className={cn('flex items-center pl-1.5', hideLogo && 'pointer-events-none')}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/logo-solo.svg"
             alt="La Calita"
-            className={cn('h-[32px] w-auto transition', light && !open && 'brightness-0 invert')}
+            className={cn('h-[32px] w-auto transition duration-300', light && !open && 'brightness-0 invert', hideLogo && 'opacity-0')}
           />
         </Link>
 
@@ -97,7 +101,7 @@ export default function HeaderBar({
 
       {/* Menú móvil: círculo que se expande desde el botón (como en hamburguesería). */}
       <div
-        aria-hidden={!open}
+        aria-hidden={open ? undefined : true}
         className="fixed inset-0 z-[45] bg-bg"
         style={{
           clipPath: open ? M_OPEN : M_CLOSED,

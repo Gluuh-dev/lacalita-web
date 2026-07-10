@@ -148,7 +148,7 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
       <div style={{borderBottom: '1px solid rgba(255,255,255,.14)', paddingBottom: 16, marginBottom: 10}}>
         <div style={{fontFamily: FONT.alfa, fontSize: 25, lineHeight: 1.14, letterSpacing: '-0.01em', color: slide.color}}>{feat.title}</div>
         <div style={{fontFamily: FONT.montserrat, fontWeight: 500, fontSize: 15, letterSpacing: '0.02em', marginTop: 8}}>{feat.day} {feat.month} · {feat.time}</div>
-        {feat.artist && <div style={{fontFamily: FONT.montserrat, fontSize: 13, color: 'rgba(255,255,255,.7)', marginTop: 5}}>con {feat.artist}</div>}
+        {feat.artist && <div style={{fontFamily: FONT.vibes, fontSize: 22, color: 'rgba(255,255,255,.85)', marginTop: 4}}>{feat.artist}</div>}
       </div>
       <div style={{display: 'flex', flexDirection: 'column', gap: 2}}>
         {evs.map((e, i) => <EvRow key={e.id} e={e} on={i === active} onClick={() => setActive(i)} />)}
@@ -187,7 +187,7 @@ function PosterView({slide}: {slide: HeroSlide}) {
           {logoSrc && (
             <span
               style={{
-                display: 'block', height: '5cqw', width: `${5 * (LOGO_ASPECT[slide.logoVariant ?? 'debajo'] ?? 1)}cqw`,
+                display: 'block', height: `${5 * (slide.logoScale ?? 1)}cqw`, width: `${5 * (slide.logoScale ?? 1) * (LOGO_ASPECT[slide.logoVariant ?? 'debajo'] ?? 1)}cqw`,
                 marginBottom: '1cqw', backgroundColor: logoCol,
                 WebkitMaskImage: `url(${logoSrc})`, maskImage: `url(${logoSrc})`,
                 WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
@@ -306,10 +306,10 @@ export function HeroStage({
             {logoSrc &&
               (() => {
                 const h =
-                  logoVariant === 'debajo' ? (pc ? 112 : 80)
+                  (logoVariant === 'debajo' ? (pc ? 112 : 80)
                   : logoVariant === 'solo' ? (pc ? 80 : 64)
                   : logoVariant === 'texto' ? (pc ? 40 : 32)
-                  : (pc ? 56 : 44); // derecha
+                  : (pc ? 56 : 44)) * (slide.logoScale ?? 1); // derecha
                 return (
                   <span
                     style={{
@@ -413,13 +413,19 @@ const LOGO_SRC: Record<string, string> = {
   derecha: '/brand/logo-texto-derecha.svg',
   texto: '/brand/texto-lacalita-derecha.svg'
 };
-// altura responsive por variante (debajo es alto, derecha/solo/texto más bajos)
+// Altura responsive por variante. En clamp() y no en clases de Tailwind para
+// poder multiplicarla por `logoScale` del admin.
 const LOGO_H: Record<string, string> = {
-  solo: 'h-16 sm:h-20',
-  debajo: 'h-20 sm:h-24 lg:h-28',
-  derecha: 'h-11 sm:h-14',
-  texto: 'h-8 sm:h-10'
+  solo: 'clamp(4rem, 9vw, 5rem)',
+  debajo: 'clamp(5rem, 11vw, 7rem)',
+  derecha: 'clamp(2.75rem, 6vw, 3.5rem)',
+  texto: 'clamp(2rem, 4.5vw, 2.5rem)'
 };
+// Altura final del logo en la web pública.
+function logoH(slide: HeroSlide): string {
+  const base = LOGO_H[slide.logoVariant ?? 'debajo'] ?? LOGO_H.debajo;
+  return `calc(${base} * ${slide.logoScale ?? 1})`;
+}
 function logoOf(slide: HeroSlide): string | null {
   const v = slide.logoVariant ?? (slide.showLogo ? 'debajo' : 'none');
   return v === 'none' ? null : LOGO_SRC[v] ?? null;
@@ -490,7 +496,8 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   const showAgenda = agenda && hasEvents;
 
   return (
-    <div className="relative flex h-full w-full items-center overflow-hidden pb-28 lg:pb-0">
+    // ponytail: el contenido va centrado; el pb extra en móvil lo sube.
+    <div className="relative flex h-full w-full items-center overflow-hidden pb-64 lg:pb-0">
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
         <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={mediaFx(slide)} className="absolute inset-0 h-full w-full object-cover" />
@@ -524,15 +531,16 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       <Marquee slide={slide} pc />
 
       {/* contenido */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-24 sm:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-24">
         <div className={`grid items-center gap-8 ${showAgenda ? 'lg:grid-cols-[minmax(0,1fr)_360px]' : ''}`}>
           <div className={`flex flex-col items-center text-center text-white ${colAlign}`}>
             {logoSrc && (
               <span
                 aria-label="La Calita"
                 role="img"
-                className={`mb-5 block ${LOGO_H[slide.logoVariant ?? 'debajo'] ?? LOGO_H.debajo}`}
+                className="mb-5 block"
                 style={{
+                  height: logoH(slide),
                   aspectRatio: String(LOGO_ASPECT[slide.logoVariant ?? 'debajo'] ?? 1),
                   backgroundColor: logoColorOf(slide),
                   WebkitMaskImage: `url(${logoSrc})`,
@@ -630,7 +638,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         <>
           <button
             onClick={() => setSheet(true)}
-            className="absolute inset-x-4 bottom-[5.5rem] z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
+            className="absolute inset-x-4 bottom-30 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
           >
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />

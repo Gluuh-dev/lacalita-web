@@ -32,6 +32,7 @@ export type HeroSlide = {
   showLogo: boolean; // legado (compat)
   logoVariant: 'none' | 'solo' | 'debajo' | 'derecha' | 'texto';
   logoColor: string; // color libre (hex) o nombre legado (white/cream/brown/ink/orange)
+  logoScale?: number; // 1 = tamaño por defecto
   eyebrow: string;
   eyebrowColor: string;
   eyebrowScale: number;
@@ -93,6 +94,7 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   showLogo: true,
   logoVariant: 'debajo',
   logoColor: 'white',
+  logoScale: 1,
   eyebrow: '',
   eyebrowColor: '#e9ae74',
   eyebrowScale: 1,
