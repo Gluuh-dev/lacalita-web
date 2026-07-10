@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {ChevronUp, X, ArrowRight} from 'lucide-react';
+import {ChevronUp, X, ArrowRight, Play, Pause} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
@@ -617,23 +617,55 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
 }
 
 /** Hero público: carrusel responsive a pantalla completa. */
+// Duración de cada diapositiva en automático (igual que el hero de burger).
+const SLIDE_MS = 6000;
+
 export default function Hero({slides, events}: {slides: HeroSlide[]; events: HeroEvent[]}) {
   const {set} = useHeaderMode();
   const [i, setI] = useState(0);
+  // Arranca en automático. Pon `false` si quieres que espere a que pulsen Play.
+  const [playing, setPlaying] = useState(true);
   const sx = useRef(0);
+  const stepTimer = useRef<number | null>(null);
+  const n = slides.length;
 
   useEffect(() => {
     set({overHero: true, hasMedia: true});
     return () => set({overHero: false, hasMedia: false});
   }, [set]);
+  // Un temporizador por diapositiva: se reinicia en cada cambio (automático o
+  // manual), así la barra de progreso va sincronizada con el avance real.
   useEffect(() => {
-    if (slides.length < 2) return;
-    const t = setInterval(() => setI((x) => (x + 1) % slides.length), 7000);
-    return () => clearInterval(t);
-  }, [slides.length]);
+    if (!playing || n <= 1) return;
+    const t = setTimeout(() => setI((x) => (x + 1) % n), SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [playing, n, i]);
+  useEffect(() => () => {
+    if (stepTimer.current) window.clearInterval(stepTimer.current);
+  }, []);
 
-  if (!slides.length) return null;
-  const cur = slides[i % slides.length];
+  // Al pulsar un punto, recorre las diapositivas intermedias en vez de saltar.
+  const goTo = (target: number) => {
+    if (target === i || target < 0 || target >= n) return;
+    if (stepTimer.current) {
+      window.clearInterval(stepTimer.current);
+      stepTimer.current = null;
+    }
+    const dir = target > i ? 1 : -1;
+    stepTimer.current = window.setInterval(() => {
+      setI((x) => {
+        const nx = x + dir;
+        if (nx === target && stepTimer.current) {
+          window.clearInterval(stepTimer.current);
+          stepTimer.current = null;
+        }
+        return nx;
+      });
+    }, 240);
+  };
+
+  if (!n) return null;
+  const cur = slides[i % n];
 
   return (
     <section
@@ -641,15 +673,43 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
       onTouchStart={(e) => (sx.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
         const dx = e.changedTouches[0].clientX - sx.current;
-        if (Math.abs(dx) > 60) setI((x) => (x + (dx < 0 ? 1 : slides.length - 1)) % slides.length);
+        if (Math.abs(dx) > 50) setI((x) => (x + (dx < 0 ? 1 : n - 1)) % n);
       }}
     >
       <HeroView key={i} slide={cur} events={events} />
-      {slides.length > 1 && (
-        <div className="absolute bottom-20 left-0 right-0 z-20 flex justify-center gap-2 lg:bottom-6">
-          {slides.map((_, k) => (
-            <button key={k} onClick={() => setI(k)} aria-label={`Diapositiva ${k + 1}`} className="h-2 rounded-full transition-all" style={{width: k === i ? 26 : 9, background: k === i ? '#e9ae74' : 'rgba(255,255,255,.4)'}} />
-          ))}
+      {n > 1 && (
+        <div className="absolute inset-x-0 bottom-6 z-20 flex items-center justify-center gap-2.5 lg:bottom-8">
+          <div className="flex h-10 items-center gap-2 rounded-full bg-black/30 px-4 backdrop-blur">
+            {slides.map((_, k) => {
+              const active = k === i;
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => goTo(k)}
+                  aria-label={`Diapositiva ${k + 1}`}
+                  className="relative h-[7px] overflow-hidden rounded-full transition-all duration-300"
+                  style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}
+                >
+                  {active && (
+                    <span
+                      key={`${i}-${playing}`}
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={playing ? {background: '#e9ae74', animation: `lc-prog ${SLIDE_MS}ms linear forwards`} : {background: '#e9ae74', width: '100%'}}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? 'Pausar' : 'Reproducir'}
+            className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition hover:bg-black/45"
+          >
+            {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
+          </button>
         </div>
       )}
     </section>
