@@ -106,22 +106,34 @@ function Marquee({slide, pc}: {slide: HeroSlide; pc: boolean}) {
   );
 }
 
-function EvRow({e, on, onClick, light = false}: {e: HeroEvent; on: boolean; onClick: () => void; light?: boolean}) {
+// Si recibe `href` se renderiza como enlace al evento; si no (previsualización
+// del admin), como un div inerte.
+function EvRow({e, on, onClick, href, light = false}: {e: HeroEvent; on: boolean; onClick?: () => void; href?: string; light?: boolean}) {
   const txt = light ? '#2a1713' : '#fff';
   const sub = light ? 'rgba(42,23,19,.6)' : 'rgba(255,255,255,.62)';
   const idleBg = light ? 'rgba(42,23,19,.07)' : 'rgba(255,255,255,.08)';
   const idleArrow = light ? 'rgba(42,23,19,.4)' : 'rgba(255,255,255,.4)';
-  return (
-    <div onClick={onClick} style={{display: 'flex', alignItems: 'center', gap: 11, cursor: 'pointer', background: on ? 'rgba(233,174,116,.16)' : 'transparent', borderRadius: 14, padding: 9}}>
+  const box: React.CSSProperties = {display: 'flex', alignItems: 'center', gap: 11, cursor: 'pointer', background: on ? 'rgba(233,174,116,.16)' : 'transparent', borderRadius: 14, padding: 9, transition: 'background .2s'};
+  const inner = (
+    <>
       <span style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44, padding: '5px 0', borderRadius: 8, background: on ? '#e9ae74' : idleBg, color: on ? '#3a2606' : txt, lineHeight: 1}}>
-        <span style={{fontFamily: FONT.display, fontWeight: 700, fontSize: 17}}>{e.day}</span>
-        <span style={{fontFamily: "'Adam',serif", fontSize: 9, letterSpacing: '0.1em', marginTop: 2}}>{e.month}</span>
+        <span style={{fontFamily: FONT.montserrat, fontWeight: 700, fontSize: 17}}>{e.day}</span>
+        <span style={{fontFamily: FONT.montserrat, fontWeight: 600, fontSize: 9, letterSpacing: '0.1em', marginTop: 3}}>{e.month}</span>
       </span>
       <span style={{flex: 1, minWidth: 0}}>
-        <span style={{display: 'block', fontFamily: FONT.display, fontWeight: 600, fontSize: 15, color: txt, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{e.title}</span>
-        <span style={{display: 'block', fontSize: 12, color: sub}}>{e.artist}{e.artist && ' · '}{e.time}</span>
+        <span style={{display: 'block', fontFamily: FONT.montserrat, fontWeight: 600, fontSize: 15, color: txt, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{e.title}</span>
+        <span style={{display: 'block', fontFamily: FONT.montserrat, fontWeight: 400, fontSize: 12, color: sub}}>{e.artist}{e.artist && ' · '}{e.time}</span>
       </span>
       <ArrowRight className="size-4 shrink-0" style={{color: on ? '#e9ae74' : idleArrow}} />
+    </>
+  );
+  return href ? (
+    <Link href={href} onClick={onClick} style={box}>
+      {inner}
+    </Link>
+  ) : (
+    <div onClick={onClick} style={box}>
+      {inner}
     </div>
   );
 }
@@ -132,7 +144,7 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
   const feat = evs[active] || ({} as HeroEvent);
   return (
     <aside style={{width: 340, flex: '0 0 340px', background: 'rgba(20,15,8,.34)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,.16)', borderRadius: 28, padding: 22, color: '#fff'}}>
-      <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: 12, color: 'rgba(255,255,255,.8)', marginBottom: 16}}>Próximos eventos</div>
+      <div style={{fontFamily: FONT.montserrat, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: 12, color: 'rgba(255,255,255,.8)', marginBottom: 16}}>Próximos eventos</div>
       <div style={{borderBottom: '1px solid rgba(255,255,255,.14)', paddingBottom: 16, marginBottom: 10}}>
         <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 32, lineHeight: 1.02, color: slide.color}}>{feat.title}</div>
         <div style={{fontFamily: FONT.eight, fontSize: 16, marginTop: 7}}>{feat.day} {feat.month} · {feat.time}</div>
@@ -142,7 +154,7 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
         {evs.map((e, i) => <EvRow key={e.id} e={e} on={i === active} onClick={() => setActive(i)} />)}
       </div>
       {slide.eventBtn && <div style={{marginTop: 14, textAlign: 'center', background: bc, color: bt, borderRadius: 999, padding: 11, fontWeight: 700, fontSize: 14}}>{slide.eventBtnText}</div>}
-      <div style={{marginTop: 12, textAlign: 'center', fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: 11, color: 'rgba(255,255,255,.75)'}}>Ver todos los eventos →</div>
+      <div style={{marginTop: 12, textAlign: 'center', fontFamily: FONT.montserrat, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', fontSize: 11, color: 'rgba(255,255,255,.75)'}}>Ver todos los eventos →</div>
     </aside>
   );
 }
@@ -334,7 +346,7 @@ export function HeroStage({
 
             {agenda && !pc && events.length > 0 && (
               <div style={{marginTop: 28, width: '100%', maxWidth: 360, background: 'rgba(20,15,8,.34)', border: '1px solid rgba(255,255,255,.16)', borderRadius: 22, padding: 16, textAlign: 'left'}}>
-                <div style={{fontFamily: "'Adam',serif", textTransform: 'uppercase', letterSpacing: '0.18em', fontSize: 10, color: 'rgba(255,255,255,.7)', marginBottom: 10}}>Próximos eventos</div>
+                <div style={{fontFamily: FONT.montserrat, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.18em', fontSize: 10, color: 'rgba(255,255,255,.7)', marginBottom: 10}}>Próximos eventos</div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 2}}>
                   {events.slice(0, 4).map((e) => <EvRow key={e.id} e={e} on={false} onClick={() => {}} />)}
                 </div>
@@ -576,21 +588,22 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <aside className="hidden rounded-[24px] border border-white/15 bg-black/35 p-5 text-white backdrop-blur-md lg:block">
               <div className="mb-4 flex items-center gap-2">
                 <span className="size-2 rounded-full bg-brand" />
-                <span className="font-adam text-[0.7rem] uppercase tracking-[0.2em] text-white/80">Próximos eventos</span>
+                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/80" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
               </div>
-              <Link href="/eventos" className="mb-3 flex h-[8.5rem] flex-col justify-center border-b border-white/15 pb-4">
+              {/* El destacado lleva a SU evento, no al listado. */}
+              <Link href={feat ? `/eventos/${feat.id}` : '/eventos'} className="mb-3 flex h-[8.5rem] flex-col justify-center border-b border-white/15 pb-4 transition hover:opacity-90">
                 <div className="line-clamp-2 text-[1.9rem] leading-tight" style={{color: slide.color, fontFamily: FONT[slide.font] || FONT.romance}}>{feat?.title}</div>
-                <div className="mt-1.5 text-base" style={{fontFamily: FONT.eight}}>{feat?.day} {feat?.month} · {feat?.time}</div>
-                <div className="mt-1 min-h-[1.25rem] text-sm text-white/70">{feat?.artist ? `con ${feat.artist}` : ''}</div>
+                <div className="mt-1.5 text-[0.95rem] font-medium tracking-wide" style={{fontFamily: FONT.montserrat}}>{feat?.day} {feat?.month} · {feat?.time}</div>
+                <div className="mt-1 min-h-[1.25rem] text-sm text-white/70" style={{fontFamily: FONT.montserrat}}>{feat?.artist ? `con ${feat.artist}` : ''}</div>
               </Link>
               <ul className="flex flex-col">
                 {evs.map((e, idx) => (
                   <li key={e.id} onMouseEnter={() => setActive(idx)}>
-                    <EvRow e={e} on={idx === active} onClick={() => {}} />
+                    <EvRow e={e} on={idx === active} href={`/eventos/${e.id}`} />
                   </li>
                 ))}
               </ul>
-              <Link href="/eventos" className="mt-3 flex items-center justify-center gap-1.5 font-adam text-[0.7rem] uppercase tracking-[0.12em] text-white/75 hover:text-white">
+              <Link href="/eventos" className="mt-3 flex items-center justify-center gap-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/75 transition hover:text-white" style={{fontFamily: FONT.montserrat}}>
                 Ver todos los eventos <ArrowRight className="size-3.5" />
               </Link>
             </aside>
@@ -620,7 +633,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />
               <span className="min-w-0 text-left">
-                <span className="block font-adam text-[0.58rem] uppercase tracking-[0.16em] text-white/70">Próximos eventos</span>
+                <span className="block text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/70" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
                 <span className="block truncate text-sm font-medium">{feat?.title} · {feat?.day} {feat?.month}</span>
               </span>
             </span>
@@ -647,17 +660,17 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             >
               <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-ink/20" />
               <div className="mb-3 flex items-center justify-between">
-                <span className="font-serif text-xl">Próximos eventos</span>
+                <span className="text-lg font-semibold" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
                 <button onClick={() => setSheet(false)} aria-label="Cerrar" className="rounded-full bg-ink/10 p-1.5"><X className="size-5" /></button>
               </div>
               <ul className="flex flex-col">
                 {evs.map((e) => (
                   <li key={e.id}>
-                    <EvRow e={e} on={false} onClick={() => setSheet(false)} light />
+                    <EvRow e={e} on={false} href={`/eventos/${e.id}`} onClick={() => setSheet(false)} light />
                   </li>
                 ))}
               </ul>
-              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary">Ver todos los eventos</Link>
+              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary" style={{fontFamily: FONT.montserrat}}>Ver todos los eventos</Link>
             </div>
           </div>
         </>
