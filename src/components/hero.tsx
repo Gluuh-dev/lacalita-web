@@ -15,6 +15,7 @@ const FONT: Record<string, string> = {
   adam: "'Adam', sans-serif",
   sans: 'var(--font-geist), sans-serif',
   // Tipografías de marca del cliente
+  tosca: "'Tosca Zero', serif",
   alfa: 'var(--font-alfa), serif',
   vibes: 'var(--font-vibes), cursive',
   kaushan: 'var(--font-kaushan), cursive',

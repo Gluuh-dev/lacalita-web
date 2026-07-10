@@ -8,6 +8,7 @@ export type HeroFont =
   | 'adam'
   | 'sans'
   // Tipografías de marca del cliente
+  | 'tosca'
   | 'alfa'
   | 'vibes'
   | 'kaushan'

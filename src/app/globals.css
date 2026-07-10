@@ -159,15 +159,14 @@
 .font-cinzel { font-family: var(--font-cinzel), serif; }
 .font-montserrat { font-family: var(--font-montserrat), sans-serif; }
 
-/* PENDIENTE: Tosca Zero no está en Google Fonts. Cuando exista el archivo en
-   public/fonts/, descomentar y añadir 'tosca' a HeroFont / FONT / FONT_LABELS.
+/* Tosca Zero: no está en Google Fonts, va autoalojada. Al ser @font-face, el
+   navegador solo la descarga si algún texto la usa. */
 @font-face {
   font-family: 'Tosca Zero';
-  src: url('/fonts/tosca-zero.woff2') format('woff2');
+  src: url('/fonts/tosca_zero.ttf') format('truetype');
   font-display: swap;
 }
 .font-tosca { font-family: 'Tosca Zero', serif; }
-*/
 
 :root {
   --background: oklch(1 0 0);

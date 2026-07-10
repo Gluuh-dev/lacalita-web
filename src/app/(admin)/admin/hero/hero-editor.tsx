@@ -479,6 +479,7 @@ const FONT_LABELS: [string, string][] = [
   ['adam', 'Adam'],
   ['sans', 'Geist'],
   // Tipografías de marca del cliente
+  ['tosca', 'Tosca Zero'],
   ['alfa', 'Alfa Slab One'],
   ['vibes', 'Great Vibes'],
   ['kaushan', 'Kaushan Script'],
