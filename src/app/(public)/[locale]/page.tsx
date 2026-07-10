@@ -64,23 +64,29 @@ export default async function Home({
           heroMode: 'boton'
         }
       ];
-  // Slide automático SOLO para los eventos que ya tienen cartel subido en
-  // /admin/eventos: se muestra el cartel completo sobre su propio desenfoque.
-  // Los eventos sin imagen no generan diapositiva (se ven en la agenda).
-  const eventSlides: HeroSlide[] = events
-    .map((e, i) => ({e, he: heroEvents[i]}))
-    .filter(({e}) => !!e.image)
-    .map(({e, he}) => ({
+  // Cada evento próximo genera su propia diapositiva del hero, con su contenido.
+  // Con cartel subido: se muestra entero sobre su propio desenfoque (sin textos
+  // encima, el cartel ya los lleva). Sin cartel: fondo de marca con la fecha,
+  // el título y el artista del evento.
+  const eventSlides: HeroSlide[] = events.map((e, i) => {
+    const he = heroEvents[i];
+    const cartel = !!e.image;
+    return {
       ...DEFAULT_HERO_SLIDE,
       id: 'ev-' + e.id,
       name: he.title,
-      media: e.image as string,
+      media: e.image ?? '',
       mediaType: 'image' as const,
-      mediaFit: 'contain' as const, // cartel completo + fondo difuminado
-      darken: 0,
+      mediaFit: (cartel ? 'contain' : 'cover') as 'contain' | 'cover',
+      darken: cartel ? 0 : 14,
+      eyebrow: cartel ? '' : `${he.day} ${he.month}${he.time ? ' · ' + he.time : ''}`,
+      lema: cartel ? '' : he.title,
+      bienvenida: cartel || !he.artist ? '' : `Con ${he.artist}`,
+      button: cartel ? '' : 'Ver el evento',
       link: `/eventos/${e.id}`,
       heroMode: 'boton' as const
-    }));
+    };
+  });
   const heroSlides: HeroSlide[] = [...baseSlides, ...eventSlides];
 
   const jsonLd = {

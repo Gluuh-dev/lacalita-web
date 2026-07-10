@@ -691,7 +691,6 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
   // Arranca en automático. Pon `false` si quieres que espere a que pulsen Play.
   const [playing, setPlaying] = useState(true);
   const sx = useRef(0);
-  const stepTimer = useRef<number | null>(null);
   const n = slides.length;
 
   useEffect(() => {
@@ -699,39 +698,12 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
     return () => set({overHero: false, hasMedia: false});
   }, [set]);
   // Un temporizador por diapositiva: se reinicia en cada cambio (automático o
-  // manual), así la barra de progreso va sincronizada con el avance real.
+  // por swipe). El botón de la esquina detiene el paso entre eventos.
   useEffect(() => {
     if (!playing || n <= 1) return;
     const t = setTimeout(() => setI((x) => (x + 1) % n), SLIDE_MS);
     return () => clearTimeout(t);
   }, [playing, n, i]);
-  useEffect(() => () => {
-    if (stepTimer.current) window.clearInterval(stepTimer.current);
-  }, []);
-
-  // Al pulsar un punto, recorre las diapositivas intermedias en vez de saltar.
-  const goTo = (target: number) => {
-    if (target === i || target < 0 || target >= n) return;
-    if (stepTimer.current) {
-      window.clearInterval(stepTimer.current);
-      stepTimer.current = null;
-    }
-    const dir = target > i ? 1 : -1;
-    // Primer paso inmediato: setInterval no dispara hasta pasado el intervalo,
-    // y eso hacía que la pulsación tardara 240ms en notarse.
-    setI(i + dir);
-    if (i + dir === target) return;
-    stepTimer.current = window.setInterval(() => {
-      setI((x) => {
-        const nx = x + dir;
-        if (nx === target && stepTimer.current) {
-          window.clearInterval(stepTimer.current);
-          stepTimer.current = null;
-        }
-        return nx;
-      });
-    }, 240);
-  };
 
   if (!n) return null;
   const cur = slides[i % n];
@@ -746,38 +718,6 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
       }}
     >
       <HeroView key={i} slide={cur} events={events} />
-      {n > 1 && (
-        <div className="absolute inset-x-0 bottom-6 z-20 flex items-center justify-center lg:bottom-8">
-          <div className="flex h-10 items-center gap-2 rounded-full bg-black/30 px-4 backdrop-blur">
-            {slides.map((_, k) => {
-              const active = k === i;
-              return (
-                // -m-2/p-2 agranda el área pulsable sin cambiar el tamaño visible.
-                <button
-                  key={k}
-                  type="button"
-                  onClick={() => goTo(k)}
-                  aria-label={`Diapositiva ${k + 1}`}
-                  className="group -m-2 p-2"
-                >
-                  <span
-                    className="relative block h-[7px] overflow-hidden rounded-full transition-all duration-300 group-hover:brightness-150 group-active:scale-90"
-                    style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}
-                  >
-                    {active && (
-                      <span
-                        key={`${i}-${playing}`}
-                        className="absolute inset-y-0 left-0 rounded-full"
-                        style={playing ? {background: '#e9ae74', animation: `lc-prog ${SLIDE_MS}ms linear forwards`} : {background: '#e9ae74', width: '100%'}}
-                      />
-                    )}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
       {/* Play/pausa del carrusel, en la esquina: detiene el paso entre eventos. */}
       {n > 1 && (
         <button
