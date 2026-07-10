@@ -64,30 +64,9 @@ export default async function Home({
           heroMode: 'boton'
         }
       ];
-  // Cada evento próximo genera su propia diapositiva del hero, con su contenido.
-  // Con cartel subido: se muestra entero sobre su propio desenfoque (sin textos
-  // encima, el cartel ya los lleva). Sin cartel: fondo de marca con la fecha,
-  // el título y el artista del evento.
-  const eventSlides: HeroSlide[] = events.map((e, i) => {
-    const he = heroEvents[i];
-    const cartel = !!e.image;
-    return {
-      ...DEFAULT_HERO_SLIDE,
-      id: 'ev-' + e.id,
-      name: he.title,
-      media: e.image ?? '',
-      mediaType: 'image' as const,
-      mediaFit: (cartel ? 'contain' : 'cover') as 'contain' | 'cover',
-      darken: cartel ? 0 : 14,
-      eyebrow: cartel ? '' : `${he.day} ${he.month}${he.time ? ' · ' + he.time : ''}`,
-      lema: cartel ? '' : he.title,
-      bienvenida: cartel || !he.artist ? '' : `Con ${he.artist}`,
-      button: cartel ? '' : 'Ver el evento',
-      link: `/eventos/${e.id}`,
-      heroMode: 'boton' as const
-    };
-  });
-  const heroSlides: HeroSlide[] = [...baseSlides, ...eventSlides];
+  // Los eventos NO generan diapositivas: el hero son las del admin. Los próximos
+  // eventos se ven en la agenda del hero, y desde ahí se entra a cada evento.
+  const heroSlides: HeroSlide[] = baseSlides;
 
   const jsonLd = {
     '@context': 'https://schema.org',
