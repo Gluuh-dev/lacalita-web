@@ -642,11 +642,14 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary"><ChevronUp className="size-4" /></span>
           </button>
 
-          <div className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'hidden'}`}>
-            <div onClick={() => setSheet(false)} className={`absolute inset-x-0 bottom-0 top-14 bg-black/50 transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
+          {/* Siempre montado: con `hidden` (display:none) el navegador no tenía
+              fotograma de partida y la apertura no se animaba, solo aparecía. */}
+          <div aria-hidden={sheet ? undefined : true} className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'pointer-events-none'}`}>
+            {/* inset-0, no top-14: el velo tapa también la barra de navegación. */}
+            <div onClick={() => setSheet(false)} className={`absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
             <div
               className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-bg p-4 pb-8 text-ink shadow-2xl"
-              style={{transform: sheet ? `translateY(${drag}px)` : 'translateY(100%)', transition: drag ? 'none' : 'transform .34s cubic-bezier(0.16,1,0.3,1)'}}
+              style={{transform: sheet ? `translateY(${drag}px)` : 'translateY(100%)', transition: drag ? 'none' : 'transform .38s cubic-bezier(0.16,1,0.3,1)'}}
               onTouchStart={(e) => (dragY.current = e.touches[0].clientY)}
               onTouchMove={(e) => {
                 if (dragY.current != null) {
