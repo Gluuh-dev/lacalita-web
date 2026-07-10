@@ -69,12 +69,14 @@ export default function HeaderBar({
           open && 'border-transparent bg-transparent'
         )}
       >
-        <Link href="/" aria-label="La Calita" className="flex items-center">
+        {/* pl-1.5 = los mismos 6px que el icono del menú queda metido dentro de
+            su botón (36px de botón, 24px de glifo). Así ambos tienen el mismo
+            margen óptico respecto al borde y comparten centro vertical. */}
+        <Link href="/" aria-label="La Calita" className="flex items-center pl-1.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/logo-solo.svg"
             alt="La Calita"
-            style={{transform: 'translateY(-1px)'}}
             className={cn('h-[32px] w-auto transition', light && !open && 'brightness-0 invert')}
           />
         </Link>
