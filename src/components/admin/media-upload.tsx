@@ -16,7 +16,8 @@ export default function MediaUpload({
   kind = 'image',
   label,
   multiple = false,
-  maxDim = 2000
+  maxDim = 2000,
+  tile = false
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
@@ -25,6 +26,7 @@ export default function MediaUpload({
   label?: string;
   multiple?: boolean;
   maxDim?: number;
+  tile?: boolean; // casilla cuadrada para encajar como primer hueco de una rejilla
 }) {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -59,6 +61,10 @@ export default function MediaUpload({
     return url;
   }
 
+  // Subidas en paralelo. El cuello de botella es la red, no la compresión, así
+  // que encadenarlas de una en una multiplicaba el tiempo por el nº de fotos.
+  const CONCURRENCY = 4;
+
   async function handleFiles(list: File[]) {
     const valid = list.filter((f) => (kind === 'image' ? f.type.startsWith('image/') : f.type.startsWith('video/')));
     if (valid.length === 0) {
@@ -67,19 +73,34 @@ export default function MediaUpload({
     }
     setBusy(true);
     if (value && !multiple) removeMedia(value); // al reemplazar (modo único)
+
+    const urls: (string | null)[] = new Array(valid.length).fill(null);
     let done = 0;
+    let next = 0;
+    setProgress(4);
+    setNote(valid.length > 1 ? `Comprimiendo y subiendo 0/${valid.length}` : '');
+
+    const worker = async () => {
+      while (next < valid.length) {
+        const i = next++;
+        urls[i] = await uploadOne(valid[i]);
+        done++;
+        setProgress(Math.round((done / valid.length) * 100));
+        setNote(valid.length > 1 ? `Comprimiendo y subiendo ${done}/${valid.length}` : '');
+      }
+    };
+    await Promise.all(Array.from({length: Math.min(CONCURRENCY, valid.length)}, worker));
+
+    // Se emiten al final y en orden: al terminar en desorden, las fotos se
+    // guardarían barajadas respecto a como las eligió el usuario.
     let ok = 0;
-    for (const file of valid) {
-      setProgress(Math.round((done / valid.length) * 100) + 4);
-      setNote(valid.length > 1 ? `Comprimiendo y subiendo ${done + 1}/${valid.length}` : '');
-      const url = await uploadOne(file);
+    for (const url of urls) {
       if (url) {
         onChange(url);
         ok++;
       }
-      done++;
-      setProgress(Math.round((done / valid.length) * 100));
     }
+
     if (ok > 0) toast.success(ok > 1 ? `${ok} imágenes subidas` : kind === 'video' ? 'Vídeo subido' : 'Imagen subida');
     if (inputRef.current) inputRef.current.value = '';
     setTimeout(() => {
@@ -87,6 +108,66 @@ export default function MediaUpload({
       setProgress(0);
       setNote('');
     }, 400);
+  }
+
+  // Handlers de la zona de soltar, compartidos por el modo normal y el modo tile.
+  const dz = {
+    role: 'button' as const,
+    tabIndex: 0,
+    onClick: () => !busy && inputRef.current?.click(),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        inputRef.current?.click();
+      }
+    },
+    onDragOver: (e: React.DragEvent) => {
+      e.preventDefault();
+      setDrag(true);
+    },
+    onDragLeave: () => setDrag(false),
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault();
+      setDrag(false);
+      handleFiles(Array.from(e.dataTransfer.files ?? []));
+    }
+  };
+
+  const fileInput = (
+    <input
+      ref={inputRef}
+      type="file"
+      aria-label="Añadir archivo"
+      accept={kind === 'video' ? 'video/*' : 'image/*'}
+      multiple={multiple && kind === 'image'}
+      className="hidden"
+      onChange={(e) => handleFiles(Array.from(e.target.files ?? []))}
+    />
+  );
+
+  // Casilla cuadrada: encaja como primer hueco de la rejilla de miniaturas, con
+  // el progreso superpuesto para no alterar la altura de la celda.
+  if (tile) {
+    return (
+      <div
+        {...dz}
+        className={cn(
+          'relative flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed p-1 text-center transition',
+          drag ? 'border-brand bg-brand/5' : 'border-input hover:border-brand/60 hover:bg-accent/40',
+          busy && 'pointer-events-none'
+        )}
+      >
+        <UploadCloud className="size-5 text-muted-foreground" />
+        <span className="px-1 text-[0.66rem] font-medium leading-tight">{label ?? '+ Añadir'}</span>
+        {busy && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 rounded-lg bg-bg/85 backdrop-blur">
+            <span className="text-sm font-semibold text-brand">{Math.round(progress)}%</span>
+            <span className="px-1 text-[0.58rem] leading-tight text-muted-foreground">{note || 'Subiendo…'}</span>
+          </div>
+        )}
+        {fileInput}
+      </div>
+    );
   }
 
   return (
@@ -113,25 +194,7 @@ export default function MediaUpload({
       )}
 
       <div
-        role="button"
-        tabIndex={0}
-        onClick={() => !busy && inputRef.current?.click()}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            inputRef.current?.click();
-          }
-        }}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDrag(true);
-        }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDrag(false);
-          handleFiles(Array.from(e.dataTransfer.files ?? []));
-        }}
+        {...dz}
         className={cn(
           'flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed px-4 py-6 text-center transition',
           drag ? 'border-brand bg-brand/5' : 'border-input hover:border-brand/60 hover:bg-accent/40',
@@ -145,14 +208,7 @@ export default function MediaUpload({
         <span className="text-xs text-muted-foreground">
           {kind === 'video' ? 'Vídeo (MP4)' : multiple ? 'Imágenes — se comprimen solas (puedes elegir varias)' : 'Imagen — se comprime sola'}
         </span>
-        <input
-          ref={inputRef}
-          type="file"
-          accept={kind === 'video' ? 'video/*' : 'image/*'}
-          multiple={multiple && kind === 'image'}
-          className="hidden"
-          onChange={(e) => handleFiles(Array.from(e.target.files ?? []))}
-        />
+        {fileInput}
       </div>
 
       {busy && (

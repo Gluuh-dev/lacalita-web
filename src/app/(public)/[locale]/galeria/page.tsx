@@ -1,6 +1,5 @@
 import {setRequestLocale} from 'next-intl/server';
-import {getGalleryAlbums, getUpcomingEvents, getPastEvents, getSettings} from '@/lib/queries';
-import {tx} from '@/lib/localize';
+import {getGalleryAlbums, getSettings} from '@/lib/queries';
 import {altLanguages} from '@/lib/site';
 import GalleryGrid from '@/components/gallery-grid';
 import GalleryAdminCta from '@/components/gallery-admin-cta';
@@ -16,21 +15,14 @@ type Section = {key: string; title: string; dateLabel: string; imgs: string[]};
 export default async function Page({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
   setRequestLocale(locale);
-  const [albums, up, past, settings] = await Promise.all([getGalleryAlbums(), getUpcomingEvents(50), getPastEvents(50), getSettings()]);
+  const [albums, settings] = await Promise.all([getGalleryAlbums(), getSettings()]);
   const fmt = (d: string) => new Intl.DateTimeFormat(locale, {day: 'numeric', month: 'long', year: 'numeric'}).format(new Date(d));
 
-  // Fuente principal: álbumes de galería (independientes). Respaldo: imágenes de eventos.
-  let sections: Section[] = albums
+  // Única fuente: los álbumes del admin. Antes, si no había ninguno, se colaban
+  // aquí los carteles de los eventos, que no son fotos de la galería.
+  const sections: Section[] = albums
     .filter((a) => a.images.length > 0)
     .map((a) => ({key: a.id, title: a.title || (a.date ? fmt(a.date) : 'Galería'), dateLabel: a.date ? fmt(a.date) : '', imgs: a.images}));
-
-  if (sections.length === 0) {
-    sections = [...up, ...past]
-      .map((e) => ({key: e.id, title: tx(e.title, locale), dateLabel: fmt(e.starts_at), imgs: e.images?.length ? e.images : e.image ? [e.image] : [], _t: new Date(e.starts_at).getTime()}))
-      .filter((s) => s.imgs.length > 0)
-      .sort((a, b) => b._t - a._t)
-      .map(({_t, ...s}) => s);
-  }
 
   const legacy = (settings?.content?.gallery ?? []).filter(Boolean);
 

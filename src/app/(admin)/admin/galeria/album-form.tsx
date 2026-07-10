@@ -5,8 +5,8 @@ import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Button} from '@/components/ui/button';
 import MediaUpload from '@/components/admin/media-upload';
+import FormFooter from '@/components/admin/form-footer';
 import {removeMedia} from '@/lib/storage';
 import {saveAlbum} from './actions';
 import type {GalleryAlbum} from '@/lib/queries';
@@ -53,7 +53,9 @@ export default function AlbumForm({id, album, onSaved}: {id: string | null; albu
       router.refresh();
       if (close) {
         toast.success('Guardado');
-        onSaved?.();
+        // Sin onSaved estamos en la página propia del álbum, no en el cajón.
+        if (onSaved) onSaved();
+        else router.push('/admin/galeria');
       } else {
         setSavedNote(true);
         setTimeout(() => setSavedNote(false), 1600);
@@ -114,43 +116,66 @@ export default function AlbumForm({id, album, onSaved}: {id: string | null; albu
         </div>
       </div>
       <div>
-        <Label>Fotos del álbum</Label>
+        <Label>
+          Fotos del álbum
+          {images.length > 0 && <span className="ml-2 text-xs font-normal text-ink-3">{images.length} foto{images.length === 1 ? '' : 's'}</span>}
+        </Label>
         {images.length > 0 && (
-          <div className="mb-2 flex flex-wrap gap-2">
-            {images.map((url, i) => (
-              <div key={i} className="relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" className="h-20 w-20 rounded-lg object-cover ring-1 ring-black/10" />
+          <p className="mb-2 text-xs text-ink-3">La primera foto (★) es la portada del álbum. Pasa el ratón por una foto para cambiarla.</p>
+        )}
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-8">
+          {/* Primer hueco: soltar/pulsar para añadir fotos nuevas. */}
+          <MediaUpload
+            tile
+            value={null}
+            multiple
+            maxDim={1600}
+            onChange={(u) => {
+              if (u) {
+                setImages((prev) => [...prev, u]);
+                autoSave();
+              }
+            }}
+            label="+ Añadir fotos"
+          />
+          {images.map((url, i) => (
+            <div key={url} className={`group relative ${i === 0 ? 'ring-2 ring-brand ring-offset-1' : ''} rounded-lg`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={url} alt="" className="aspect-square w-full rounded-lg object-cover ring-1 ring-black/10" />
+              {i === 0 && (
+                <span className="absolute left-1 top-1 rounded-full bg-brand px-1.5 py-0.5 text-[0.6rem] font-bold text-on-primary shadow">★ Portada</span>
+              )}
+              {i !== 0 && (
                 <button
                   type="button"
                   onClick={() => {
-                    removeMedia(url);
-                    setImages((prev) => prev.filter((_, j) => j !== i));
+                    // A la primera posición sin borrar nada más.
+                    setImages((prev) => [url, ...prev.filter((u) => u !== url)]);
                     autoSave();
                   }}
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-white"
+                  className="absolute inset-x-1 bottom-1 rounded-full bg-black/70 py-0.5 text-[0.6rem] font-semibold text-white opacity-0 backdrop-blur transition group-hover:opacity-100"
                 >
-                  ✕
+                  Hacer portada
                 </button>
-              </div>
-            ))}
-          </div>
-        )}
-        <MediaUpload
-          value={null}
-          multiple
-          maxDim={1600}
-          onChange={(u) => {
-            if (u) {
-              setImages((prev) => [...prev, u]);
-              autoSave();
-            }
-          }}
-          label="+ Añadir fotos (varias a la vez)"
-        />
-        {savedNote && <p className="mt-1.5 text-xs font-medium text-green-600">Guardado automáticamente ✓</p>}
+              )}
+              <button
+                type="button"
+                aria-label="Quitar foto"
+                onClick={() => {
+                  removeMedia(url);
+                  setImages((prev) => prev.filter((_, j) => j !== i));
+                  autoSave();
+                }}
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-white"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+        {savedNote && <p className="mt-2 text-xs font-medium text-green-600">Guardado automáticamente ✓</p>}
       </div>
-      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar y cerrar'}</Button>
+      <FormFooter pending={pending} cancelHref="/admin/galeria" label="Guardar y cerrar" />
     </form>
   );
 }
