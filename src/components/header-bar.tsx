@@ -71,7 +71,8 @@ export default function HeaderBar({
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500',
+          // En PC el logo y el menú se despegan de las esquinas (px progresivo).
+          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500 lg:px-8 xl:px-12',
           onMedia
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay

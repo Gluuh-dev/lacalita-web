@@ -164,7 +164,7 @@ export default async function Home({
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow="Nuestra cocina" title="Sabores" />
             <MoreLink href="/carta" label={t('menu.title')} />
-            <div className="-mx-4 md:mx-0">
+            <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
             {menus.map((m) => {
               const Icon = ICONS[m.slug] ?? UtensilsCrossed;
@@ -206,7 +206,7 @@ export default async function Home({
           <section className="mx-auto max-w-6xl px-4 py-16">
             <SectionHead eyebrow="De nuestra carta" title="Platos" />
             <MoreLink href="/carta" label={t('menu.title')} />
-            <div className="-mx-4 md:mx-0">
+            <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
               {featured.map((p) => (
                 <Link
@@ -239,7 +239,7 @@ export default async function Home({
             <div className="mx-auto max-w-6xl px-4 py-16">
               <SectionHead eyebrow={t('events.upcoming')} title="Eventos" />
               <MoreLink href="/eventos" label={t('events.all')} />
-              <div className="-mx-4 md:mx-0">
+              <div className="-mx-4 md:mx-0 xl:-mx-20">
               <SnapCarousel itemClass="w-[74vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
                 {events.slice(0, 4).map((e) => (
                   <EventCard key={e.id} event={e} locale={locale} layout="tile" />
