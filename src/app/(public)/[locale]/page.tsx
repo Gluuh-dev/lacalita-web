@@ -400,18 +400,18 @@ const ICONS: Record<string, typeof Coffee> = {
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
-  // En Alfa Slab One cada mayúscula ocupa ~0.68em. Derivando el tamaño del nº de
-  // letras, la palabra llega de lado a lado sea cual sea (SABORES, UBICACIÓN…)
-  // sin que el overflow-hidden la recorte. En PC se topa para no dispararse.
-  const size = `min(${(98 / (word.length * 0.68)).toFixed(1)}vw, 11rem)`;
+  // En Cinzel cada mayúscula ocupa ~0.72em. Derivando el tamaño del nº de letras,
+  // la palabra llega de lado a lado sea cual sea (SABORES, UBICACIÓN…) sin que el
+  // overflow-hidden la recorte. En PC se topa para no dispararse.
+  const size = `min(${(98 / (word.length * 0.72)).toFixed(1)}vw, 11rem)`;
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
       {/* -44% en vez de -50%: con leading-none la caja reserva el hueco del
           descendiente, así que las mayúsculas quedan por encima de su centro. */}
       <span
         aria-hidden
-        style={{fontSize: size, transform: 'translate(-50%, -44%)'}}
-        className={`font-alfa pointer-events-none absolute left-1/2 top-1/2 w-full select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
+        style={{fontSize: size, transform: 'translate(-50%, -44%)', fontWeight: 600}}
+        className={`font-cinzel pointer-events-none absolute left-1/2 top-1/2 w-full select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'}`}
       >
         {word}
       </span>
@@ -434,22 +434,19 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   );
 }
 
-// CTA "ver todo" debajo de las cards, centrado.
+// CTA "ver todo" bajo los botones del carrusel: solo texto, sin flecha ni
+// píldora. Un filete tenue marca la línea base y otro, de marca, entra al pasar.
 function MoreLink({href, label}: {href: string; label: string}) {
   return (
-    <div className="mt-7 flex justify-center">
-      <ActionLink href={href} label={label} />
+    <div className="mt-8 flex justify-center">
+      <Link
+        href={href}
+        className="group relative inline-block py-1 text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-brand-deep transition-colors hover:text-ink"
+      >
+        {label}
+        <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-current opacity-25" />
+        <span aria-hidden className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-brand transition-transform duration-300 group-hover:scale-x-100" />
+      </Link>
     </div>
-  );
-}
-
-function ActionLink({href, label}: {href: string; label: string}) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:bg-surface-2"
-    >
-      {label} <ArrowRight className="size-4" />
-    </Link>
   );
 }
