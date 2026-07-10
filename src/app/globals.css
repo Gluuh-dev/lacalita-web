@@ -152,6 +152,23 @@
 .font-adam { font-family: 'Adam', sans-serif; }
 .font-eight { font-family: 'Eight One', sans-serif; }
 
+/* Tipografías de marca del cliente (cargadas con next/font en los layouts) */
+.font-alfa { font-family: var(--font-alfa), serif; }
+.font-vibes { font-family: var(--font-vibes), cursive; }
+.font-kaushan { font-family: var(--font-kaushan), cursive; }
+.font-cinzel { font-family: var(--font-cinzel), serif; }
+.font-montserrat { font-family: var(--font-montserrat), sans-serif; }
+
+/* PENDIENTE: Tosca Zero no está en Google Fonts. Cuando exista el archivo en
+   public/fonts/, descomentar y añadir 'tosca' a HeroFont / FONT / FONT_LABELS.
+@font-face {
+  font-family: 'Tosca Zero';
+  src: url('/fonts/tosca-zero.woff2') format('woff2');
+  font-display: swap;
+}
+.font-tosca { font-family: 'Tosca Zero', serif; }
+*/
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

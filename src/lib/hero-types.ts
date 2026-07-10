@@ -1,7 +1,18 @@
 // Tipo + valores por defecto de la portada. Sin dependencias de servidor para
 // poder importarlo desde componentes cliente (editor y hero público).
 
-export type HeroFont = 'romance' | 'eight' | 'display' | 'adam' | 'sans';
+export type HeroFont =
+  | 'romance'
+  | 'eight'
+  | 'display'
+  | 'adam'
+  | 'sans'
+  // Tipografías de marca del cliente
+  | 'alfa'
+  | 'vibes'
+  | 'kaushan'
+  | 'cinzel'
+  | 'montserrat';
 
 export type HeroSlide = {
   id: string;

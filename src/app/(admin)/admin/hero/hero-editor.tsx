@@ -67,6 +67,8 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
     setSel(id);
   }
   function removeSlide(id: string) {
+    // La primera diapositiva es la portada por defecto: siempre debe existir.
+    if (slides.findIndex((s) => s.id === id) === 0) return toast.error('La portada por defecto no se puede eliminar');
     if (slides.length <= 1) return toast.error('Debe quedar al menos una');
     persist(slides.filter((s) => s.id !== id), 'Diapositiva eliminada');
   }
@@ -119,7 +121,15 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
                 <button onClick={() => toggleActive(s.id)} aria-label={s.active === false ? 'Activar' : 'Desactivar'} title={s.active === false ? 'Activar' : 'Ocultar en la web'} className="p-1 text-ink-3 hover:text-ink">
                   {s.active === false ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
-                <button onClick={() => removeSlide(s.id)} aria-label="Eliminar" className="p-1 text-ink-3 hover:text-danger"><Trash2 className="size-4" /></button>
+                <button
+                  onClick={() => removeSlide(s.id)}
+                  disabled={i === 0}
+                  aria-label="Eliminar"
+                  title={i === 0 ? 'La portada por defecto no se puede eliminar' : 'Eliminar'}
+                  className="p-1 text-ink-3 hover:text-danger disabled:pointer-events-none disabled:opacity-30"
+                >
+                  <Trash2 className="size-4" />
+                </button>
               </div>
             ))}
           </div>
@@ -467,7 +477,13 @@ const FONT_LABELS: [string, string][] = [
   ['romance', 'Modern Romance'],
   ['eight', 'Eight One'],
   ['adam', 'Adam'],
-  ['sans', 'Geist']
+  ['sans', 'Geist'],
+  // Tipografías de marca del cliente
+  ['alfa', 'Alfa Slab One'],
+  ['vibes', 'Great Vibes'],
+  ['kaushan', 'Kaushan Script'],
+  ['cinzel', 'Cinzel'],
+  ['montserrat', 'Montserrat']
 ];
 
 function FontSelect({value, onChange}: {value: string; onChange: (v: string) => void}) {

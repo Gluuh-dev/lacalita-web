@@ -13,7 +13,13 @@ const FONT: Record<string, string> = {
   eight: "'Eight One', sans-serif",
   display: 'var(--font-playfair), serif',
   adam: "'Adam', sans-serif",
-  sans: 'var(--font-geist), sans-serif'
+  sans: 'var(--font-geist), sans-serif',
+  // Tipografías de marca del cliente
+  alfa: 'var(--font-alfa), serif',
+  vibes: 'var(--font-vibes), cursive',
+  kaushan: 'var(--font-kaushan), cursive',
+  cinzel: 'var(--font-cinzel), serif',
+  montserrat: 'var(--font-montserrat), sans-serif'
 };
 
 // Líneas del rótulo: autorrelleno con el próximo evento, manual, o legado (rotulo/sub).
