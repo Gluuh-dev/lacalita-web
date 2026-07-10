@@ -13,6 +13,7 @@ import EventCard from '@/components/event-card';
 import SnapCarousel from '@/components/burger/snap-carousel';
 import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
+import Watermark from '@/components/watermark';
 import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
@@ -410,21 +411,9 @@ const ICONS: Record<string, typeof Coffee> = {
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
-  // En Cinzel semibold cada mayúscula ocupa ~0.82em (0.72 se quedaba corto y el
-  // overflow-hidden recortaba la palabra en PC). Objetivo 94vw: llega casi de
-  // lado a lado con margen para no cortarse nunca. En PC se topa a 11rem.
-  const size = `min(${(94 / (word.length * 0.82)).toFixed(1)}vw, 11rem)`;
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
-      {/* -44% en vez de -50%: con leading-none la caja reserva el hueco del
-          descendiente, así que las mayúsculas quedan por encima de su centro. */}
-      <span
-        aria-hidden
-        style={{fontSize: size, transform: 'translate(-50%, -44%)', fontWeight: 600}}
-        className={`font-cinzel pointer-events-none absolute left-1/2 top-1/2 w-full select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'}`}
-      >
-        {word}
-      </span>
+      <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
       <div className="relative mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
             espacio fantasma bajo el texto que separaba el par.

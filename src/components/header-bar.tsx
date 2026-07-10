@@ -11,7 +11,9 @@ import {useHeaderMode} from './header-mode';
 import {useIsAdmin} from '@/lib/use-is-admin';
 
 // Origen del círculo del menú (donde está el botón, arriba a la derecha).
-const M_ORIGIN = 'calc(100% - 2.05rem) 1.75rem';
+// El botón vive en un contenido max-w-7xl (80rem) centrado: por debajo de ese
+// ancho min(50vw,40rem)=50vw y la fórmula equivale al borde del viewport.
+const M_ORIGIN = 'calc(50vw + min(50vw, 40rem) - 2.05rem) 1.75rem';
 const M_OPEN = `circle(150% at ${M_ORIGIN})`;
 const M_CLOSED = `circle(0px at ${M_ORIGIN})`;
 
@@ -71,8 +73,9 @@ export default function HeaderBar({
     <>
       <header
         className={cn(
-          // En PC el logo y el menú se despegan de las esquinas (px progresivo).
-          'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-3 px-4 transition-[background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500 lg:px-8 xl:px-12',
+          // Barra a todo el ancho; el contenido (logo + menú) se limita a xl y
+          // se centra, para que en PC no queden pegados a las esquinas.
+          'fixed inset-x-0 top-0 z-50 h-14 px-4 transition-[background-color,border-color] duration-300 animate-in fade-in slide-in-from-top duration-500',
           onMedia
             ? 'bg-gradient-to-b from-black/40 to-transparent'
             : overlay
@@ -81,6 +84,7 @@ export default function HeaderBar({
           open && 'border-transparent bg-transparent'
         )}
       >
+        <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-between gap-3">
         {/* pl-1.5 = los mismos 6px que el icono del menú queda metido dentro de
             su botón (36px de botón, 24px de glifo). Así ambos tienen el mismo
             margen óptico respecto al borde y comparten centro vertical. */}
@@ -105,6 +109,7 @@ export default function HeaderBar({
             <span className={cn('absolute left-0 h-[2px] w-6 rounded-full bg-current transition-all duration-300', open ? 'top-1/2 -translate-y-1/2 -rotate-45' : 'bottom-0')} />
           </span>
         </button>
+        </div>
       </header>
 
       {/* Menú móvil: círculo que se expande desde el botón (como en hamburguesería). */}

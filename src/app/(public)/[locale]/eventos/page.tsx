@@ -7,6 +7,7 @@ import {countdownLabel} from '@/lib/event-time';
 import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
+import Watermark from '@/components/watermark';
 import EventsToggle from './events-toggle';
 import type {EventRow} from '@/lib/queries';
 
@@ -122,14 +123,8 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
         className="relative overflow-hidden px-6 pb-16 pt-28 text-center text-white"
         style={{background: 'radial-gradient(125% 135% at 78% 0%, #e8ab6f 0%, #c67c46 30%, #8a5230 62%, #2f1d12 100%)'}}
       >
-        {/* Misma marca de agua que en la portada: Cinzel, mayúsculas, a lo ancho. */}
-        <span
-          aria-hidden
-          style={{fontSize: 'min(19.1vw, 11rem)', transform: 'translate(-50%, -44%)'}}
-          className="pointer-events-none absolute left-1/2 top-1/2 select-none whitespace-nowrap font-cinzel font-semibold uppercase leading-none text-white/[0.07]"
-        >
-          Agenda
-        </span>
+        {/* Misma marca de agua que en la portada. */}
+        <Watermark word="Agenda" className="text-white/[0.07]" />
         {/* Palmeras de marca, como en el hero. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
