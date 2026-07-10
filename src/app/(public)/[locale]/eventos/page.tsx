@@ -125,7 +125,7 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
         {/* Misma marca de agua que en la portada: Cinzel, mayúsculas, a lo ancho. */}
         <span
           aria-hidden
-          style={{fontSize: 'min(22.6vw, 11rem)', transform: 'translate(-50%, -44%)'}}
+          style={{fontSize: 'min(19.1vw, 11rem)', transform: 'translate(-50%, -44%)'}}
           className="pointer-events-none absolute left-1/2 top-1/2 select-none whitespace-nowrap font-cinzel font-semibold uppercase leading-none text-white/[0.07]"
         >
           Agenda

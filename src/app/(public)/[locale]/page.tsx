@@ -410,10 +410,10 @@ const ICONS: Record<string, typeof Coffee> = {
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
-  // En Cinzel cada mayúscula ocupa ~0.72em. Derivando el tamaño del nº de letras,
-  // la palabra llega de lado a lado sea cual sea (SABORES, UBICACIÓN…) sin que el
-  // overflow-hidden la recorte. En PC se topa para no dispararse.
-  const size = `min(${(98 / (word.length * 0.72)).toFixed(1)}vw, 11rem)`;
+  // En Cinzel semibold cada mayúscula ocupa ~0.82em (0.72 se quedaba corto y el
+  // overflow-hidden recortaba la palabra en PC). Objetivo 94vw: llega casi de
+  // lado a lado con margen para no cortarse nunca. En PC se topa a 11rem.
+  const size = `min(${(94 / (word.length * 0.82)).toFixed(1)}vw, 11rem)`;
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
       {/* -44% en vez de -50%: con leading-none la caja reserva el hueco del
