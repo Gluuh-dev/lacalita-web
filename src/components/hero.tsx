@@ -146,9 +146,9 @@ function AgendaPanel({slide, events, bc, bt}: {slide: HeroSlide; events: HeroEve
     <aside style={{width: 340, flex: '0 0 340px', background: 'rgba(20,15,8,.34)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,.16)', borderRadius: 28, padding: 22, color: '#fff'}}>
       <div style={{fontFamily: FONT.montserrat, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: 12, color: 'rgba(255,255,255,.8)', marginBottom: 16}}>Próximos eventos</div>
       <div style={{borderBottom: '1px solid rgba(255,255,255,.14)', paddingBottom: 16, marginBottom: 10}}>
-        <div style={{fontFamily: FONT[slide.font] || FONT.romance, fontSize: 32, lineHeight: 1.02, color: slide.color}}>{feat.title}</div>
-        <div style={{fontFamily: FONT.eight, fontSize: 16, marginTop: 7}}>{feat.day} {feat.month} · {feat.time}</div>
-        {feat.artist && <div style={{fontSize: 13, color: 'rgba(255,255,255,.7)', marginTop: 5}}>con {feat.artist}</div>}
+        <div style={{fontFamily: FONT.alfa, fontSize: 25, lineHeight: 1.14, letterSpacing: '-0.01em', color: slide.color}}>{feat.title}</div>
+        <div style={{fontFamily: FONT.montserrat, fontWeight: 500, fontSize: 15, letterSpacing: '0.02em', marginTop: 8}}>{feat.day} {feat.month} · {feat.time}</div>
+        {feat.artist && <div style={{fontFamily: FONT.montserrat, fontSize: 13, color: 'rgba(255,255,255,.7)', marginTop: 5}}>con {feat.artist}</div>}
       </div>
       <div style={{display: 'flex', flexDirection: 'column', gap: 2}}>
         {evs.map((e, i) => <EvRow key={e.id} e={e} on={i === active} onClick={() => setActive(i)} />)}
@@ -289,13 +289,13 @@ export function HeroStage({
 
       {/* Palmeras negras en las 4 esquinas */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palm-sup-iz.svg" alt="" style={{position: 'absolute', left: 0, top: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      <img src="/brand/palmeras/palm-sup-iz.svg" alt="" style={{position: 'absolute', left: 0, top: 0, width: pc ? 250 : 120, opacity: 0.45, zIndex: 1}} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palm-sup-der.svg" alt="" style={{position: 'absolute', right: 0, top: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      <img src="/brand/palmeras/palm-sup-der.svg" alt="" style={{position: 'absolute', right: 0, top: 0, width: pc ? 250 : 120, opacity: 0.45, zIndex: 1}} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palm-inf-iz.svg" alt="" style={{position: 'absolute', left: 0, bottom: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      <img src="/brand/palmeras/palm-inf-iz.svg" alt="" style={{position: 'absolute', left: 0, bottom: 0, width: pc ? 250 : 120, opacity: 0.45, zIndex: 1}} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/palmeras/palm-inf-der.svg" alt="" style={{position: 'absolute', right: 0, bottom: 0, width: pc ? 190 : 92, opacity: 0.45, zIndex: 1}} />
+      <img src="/brand/palmeras/palm-inf-der.svg" alt="" style={{position: 'absolute', right: 0, bottom: 0, width: pc ? 250 : 120, opacity: 0.45, zIndex: 1}} />
 
       <Marquee slide={slide} pc={pc} />
 
@@ -512,13 +512,13 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       {/* Palmeras negras (siluetas) en las 4 esquinas, 45% */}
       <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palm-sup-iz.svg" alt="" className="absolute left-0 top-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        <img src="/brand/palmeras/palm-sup-iz.svg" alt="" className="absolute left-0 top-0 w-[clamp(115px,17vw,265px)] opacity-45" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palm-sup-der.svg" alt="" className="absolute right-0 top-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        <img src="/brand/palmeras/palm-sup-der.svg" alt="" className="absolute right-0 top-0 w-[clamp(115px,17vw,265px)] opacity-45" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palm-inf-iz.svg" alt="" className="absolute bottom-0 left-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        <img src="/brand/palmeras/palm-inf-iz.svg" alt="" className="absolute bottom-0 left-0 w-[clamp(115px,17vw,265px)] opacity-45" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/palmeras/palm-inf-der.svg" alt="" className="absolute bottom-0 right-0 w-[clamp(88px,13vw,200px)] opacity-45" />
+        <img src="/brand/palmeras/palm-inf-der.svg" alt="" className="absolute bottom-0 right-0 w-[clamp(115px,17vw,265px)] opacity-45" />
       </div>
 
       <Marquee slide={slide} pc />
@@ -592,7 +592,9 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
               </div>
               {/* El destacado lleva a SU evento, no al listado. */}
               <Link href={feat ? `/eventos/${feat.id}` : '/eventos'} className="mb-3 flex h-[8.5rem] flex-col justify-center border-b border-white/15 pb-4 transition hover:opacity-90">
-                <div className="line-clamp-2 text-[1.9rem] leading-tight" style={{color: slide.color, fontFamily: FONT[slide.font] || FONT.romance}}>{feat?.title}</div>
+                {/* Alfa Slab One: la tipografía de titulares de la marca. La del
+                    rótulo del slide (script) quedaba irregular aquí. */}
+                <div className="line-clamp-2 text-[1.5rem] leading-[1.14] tracking-tight" style={{color: slide.color, fontFamily: FONT.alfa}}>{feat?.title}</div>
                 <div className="mt-1.5 text-[0.95rem] font-medium tracking-wide" style={{fontFamily: FONT.montserrat}}>{feat?.day} {feat?.month} · {feat?.time}</div>
                 <div className="mt-1 min-h-[1.25rem] text-sm text-white/70" style={{fontFamily: FONT.montserrat}}>{feat?.artist ? `con ${feat.artist}` : ''}</div>
               </Link>
@@ -634,7 +636,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
               <span className="size-2 shrink-0 rounded-full bg-brand" />
               <span className="min-w-0 text-left">
                 <span className="block text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/70" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
-                <span className="block truncate text-sm font-medium">{feat?.title} · {feat?.day} {feat?.month}</span>
+                <span className="block truncate text-sm font-semibold" style={{fontFamily: FONT.montserrat}}>{feat?.title} · {feat?.day} {feat?.month}</span>
               </span>
             </span>
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary"><ChevronUp className="size-4" /></span>
@@ -745,7 +747,7 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
     >
       <HeroView key={i} slide={cur} events={events} />
       {n > 1 && (
-        <div className="absolute inset-x-0 bottom-6 z-20 flex items-center justify-center gap-2.5 lg:bottom-8">
+        <div className="absolute inset-x-0 bottom-6 z-20 flex items-center justify-center lg:bottom-8">
           <div className="flex h-10 items-center gap-2 rounded-full bg-black/30 px-4 backdrop-blur">
             {slides.map((_, k) => {
               const active = k === i;
@@ -774,16 +776,19 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
               );
             })}
           </div>
-          <button
-            type="button"
-            onClick={() => setPlaying((p) => !p)}
-            aria-label={playing ? 'Pausar' : 'Reproducir'}
-            title={playing ? 'Pausar' : 'Reproducir'}
-            className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95"
-          >
-            {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
-          </button>
         </div>
+      )}
+      {/* Play/pausa del carrusel, en la esquina: detiene el paso entre eventos. */}
+      {n > 1 && (
+        <button
+          type="button"
+          onClick={() => setPlaying((p) => !p)}
+          aria-label={playing ? 'Pausar el carrusel' : 'Reproducir el carrusel'}
+          title={playing ? 'Pausar' : 'Reproducir'}
+          className="absolute bottom-6 right-4 z-20 flex size-10 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95 lg:bottom-8 lg:right-6"
+        >
+          {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
+        </button>
       )}
     </section>
   );
