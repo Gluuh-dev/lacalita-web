@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {ChevronUp, X, ArrowRight, Play, Pause} from 'lucide-react';
+import {ChevronUp, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
@@ -705,8 +705,6 @@ const SLIDE_MS = 6000;
 export default function Hero({slides, events}: {slides: HeroSlide[]; events: HeroEvent[]}) {
   const {set} = useHeaderMode();
   const [i, setI] = useState(0);
-  // Arranca en automático. Pon `false` si quieres que espere a que pulsen Play.
-  const [playing, setPlaying] = useState(true);
   const sx = useRef(0);
   const n = slides.length;
 
@@ -715,12 +713,12 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
     return () => set({overHero: false, hasMedia: false});
   }, [set]);
   // Un temporizador por diapositiva: se reinicia en cada cambio (automático o
-  // por swipe). El botón de la esquina detiene el paso entre eventos.
+  // por swipe). Sin control de pausa: siempre avanza solo.
   useEffect(() => {
-    if (!playing || n <= 1) return;
+    if (n <= 1) return;
     const t = setTimeout(() => setI((x) => (x + 1) % n), SLIDE_MS);
     return () => clearTimeout(t);
-  }, [playing, n, i]);
+  }, [n, i]);
 
   if (!n) return null;
   const cur = slides[i % n];
@@ -735,20 +733,6 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
       }}
     >
       <HeroView key={i} slide={cur} events={events} />
-      {/* Play/pausa del carrusel, en la esquina: detiene el paso entre eventos. */}
-      {n > 1 && (
-        <button
-          type="button"
-          onClick={() => setPlaying((p) => !p)}
-          aria-label={playing ? 'Pausar el carrusel' : 'Reproducir el carrusel'}
-          title={playing ? 'Pausar' : 'Reproducir'}
-          // bottom-30: en móvil la tab-bar (82px, z-40) tapaba bottom-6; queda en
-          // fila con la barra de eventos (left-4 right-18).
-          className="absolute bottom-30 right-4 z-20 flex size-12 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95 lg:bottom-8 lg:right-6 lg:size-10"
-        >
-          {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
-        </button>
-      )}
     </section>
   );
 }
