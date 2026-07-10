@@ -69,13 +69,7 @@ export default function HeaderBar({
           open && 'border-transparent bg-transparent'
         )}
       >
-        {/* El logo del navbar solo aparece cuando la barra es sólida (con scroll), para no
-            duplicarse con el logo grande del hero/cabecera cuando está transparente. */}
-        <Link
-          href="/"
-          aria-label="La Calita"
-          className={cn('flex items-center transition-opacity duration-300', overlay && !open ? 'pointer-events-none opacity-0' : 'opacity-100')}
-        >
+        <Link href="/" aria-label="La Calita" className="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/logo-solo.svg"
