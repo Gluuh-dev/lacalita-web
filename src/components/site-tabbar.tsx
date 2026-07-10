@@ -24,6 +24,9 @@ const HIDE = /^\/(burguer|admin)(\/|$)|^\/carta\/[^/]+/;
 // Barra con bolsillo circular central (hombros redondeados) que abraza el FAB (del prototipo).
 const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
+// Variante tablet: misma forma pero con la base también redondeada (va flotando).
+const BAR_PATH_FLOAT =
+  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
 
 // Las 4 cartas que se despliegan en abanico desde el botón central.
 const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
@@ -40,11 +43,17 @@ export default function SiteTabBar() {
 
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in md:hidden" onClick={() => setOpen(false)} />}
+      {/* Espaciador: fluye al final de la página para que el contenido no
+          termine escondido debajo de la barra. Desaparece con ella en PC. */}
+      <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)] lg:hidden" />
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:hidden">
-        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 -2px 8px rgba(0,0,0,.10))'}}>
-          <path d={BAR_PATH} fill="var(--bg)" />
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in lg:hidden" onClick={() => setOpen(false)} />}
+
+      {/* Móvil: pegada abajo a todo el ancho. Tablet: píldora flotante centrada. */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:inset-x-auto md:bottom-4 md:left-1/2 md:w-[460px] md:-translate-x-1/2 lg:hidden">
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
+          <path d={BAR_PATH} fill="var(--bg)" className="md:hidden" />
+          <path d={BAR_PATH_FLOAT} fill="var(--bg)" className="hidden md:block" />
         </svg>
 
         {/* Pestañas (izquierda / hueco central / derecha) */}

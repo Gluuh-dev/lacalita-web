@@ -73,8 +73,9 @@ export default async function LocaleLayout({
               <SiteHeader />
             </HideOnBurger>
             <BurgerChrome locale={locale} />
-            <SiteTabBar />
             {children}
+            {/* Después del contenido: su espaciador fluye al final de la página. */}
+            <SiteTabBar />
             <HideOnBurger>
               <SiteFooter />
             </HideOnBurger>
