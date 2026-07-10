@@ -644,7 +644,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         <>
           <button
             onClick={() => setSheet(true)}
-            className="absolute bottom-30 left-4 right-18 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
+            className="absolute inset-x-4 bottom-30 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
           >
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />

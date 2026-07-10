@@ -49,8 +49,10 @@ export default function SiteTabBar() {
 
       {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in lg:hidden" onClick={() => setOpen(false)} />}
 
-      {/* Móvil: pegada abajo a todo el ancho. Tablet: píldora flotante centrada. */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:inset-x-auto md:bottom-4 md:left-1/2 md:w-[460px] md:-translate-x-1/2 lg:hidden">
+      {/* Móvil: pegada abajo a todo el ancho. Tablet: píldora flotante centrada.
+          Solo propiedades físicas: left/right (inset-x es lógica) y el override
+          de md dejaba de aplicarse según el orden del CSS. */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-4 md:left-1/2 md:right-auto md:w-[460px] md:-translate-x-1/2 lg:hidden">
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
           <path d={BAR_PATH} fill="var(--bg)" className="md:hidden" />
           <path d={BAR_PATH_FLOAT} fill="var(--bg)" className="hidden md:block" />
