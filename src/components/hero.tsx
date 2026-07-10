@@ -197,6 +197,18 @@ export function HeroStage({
   preview?: boolean;
 }) {
   if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
+  // Cartel completo + fondo difuminado (igual que en la web).
+  if (slide.mediaFit === 'contain' && slide.media) {
+    return (
+      <div style={{position: 'absolute', inset: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#243b53'}}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={slide.media} alt="" style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(24px)', transform: 'scale(1.25)'}} />
+        <div style={{position: 'absolute', inset: 0, background: 'rgba(0,0,0,.30)'}} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={slide.media} alt="" style={{position: 'relative', zIndex: 10, maxHeight: '92%', maxWidth: '92%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}} />
+      </div>
+    );
+  }
   const bc = slide.btnColor || '#e9ae74';
   const bt = inkOn(bc);
   const agenda = slide.heroMode === 'agenda';

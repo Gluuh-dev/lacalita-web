@@ -46,9 +46,8 @@ export default async function Home({
   const gallery = content.gallery ?? [];
 
   const heroEvents = toHeroEvents(events, locale);
-  // Slides fijos del admin (se descarta el modo 'poster' manual: los eventos se
-  // generan solos abajo, cada uno con su imagen).
-  const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false && s.heroMode !== 'poster');
+  // Todas las diapositivas activas del admin (incluidas las de tipo 'poster').
+  const activeHero = (settings?.hero ?? []).filter((s) => s.active !== false);
   const baseSlides: HeroSlide[] = activeHero.length
     ? activeHero
     : [
@@ -65,26 +64,23 @@ export default async function Home({
           heroMode: 'boton'
         }
       ];
-  // Un slide por evento próximo, con la imagen del evento de fondo (o fondo de
-  // marca si aún no tiene imagen). Se rellena solo desde /admin/eventos.
-  const eventSlides: HeroSlide[] = events.map((e, i) => {
-    const he = heroEvents[i];
-    return {
+  // Slide automático SOLO para los eventos que ya tienen cartel subido en
+  // /admin/eventos: se muestra el cartel completo sobre su propio desenfoque.
+  // Los eventos sin imagen no generan diapositiva (se ven en la agenda).
+  const eventSlides: HeroSlide[] = events
+    .map((e, i) => ({e, he: heroEvents[i]}))
+    .filter(({e}) => !!e.image)
+    .map(({e, he}) => ({
       ...DEFAULT_HERO_SLIDE,
       id: 'ev-' + e.id,
       name: he.title,
-      media: e.image ?? '',
-      mediaType: 'image',
-      mediaFit: e.image ? 'contain' : 'cover', // cartel completo + fondo difuminado
-      darken: e.image ? 0 : 14,
-      eyebrow: `${he.day} ${he.month}${he.time ? ' · ' + he.time : ''}`,
-      lema: he.title,
-      bienvenida: he.artist ? `Con ${he.artist}` : '',
-      button: 'Ver el evento',
+      media: e.image as string,
+      mediaType: 'image' as const,
+      mediaFit: 'contain' as const, // cartel completo + fondo difuminado
+      darken: 0,
       link: `/eventos/${e.id}`,
-      heroMode: 'boton'
-    };
-  });
+      heroMode: 'boton' as const
+    }));
   const heroSlides: HeroSlide[] = [...baseSlides, ...eventSlides];
 
   const jsonLd = {

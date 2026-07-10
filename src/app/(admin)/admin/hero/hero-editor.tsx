@@ -149,6 +149,20 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               onClear={() => setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, media: '', poster: undefined} : s)))}
             />
           </Field>
+          {slide.mediaType === 'image' && slide.media && (
+            <Field label="Ajuste de la imagen" hint="“Completa” muestra el cartel entero sin recortar y rellena el hueco con la propia imagen difuminada. Ideal para carteles verticales.">
+              <div className="grid grid-cols-2 gap-2">
+                {([['cover', 'Rellenar'], ['contain', 'Completa (difuminado)']] as const).map(([v, l]) => {
+                  const on = (slide.mediaFit ?? 'cover') === v;
+                  return (
+                    <button key={v} type="button" onClick={() => set('mediaFit', v)} className={cn('rounded-[12px] border px-1 py-2 text-xs font-medium', on ? 'border-brand bg-surface-sunken text-brand-deep' : 'border-line-strong text-ink-2')}>
+                      {l}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+          )}
           <Field label={`Oscurecido del fondo · ${slide.darken}%`}>
             <input type="range" min={0} max={80} value={slide.darken} onChange={(e) => set('darken', +e.target.value)} className="w-full accent-brand" />
           </Field>
