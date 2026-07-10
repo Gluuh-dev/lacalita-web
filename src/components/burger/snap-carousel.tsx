@@ -1,12 +1,10 @@
 'use client';
 
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {ChevronLeft, ChevronRight, Play, Pause} from 'lucide-react';
+import {ChevronLeft, ChevronRight} from 'lucide-react';
 
-// Carrusel de tarjetas con scroll-snap, en móvil y en PC. Debajo: flechas,
-// puntos y play/pausa. El autoavance arranca PARADO: solo corre si lo pulsan.
-const AUTO_MS = 5000;
-
+// Carrusel de tarjetas con scroll-snap, en móvil y en PC. Debajo: flechas y
+// puntos. Sin autoavance: aquí las tarjetas se pasan a mano.
 export default function SnapCarousel({
   children,
   itemClass = 'w-[80vw] max-w-[340px]',
@@ -23,7 +21,6 @@ export default function SnapCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
   const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const items = Array.isArray(children) ? children : [children];
   const n = items.length;
 
@@ -72,12 +69,6 @@ export default function SnapCarousel({
     [n]
   );
 
-  useEffect(() => {
-    if (!playing || n <= 1) return;
-    const t = setTimeout(() => go(active + 1), AUTO_MS);
-    return () => clearTimeout(t);
-  }, [playing, active, n, go]);
-
   const btn = 'flex size-11 items-center justify-center rounded-full border transition hover:brightness-110 active:scale-95';
   const btnStyle = {borderColor: `${ink}33`, color: ink};
 
@@ -112,15 +103,6 @@ export default function SnapCarousel({
           </div>
           <button onClick={() => go(active + 1)} aria-label="Siguiente" style={btnStyle} className={btn}>
             <ChevronRight className="size-5" />
-          </button>
-          <button
-            onClick={() => setPlaying((p) => !p)}
-            aria-label={playing ? 'Pausar' : 'Reproducir'}
-            title={playing ? 'Pausar' : 'Reproducir'}
-            style={playing ? {borderColor: accent, background: accent, color: '#fff'} : btnStyle}
-            className={`${btn} ml-1`}
-          >
-            {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
           </button>
         </div>
       )}

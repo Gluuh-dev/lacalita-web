@@ -163,6 +163,7 @@ export default async function Home({
         <section id="carta" className="scroll-mt-20 py-20">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow="Nuestra cocina" title="Sabores" />
+            <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
             {menus.map((m) => {
@@ -195,7 +196,6 @@ export default async function Home({
             })}
             </SnapCarousel>
             </div>
-            <MoreLink href="/carta" label={t('menu.title')} />
           </div>
         </section>
       </Reveal>
@@ -205,6 +205,7 @@ export default async function Home({
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
             <SectionHead eyebrow="De nuestra carta" title="Platos" />
+            <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0">
             <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
               {featured.map((p) => (
@@ -227,7 +228,6 @@ export default async function Home({
               ))}
             </SnapCarousel>
             </div>
-            <MoreLink href="/carta" label={t('menu.title')} />
           </section>
         </Reveal>
       )}
@@ -238,6 +238,7 @@ export default async function Home({
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
             <div className="mx-auto max-w-6xl px-4 py-16">
               <SectionHead eyebrow={t('events.upcoming')} title="Eventos" />
+              <MoreLink href="/eventos" label={t('events.all')} />
               <div className="-mx-4 md:mx-0">
               <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdItemClass="md:w-[380px]" accent="#c98a4e" ink="#4c2f08">
                 {events.slice(0, 4).map((e) => (
@@ -245,7 +246,6 @@ export default async function Home({
                 ))}
               </SnapCarousel>
               </div>
-              <MoreLink href="/eventos" label={t('events.all')} />
             </div>
           </section>
         </Reveal>
@@ -434,11 +434,11 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   );
 }
 
-// CTA "ver todo" pegado a los botones del carrusel: solo texto, sin flecha ni
-// píldora. Sin filete fijo; al pasar por encima entra un subrayado de marca.
+// CTA "ver todo" justo bajo la cabecera de sección: solo texto, sin flecha ni
+// píldora. El -mt-6 lo mete dentro del mb-10 que deja SectionHead.
 function MoreLink({href, label}: {href: string; label: string}) {
   return (
-    <div className="mt-3 flex justify-center">
+    <div className="-mt-6 mb-9 flex justify-center">
       <Link
         href={href}
         className="group relative inline-block py-1 text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-brand-deep transition-colors hover:text-ink"
