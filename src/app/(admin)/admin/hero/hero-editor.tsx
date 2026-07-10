@@ -176,6 +176,14 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           <Field label={`Oscurecido del fondo · ${slide.darken}%`}>
             <input type="range" min={0} max={80} value={slide.darken} onChange={(e) => set('darken', +e.target.value)} className="w-full accent-brand" />
           </Field>
+          <Field label="Capa de color" hint="Tiñe el fondo; la foto sigue aportando la textura por debajo.">
+            <Swatch value={slide.tint ?? ''} onPick={(c) => set('tint', c)} none />
+          </Field>
+          {slide.tint && (
+            <Field label={`Intensidad de la capa · ${slide.tintOpacity ?? 0}%`}>
+              <input type="range" min={0} max={90} value={slide.tintOpacity ?? 0} onChange={(e) => set('tintOpacity', +e.target.value)} className="w-full accent-brand" />
+            </Field>
+          )}
           <Field label="Logo">
             <div className="grid grid-cols-3 gap-2">
               {([['none', 'Ninguno'], ['solo', 'Símbolo'], ['debajo', 'Texto debajo'], ['derecha', 'Texto al lado'], ['texto', 'Solo texto']] as const).map(([v, l]) => {

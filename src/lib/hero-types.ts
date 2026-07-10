@@ -24,6 +24,9 @@ export type HeroSlide = {
   mediaFit?: 'cover' | 'contain'; // 'contain' = imagen completa + fondo difuminado (carteles verticales)
   poster?: string;
   darken: number;
+  // Capa de color sobre el fondo: la foto sigue aportando la textura debajo.
+  tint?: string; // hex; vacío = sin capa
+  tintOpacity?: number; // 0-90
   showLogo: boolean; // legado (compat)
   logoVariant: 'none' | 'solo' | 'debajo' | 'derecha' | 'texto';
   logoColor: string; // color libre (hex) o nombre legado (white/cream/brown/ink/orange)
@@ -81,6 +84,8 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   mediaType: 'image',
   mediaFit: 'cover',
   darken: 45,
+  tint: '',
+  tintOpacity: 0,
   showLogo: true,
   logoVariant: 'debajo',
   logoColor: 'white',

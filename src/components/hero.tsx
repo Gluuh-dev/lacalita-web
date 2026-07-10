@@ -249,6 +249,9 @@ export function HeroStage({
       ) : (
         <div style={{...cover, background: 'radial-gradient(130% 115% at 78% 12%, #ffe6c2 0%, #f6bd82 22%, #e0955a 44%, #b96e42 64%, #5e3620 100%)'}} />
       )}
+      {slide.tint && (slide.tintOpacity ?? 0) > 0 ? (
+        <div style={{...cover, background: slide.tint, opacity: (slide.tintOpacity ?? 0) / 100}} />
+      ) : null}
       <div style={{...cover, background: 'linear-gradient(to bottom, rgba(20,15,8,.3) 0%, rgba(20,15,8,.1) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div style={{...cover, background: '#140f08', opacity: (slide.darken || 0) / 100}} />
       <div style={{position: 'absolute', top: '-14%', right: '-6%', width: pc ? 560 : 280, height: pc ? 560 : 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(233,174,116,.5), transparent 65%)'}} />
@@ -467,6 +470,10 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         // Sin media: atardecer de playa (marca), no el azul marino de relleno.
         <div className="absolute inset-0" style={{background: 'radial-gradient(130% 115% at 78% 12%, #ffe6c2 0%, #f6bd82 22%, #e0955a 44%, #b96e42 64%, #5e3620 100%)'}} />
       )}
+      {/* Capa de color: tiñe el fondo dejando que la foto aporte la textura. */}
+      {slide.tint && (slide.tintOpacity ?? 0) > 0 ? (
+        <div className="absolute inset-0" style={{background: slide.tint, opacity: (slide.tintOpacity ?? 0) / 100}} />
+      ) : null}
       <div className="absolute inset-0" style={{background: 'linear-gradient(to bottom, rgba(20,15,8,.32) 0%, rgba(20,15,8,.12) 40%, rgba(20,15,8,.55) 100%)'}} />
       <div className="absolute inset-0 bg-[#140f08]" style={{opacity: (slide.darken || 0) / 100}} />
       <div className="pointer-events-none absolute -right-20 -top-24 size-[clamp(220px,40vw,520px)] rounded-full" style={{background: 'radial-gradient(circle, rgba(233,174,116,.45), transparent 65%)'}} />
