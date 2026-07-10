@@ -1,6 +1,6 @@
 'use server';
 
-import {revalidatePath, revalidateTag} from 'next/cache';
+import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {removeMediaServer} from '@/lib/storage-server';
 
@@ -19,7 +19,7 @@ export async function saveAlbum(id: string | null, input: AlbumInput) {
     savedId = data?.id ?? null;
   }
   revalidatePath('/', 'layout');
-  revalidateTag('gallery', 'max');
+  updateTag('gallery');
   revalidatePath('/admin/galeria');
   return {ok: true, id: savedId};
 }
@@ -31,7 +31,7 @@ export async function deleteAlbum(id: string) {
   if (error) return {ok: false, error: error.message};
   if (row?.images) await removeMediaServer(supabase, row.images as string[]);
   revalidatePath('/', 'layout');
-  revalidateTag('gallery', 'max');
+  updateTag('gallery');
   revalidatePath('/admin/galeria');
   return {ok: true};
 }

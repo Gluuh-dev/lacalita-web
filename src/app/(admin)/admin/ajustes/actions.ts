@@ -1,6 +1,6 @@
 'use server';
 
-import {revalidatePath, revalidateTag} from 'next/cache';
+import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {translateField} from '@/lib/translate';
 import type {Hours} from '@/lib/hours';
@@ -31,6 +31,6 @@ export async function saveSettings(form: SettingsInput) {
   });
   if (error) return {ok: false, error: error.message};
   revalidatePath('/', 'layout');
-  revalidateTag('settings', 'max');
+  updateTag('settings');
   return {ok: true};
 }

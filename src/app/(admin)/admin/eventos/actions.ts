@@ -1,6 +1,6 @@
 'use server';
 
-import {revalidatePath, revalidateTag} from 'next/cache';
+import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {removeMediaServer} from '@/lib/storage-server';
 import {translateField} from '@/lib/translate';
@@ -34,7 +34,7 @@ export async function saveEvent(id: string | null, form: EventInput) {
     : await supabase.from('events').insert(row);
   if (res.error) return {ok: false, error: res.error.message};
   revalidatePath('/', 'layout');
-  revalidateTag('events', 'max');
+  updateTag('events');
   revalidatePath('/admin/eventos');
   return {ok: true};
 }
@@ -46,7 +46,7 @@ export async function deleteEvent(id: string) {
   if (error) return {ok: false, error: error.message};
   if (row) await removeMediaServer(supabase, [row.image, row.video, ...((row.images as string[]) ?? [])]);
   revalidatePath('/', 'layout');
-  revalidateTag('events', 'max');
+  updateTag('events');
   revalidatePath('/admin/eventos');
   return {ok: true};
 }
