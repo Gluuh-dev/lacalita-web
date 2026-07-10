@@ -1,5 +1,6 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import Image from 'next/image';
+import {History} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getUpcomingEvents, getPastEvents} from '@/lib/queries';
 import {countdownLabel} from '@/lib/event-time';
@@ -97,7 +98,15 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
 
   const pastView =
     past.length === 0 ? (
-      <p className="py-16 text-center text-ink-3">Aún no hay eventos pasados.</p>
+      <div className="flex flex-col items-center gap-3 py-20 text-center">
+        <span className="flex size-16 items-center justify-center rounded-full bg-brand/10 text-brand-deep">
+          <History className="size-7" strokeWidth={1.6} />
+        </span>
+        <p className="font-serif text-2xl font-bold text-ink">Todavía no hay recuerdos</p>
+        <p className="max-w-xs font-montserrat text-sm leading-relaxed text-ink-3">
+          Cuando celebremos los primeros eventos, aquí quedará el álbum de lo vivido.
+        </p>
+      </div>
     ) : (
       <div className="grid grid-cols-2 gap-4 opacity-80 transition-opacity hover:opacity-100 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
         {past.map((e) => (
