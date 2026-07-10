@@ -184,6 +184,16 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               <input type="range" min={0} max={90} value={slide.tintOpacity ?? 0} onChange={(e) => set('tintOpacity', +e.target.value)} className="w-full accent-brand" />
             </Field>
           )}
+          {slide.media && (
+            <>
+              <Field label={`Desenfoque · ${slide.blur ?? 0}px`} hint="Difumina la foto del fondo. Útil si quieres que mande la capa de color.">
+                <input type="range" min={0} max={30} value={slide.blur ?? 0} onChange={(e) => set('blur', +e.target.value)} className="w-full accent-brand" />
+              </Field>
+              <Field label={`Difuminado radial · ${slide.radial ?? 0}%`} hint="La foto se desvanece hacia los bordes, quedando nítida en el centro.">
+                <input type="range" min={0} max={100} value={slide.radial ?? 0} onChange={(e) => set('radial', +e.target.value)} className="w-full accent-brand" />
+              </Field>
+            </>
+          )}
           <Field label="Logo">
             <div className="grid grid-cols-3 gap-2">
               {([['none', 'Ninguno'], ['solo', 'Símbolo'], ['debajo', 'Texto debajo'], ['derecha', 'Texto al lado'], ['texto', 'Solo texto']] as const).map(([v, l]) => {

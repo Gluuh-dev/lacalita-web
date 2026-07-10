@@ -44,6 +44,25 @@ function getRotuloLines(slide: HeroSlide, events: HeroEvent[]): {text: string; c
 }
 const cover: React.CSSProperties = {position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'};
 
+// Efectos del fondo: desenfoque y difuminado radial hacia los bordes.
+function mediaFx(slide: HeroSlide): React.CSSProperties {
+  const blur = slide.blur ?? 0;
+  const radial = slide.radial ?? 0;
+  const s: React.CSSProperties = {};
+  if (blur > 0) {
+    s.filter = `blur(${blur}px)`;
+    // Al desenfocar, los bordes se transparentan: ampliamos para taparlos.
+    s.transform = `scale(${1 + blur / 100 + 0.04})`;
+  }
+  if (radial > 0) {
+    const stop = Math.max(0, 100 - radial);
+    const g = `radial-gradient(ellipse at center, #000 ${stop}%, transparent 100%)`;
+    s.WebkitMaskImage = g;
+    s.maskImage = g;
+  }
+  return s;
+}
+
 function HeroButton({slide, bc, bt, pc, preview}: {slide: HeroSlide; bc: string; bt: string; pc: boolean; preview: boolean}) {
   const style: React.CSSProperties = {
     display: 'inline-block', background: bc, color: bt, borderRadius: 999,
@@ -243,9 +262,9 @@ export function HeroStage({
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#243b53'}}>
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
-        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={cover} />
+        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={{...cover, ...mediaFx(slide)}} />
       ) : slide.media ? (
-        <div style={{...cover, background: `center/cover url(${slide.media})`}} />
+        <div style={{...cover, background: `center/cover url(${slide.media})`, ...mediaFx(slide)}} />
       ) : (
         <div style={{...cover, background: 'radial-gradient(130% 115% at 78% 12%, #ffe6c2 0%, #f6bd82 22%, #e0955a 44%, #b96e42 64%, #5e3620 100%)'}} />
       )}
@@ -462,10 +481,10 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
     <div className="relative flex h-full w-full items-center overflow-hidden pb-28 lg:pb-0">
       {/* fondo */}
       {slide.mediaType === 'video' && slide.media ? (
-        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
+        <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={mediaFx(slide)} className="absolute inset-0 h-full w-full object-cover" />
       ) : slide.media ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={slide.media} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={slide.media} alt="" style={mediaFx(slide)} className="absolute inset-0 h-full w-full object-cover" />
       ) : (
         // Sin media: atardecer de playa (marca), no el azul marino de relleno.
         <div className="absolute inset-0" style={{background: 'radial-gradient(130% 115% at 78% 12%, #ffe6c2 0%, #f6bd82 22%, #e0955a 44%, #b96e42 64%, #5e3620 100%)'}} />

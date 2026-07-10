@@ -27,6 +27,8 @@ export type HeroSlide = {
   // Capa de color sobre el fondo: la foto sigue aportando la textura debajo.
   tint?: string; // hex; vacío = sin capa
   tintOpacity?: number; // 0-90
+  blur?: number; // px de desenfoque del fondo (0 = nítido)
+  radial?: number; // 0-100: la imagen se desvanece hacia los bordes (0 = sin difuminado)
   showLogo: boolean; // legado (compat)
   logoVariant: 'none' | 'solo' | 'debajo' | 'derecha' | 'texto';
   logoColor: string; // color libre (hex) o nombre legado (white/cream/brown/ink/orange)
@@ -86,6 +88,8 @@ export const DEFAULT_HERO_SLIDE: Omit<HeroSlide, 'id'> = {
   darken: 45,
   tint: '',
   tintOpacity: 0,
+  blur: 0,
+  radial: 0,
   showLogo: true,
   logoVariant: 'debajo',
   logoColor: 'white',
