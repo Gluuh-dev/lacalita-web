@@ -434,17 +434,16 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   );
 }
 
-// CTA "ver todo" bajo los botones del carrusel: solo texto, sin flecha ni
-// píldora. Un filete tenue marca la línea base y otro, de marca, entra al pasar.
+// CTA "ver todo" pegado a los botones del carrusel: solo texto, sin flecha ni
+// píldora. Sin filete fijo; al pasar por encima entra un subrayado de marca.
 function MoreLink({href, label}: {href: string; label: string}) {
   return (
-    <div className="mt-8 flex justify-center">
+    <div className="mt-3 flex justify-center">
       <Link
         href={href}
         className="group relative inline-block py-1 text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-brand-deep transition-colors hover:text-ink"
       >
         {label}
-        <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-current opacity-25" />
         <span aria-hidden className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-brand transition-transform duration-300 group-hover:scale-x-100" />
       </Link>
     </div>
