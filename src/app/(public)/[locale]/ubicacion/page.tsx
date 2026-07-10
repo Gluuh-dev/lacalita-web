@@ -1,5 +1,6 @@
 import {setRequestLocale} from 'next-intl/server';
 import {MapPin, Phone, Mail, Clock, Navigation} from 'lucide-react';
+import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
 import {getSettings} from '@/lib/queries';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {altLanguages} from '@/lib/site';
@@ -59,10 +60,24 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
           {(settings?.social?.instagram || settings?.social?.facebook) && (
             <div className="flex items-center gap-2 rounded-[16px] border border-line bg-surface px-4 py-3">
               {settings?.social?.instagram && (
-                <a href={settings.social.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-surface-2 px-3 py-1 text-xs font-medium">Instagram</a>
+                <a
+                  href={settings.social.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 rounded-full bg-surface-2 px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-brand hover:text-on-primary"
+                >
+                  <IconBrandInstagram size={16} stroke={2} /> Instagram
+                </a>
               )}
               {settings?.social?.facebook && (
-                <a href={settings.social.facebook} target="_blank" rel="noreferrer" className="rounded-full bg-surface-2 px-3 py-1 text-xs font-medium">Facebook</a>
+                <a
+                  href={settings.social.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 rounded-full bg-surface-2 px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-brand hover:text-on-primary"
+                >
+                  <IconBrandFacebook size={16} stroke={2} /> Facebook
+                </a>
               )}
             </div>
           )}

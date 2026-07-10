@@ -1,5 +1,6 @@
 import {getTranslations} from 'next-intl/server';
 import {MapPin, Phone, Mail, Navigation} from 'lucide-react';
+import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
 import {getSettings} from '@/lib/queries';
 
 export default async function SiteFooter() {
@@ -45,14 +46,26 @@ export default async function SiteFooter() {
 
         <div>
           <div className="eyebrow mb-4 !text-brand">{t('follow')}</div>
-          <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+          <div className="flex flex-wrap justify-center gap-2.5 sm:justify-start">
             {settings?.social?.instagram && (
-              <a href={settings.social.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-white/10 px-4 py-2 text-sm transition hover:bg-white/20">
+              <a
+                href={settings.social.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2 text-sm font-medium transition hover:border-brand hover:bg-brand hover:text-[#1c160e]"
+              >
+                <IconBrandInstagram size={19} stroke={1.8} className="text-brand transition group-hover:text-[#1c160e]" />
                 Instagram
               </a>
             )}
             {settings?.social?.facebook && (
-              <a href={settings.social.facebook} target="_blank" rel="noreferrer" className="rounded-full bg-white/10 px-4 py-2 text-sm transition hover:bg-white/20">
+              <a
+                href={settings.social.facebook}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2 text-sm font-medium transition hover:border-brand hover:bg-brand hover:text-[#1c160e]"
+              >
+                <IconBrandFacebook size={19} stroke={1.8} className="text-brand transition group-hover:text-[#1c160e]" />
                 Facebook
               </a>
             )}

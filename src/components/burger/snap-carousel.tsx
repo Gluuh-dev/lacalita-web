@@ -21,6 +21,8 @@ export default function SnapCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  // ¿La pista desborda? Si todo cabe (PC ancho), se centra y sobran los controles.
+  const [overflow, setOverflow] = useState(true);
   const items = Array.isArray(children) ? children : [children];
   const n = items.length;
 
@@ -32,6 +34,7 @@ export default function SnapCarousel({
     if (!root) return;
     let raf = 0;
     const measure = () => {
+      setOverflow(root.scrollWidth > root.clientWidth + 1);
       const left = root.getBoundingClientRect().left;
       let best = 0;
       let bestD = Infinity;
@@ -76,7 +79,7 @@ export default function SnapCarousel({
     <>
       <div
         ref={scrollRef}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-[10vw] px-[10vw] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:scroll-px-1 md:gap-5 md:px-1"
+        className={`flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-[10vw] px-[10vw] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:scroll-px-1 md:gap-5 md:px-1 ${overflow ? '' : 'justify-center'}`}
       >
         {items.map((c, i) => (
           <div
@@ -91,7 +94,8 @@ export default function SnapCarousel({
         ))}
       </div>
 
-      {n > 1 && (
+      {/* Controles solo si de verdad hay algo que desplazar. */}
+      {overflow && n > 1 && (
         <div className="mt-5 flex items-center justify-center gap-3">
           <button onClick={() => go(active - 1)} aria-label="Anterior" style={btnStyle} className={btn}>
             <ChevronLeft className="size-5" />
