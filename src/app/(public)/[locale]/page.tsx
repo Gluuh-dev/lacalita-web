@@ -401,9 +401,11 @@ const ICONS: Record<string, typeof Coffee> = {
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
+      {/* Marca de agua: Tosca Zero en mayúsculas. A 32vw la palabra era más
+          ancha que la pantalla y el overflow-hidden la recortaba. */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[clamp(6rem,32vw,20rem)] font-bold leading-none ${dark ? 'text-white/[0.06]' : 'text-ink/[0.055]'}`}
+        className={`font-tosca pointer-events-none absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center text-[clamp(2.5rem,14vw,10.5rem)] uppercase leading-none tracking-[0.02em] ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
       >
         {bg ?? title}
       </span>
