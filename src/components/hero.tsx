@@ -219,7 +219,7 @@ export function HeroStage({
           style={
             pc
               ? {position: 'relative', zIndex: 10, maxHeight: '92%', maxWidth: '92%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}
-              : {position: 'absolute', inset: 0, zIndex: 10, width: '100%', height: '100%', objectFit: 'cover'}
+              : {position: 'relative', zIndex: 10, height: '100%', width: 'auto', maxWidth: 'none'}
           }
         />
       </div>
@@ -425,14 +425,15 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   // Cartel vertical completo: imagen a tamaño real (contain) sobre una copia
   // de sí misma ampliada y difuminada de fondo. Todo el slide enlaza al evento.
   if (slide.mediaFit === 'contain' && slide.media) {
-    // Móvil: el cartel llena la pantalla (cover, recorta arriba/abajo).
-    // Escritorio: cartel completo (contain) sobre su propio desenfoque.
+    // Móvil: el cartel se escala a la ALTURA de la pantalla (w-auto). Así nunca
+    // se corta el título ni la fecha; si sobra ancho se recorta por los lados y
+    // si falta, asoma el desenfoque. Escritorio: cartel completo (contain).
     const Poster = (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={slide.media}
         alt=""
-        className="h-full w-full object-cover lg:h-auto lg:max-h-full lg:w-auto lg:max-w-full lg:rounded-2xl lg:object-contain lg:shadow-2xl"
+        className="h-full w-auto max-w-none lg:h-auto lg:max-h-full lg:max-w-full lg:rounded-2xl lg:object-contain lg:shadow-2xl"
       />
     );
     const wrapCls = 'absolute inset-0 z-10 flex items-center justify-center lg:p-10';
