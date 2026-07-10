@@ -19,7 +19,7 @@ export default function BurgerOfferCarousel({offers, locale}: {offers: BurgerOff
       </div>
 
       <div className="mx-auto max-w-7xl md:px-5">
-        <SnapCarousel itemClass="w-[85vw] max-w-[420px]" mdCols="md:grid-cols-2">
+        <SnapCarousel itemClass="w-[85vw] max-w-[420px]" mdItemClass="md:w-[420px]">
           {offers.map((o) => {
             const cents = o.price != null ? Math.round((o.price % 1) * 100) : null;
             const intPart = o.price != null ? Math.floor(o.price) : null;

@@ -1,56 +1,91 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
-import {ChevronLeft, ChevronRight} from 'lucide-react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {ChevronLeft, ChevronRight, Play, Pause} from 'lucide-react';
 
-// Carrusel: en móvil scroll-snap con la card centrada en pantalla (+ flechas y puntos);
-// en PC rejilla que muestra todas las que caben.
+// Carrusel de tarjetas con scroll-snap, en móvil y en PC. Debajo: flechas,
+// puntos y play/pausa. El autoavance arranca PARADO: solo corre si lo pulsan.
+const AUTO_MS = 5000;
+
 export default function SnapCarousel({
   children,
   itemClass = 'w-[80vw] max-w-[340px]',
-  mdCols = 'md:grid-cols-3',
+  mdItemClass = 'md:w-[320px]',
   accent = '#c36148',
   ink = '#2a1713'
 }: {
   children: React.ReactNode[];
   itemClass?: string;
-  mdCols?: string;
+  mdItemClass?: string;
   accent?: string;
   ink?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const items = Array.isArray(children) ? children : [children];
   const n = items.length;
 
+  // La tarjeta activa es la más pegada al borde izquierdo de la pista. Sirve
+  // igual en móvil (una visible) que en PC (varias a la vez), cosa que el
+  // IntersectionObserver por umbral no resolvía.
   useEffect(() => {
     const root = scrollRef.current;
     if (!root) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting && e.intersectionRatio > 0.55) {
-            const i = itemsRef.current.indexOf(e.target as HTMLElement);
-            if (i >= 0) setActive(i);
-          }
+    let raf = 0;
+    const measure = () => {
+      const left = root.getBoundingClientRect().left;
+      let best = 0;
+      let bestD = Infinity;
+      itemsRef.current.forEach((el, i) => {
+        if (!el) return;
+        const d = Math.abs(el.getBoundingClientRect().left - left);
+        if (d < bestD) {
+          bestD = d;
+          best = i;
         }
-      },
-      {root, threshold: [0.55]}
-    );
-    itemsRef.current.forEach((el) => el && obs.observe(el));
-    return () => obs.disconnect();
+      });
+      setActive(best);
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+    measure();
+    root.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      root.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, [n]);
 
-  const go = (i: number) => {
-    itemsRef.current[Math.max(0, Math.min(n - 1, i))]?.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
-  };
+  // Envuelve por los extremos: así el autoavance no se atasca en la última.
+  const go = useCallback(
+    (i: number) => {
+      if (n < 1) return;
+      const t = ((i % n) + n) % n;
+      itemsRef.current[t]?.scrollIntoView({behavior: 'smooth', inline: 'start', block: 'nearest'});
+    },
+    [n]
+  );
+
+  useEffect(() => {
+    if (!playing || n <= 1) return;
+    const t = setTimeout(() => go(active + 1), AUTO_MS);
+    return () => clearTimeout(t);
+  }, [playing, active, n, go]);
+
+  const btn = 'flex size-11 items-center justify-center rounded-full border transition hover:brightness-110 active:scale-95';
+  const btnStyle = {borderColor: `${ink}33`, color: ink};
 
   return (
     <>
       <div
         ref={scrollRef}
-        className={`flex snap-x snap-mandatory gap-4 overflow-x-auto px-[10vw] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid ${mdCols} md:snap-none md:gap-5 md:overflow-visible md:px-0`}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-[10vw] px-[10vw] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:scroll-px-1 md:gap-5 md:px-1"
       >
         {items.map((c, i) => (
           <div
@@ -58,7 +93,7 @@ export default function SnapCarousel({
             ref={(el) => {
               itemsRef.current[i] = el;
             }}
-            className={`shrink-0 snap-center ${itemClass} md:w-auto md:max-w-none`}
+            className={`shrink-0 snap-start ${itemClass} ${mdItemClass} md:max-w-none`}
           >
             {c}
           </div>
@@ -66,8 +101,8 @@ export default function SnapCarousel({
       </div>
 
       {n > 1 && (
-        <div className="mt-5 flex items-center justify-center gap-4 md:hidden">
-          <button onClick={() => go(active - 1)} disabled={active <= 0} aria-label="Anterior" style={{borderColor: `${ink}33`, color: ink}} className="flex size-11 items-center justify-center rounded-full border transition disabled:opacity-30">
+        <div className="mt-5 flex items-center justify-center gap-3">
+          <button onClick={() => go(active - 1)} aria-label="Anterior" style={btnStyle} className={btn}>
             <ChevronLeft className="size-5" />
           </button>
           <div className="flex items-center gap-2">
@@ -75,8 +110,17 @@ export default function SnapCarousel({
               <button key={i} onClick={() => go(i)} aria-label={`Ir a ${i + 1}`} style={{background: i === active ? accent : `${ink}40`}} className={`h-2 rounded-full transition-all ${i === active ? 'w-6' : 'w-2'}`} />
             ))}
           </div>
-          <button onClick={() => go(active + 1)} disabled={active >= n - 1} aria-label="Siguiente" style={{borderColor: `${ink}33`, color: ink}} className="flex size-11 items-center justify-center rounded-full border transition disabled:opacity-30">
+          <button onClick={() => go(active + 1)} aria-label="Siguiente" style={btnStyle} className={btn}>
             <ChevronRight className="size-5" />
+          </button>
+          <button
+            onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? 'Pausar' : 'Reproducir'}
+            title={playing ? 'Pausar' : 'Reproducir'}
+            style={playing ? {borderColor: accent, background: accent, color: '#fff'} : btnStyle}
+            className={`${btn} ml-1`}
+          >
+            {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
           </button>
         </div>
       )}

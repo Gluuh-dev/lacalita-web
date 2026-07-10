@@ -115,7 +115,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         {favorites.length === 0 ? (
           <p style={{color: C.muted}}>Marca productos como destacados (o con votos) para que salgan aquí.</p>
         ) : (
-          <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdCols="md:grid-cols-3">
+          <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdItemClass="md:w-[320px]">
             {favorites.map((p, i) => (
               <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
                 <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">

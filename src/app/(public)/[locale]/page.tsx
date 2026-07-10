@@ -164,7 +164,7 @@ export default async function Home({
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow="Nuestra cocina" title="Sabores" />
             <div className="-mx-4 md:mx-0">
-            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdCols="md:grid-cols-3" accent="#c98a4e" ink="#243b53">
+            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
             {menus.map((m) => {
               const Icon = ICONS[m.slug] ?? UtensilsCrossed;
               return (
@@ -206,7 +206,7 @@ export default async function Home({
           <section className="mx-auto max-w-6xl px-4 py-16">
             <SectionHead eyebrow="De nuestra carta" title="Platos" />
             <div className="-mx-4 md:mx-0">
-            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdCols="md:grid-cols-4" accent="#c98a4e" ink="#243b53">
+            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
               {featured.map((p) => (
                 <Link
                   key={p.id}
@@ -239,7 +239,7 @@ export default async function Home({
             <div className="mx-auto max-w-6xl px-4 py-16">
               <SectionHead eyebrow={t('events.upcoming')} title="Música" />
               <div className="-mx-4 md:mx-0">
-              <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdCols="md:grid-cols-2" accent="#c98a4e" ink="#243b53">
+              <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdItemClass="md:w-[380px]" accent="#c98a4e" ink="#4c2f08">
                 {events.slice(0, 4).map((e) => (
                   <EventCard key={e.id} event={e} locale={locale} layout="tile" />
                 ))}

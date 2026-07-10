@@ -19,7 +19,7 @@ export default function BurgerCategoryCarousel({categories, locale}: {categories
       </div>
 
       <div className="mx-auto max-w-7xl md:px-5">
-        <SnapCarousel itemClass="w-[72vw] max-w-[300px]" mdCols="md:grid-cols-4">
+        <SnapCarousel itemClass="w-[72vw] max-w-[300px]" mdItemClass="md:w-[300px]">
           {categories.map((c) => {
             const img = c.image ?? c.products?.find((p) => p.image)?.image ?? null;
             return (
