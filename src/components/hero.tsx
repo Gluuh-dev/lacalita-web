@@ -73,7 +73,7 @@ function HeroButton({slide, bc, bt, pc, preview}: {slide: HeroSlide; bc: string;
   return <a href={slide.link} style={style}>{slide.button}</a>;
 }
 
-function Marquee({slide, pc}: {slide: HeroSlide; pc: boolean}) {
+function Marquee({slide, pc = false}: {slide: HeroSlide; pc?: boolean}) {
   if (!slide.marqueeOn || !slide.marquee) return null;
   const color = slide.marqueeColor || slide.color || '#e9ae74';
   const bg = slide.marqueeBg || '';
@@ -528,7 +528,13 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         <img src="/brand/palmeras/palm-inf-der.svg" alt="" className="absolute bottom-0 right-0 w-[clamp(115px,17vw,265px)] opacity-45" />
       </div>
 
-      <Marquee slide={slide} pc />
+      {/* La web también se ve en móvil: tamaños según viewport, no siempre PC. */}
+      <div className="contents lg:hidden">
+        <Marquee slide={slide} />
+      </div>
+      <div className="hidden lg:contents">
+        <Marquee slide={slide} pc />
+      </div>
 
       {/* contenido */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-24">
@@ -638,7 +644,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
         <>
           <button
             onClick={() => setSheet(true)}
-            className="absolute inset-x-4 bottom-30 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
+            className="absolute bottom-30 left-4 right-18 z-20 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-black/45 px-4 py-3 text-white backdrop-blur lg:hidden"
           >
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />
@@ -736,7 +742,9 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
           onClick={() => setPlaying((p) => !p)}
           aria-label={playing ? 'Pausar el carrusel' : 'Reproducir el carrusel'}
           title={playing ? 'Pausar' : 'Reproducir'}
-          className="absolute bottom-6 right-4 z-20 flex size-10 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95 lg:bottom-8 lg:right-6"
+          // bottom-30: en móvil la tab-bar (82px, z-40) tapaba bottom-6; queda en
+          // fila con la barra de eventos (left-4 right-18).
+          className="absolute bottom-30 right-4 z-20 flex size-12 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95 lg:bottom-8 lg:right-6 lg:size-10"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
         </button>

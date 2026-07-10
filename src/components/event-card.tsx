@@ -46,7 +46,8 @@ export default async function EventCard({
   const Media = (
     <div className="lc-img-loading ds-media-zoom absolute inset-0">
       {event.image ? (
-        <Image src={event.image} alt={title} fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover" />
+        // La miniatura vive en una columna de 112-136px: pedir 100vw descargaba 4-6x de más.
+        <Image src={event.image} alt={title} fill sizes="(max-width: 640px) 112px, 136px" className="object-cover" />
       ) : (
         <div className="relative h-full w-full" style={{background: GRADIENTS[kind] ?? GRADIENTS.dj}}>
           <div className="absolute inset-0" style={{background: 'radial-gradient(120% 90% at 80% 10%, rgba(233,174,116,.28), transparent 60%)'}} />

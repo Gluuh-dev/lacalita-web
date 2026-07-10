@@ -294,9 +294,8 @@ export default async function Home({
             <SectionHead eyebrow="Momentos" title="Galería" />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
-                <div key={idx} className="ds-media-zoom aspect-square overflow-hidden rounded-[16px] border border-line">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="" className="h-full w-full object-cover" />
+                <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
+                  <Image src={url} alt="" fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" className="object-cover" />
                 </div>
               ))}
             </div>

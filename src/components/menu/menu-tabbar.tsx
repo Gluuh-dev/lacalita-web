@@ -145,7 +145,8 @@ export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
           <Heart className="size-9" />
         </span>
         <p className="font-serif text-xl text-ink">Aún no tienes favoritos</p>
-        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa el ♥ en las hamburguesas que más te gusten y las verás aquí.</p>
+        {/* Se ve en todas las cartas, no solo en la hamburguesería. */}
+        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa el ♥ en los platos que más te gusten y los verás aquí.</p>
       </div>
     );
   return (

@@ -131,21 +131,21 @@
   }
 }
 
-/* Tipografías a probar para el menú */
+/* Tipografías a probar para el menú (WOFF2: mismo glifo, ~4x menos peso) */
 @font-face {
   font-family: 'Modern Romance';
-  src: url('/fonts/modern-romance.otf') format('opentype');
+  src: url('/fonts/modern-romance.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
   font-family: 'Adam';
-  src: url('/fonts/adam.ttf') format('truetype');
+  src: url('/fonts/adam.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: 'Eight One';
-  src: url('/fonts/eight-one.ttf') format('truetype');
+  src: url('/fonts/eight-one.woff2') format('woff2');
   font-display: swap;
 }
 .font-modern { font-family: 'Modern Romance', serif; }
@@ -160,10 +160,10 @@
 .font-montserrat { font-family: var(--font-montserrat), sans-serif; }
 
 /* Tosca Zero: no está en Google Fonts, va autoalojada. Al ser @font-face, el
-   navegador solo la descarga si algún texto la usa. */
+   navegador solo la descarga si algún texto la usa (125 KB en WOFF2). */
 @font-face {
   font-family: 'Tosca Zero';
-  src: url('/fonts/tosca_zero.ttf') format('truetype');
+  src: url('/fonts/tosca_zero.woff2') format('woff2');
   font-display: swap;
 }
 .font-tosca { font-family: 'Tosca Zero', serif; }

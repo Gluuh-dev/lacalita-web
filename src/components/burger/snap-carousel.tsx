@@ -96,9 +96,12 @@ export default function SnapCarousel({
           <button onClick={() => go(active - 1)} aria-label="Anterior" style={btnStyle} className={btn}>
             <ChevronLeft className="size-5" />
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             {items.map((_, i) => (
-              <button key={i} onClick={() => go(i)} aria-label={`Ir a ${i + 1}`} style={{background: i === active ? accent : `${ink}40`}} className={`h-2 rounded-full transition-all ${i === active ? 'w-6' : 'w-2'}`} />
+              // El punto mide 8px; el área pulsable, 44px (h-11 + padding).
+              <button key={i} type="button" onClick={() => go(i)} aria-label={`Ir a ${i + 1}`} className="flex h-11 items-center px-1">
+                <span style={{background: i === active ? accent : `${ink}40`}} className={`h-2 rounded-full transition-all ${i === active ? 'w-6' : 'w-2'}`} />
+              </button>
             ))}
           </div>
           <button onClick={() => go(active + 1)} aria-label="Siguiente" style={btnStyle} className={btn}>

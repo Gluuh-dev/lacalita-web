@@ -113,7 +113,8 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
           </div>
         </div>
         {favorites.length === 0 ? (
-          <p style={{color: C.muted}}>Marca productos como destacados (o con votos) para que salgan aquí.</p>
+          // Lo lee el visitante, no el admin: nada de instrucciones internas.
+          <p style={{color: C.muted}}>Muy pronto verás aquí las hamburguesas favoritas de la gente.</p>
         ) : (
           <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdItemClass="md:w-[320px]">
             {favorites.map((p, i) => (

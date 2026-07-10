@@ -30,7 +30,8 @@ export default function CountdownBar({startsAt}: {startsAt: string}) {
   if (!label) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-[51] flex h-14 items-center justify-center lg:hidden">
+    // Con el menú a pantalla completa abierto (z inferior) el chip flotaría encima: se oculta.
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[51] flex h-14 items-center justify-center lg:hidden [[data-menu-open]_&]:hidden">
       <span className="rounded-full border border-white/15 bg-black/55 px-3 py-1 font-montserrat text-[0.7rem] font-semibold uppercase tracking-[0.12em] tabular-nums text-white shadow-sm backdrop-blur">
         {label}
       </span>

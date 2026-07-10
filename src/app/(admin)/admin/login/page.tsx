@@ -40,7 +40,6 @@ export default function LoginPage() {
           type="email"
           required
           placeholder="Email"
-          defaultValue="admin@lacalita.test"
           className={input}
         />
         <input

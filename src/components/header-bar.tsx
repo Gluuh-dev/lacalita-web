@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
@@ -50,6 +50,13 @@ export default function HeaderBar({
   const [open, setOpen] = useState(false);
 
   useScrollLock(open);
+
+  // Marca en <body> que el menú está abierto: los elementos fijos ajenos al
+  // header (p. ej. la cuenta atrás de eventos) se ocultan por CSS.
+  useEffect(() => {
+    document.body.toggleAttribute('data-menu-open', open);
+    return () => document.body.removeAttribute('data-menu-open');
+  }, [open]);
 
   // Páginas que empiezan con una cabecera oscura a sangre: el navbar va encima.
   const darkHeader = pathname === '/eventos' || pathname.startsWith('/eventos/');

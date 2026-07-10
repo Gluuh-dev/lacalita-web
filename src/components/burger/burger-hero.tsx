@@ -315,8 +315,11 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
             {slides.map((_, k) => {
               const active = k === i;
               return (
-                <button key={k} type="button" onClick={() => goTo(k)} aria-label={`Diapositiva ${k + 1}`} className="relative h-[7px] overflow-hidden rounded-full transition-all duration-300" style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}>
-                  {active && <span key={`${i}-${playing}`} className="absolute inset-y-0 left-0 rounded-full bg-white" style={playing ? {animation: 'lc-prog 6s linear forwards'} : {width: '100%'}} />}
+                // El punto mide 7px; el área pulsable, los 40px del carril.
+                <button key={k} type="button" onClick={() => goTo(k)} aria-label={`Diapositiva ${k + 1}`} className="flex h-10 items-center">
+                  <span className="relative h-[7px] overflow-hidden rounded-full transition-all duration-300" style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}>
+                    {active && <span key={`${i}-${playing}`} className="absolute inset-y-0 left-0 rounded-full bg-white" style={playing ? {animation: 'lc-prog 6s linear forwards'} : {width: '100%'}} />}
+                  </span>
                 </button>
               );
             })}
