@@ -219,7 +219,7 @@ export function HeroStage({
           style={
             pc
               ? {position: 'relative', zIndex: 10, maxHeight: '92%', maxWidth: '92%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}
-              : {position: 'relative', zIndex: 10, height: '100%', width: 'auto', maxWidth: 'none'}
+              : {position: 'relative', zIndex: 10, maxHeight: '84%', maxWidth: '96%', objectFit: 'contain', borderRadius: 12, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}
           }
         />
       </div>
@@ -425,18 +425,18 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   // Cartel vertical completo: imagen a tamaño real (contain) sobre una copia
   // de sí misma ampliada y difuminada de fondo. Todo el slide enlaza al evento.
   if (slide.mediaFit === 'contain' && slide.media) {
-    // Móvil: el cartel se escala a la ALTURA de la pantalla (w-auto). Así nunca
-    // se corta el título ni la fecha; si sobra ancho se recorta por los lados y
-    // si falta, asoma el desenfoque. Escritorio: cartel completo (contain).
+    // El cartel se ve SIEMPRE entero (contain): recortarlo se comía el título,
+    // la fecha o los laterales. Se agranda hasta donde quepa, dejando abajo el
+    // hueco justo para el paginador y el botón de eventos.
     const Poster = (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={slide.media}
         alt=""
-        className="h-full w-auto max-w-none lg:h-auto lg:max-h-full lg:max-w-full lg:rounded-2xl lg:object-contain lg:shadow-2xl"
+        className="max-h-full max-w-full rounded-xl object-contain shadow-2xl lg:rounded-2xl"
       />
     );
-    const wrapCls = 'absolute inset-0 z-10 flex items-center justify-center lg:p-10';
+    const wrapCls = 'absolute inset-0 z-10 flex items-center justify-center p-3 pb-24 lg:p-10';
     return (
       <div className="relative h-full w-full overflow-hidden bg-ink">
         {/* eslint-disable-next-line @next/next/no-img-element */}
