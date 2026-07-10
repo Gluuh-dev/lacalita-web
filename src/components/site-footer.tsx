@@ -9,7 +9,7 @@ export default async function SiteFooter() {
 
   return (
     // Solo PC: en móvil/tablet la tab-bar ya lleva a todo y este bloque ocupaba pantalla y media.
-    <footer className="mt-auto hidden bg-[#1c160e] text-[#fbf7f0] lg:block">
+    <footer className="mt-auto hidden bg-[#1c160e] text-[#fbf7f0] xl:block">
       <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 text-center sm:grid-cols-3 sm:text-left">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
