@@ -5,8 +5,8 @@ import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
+import FormFooter from '@/components/admin/form-footer';
 import {
   Select,
   SelectContent,
@@ -95,7 +95,7 @@ export default function CategoryForm({
           Visible
         </label>
       </div>
-      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <FormFooter pending={pending} onCancel={onSaved} />
     </form>
   );
 }

@@ -6,7 +6,6 @@ import {toast} from 'sonner';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Textarea} from '@/components/ui/textarea';
-import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
 import {
   Select,
@@ -16,6 +15,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import MediaUpload from '@/components/admin/media-upload';
+import FormFooter from '@/components/admin/form-footer';
 import {removeMedia} from '@/lib/storage';
 import {saveEvent} from './actions';
 import type {EventRow} from '@/lib/queries';
@@ -162,7 +162,7 @@ export default function EventForm({
         <Checkbox checked={published} onCheckedChange={(v) => setPublished(v === true)} />
         Publicado
       </label>
-      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <FormFooter pending={pending} onCancel={onSaved} />
     </form>
   );
 }

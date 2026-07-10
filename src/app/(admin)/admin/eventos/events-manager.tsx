@@ -1,7 +1,8 @@
 'use client';
 
 import {useState} from 'react';
-import {btn, card} from '@/components/admin/ui';
+import {Pencil} from 'lucide-react';
+import {btn, btnEdit, card} from '@/components/admin/ui';
 import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
 import EventForm from './event-form';
@@ -36,8 +37,8 @@ export default function EventsManager({events}: {events: EventRow[]}) {
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-4">
-              <button onClick={() => setEdit(e)} className="text-sm text-accent hover:underline">
-                Editar
+              <button type="button" onClick={() => setEdit(e)} className={btnEdit}>
+                <Pencil className="size-3.5" /> Editar
               </button>
               <DeleteButton onDelete={() => deleteEvent(e.id)} />
             </div>

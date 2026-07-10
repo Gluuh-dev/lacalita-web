@@ -207,9 +207,14 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
             </div>
           </Field>
           {(slide.logoVariant ?? 'debajo') !== 'none' && (
-            <Field label="Color del logo">
-              <Swatch value={LEGACY_LOGO[slide.logoColor] ?? slide.logoColor ?? '#ffffff'} onPick={(c) => set('logoColor', c)} />
-            </Field>
+            <>
+              <Field label={`Tamaño del logo · ${Math.round((slide.logoScale ?? 1) * 100)}%`}>
+                <input aria-label="Tamaño del logo" type="range" min={0.5} max={2} step={0.05} value={slide.logoScale ?? 1} onChange={(e) => set('logoScale', +e.target.value)} className="w-full accent-brand" />
+              </Field>
+              <Field label="Color del logo">
+                <Swatch value={LEGACY_LOGO[slide.logoColor] ?? slide.logoColor ?? '#ffffff'} onPick={(c) => set('logoColor', c)} />
+              </Field>
+            </>
           )}
         </Card>
 

@@ -5,7 +5,6 @@ import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Button} from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -14,6 +13,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import MediaUpload from '@/components/admin/media-upload';
+import FormFooter from '@/components/admin/form-footer';
 import {slugify} from '@/lib/slug';
 import {saveMenu} from './actions';
 import type {Menu} from '@/lib/queries';
@@ -102,7 +102,7 @@ export default function MenuForm({
         <Label>Vídeo de cabecera</Label>
         <MediaUpload kind="video" value={video} onChange={setVideo} />
       </div>
-      <Button type="submit" disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <FormFooter pending={pending} onCancel={onSaved} />
     </form>
   );
 }

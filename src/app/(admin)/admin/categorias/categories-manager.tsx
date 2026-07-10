@@ -1,7 +1,8 @@
 'use client';
 
 import {useState} from 'react';
-import {btn, card} from '@/components/admin/ui';
+import {Pencil} from 'lucide-react';
+import {btn, btnEdit, card} from '@/components/admin/ui';
 import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
 import CategoryForm from './category-form';
@@ -41,8 +42,8 @@ export default function CategoriesManager({
               <div className="text-xs text-ink-3">{c.menus ? tx(c.menus.name, 'es') : '—'}</div>
             </div>
             <div className="flex shrink-0 items-center gap-4">
-              <button onClick={() => setEdit(c)} className="text-sm text-accent hover:underline">
-                Editar
+              <button type="button" onClick={() => setEdit(c)} className={btnEdit}>
+                <Pencil className="size-3.5" /> Editar
               </button>
               <DeleteButton
                 onDelete={() => deleteCategory(c.id)}
