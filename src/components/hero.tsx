@@ -204,7 +204,8 @@ export function HeroStage({
   preview?: boolean;
 }) {
   if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
-  // Cartel completo + fondo difuminado (igual que en la web).
+  // Igual que en la web: en PC el cartel completo sobre su desenfoque; en móvil
+  // llena la pantalla (recorta arriba/abajo).
   if (slide.mediaFit === 'contain' && slide.media) {
     return (
       <div style={{position: 'absolute', inset: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#243b53'}}>
@@ -212,7 +213,15 @@ export function HeroStage({
         <img src={slide.media} alt="" style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(24px)', transform: 'scale(1.25)'}} />
         <div style={{position: 'absolute', inset: 0, background: 'rgba(0,0,0,.30)'}} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={slide.media} alt="" style={{position: 'relative', zIndex: 10, maxHeight: '92%', maxWidth: '92%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}} />
+        <img
+          src={slide.media}
+          alt=""
+          style={
+            pc
+              ? {position: 'relative', zIndex: 10, maxHeight: '92%', maxWidth: '92%', objectFit: 'contain', borderRadius: 16, boxShadow: '0 20px 50px rgba(0,0,0,.5)'}
+              : {position: 'absolute', inset: 0, zIndex: 10, width: '100%', height: '100%', objectFit: 'cover'}
+          }
+        />
       </div>
     );
   }
@@ -416,21 +425,28 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   // Cartel vertical completo: imagen a tamaño real (contain) sobre una copia
   // de sí misma ampliada y difuminada de fondo. Todo el slide enlaza al evento.
   if (slide.mediaFit === 'contain' && slide.media) {
+    // Móvil: el cartel llena la pantalla (cover, recorta arriba/abajo).
+    // Escritorio: cartel completo (contain) sobre su propio desenfoque.
     const Poster = (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={slide.media} alt="" className="max-h-full max-w-full rounded-2xl object-contain shadow-2xl" />
+      <img
+        src={slide.media}
+        alt=""
+        className="h-full w-full object-cover lg:h-auto lg:max-h-full lg:w-auto lg:max-w-full lg:rounded-2xl lg:object-contain lg:shadow-2xl"
+      />
     );
+    const wrapCls = 'absolute inset-0 z-10 flex items-center justify-center lg:p-10';
     return (
-      <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-ink">
+      <div className="relative h-full w-full overflow-hidden bg-ink">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={slide.media} alt="" className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl" />
         <div className="absolute inset-0 bg-black/30" />
         {slide.link ? (
-          <Link href={slide.link} className="relative z-10 flex h-full w-full items-center justify-center p-5 pb-28 lg:p-10 lg:pb-10">
+          <Link href={slide.link} className={wrapCls}>
             {Poster}
           </Link>
         ) : (
-          <div className="relative z-10 flex h-full w-full items-center justify-center p-5 pb-28 lg:p-10 lg:pb-10">{Poster}</div>
+          <div className={wrapCls}>{Poster}</div>
         )}
       </div>
     );
