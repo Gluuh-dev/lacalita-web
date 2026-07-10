@@ -417,8 +417,14 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
       </span>
       <div className="relative mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
-            espacio fantasma bajo el texto que separaba el par. */}
-        <div className="eyebrow -mb-0.5 leading-none">{eyebrow}</div>
+            espacio fantasma bajo el texto que separaba el par.
+            Segoe UI es del sistema (Windows); fuera de ahí cae a la reserva. */}
+        <div
+          className="eyebrow -mb-0.5 leading-none"
+          style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}
+        >
+          {eyebrow}
+        </div>
         <h2 className="font-serif text-5xl font-bold leading-[0.9] sm:text-6xl">
           {title}
           <span className="text-brand">.</span>
