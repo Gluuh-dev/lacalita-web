@@ -2,6 +2,7 @@
 
 import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
+import {actionGuard} from '@/lib/auth';
 import {removeMediaServer} from '@/lib/storage-server';
 import {translateField} from '@/lib/translate';
 import {slugify} from '@/lib/slug';
@@ -125,6 +126,8 @@ export async function toggleAvailable(id: string, available: boolean) {
 
 export async function deleteProduct(id: string) {
   const supabase = await createClient();
+  const denied = await actionGuard(supabase);
+  if (denied) return denied;
   const {data: row} = await supabase.from('products').select('image, video').eq('id', id).single();
   const {error} = await supabase.from('products').delete().eq('id', id);
   if (error) return {ok: false, error: error.message};

@@ -2,6 +2,7 @@
 
 import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
+import {actionGuard} from '@/lib/auth';
 import {translateField} from '@/lib/translate';
 import type {LandingContent} from '@/lib/content-types';
 
@@ -16,6 +17,8 @@ export async function saveContent(input: {
   gallery: string[];
 }) {
   const supabase = await createClient();
+  const denied = await actionGuard(supabase);
+  if (denied) return denied;
   const content: LandingContent = {
     about: {
       title: await translateField(input.aboutTitle),
@@ -29,10 +32,12 @@ export async function saveContent(input: {
     reviews: input.reviews.filter((r) => r.quote.trim()),
     gallery: input.gallery
   };
-  const {error} = await supabase
+  const {data, error} = await supabase
     .from('settings')
-    .upsert({id: 1, content, updated_at: new Date().toISOString()});
+    .upsert({id: 1, content, updated_at: new Date().toISOString()})
+    .select('id');
   if (error) return {ok: false, error: error.message};
+  if (!data?.length) return {ok: false, error: 'No se pudo guardar (sesion caducada). Vuelve a entrar.'};
   revalidatePath('/', 'layout');
   updateTag('settings');
   return {ok: true};

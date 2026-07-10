@@ -2,6 +2,7 @@
 
 import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
+import {actionGuard} from '@/lib/auth';
 import {translateField} from '@/lib/translate';
 
 export type MenuInput = {
@@ -16,6 +17,8 @@ export type MenuInput = {
 
 export async function saveMenu(id: string | null, form: MenuInput) {
   const supabase = await createClient();
+  const denied = await actionGuard(supabase);
+  if (denied) return denied;
   const row = {
     slug: form.slug,
     name: await translateField(form.name),
@@ -27,9 +30,10 @@ export async function saveMenu(id: string | null, form: MenuInput) {
     updated_at: new Date().toISOString()
   };
   const res = id
-    ? await supabase.from('menus').update(row).eq('id', id)
-    : await supabase.from('menus').insert(row);
+    ? await supabase.from('menus').update(row).eq('id', id).select('id')
+    : await supabase.from('menus').insert(row).select('id');
   if (res.error) return {ok: false, error: res.error.message};
+  if (!res.data?.length) return {ok: false, error: 'No se pudo guardar (sesion caducada). Vuelve a entrar.'};
   revalidatePath('/', 'layout');
   updateTag('menu');
   revalidatePath('/admin/menus');
@@ -38,6 +42,8 @@ export async function saveMenu(id: string | null, form: MenuInput) {
 
 export async function deleteMenu(id: string) {
   const supabase = await createClient();
+  const denied = await actionGuard(supabase);
+  if (denied) return denied;
   const {error} = await supabase.from('menus').delete().eq('id', id);
   if (error) return {ok: false, error: error.message};
   revalidatePath('/', 'layout');
