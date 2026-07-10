@@ -406,16 +406,18 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   const size = `min(${(98 / (word.length * 0.68)).toFixed(1)}vw, 11rem)`;
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
+      {/* -44% en vez de -50%: con leading-none la caja reserva el hueco del
+          descendiente, así que las mayúsculas quedan por encima de su centro. */}
       <span
         aria-hidden
-        style={{fontSize: size}}
-        className={`font-alfa pointer-events-none absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
+        style={{fontSize: size, transform: 'translate(-50%, -44%)'}}
+        className={`font-alfa pointer-events-none absolute left-1/2 top-1/2 w-full select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
       >
         {word}
       </span>
       <div className="relative mx-auto max-w-6xl px-4">
-        <div className="eyebrow mb-2">{eyebrow}</div>
-        <h2 className="font-serif text-5xl font-bold sm:text-6xl">
+        <div className="eyebrow mb-0.5">{eyebrow}</div>
+        <h2 className="font-serif text-5xl font-bold leading-[0.95] sm:text-6xl">
           {title}
           <span className="text-brand">.</span>
         </h2>
