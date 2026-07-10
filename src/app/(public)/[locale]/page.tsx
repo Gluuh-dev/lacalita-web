@@ -237,7 +237,7 @@ export default async function Home({
         <Reveal>
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
             <div className="mx-auto max-w-6xl px-4 py-16">
-              <SectionHead eyebrow={t('events.upcoming')} title="Música" />
+              <SectionHead eyebrow={t('events.upcoming')} title="Eventos" />
               <div className="-mx-4 md:mx-0">
               <SnapCarousel itemClass="w-[84vw] max-w-[380px]" mdItemClass="md:w-[380px]" accent="#c98a4e" ink="#4c2f08">
                 {events.slice(0, 4).map((e) => (
