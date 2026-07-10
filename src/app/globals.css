@@ -228,6 +228,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Tailwind v4 pone cursor:default en los botones. Restauramos la manita. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  label[for],
+  summary {
+    cursor: pointer;
+  }
   html {
     @apply font-sans;
   }

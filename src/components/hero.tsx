@@ -683,21 +683,26 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
             {slides.map((_, k) => {
               const active = k === i;
               return (
+                // -m-2/p-2 agranda el área pulsable sin cambiar el tamaño visible.
                 <button
                   key={k}
                   type="button"
                   onClick={() => goTo(k)}
                   aria-label={`Diapositiva ${k + 1}`}
-                  className="relative h-[7px] overflow-hidden rounded-full transition-all duration-300"
-                  style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}
+                  className="group -m-2 p-2"
                 >
-                  {active && (
-                    <span
-                      key={`${i}-${playing}`}
-                      className="absolute inset-y-0 left-0 rounded-full"
-                      style={playing ? {background: '#e9ae74', animation: `lc-prog ${SLIDE_MS}ms linear forwards`} : {background: '#e9ae74', width: '100%'}}
-                    />
-                  )}
+                  <span
+                    className="relative block h-[7px] overflow-hidden rounded-full transition-all duration-300 group-hover:brightness-150 group-active:scale-90"
+                    style={{width: active ? 24 : 7, background: active ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.4)'}}
+                  >
+                    {active && (
+                      <span
+                        key={`${i}-${playing}`}
+                        className="absolute inset-y-0 left-0 rounded-full"
+                        style={playing ? {background: '#e9ae74', animation: `lc-prog ${SLIDE_MS}ms linear forwards`} : {background: '#e9ae74', width: '100%'}}
+                      />
+                    )}
+                  </span>
                 </button>
               );
             })}
@@ -706,7 +711,8 @@ export default function Hero({slides, events}: {slides: HeroSlide[]; events: Her
             type="button"
             onClick={() => setPlaying((p) => !p)}
             aria-label={playing ? 'Pausar' : 'Reproducir'}
-            className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur transition hover:bg-black/45"
+            title={playing ? 'Pausar' : 'Reproducir'}
+            className="flex size-10 items-center justify-center rounded-full bg-black/30 text-white ring-1 ring-white/10 backdrop-blur transition hover:scale-105 hover:bg-black/50 hover:ring-white/30 active:scale-95"
           >
             {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
           </button>
