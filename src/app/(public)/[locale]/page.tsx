@@ -399,15 +399,19 @@ const ICONS: Record<string, typeof Coffee> = {
 
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
+  const word = (bg ?? title).trim();
+  // En Alfa Slab One cada mayúscula ocupa ~0.68em. Derivando el tamaño del nº de
+  // letras, la palabra llega de lado a lado sea cual sea (SABORES, UBICACIÓN…)
+  // sin que el overflow-hidden la recorte. En PC se topa para no dispararse.
+  const size = `min(${(98 / (word.length * 0.68)).toFixed(1)}vw, 11rem)`;
   return (
     <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
-      {/* Marca de agua: Tosca Zero en mayúsculas. A 32vw la palabra era más
-          ancha que la pantalla y el overflow-hidden la recortaba. */}
       <span
         aria-hidden
-        className={`font-tosca pointer-events-none absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center text-[clamp(2.5rem,14vw,10.5rem)] uppercase leading-none tracking-[0.02em] ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
+        style={{fontSize: size}}
+        className={`font-alfa pointer-events-none absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center uppercase leading-none ${dark ? 'text-white/[0.07]' : 'text-ink/[0.06]'}`}
       >
-        {bg ?? title}
+        {word}
       </span>
       <div className="relative mx-auto max-w-6xl px-4">
         <div className="eyebrow mb-2">{eyebrow}</div>
