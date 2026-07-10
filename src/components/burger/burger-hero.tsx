@@ -118,6 +118,10 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
       stepTimer.current = null;
     }
     const dir = target > i ? 1 : -1;
+    // Primer paso inmediato: setInterval no dispara hasta pasado el intervalo,
+    // y eso hacía que la pulsación tardara 240ms en notarse.
+    setI(i + dir);
+    if (i + dir === target) return;
     stepTimer.current = window.setInterval(() => {
       setI((x) => {
         const nx = x + dir;
