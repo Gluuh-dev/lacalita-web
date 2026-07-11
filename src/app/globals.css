@@ -108,26 +108,8 @@
   --line-strong: #ddc3ba;
 }
 
-/* Tema Desayunos — amanecer: miel y dorado sobre crema cálida */
+/* Tema Desayunos — verde oliva: huerta y calma de la mañana */
 [data-theme='desayunos'] {
-  --bg: #fdf1e0;
-  --surface: #ffffff;
-  --surface-2: #fbead2;
-  --surface-sunken: #f6ddba;
-  --brand: #e0862f;
-  --brand-deep: #bf6c1d;
-  --on-primary: #3c2405;
-  --ink: #3b2c1a;
-  --ink-2: #5f4c33;
-  --ink-3: #8f7c63;
-  --accent: #2e6e8e;
-  --accent-soft: #e3eef3;
-  --line: #f0dcbd;
-  --line-strong: #e2c795;
-}
-
-/* Tema Restaurante — mediterráneo de cocina: oliva y hierbas sobre crema verdosa */
-[data-theme='restaurante'] {
   --bg: #f5f6ec;
   --surface: #ffffff;
   --surface-2: #f1f3e4;
@@ -142,6 +124,24 @@
   --accent-soft: #f3e8d8;
   --line: #e2e5cd;
   --line-strong: #cdd2ab;
+}
+
+/* Tema Restaurante — naranja claro: atardecer suave de cocina mediterránea */
+[data-theme='restaurante'] {
+  --bg: #fdf3e7;
+  --surface: #ffffff;
+  --surface-2: #fbecd9;
+  --surface-sunken: #f6e1c6;
+  --brand: #eb9a55;
+  --brand-deep: #d17d33;
+  --on-primary: #3d2708;
+  --ink: #3d2f1c;
+  --ink-2: #61503a;
+  --ink-3: #8f7f6a;
+  --accent: #2e6e8e;
+  --accent-soft: #e3eef3;
+  --line: #f0dfc6;
+  --line-strong: #e2cba3;
 }
 
 /* Tema Cócteles — mediterráneo: azul profundo y coral sobre bruma marina */

@@ -36,7 +36,7 @@ export default function BurgerChrome({locale, hasVideos = true}: {locale: string
   if (!onBurguer) return null;
   return (
     <>
-      <BurgerHeader locale={locale} />
+      <BurgerHeader />
       <Suspense fallback={null}>
         <BurgerTabBar hasVideos={hasVideos} />
       </Suspense>
