@@ -85,7 +85,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
               href={c.href}
               aria-label={tNav(c.key)}
               onClick={() => setOpen(false)}
-              className="absolute left-1/2 top-[32px] md:top-[53px] z-40 flex flex-col items-center gap-1.5"
+              className="absolute left-1/2 top-[32px] md:top-[13px] z-40 flex flex-col items-center gap-1.5"
               style={{
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
                 opacity: open ? 1 : 0,

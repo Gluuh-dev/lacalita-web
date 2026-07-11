@@ -40,7 +40,7 @@ const MENU_STYLE: Record<string, {Icon: TablerIcon; color: string}> = {
   cocteles: {Icon: IconGlassCocktail, color: '#2e6e8e'}
 };
 
-export default function CartaTabBar() {
+export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
   const tNav = useTranslations('nav');
   const tTabs = useTranslations('tabs');
   const pathname = usePathname();
@@ -80,7 +80,7 @@ export default function CartaTabBar() {
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
           <div className="flex flex-1 justify-around">
             <Item href="/" label={tNav('home')} Icon={IconHome} IconFilled={IconHomeFilled} active={false} />
-            <Item href={`${base}/video`} label={tTabs('video')} Icon={IconVideo} IconFilled={IconVideoFilled} active={sub === 'video'} />
+            <Item href={`${base}/video`} label={tTabs('video')} Icon={IconVideo} IconFilled={IconVideoFilled} active={sub === 'video'} disabled={!hasVideos} />
           </div>
           <div className="w-[74px] shrink-0" aria-hidden />
           <div className="flex flex-1 justify-around">
@@ -97,7 +97,7 @@ export default function CartaTabBar() {
               href={c.href}
               aria-label={tNav(c.key)}
               onClick={() => setOpen(false)}
-              className="absolute left-1/2 top-[32px] md:top-[53px] z-40 flex flex-col items-center gap-1.5"
+              className="absolute left-1/2 top-[32px] md:top-[13px] z-40 flex flex-col items-center gap-1.5"
               style={{
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
                 opacity: open ? 1 : 0,
@@ -141,10 +141,10 @@ export default function CartaTabBar() {
   );
 }
 
-function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number}) {
+function Item({href, label, Icon, IconFilled, active, badge = 0, disabled = false}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number; disabled?: boolean}) {
   const I = active ? IconFilled : Icon;
-  return (
-    <Link href={href} className={`flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
+  const inner = (
+    <>
       <span className="relative">
         <I size={22} stroke={1.8} />
         {badge > 0 && (
@@ -152,6 +152,19 @@ function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string;
         )}
       </span>
       {label}
+    </>
+  );
+  // Sin contenido detras (p. ej. carta sin videos): pestana visible pero apagada.
+  if (disabled) {
+    return (
+      <span aria-disabled="true" className="flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide text-ink-3 opacity-35">
+        {inner}
+      </span>
+    );
+  }
+  return (
+    <Link href={href} className={`flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide transition-colors ${active ? 'text-brand-deep' : 'text-ink-3'}`}>
+      {inner}
     </Link>
   );
 }
