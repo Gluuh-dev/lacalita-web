@@ -27,7 +27,7 @@ const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
 // Variante tablet: misma forma pero con la base también redondeada (va flotando).
 const BAR_PATH_FLOAT =
-  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
+  'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
 
 // Las 4 cartas que se despliegan en abanico desde el botón central (labels = claves de `nav`).
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
@@ -47,14 +47,14 @@ export default function SiteTabBar() {
     <>
       {/* Espaciador: fluye al final de la página para que el contenido no
           termine escondido debajo de la barra. Desaparece con ella en PC. */}
-      <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)] xl:pointer-fine:hidden" />
+      <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)]" />
 
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in xl:pointer-fine:hidden" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
 
       {/* Móvil: pegada abajo a todo el ancho. Tablet: píldora flotante centrada.
           Solo propiedades físicas: left/right (inset-x es lógica) y el override
           de md dejaba de aplicarse según el orden del CSS. */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8 xl:pointer-fine:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
         {/* El centrado va por mx-auto (no left/translate): el circulo y su
             bolsillo quedan clavados al centro en cualquier ancho. */}
         <div className="relative md:mx-auto md:w-[460px]">
@@ -83,7 +83,7 @@ export default function SiteTabBar() {
             href={c.href}
             aria-label={t(c.key)}
             onClick={() => setOpen(false)}
-            className="absolute left-1/2 top-[32px] z-40 flex flex-col items-center gap-1.5"
+            className="absolute left-1/2 top-[32px] md:top-[53px] z-40 flex flex-col items-center gap-1.5"
             style={{
               transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
               opacity: open ? 1 : 0,
@@ -105,7 +105,7 @@ export default function SiteTabBar() {
           onClick={() => setOpen((o) => !o)}
           aria-label={t('cartas')}
           aria-expanded={open}
-          className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-bg text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
+          className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-bg text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
         >
           <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
         </button>

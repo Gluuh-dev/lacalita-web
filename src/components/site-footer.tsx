@@ -11,7 +11,7 @@ export default async function SiteFooter() {
 
   return (
     // Solo PC: en móvil/tablet la tab-bar ya lleva a todo y este bloque ocupaba pantalla y media.
-    <footer className="mt-auto hidden bg-[#1c160e] text-[#fbf7f0] xl:pointer-fine:block">
+    <footer className="mt-auto hidden bg-[#1c160e] text-[#fbf7f0] xl:block">
       <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 text-center sm:grid-cols-3 sm:text-left">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -78,7 +78,7 @@ export default async function SiteFooter() {
           )}
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)+3.75rem))] text-center text-xs text-[#fbf7f0]/50 md:pb-5">
+      <div className="border-t border-white/10 py-5 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)+3.75rem))] text-center text-xs text-[#fbf7f0]/50 md:pb-32">
         © {year} La Calita Beach Club · Salobreña
       </div>
     </footer>

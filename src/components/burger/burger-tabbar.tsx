@@ -24,7 +24,7 @@ const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
 // Variante tablet: base redondeada porque va flotando.
 const BAR_PATH_FLOAT =
-  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
+  'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
 
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
   {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
@@ -85,7 +85,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
               href={c.href}
               aria-label={tNav(c.key)}
               onClick={() => setOpen(false)}
-              className="absolute left-1/2 top-[32px] z-40 flex flex-col items-center gap-1.5"
+              className="absolute left-1/2 top-[32px] md:top-[53px] z-40 flex flex-col items-center gap-1.5"
               style={{
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
                 opacity: open ? 1 : 0,
@@ -114,7 +114,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
             onClick={() => setOpen((o) => !o)}
             aria-label={tNav('cartas')}
             aria-expanded={open}
-            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
             style={{background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconBurger size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
@@ -123,7 +123,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
           <Link
             href="/burguer/carta"
             aria-label={tNav('menu')}
-            className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
             style={{background: `color-mix(in srgb, ${C.brand} 52%, #fff)`, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconBurger size={26} stroke={2} />
