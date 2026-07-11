@@ -25,9 +25,12 @@ const HIDE = /^\/(burguer|admin)(\/|$)|^\/carta\/[^/]+/;
 // Barra con bolsillo circular central (hombros redondeados) que abraza el FAB (del prototipo).
 const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
-// Variante tablet: misma forma pero con la base también redondeada (va flotando).
-const BAR_PATH_FLOAT =
-  'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
+// Variante flotante (md+): dos segmentos con hueco central; el circulo va
+// centrado dentro del hueco, con su recorte de aire alrededor.
+const BAR_FLOAT_L =
+  'M0,48 Q0,28 20,28 L148,28 Q170,28 170,50 L170,70 Q170,92 148,92 L22,92 Q0,92 0,70 Z';
+const BAR_FLOAT_R =
+  'M230,50 Q230,28 252,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L252,92 Q230,92 230,70 Z';
 
 // Las 4 cartas que se despliegan en abanico desde el botón central (labels = claves de `nav`).
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
@@ -60,7 +63,8 @@ export default function SiteTabBar() {
         <div className="relative md:mx-auto md:w-[460px]">
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
           <path d={BAR_PATH} fill="var(--bg)" className="md:hidden" />
-          <path d={BAR_PATH_FLOAT} fill="var(--bg)" className="hidden md:block" />
+          <path d={BAR_FLOAT_L} fill="var(--bg)" className="hidden md:block" />
+          <path d={BAR_FLOAT_R} fill="var(--bg)" className="hidden md:block" />
         </svg>
 
         {/* Pestañas (izquierda / hueco central / derecha) */}
