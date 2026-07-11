@@ -1,8 +1,6 @@
 import {tx} from './localize';
 import type {EventRow} from './queries';
 
-const MONTHS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-
 export type HeroEvent = {
   id: string;
   title: string;
@@ -10,9 +8,11 @@ export type HeroEvent = {
   time: string;
   day: string;
   month: string;
+  image: string | null; // cartel: lo usa el importador de eventos del editor
 };
 
 export function toHeroEvents(events: EventRow[], locale: string): HeroEvent[] {
+  const mes = new Intl.DateTimeFormat(locale, {month: 'short'});
   return events.map((e) => {
     const d = new Date(e.starts_at);
     const ok = !isNaN(d.getTime());
@@ -22,7 +22,9 @@ export function toHeroEvents(events: EventRow[], locale: string): HeroEvent[] {
       artist: e.artist ?? '',
       time: ok ? d.toLocaleTimeString(locale, {hour: '2-digit', minute: '2-digit'}) : '',
       day: ok ? String(d.getDate()).padStart(2, '0') : '--',
-      month: ok ? MONTHS[d.getMonth()] : ''
+      // Según el idioma ("jul." → "JUL"), no un array fijo en español.
+      month: ok ? mes.format(d).replace(/\.$/, '').toUpperCase().slice(0, 4) : '',
+      image: e.images?.[0] ?? e.image ?? null
     };
   });
 }

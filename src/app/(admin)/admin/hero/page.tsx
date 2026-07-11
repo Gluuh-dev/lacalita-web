@@ -6,7 +6,8 @@ import HeroEditor from './hero-editor';
 
 export default async function HeroPage() {
   await requireUser();
-  const [settings, events] = await Promise.all([getSettings(), getUpcomingEvents(6)]);
+  // 20 y no 6: el importador de eventos enseña todos los próximos.
+  const [settings, events] = await Promise.all([getSettings(), getUpcomingEvents(20)]);
   return (
     <AdminShell title="Portada (Hero)">
       <HeroEditor initial={settings?.hero ?? []} events={toHeroEvents(events, 'es')} />

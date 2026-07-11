@@ -2,10 +2,11 @@
 
 import {useEffect, useRef, useState, useTransition} from 'react';
 import {toast} from 'sonner';
-import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List, Eye, EyeOff} from 'lucide-react';
+import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List, Eye, EyeOff, CalendarPlus} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
+import Drawer from '@/components/admin/drawer';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import {HeroPreview} from '@/components/hero';
 import {saveHero} from './actions';
@@ -35,6 +36,9 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
   const [device, setDevice] = useState<'pc' | 'mobile'>('pc');
   const [animKey, setAnimKey] = useState(0);
   const [pending, start] = useTransition();
+  // Importador de eventos: marca los que quieres y cada uno se vuelve diapositiva.
+  const [importOpen, setImportOpen] = useState(false);
+  const [marked, setMarked] = useState<Set<string>>(new Set());
 
   const slide = slides.find((s) => s.id === sel) ?? slides[0];
   const isPoster = slide?.heroMode === 'poster';
@@ -106,6 +110,40 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
     });
   }
 
+  // Eventos que ya tienen diapositiva (su link apunta al evento).
+  const importedIds = new Set(
+    slides.map((s) => /^\/eventos\/(.+)$/.exec(s.link ?? '')?.[1]).filter(Boolean) as string[]
+  );
+  function toggleMark(id: string) {
+    setMarked((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  }
+  function importEvents() {
+    // Cartel completo (contain) sobre fondo difuminado y clic al evento: el
+    // mismo formato que las diapositivas de evento hechas a mano.
+    const nuevos: HeroSlide[] = events
+      .filter((e) => marked.has(e.id))
+      .map((e, i) => ({
+        ...DEFAULT_HERO_SLIDE,
+        id: 's' + (Date.now() + i),
+        name: e.title,
+        media: e.image ?? '',
+        mediaType: 'image' as const,
+        mediaFit: 'contain' as const,
+        link: `/eventos/${e.id}`,
+        heroMode: 'boton' as const
+      }));
+    if (!nuevos.length) return;
+    persist([...slides, ...nuevos], nuevos.length > 1 ? `${nuevos.length} eventos importados` : 'Evento importado');
+    setImportOpen(false);
+    setMarked(new Set());
+    setSel(nuevos[0].id);
+  }
+
   if (!slide) return null;
 
   return (
@@ -114,11 +152,16 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
       <div className="flex flex-col gap-4">
         {/* Diapositivas */}
         <Card>
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between gap-2">
             <div className="eyebrow">Diapositivas</div>
-            <button onClick={addSlide} className={`${btnGhost} inline-flex items-center gap-1.5`}>
-              <Plus className="size-4" /> Añadir
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setImportOpen(true)} className={`${btnGhost} inline-flex items-center gap-1.5`}>
+                <CalendarPlus className="size-4" /> Importar eventos
+              </button>
+              <button onClick={addSlide} className={`${btnGhost} inline-flex items-center gap-1.5`}>
+                <Plus className="size-4" /> Añadir
+              </button>
+            </div>
           </div>
           <div className="flex flex-col gap-1.5">
             {slides.map((s, i) => (
@@ -506,6 +549,66 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
         </div>
         <p className="mt-3 text-center text-sm text-ink-3">Mismas tipografías, proporciones y animación que la web. Pulsa “Recargar” para ver la entrada.</p>
       </div>
+
+      {/* Importador: marca los eventos y cada uno entra como diapositiva-cartel. */}
+      <Drawer open={importOpen} title="Importar eventos" onClose={() => setImportOpen(false)}>
+        {events.length === 0 ? (
+          <p className="py-10 text-center text-sm text-ink-3">No hay eventos próximos que importar.</p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <p className="mb-1 text-sm text-ink-3">
+              Cada evento marcado se convierte en una diapositiva con su cartel completo, enlazada al evento.
+            </p>
+            {events.map((e) => {
+              const ya = importedIds.has(e.id);
+              const sinCartel = !e.image;
+              const bloqueado = ya || sinCartel;
+              const on = marked.has(e.id);
+              return (
+                <label
+                  key={e.id}
+                  className={cn(
+                    'flex cursor-pointer items-center gap-3 rounded-[14px] border p-2.5 transition',
+                    on ? 'border-brand bg-surface-sunken' : 'border-line',
+                    bloqueado && 'cursor-default opacity-50'
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    className="size-4 shrink-0 accent-brand"
+                    disabled={bloqueado}
+                    checked={on}
+                    onChange={() => toggleMark(e.id)}
+                  />
+                  {e.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={e.image} alt="" className="h-14 w-10 shrink-0 rounded-md object-cover ring-1 ring-black/10" />
+                  ) : (
+                    <span className="flex h-14 w-10 shrink-0 items-center justify-center rounded-md bg-surface-sunken text-[0.55rem] text-ink-3">sin foto</span>
+                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">{e.title}</span>
+                    <span className="block text-xs text-ink-3">
+                      {e.day} {e.month} · {e.time}
+                      {e.artist ? ` · ${e.artist}` : ''}
+                    </span>
+                  </span>
+                  {ya && <span className="shrink-0 rounded-full bg-success/15 px-2 py-0.5 text-[0.62rem] font-semibold text-success">Ya en la portada</span>}
+                  {sinCartel && !ya && <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-[0.62rem] font-semibold text-amber-600">Sin cartel</span>}
+                </label>
+              );
+            })}
+            <div className="sticky bottom-0 -mx-1 mt-2 flex justify-end gap-2 border-t border-line bg-bg/95 px-1 py-3 backdrop-blur">
+              <button type="button" onClick={() => setImportOpen(false)} className={btnGhost}>
+                Cancelar
+              </button>
+              <button type="button" onClick={importEvents} disabled={marked.size === 0 || pending} className={btn}>
+                {pending ? 'Importando…' : marked.size > 0 ? `Importar ${marked.size}` : 'Importar'}
+              </button>
+            </div>
+          </div>
+        )}
+      </Drawer>
     </div>
   );
 }
