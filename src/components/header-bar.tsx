@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
+import {ChevronLeft} from 'lucide-react';
 import {Link, usePathname} from '@/i18n/navigation';
 import {cn} from '@/lib/utils';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
@@ -41,6 +42,9 @@ export default function HeaderBar({
   const pathname = usePathname();
   const cartaMatch = pathname.match(/^\/carta\/([^/]+)(?:\/([^/]+))?/);
   const currentCarta = cartaMatch ? cartaMatch[1] : null;
+  // Detalle de producto: el logo cede el sitio a un chevron de vuelta a la carta.
+  const cartaSub = cartaMatch?.[2];
+  const onProductDetail = !!currentCarta && !!cartaSub && !['fav', 'list', 'video'].includes(cartaSub);
 
   const menuLinks = currentCarta
     ? [
@@ -84,7 +88,9 @@ export default function HeaderBar({
   const hideLogo = mode.overHero && !scrolled && !open;
 
   return (
-    <>
+    // El slug de la carta coincide con su tema (desayunos/restaurante/cocteles):
+    // navbar, logo y menú desplegable se tiñen con el color de la carta activa.
+    <div data-theme={currentCarta ?? undefined} className="contents">
       <header
         className={cn(
           // Barra a todo el ancho; el contenido (logo + menú) se limita a xl y
@@ -102,14 +108,30 @@ export default function HeaderBar({
         {/* pl-1.5 = los mismos 6px que el icono del menú queda metido dentro de
             su botón (36px de botón, 24px de glifo). Así ambos tienen el mismo
             margen óptico respecto al borde y comparten centro vertical. */}
+        {onProductDetail ? (
+          <Link href={`/carta/${currentCarta}`} aria-label={labels.menu} className="flex items-center pl-0.5">
+            <ChevronLeft className={cn('size-7 transition', light && !open ? 'text-white' : 'text-ink')} />
+          </Link>
+        ) : (
         <Link href="/" aria-label="La Calita" className={cn('flex items-center pl-1.5', hideLogo && 'pointer-events-none')}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/logo-solo.svg"
-            alt="La Calita"
-            className={cn('h-[32px] w-auto transition duration-300', light && !open && 'brightness-0 invert', hideLogo && 'opacity-0')}
+          {/* Máscara en vez de <img>: el logo toma el color del tema de la carta. */}
+          <span
+            aria-hidden
+            className={cn('block h-8 w-[37px] transition duration-300', hideLogo && 'opacity-0')}
+            style={{
+              backgroundColor: light && !open ? '#ffffff' : 'var(--brand-deep)',
+              WebkitMaskImage: 'url(/brand/logo-solo.svg)',
+              maskImage: 'url(/brand/logo-solo.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center'
+            }}
           />
         </Link>
+        )}
 
         <button
           type="button"
@@ -169,6 +191,6 @@ export default function HeaderBar({
           </div>
         </nav>
       </div>
-    </>
+    </div>
   );
 }

@@ -43,6 +43,12 @@ const MENU_ICON: Record<string, TablerIcon> = {
   cocteles: IconGlassCocktail
 };
 
+
+// Escudo breve: evita que el toque que eligio carta caiga en la pagina nueva.
+function navShield() {
+  document.body.setAttribute('data-nav-shield', '1');
+  setTimeout(() => document.body.removeAttribute('data-nav-shield'), 450);
+}
 export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
   const tNav = useTranslations('nav');
   const tTabs = useTranslations('tabs');
@@ -68,7 +74,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
 
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => { setOpen(false); navShield(); }} />}
 
       {/* Siempre visible, tambien en PC: sin ella se pierden Favoritos y Mi lista.
           Movil: pegada abajo. Desde md: pildora flotante centrada. */}
@@ -99,7 +105,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
               key={c.href}
               href={c.href}
               aria-label={tNav(c.key)}
-              onClick={() => setOpen(false)}
+              onClick={() => { setOpen(false); navShield(); }}
               className="absolute left-1/2 top-[32px] md:top-[13px] z-40 flex flex-col items-center gap-1.5"
               style={{
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
@@ -123,8 +129,8 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
             onClick={() => setOpen((o) => !o)}
             aria-label={tNav('cartas')}
             aria-expanded={open}
-            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
-            style={{backgroundColor: 'var(--brand)', transition: 'background-color .45s ease, transform .12s'}}
+            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
+            style={{backgroundColor: 'var(--brand)', color: 'var(--on-primary)', transition: 'background-color .45s ease, transform .12s'}}
           >
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
           </button>
@@ -132,8 +138,8 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
           <Link
             href={base}
             aria-label={tNav('menu')}
-            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
-            style={{backgroundColor: 'color-mix(in srgb, var(--brand) 52%, #fff)', transition: 'background-color .45s ease, transform .12s'}}
+            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
+            style={{backgroundColor: 'color-mix(in srgb, var(--brand) 52%, #fff)', color: 'var(--on-primary)', transition: 'background-color .45s ease, transform .12s'}}
           >
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" />
           </Link>

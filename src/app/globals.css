@@ -110,20 +110,20 @@
 
 /* Tema Desayunos — amanecer: miel y dorado sobre crema cálida */
 [data-theme='desayunos'] {
-  --bg: #faf0d8;
+  --bg: #fdf1e0;
   --surface: #ffffff;
-  --surface-2: #f7edd2;
-  --surface-sunken: #efe0ba;
-  --brand: #d9a441;
-  --brand-deep: #b9862a;
-  --on-primary: #3a2c06;
-  --ink: #3b3020;
-  --ink-2: #5d5138;
-  --ink-3: #8d816a;
+  --surface-2: #fbead2;
+  --surface-sunken: #f6ddba;
+  --brand: #e0862f;
+  --brand-deep: #bf6c1d;
+  --on-primary: #3c2405;
+  --ink: #3b2c1a;
+  --ink-2: #5f4c33;
+  --ink-3: #8f7c63;
   --accent: #2e6e8e;
   --accent-soft: #e3eef3;
-  --line: #ecdfc2;
-  --line-strong: #dcc9a1;
+  --line: #f0dcbd;
+  --line-strong: #e2c795;
 }
 
 /* Tema Restaurante — mediterráneo de cocina: oliva y hierbas sobre crema verdosa */
@@ -431,7 +431,9 @@
 .lc-cat-dot { height: 8px; width: 8px; border-radius: 999px; background: rgba(42,23,19,.22); transition: all .35s cubic-bezier(.22,.61,.36,1); }
 .lc-cat-dot.is-active { width: 26px; background: #c36148; }
 /* Placeholder con el logo de La Calita mientras carga la imagen (la foto lo tapa al cargar) */
-.lc-img-loading { background-color: #f3e7da; background-image: url('/brand/logo-solo.svg'); background-repeat: no-repeat; background-position: center; background-size: 30%; }
+.lc-img-loading { background-color: var(--surface-sunken); }
+/* Logo como mascara para poder tenirlo con el color del tema de cada carta. */
+.lc-img-loading::before { content: ''; position: absolute; inset: 0; background-color: var(--brand); opacity: 0.5; -webkit-mask: url('/brand/logo-solo.svg') no-repeat center / 30%; mask: url('/brand/logo-solo.svg') no-repeat center / 30%; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .lc-cat-card, .lc-cat-dot { transition: none; } }
 /* Efectos de fondo del hero hamburguesería */
 @keyframes lc-smoke { 0% { transform: translate(0, 0) scale(1); opacity: 0.45; } 50% { transform: translate(2%, -3%) scale(1.1); opacity: 0.7; } 100% { transform: translate(-2%, -1%) scale(1); opacity: 0.45; } }
@@ -448,6 +450,10 @@
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
 /* Relleno de progreso del punto activo del paginador (sincronizado con el autoplay) */
 @keyframes lc-prog { from { width: 0; } to { width: 100%; } }
+
+/* Tras navegar con el abanico de cartas, un toque residual podia caer sobre un
+   producto de la pagina nueva. El atributo dura ~450ms en <body>. */
+body[data-nav-shield] { pointer-events: none; }
 
 /* Reveal de secciones (antes framer-motion): fade-up al entrar en pantalla. */
 .lc-reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }

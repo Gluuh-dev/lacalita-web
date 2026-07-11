@@ -40,6 +40,12 @@ const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'bu
   {href: '/burguer/carta', key: 'burger', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
+
+// Escudo breve: evita que el toque que eligio carta caiga en la pagina nueva.
+function navShield() {
+  document.body.setAttribute('data-nav-shield', '1');
+  setTimeout(() => document.body.removeAttribute('data-nav-shield'), 450);
+}
 export default function SiteTabBar() {
   const t = useTranslations('nav');
   const pathname = usePathname();
@@ -52,7 +58,7 @@ export default function SiteTabBar() {
           termine escondido debajo de la barra. Desaparece con ella en PC. */}
       <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)]" />
 
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => { setOpen(false); navShield(); }} />}
 
       {/* Móvil: pegada abajo a todo el ancho. Tablet: píldora flotante centrada.
           Solo propiedades físicas: left/right (inset-x es lógica) y el override
@@ -86,7 +92,7 @@ export default function SiteTabBar() {
             key={c.href}
             href={c.href}
             aria-label={t(c.key)}
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); navShield(); }}
             className="absolute left-1/2 top-[32px] md:top-[13px] z-40 flex flex-col items-center gap-1.5"
             style={{
               transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',

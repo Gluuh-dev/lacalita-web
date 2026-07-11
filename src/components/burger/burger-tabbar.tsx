@@ -39,6 +39,12 @@ const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'bu
 // Colores de la hamburguesería.
 const C = {bg: '#fdfbf7', brand: '#c36148', neutral: '#b3aaa0', ink: '#2a1713', dim: 'rgba(42,23,19,.55)'};
 
+
+// Escudo breve: evita que el toque que eligio carta caiga en la pagina nueva.
+function navShield() {
+  document.body.setAttribute('data-nav-shield', '1');
+  setTimeout(() => document.body.removeAttribute('data-nav-shield'), 450);
+}
 export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) {
   const tNav = useTranslations('nav');
   const tTabs = useTranslations('tabs');
@@ -58,7 +64,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
 
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => { setOpen(false); navShield(); }} />}
 
       {/* Movil: pegada abajo. Tablet (incluso horizontal): pildora flotante centrada. */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
@@ -88,7 +94,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
               key={c.href}
               href={c.href}
               aria-label={tNav(c.key)}
-              onClick={() => setOpen(false)}
+              onClick={() => { setOpen(false); navShield(); }}
               className="absolute left-1/2 top-[32px] md:top-[13px] z-40 flex flex-col items-center gap-1.5"
               style={{
                 transform: open ? `translate(-50%,-50%) translate(${c.dx}px,${c.dy}px) scale(1)` : 'translate(-50%,-50%) scale(.3)',
