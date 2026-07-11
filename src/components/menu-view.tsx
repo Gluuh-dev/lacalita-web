@@ -61,12 +61,17 @@ export default async function MenuView({
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-7deg] opacity-[0.13]"
           style={{
-            backgroundImage: 'url(/brand/motivo-carta.svg)',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-            WebkitMaskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)',
-            maskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)'
+            backgroundColor: 'var(--brand)',
+            WebkitMaskImage: 'url(/brand/motivo-carta.svg), linear-gradient(180deg,#000 58%,transparent 100%)',
+            maskImage: 'url(/brand/motivo-carta.svg), linear-gradient(180deg,#000 58%,transparent 100%)',
+            WebkitMaskComposite: 'source-in',
+            maskComposite: 'intersect',
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+            WebkitMaskSize: 'cover, 100% 100%',
+            maskSize: 'cover, 100% 100%',
+            WebkitMaskPosition: 'center top',
+            maskPosition: 'center top'
           }}
         />
       )}
@@ -76,12 +81,17 @@ export default async function MenuView({
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-7deg] opacity-[0.13]"
             style={{
-              backgroundImage: `url(${MOTIVO[menu.slug]})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center top',
-              WebkitMaskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)',
-              maskImage: 'linear-gradient(180deg,#000 58%,transparent 100%)'
+              backgroundColor: 'var(--brand)',
+              WebkitMaskImage: `url(${MOTIVO[menu.slug]}), linear-gradient(180deg,#000 58%,transparent 100%)`,
+              maskImage: `url(${MOTIVO[menu.slug]}), linear-gradient(180deg,#000 58%,transparent 100%)`,
+              WebkitMaskComposite: 'source-in',
+              maskComposite: 'intersect',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'cover, 100% 100%',
+              maskSize: 'cover, 100% 100%',
+              WebkitMaskPosition: 'center top',
+              maskPosition: 'center top'
             }}
           />
         ) : (
@@ -89,7 +99,7 @@ export default async function MenuView({
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[26rem] w-[185%] -translate-x-1/2 rotate-[-6deg] opacity-[0.1]"
             style={{
-              backgroundColor: '#E9AE74',
+              backgroundColor: 'var(--brand)',
               WebkitMaskImage: 'url(/brand/manifesto.svg)',
               maskImage: 'url(/brand/manifesto.svg)',
               WebkitMaskRepeat: 'no-repeat',
@@ -103,17 +113,13 @@ export default async function MenuView({
         ))}
       {menu.slug === 'hamburgueseria' ? (
         <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-solo.svg" alt="La Calita" className="mx-auto mb-3 h-9 w-auto" />
-          <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita Burger</div>
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-brand" style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}>La Calita Burger</div>
           <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
       ) : (
         <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-solo.svg" alt="La Calita" className="mx-auto mb-3 h-9 w-auto" />
-          <div className="font-adam text-[0.7rem] uppercase tracking-[0.22em] text-brand">La Calita · Carta</div>
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-brand" style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}>La Calita · Carta</div>
           <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>
