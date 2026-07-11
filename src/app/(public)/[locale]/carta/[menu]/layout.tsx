@@ -14,9 +14,11 @@ export default async function CartaMenuLayout({
   const data = await getMenu(menu);
   const hasVideos = !!data?.categories?.some((c) => c.products?.some((p) => p.video));
   return (
-    <>
+    // display:contents no afecta al layout pero SI hereda las variables del
+    // tema: la tabbar (fija) toma el color de la carta activa.
+    <div data-theme={data?.theme ?? 'calita'} className="contents">
       {children}
       <CartaTabBar hasVideos={hasVideos} />
-    </>
+    </div>
   );
 }

@@ -108,6 +108,42 @@
   --line-strong: #ddc3ba;
 }
 
+/* Tema Desayunos — amanecer: miel y dorado sobre crema cálida */
+[data-theme='desayunos'] {
+  --bg: #fbf5e8;
+  --surface: #ffffff;
+  --surface-2: #f9f1df;
+  --surface-sunken: #f2e6cb;
+  --brand: #d9a441;
+  --brand-deep: #b9862a;
+  --on-primary: #3a2c06;
+  --ink: #3b3020;
+  --ink-2: #5d5138;
+  --ink-3: #8d816a;
+  --accent: #2e6e8e;
+  --accent-soft: #e3eef3;
+  --line: #ecdfc2;
+  --line-strong: #dcc9a1;
+}
+
+/* Tema Cócteles — mediterráneo: azul profundo y coral sobre bruma marina */
+[data-theme='cocteles'] {
+  --bg: #f2f7f8;
+  --surface: #ffffff;
+  --surface-2: #ecf3f5;
+  --surface-sunken: #dfeaee;
+  --brand: #2e6e8e;
+  --brand-deep: #245a75;
+  --on-primary: #f2f7f8;
+  --ink: #1d3a4a;
+  --ink-2: #3f5b6b;
+  --ink-3: #74909e;
+  --accent: #e98a74;
+  --accent-soft: #fbe8e2;
+  --line: #d8e4e8;
+  --line-strong: #bfd2d9;
+}
+
 /* Tokens compartidos del Design System */
 :root {
   --shadow-xs: 0 1px 2px rgba(76, 47, 8, 0.06);

@@ -36,11 +36,11 @@ const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'bu
   {href: '/burguer/carta', key: 'burger', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
-// Icono + color del botón central según la carta actual.
-const MENU_STYLE: Record<string, {Icon: TablerIcon; color: string}> = {
-  desayunos: {Icon: IconCoffee, color: '#c9922f'},
-  restaurante: {Icon: IconToolsKitchen2, color: '#b5651d'},
-  cocteles: {Icon: IconGlassCocktail, color: '#2e6e8e'}
+// Icono del botón central según la carta; el color lo da el tema (var --brand).
+const MENU_ICON: Record<string, TablerIcon> = {
+  desayunos: IconCoffee,
+  restaurante: IconToolsKitchen2,
+  cocteles: IconGlassCocktail
 };
 
 export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
@@ -64,8 +64,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
 
   const base = `/carta/${menu}`;
   const onCartaIndex = sub === ''; // estamos en la carta → el centro abre el abanico
-  const cur = MENU_STYLE[menu] ?? {Icon: IconToolsKitchen2, color: '#c98a4e'};
-  const CurIcon = cur.Icon;
+  const CurIcon = MENU_ICON[menu] ?? IconToolsKitchen2;
 
   return (
     <>
@@ -125,7 +124,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
             aria-label={tNav('cartas')}
             aria-expanded={open}
             className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
-            style={{backgroundColor: cur.color, transition: 'background-color .45s ease, transform .12s'}}
+            style={{backgroundColor: 'var(--brand)', transition: 'background-color .45s ease, transform .12s'}}
           >
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
           </button>
@@ -134,7 +133,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
             href={base}
             aria-label={tNav('menu')}
             className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] active:scale-95"
-            style={{backgroundColor: `color-mix(in srgb, ${cur.color} 52%, #fff)`, transition: 'background-color .45s ease, transform .12s'}}
+            style={{backgroundColor: 'color-mix(in srgb, var(--brand) 52%, #fff)', transition: 'background-color .45s ease, transform .12s'}}
           >
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" />
           </Link>
