@@ -27,7 +27,7 @@ const BAR_PATH =
 // El agujero es una elipse en el viewBox que en pantalla queda circular.
 const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z ' +
-  'M170.4,59.5 a29.6,38.2 0 1 0 59.2,0 a29.6,38.2 0 1 0 -59.2,0 Z';
+  'M170,60 a30,46 0 1 0 60,0 a30,46 0 1 0 -60,0 Z';
 
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
   {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
@@ -63,9 +63,10 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
       {/* Movil: pegada abajo. Tablet (incluso horizontal): pildora flotante centrada. */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
         <div className="relative md:mx-auto md:w-[460px]">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:rounded-[22px]" />
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
-          <path d={BAR_PATH} fill={C.bg} className="md:hidden" />
-          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill={C.bg} className="hidden md:block" />
+          <path d={BAR_PATH} fill="rgba(255,255,255,.9)" className="md:hidden" />
+          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="rgba(255,255,255,.9)" className="hidden md:block" />
         </svg>
 
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
@@ -100,7 +101,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
               <span
                 className="flex size-14 items-center justify-center rounded-full shadow-lg"
                 style={{
-                  background: c.href === '/burguer/carta' ? C.brand : C.bg,
+                  background: c.href === '/burguer/carta' ? C.brand : '#fff',
                   color: c.href === '/burguer/carta' ? C.bg : C.ink
                 }}
               >

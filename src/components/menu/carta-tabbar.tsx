@@ -27,7 +27,7 @@ const BAR_PATH =
 // El agujero es una elipse en el viewBox que en pantalla queda circular.
 const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z ' +
-  'M170.4,59.5 a29.6,38.2 0 1 0 59.2,0 a29.6,38.2 0 1 0 -59.2,0 Z';
+  'M170,60 a30,46 0 1 0 60,0 a30,46 0 1 0 -60,0 Z';
 
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
   {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
@@ -75,9 +75,10 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
           Movil: pegada abajo. Desde md: pildora flotante centrada. */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
         <div className="relative md:mx-auto md:w-[460px]">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:rounded-[22px]" />
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
-          <path d={BAR_PATH} fill="var(--bg)" className="md:hidden" />
-          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="var(--bg)" className="hidden md:block" />
+          <path d={BAR_PATH} fill="rgba(255,255,255,.9)" className="md:hidden" />
+          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="rgba(255,255,255,.9)" className="hidden md:block" />
         </svg>
 
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
@@ -109,7 +110,7 @@ export default function CartaTabBar({hasVideos = true}: {hasVideos?: boolean}) {
                 transitionDelay: open ? `${i * 0.05}s` : `${(3 - i) * 0.04}s`
               }}
             >
-              <span className={`flex size-14 items-center justify-center rounded-full shadow-lg ${c.href === base ? 'bg-brand text-on-primary' : 'bg-bg text-ink'}`}>
+              <span className={`flex size-14 items-center justify-center rounded-full shadow-lg ${c.href === base ? 'bg-brand text-on-primary' : 'bg-white text-ink'}`}>
                 <c.Icon size={22} stroke={1.9} />
               </span>
               <span className="whitespace-nowrap rounded-full bg-ink px-2 py-0.5 text-[0.55rem] font-semibold text-bg">{tNav(c.key)}</span>
