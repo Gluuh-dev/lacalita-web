@@ -22,6 +22,9 @@ import {useMenuStore} from '@/components/menu/store';
 
 const BAR_PATH =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,92 L0,92 Z';
+// Variante flotante (tablet y PC): base tambien redondeada.
+const BAR_PATH_FLOAT =
+  'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
 
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
   {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
@@ -63,11 +66,15 @@ export default function CartaTabBar() {
 
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in md:hidden" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 overflow-visible md:hidden">
-        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 -2px 8px rgba(0,0,0,.10))'}}>
-          <path d={BAR_PATH} fill="var(--bg)" />
+      {/* Siempre visible, tambien en PC: sin ella se pierden Favoritos y Mi lista.
+          Movil: pegada abajo. Desde md: pildora flotante centrada. */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
+        <div className="relative md:mx-auto md:w-[460px]">
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
+          <path d={BAR_PATH} fill="var(--bg)" className="md:hidden" />
+          <path d={BAR_PATH_FLOAT} fill="var(--bg)" className="hidden md:block" />
         </svg>
 
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
@@ -128,6 +135,7 @@ export default function CartaTabBar() {
             <CurIcon key={menu} size={26} stroke={2} className="duration-300 animate-in fade-in zoom-in-90" />
           </Link>
         )}
+        </div>
       </nav>
     </>
   );

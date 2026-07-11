@@ -55,10 +55,10 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
 
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in xl:pointer-fine:hidden" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => setOpen(false)} />}
 
       {/* Movil: pegada abajo. Tablet (incluso horizontal): pildora flotante centrada. */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8 xl:pointer-fine:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
         <div className="relative md:mx-auto md:w-[460px]">
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
           <path d={BAR_PATH} fill={C.bg} className="md:hidden" />
