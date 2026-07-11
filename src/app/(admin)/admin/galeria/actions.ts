@@ -1,6 +1,6 @@
 'use server';
 
-import {revalidatePath} from 'next/cache';
+import {revalidatePath, updateTag} from 'next/cache';
 import {createClient} from '@/lib/supabase/server';
 import {actionGuard} from '@/lib/auth';
 import {removeMediaServer} from '@/lib/storage-server';
@@ -23,6 +23,7 @@ export async function saveAlbum(id: string | null, input: AlbumInput) {
     savedId = data?.id ?? null;
   }
   revalidatePath('/', 'layout');
+  updateTag('media-usage'); // el medidor de espacio refleja las fotos nuevas
   revalidatePath('/admin/galeria');
   return {ok: true, id: savedId};
 }
@@ -36,6 +37,7 @@ export async function deleteAlbum(id: string) {
   if (error) return {ok: false, error: error.message};
   if (row?.images) await removeMediaServer(supabase, row.images as string[]);
   revalidatePath('/', 'layout');
+  updateTag('media-usage');
   revalidatePath('/admin/galeria');
   return {ok: true};
 }

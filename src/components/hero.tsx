@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import Image from 'next/image';
 import {ChevronUp, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
@@ -469,18 +470,20 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
     // la fecha o los laterales. Se agranda hasta donde quepa, dejando abajo el
     // hueco justo para el paginador y el botón de eventos.
     const Poster = (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         src={slide.media}
         alt=""
-        className="max-h-full max-w-full rounded-xl object-contain shadow-2xl lg:rounded-2xl"
+        width={1080}
+        height={1350}
+        priority
+        sizes="(min-width: 1024px) 640px, 92vw"
+        className="h-auto max-h-full w-auto max-w-full rounded-xl object-contain shadow-2xl lg:rounded-2xl"
       />
     );
     const wrapCls = 'absolute inset-0 z-10 flex items-center justify-center p-3 pb-24 lg:p-10';
     return (
       <div className="relative h-full w-full overflow-hidden bg-ink">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={slide.media} alt="" className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl" />
+        <Image src={slide.media} alt="" fill sizes="100vw" className="scale-125 object-cover blur-2xl" />
         <div className="absolute inset-0 bg-black/30" />
         {slide.link ? (
           <Link href={slide.link} className={wrapCls}>
@@ -502,8 +505,9 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
       {slide.mediaType === 'video' && slide.media ? (
         <video src={slide.media} poster={slide.poster} autoPlay muted loop playsInline preload="metadata" style={mediaFx(slide)} className="absolute inset-0 h-full w-full object-cover" />
       ) : slide.media ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={slide.media} alt="" style={mediaFx(slide)} className="absolute inset-0 h-full w-full object-cover" />
+        // El LCP de la portada: next/image lo sirve en AVIF/WebP redimensionado
+        // y con prioridad (antes era un <img> con el original de Supabase).
+        <Image src={slide.media} alt="" fill priority sizes="100vw" style={mediaFx(slide)} className="object-cover" />
       ) : (
         // Sin media: atardecer de playa (marca), no el azul marino de relleno.
         <div className="absolute inset-0" style={{background: 'radial-gradient(130% 115% at 78% 12%, #ffe6c2 0%, #f6bd82 22%, #e0955a 44%, #b96e42 64%, #5e3620 100%)'}} />

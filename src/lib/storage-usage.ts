@@ -1,4 +1,5 @@
-import {createClient} from '@/lib/supabase/server';
+import {unstable_cache} from 'next/cache';
+import {supabasePublic} from '@/lib/supabase/public';
 
 export {fmtBytes} from './format-bytes';
 
@@ -15,43 +16,51 @@ export function pathOf(url: string): string | null {
   return i === -1 ? null : decodeURIComponent(url.slice(i + MARKER.length));
 }
 
-export type MediaUsage = {sizes: Map<string, number>; total: number};
+// Record y no Map: unstable_cache serializa a JSON y un Map se perdería.
+export type MediaUsage = {sizes: Record<string, number>; total: number};
 
-// Recorre el bucket `media` y devuelve el tamaño de cada objeto.
+// Recorre el bucket `media` y devuelve el tamaño de cada objeto. Cacheado:
+// antes escaneaba el bucket entero en CADA visita a /admin/galeria. El bucket
+// es público (RLS: public read), así que vale el cliente anónimo.
 export async function getMediaUsage(): Promise<MediaUsage> {
-  const supabase = await createClient();
-  const bucket = supabase.storage.from('media');
-  const sizes = new Map<string, number>();
+  return unstable_cache(
+    async () => {
+      const bucket = supabasePublic.storage.from('media');
+      const sizes: Record<string, number> = {};
 
-  // Un nivel de carpetas (image/, video/, poster/). `id: null` = carpeta.
-  const {data: roots} = await bucket.list('', {limit: PAGE});
-  const folders = (roots ?? []).filter((e) => e.id === null).map((e) => e.name);
+      // Un nivel de carpetas (image/, video/, poster/). `id: null` = carpeta.
+      const {data: roots} = await bucket.list('', {limit: PAGE});
+      const folders = (roots ?? []).filter((e) => e.id === null).map((e) => e.name);
 
-  const scan = async (prefix: string) => {
-    for (let offset = 0; ; offset += PAGE) {
-      const {data, error} = await bucket.list(prefix, {limit: PAGE, offset});
-      if (error || !data?.length) return;
-      for (const f of data) {
-        if (f.id === null) continue; // subcarpeta: no las usamos
-        sizes.set(prefix ? `${prefix}/${f.name}` : f.name, f.metadata?.size ?? 0);
-      }
-      if (data.length < PAGE) return;
-    }
-  };
+      const scan = async (prefix: string) => {
+        for (let offset = 0; ; offset += PAGE) {
+          const {data, error} = await bucket.list(prefix, {limit: PAGE, offset});
+          if (error || !data?.length) return;
+          for (const f of data) {
+            if (f.id === null) continue; // subcarpeta: no las usamos
+            sizes[prefix ? `${prefix}/${f.name}` : f.name] = f.metadata?.size ?? 0;
+          }
+          if (data.length < PAGE) return;
+        }
+      };
 
-  await Promise.all([scan(''), ...folders.map(scan)]);
+      await Promise.all([scan(''), ...folders.map(scan)]);
 
-  let total = 0;
-  for (const s of sizes.values()) total += s;
-  return {sizes, total};
+      let total = 0;
+      for (const s of Object.values(sizes)) total += s;
+      return {sizes, total};
+    },
+    ['media-usage'],
+    {revalidate: 300, tags: ['media-usage']}
+  )();
 }
 
 // Suma los bytes de una lista de URLs públicas.
-export function bytesOf(urls: string[], sizes: Map<string, number>): number {
+export function bytesOf(urls: string[], sizes: Record<string, number>): number {
   let n = 0;
   for (const url of urls) {
     const p = pathOf(url);
-    if (p) n += sizes.get(p) ?? 0;
+    if (p) n += sizes[p] ?? 0;
   }
   return n;
 }

@@ -226,9 +226,17 @@ export async function getPastEvents(limit = 30): Promise<EventRow[]> {
 // ---------- Admin (autenticado: RLS deja ver/editar todo) ----------
 
 export async function getAllergens(): Promise<Allergen[]> {
-  const supabase = await createClient();
-  const {data} = await supabase.from('allergens').select('id, code, name, icon').order('code');
-  return (data as Allergen[]) ?? [];
+  // supabasePublic + caché, nunca createClient: cookies() aquí volvía DINÁMICA
+  // a toda página que lo llamara (/burguer perdía el ISR y golpeaba Supabase
+  // en cada visita). Los alérgenos son datos públicos (RLS: public read).
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic.from('allergens').select('id, code, name, icon').order('code');
+      return (data as Allergen[]) ?? [];
+    },
+    ['allergens'],
+    {revalidate: 300, tags: ['menu']}
+  )();
 }
 
 export async function getMenusWithCategories() {

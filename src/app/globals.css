@@ -394,6 +394,11 @@
 .lc-hero-fade { animation: lc-hero-fade var(--dur-slow) var(--ease-out) both; }
 /* Relleno de progreso del punto activo del paginador (sincronizado con el autoplay) */
 @keyframes lc-prog { from { width: 0; } to { width: 100%; } }
+
+/* Reveal de secciones (antes framer-motion): fade-up al entrar en pantalla. */
+.lc-reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.lc-reveal-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .lc-reveal { opacity: 1; transform: none; transition: none; } }
 /* "Pop" del botón Mi lista al añadir un producto */
 @keyframes lc-pop { 0% { transform: scale(1); } 35% { transform: scale(1.38); } 70% { transform: scale(0.92); } 100% { transform: scale(1); } }
 .lc-pop { animation: lc-pop 0.5s cubic-bezier(.22,1,.36,1); }
