@@ -10,7 +10,7 @@ const BURGER_THEME = '#fdfbf7';
 
 // Navbar + tab-bar de hamburguesería montados en el layout: persisten al navegar
 // (parece la misma app, solo cambia el contenido).
-export default function BurgerChrome({locale}: {locale: string}) {
+export default function BurgerChrome({locale, hasVideos = true}: {locale: string; hasVideos?: boolean}) {
   const p = usePathname();
   const onBurguer = /^(\/[a-z]{2,3})?\/burguer(\/.*)?$/.test(p);
 
@@ -38,7 +38,7 @@ export default function BurgerChrome({locale}: {locale: string}) {
     <>
       <BurgerHeader locale={locale} />
       <Suspense fallback={null}>
-        <BurgerTabBar />
+        <BurgerTabBar hasVideos={hasVideos} />
       </Suspense>
     </>
   );

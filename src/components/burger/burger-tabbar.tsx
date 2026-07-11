@@ -35,7 +35,7 @@ const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: nu
 // Colores de la hamburguesería.
 const C = {bg: '#fdfbf7', brand: '#c36148', neutral: '#b3aaa0', ink: '#2a1713', dim: 'rgba(42,23,19,.55)'};
 
-export default function BurgerTabBar() {
+export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) {
   const pathname = usePathname();
   const s = useMenuStore();
   const [open, setOpen] = useState(false);
@@ -65,7 +65,7 @@ export default function BurgerTabBar() {
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
           <div className="flex flex-1 justify-around">
             <Item href="/burguer" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/burguer'} />
-            <Item href="/burguer/video" label="Vídeo" Icon={IconVideo} IconFilled={IconVideoFilled} active={pathname === '/burguer/video'} />
+            <Item href="/burguer/video" label="Vídeo" Icon={IconVideo} IconFilled={IconVideoFilled} active={pathname === '/burguer/video'} disabled={!hasVideos} />
           </div>
           <div className="w-[74px] shrink-0" aria-hidden />
           <div className="flex flex-1 justify-around">
@@ -132,10 +132,10 @@ export default function BurgerTabBar() {
   );
 }
 
-function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number}) {
+function Item({href, label, Icon, IconFilled, active, badge = 0, disabled = false}: {href: string; label: string; Icon: TablerIcon; IconFilled: TablerIcon; active: boolean; badge?: number; disabled?: boolean}) {
   const I = active ? IconFilled : Icon;
-  return (
-    <Link href={href} className="flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide" style={{color: active ? C.brand : C.dim}}>
+  const inner = (
+    <>
       <span className="relative">
         <I size={22} stroke={1.8} />
         {badge > 0 && (
@@ -143,6 +143,20 @@ function Item({href, label, Icon, IconFilled, active, badge = 0}: {href: string;
         )}
       </span>
       {label}
+    </>
+  );
+  const cls = 'flex flex-col items-center gap-0.5 text-[0.6rem] font-medium tracking-wide';
+  // Sin contenido detrás (p. ej. no hay vídeos): la pestaña se ve pero apagada.
+  if (disabled) {
+    return (
+      <span aria-disabled="true" className={`${cls} opacity-35`} style={{color: C.dim}}>
+        {inner}
+      </span>
+    );
+  }
+  return (
+    <Link href={href} className={cls} style={{color: active ? C.brand : C.dim}}>
+      {inner}
     </Link>
   );
 }

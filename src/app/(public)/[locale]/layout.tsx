@@ -12,6 +12,7 @@ import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import HideOnBurger from '@/components/hide-on-burger';
 import BurgerChrome from '@/components/burger/burger-chrome';
+import {getMenu} from '@/lib/queries';
 import SiteTabBar from '@/components/site-tabbar';
 import {HeaderModeProvider} from '@/components/header-mode';
 import {MenuStoreProvider} from '@/components/menu/store';
@@ -60,6 +61,11 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  // ¿La hamburguesería tiene vídeos? La pestaña Vídeo del tab-bar se desactiva
+  // si no hay ninguno. getMenu está cacheado (tag menu): no cuesta una consulta.
+  const burgerMenu = await getMenu('hamburgueseria');
+  const burgerHasVideos = !!burgerMenu?.categories?.some((c) => c.products?.some((p) => p.video));
+
   return (
     <html
       lang={locale}
@@ -72,7 +78,7 @@ export default async function LocaleLayout({
             <HideOnBurger>
               <SiteHeader />
             </HideOnBurger>
-            <BurgerChrome locale={locale} />
+            <BurgerChrome locale={locale} hasVideos={burgerHasVideos} />
             {children}
             {/* Después del contenido: su espaciador fluye al final de la página. */}
             <SiteTabBar />
