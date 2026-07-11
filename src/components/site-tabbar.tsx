@@ -30,7 +30,7 @@ const BAR_PATH =
 // El agujero es una elipse en el viewBox que en pantalla queda circular.
 const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z ' +
-  'M170,60 a30,46 0 1 0 60,0 a30,46 0 1 0 -60,0 Z';
+  'M170,60 a30,30 0 1 0 60,0 a30,30 0 1 0 -60,0 Z';
 
 // Las 4 cartas que se despliegan en abanico desde el botón central (labels = claves de `nav`).
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
@@ -61,14 +61,14 @@ export default function SiteTabBar() {
         {/* El centrado va por mx-auto (no left/translate): el circulo y su
             bolsillo quedan clavados al centro en cualquier ancho. */}
         <div className="relative md:mx-auto md:w-[460px]">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:rounded-[22px]" />
-        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:h-[74px] md:rounded-[22px]" />
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full md:h-[106px]" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
           <path d={BAR_PATH} fill="rgba(255,255,255,.9)" className="md:hidden" />
           <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="rgba(255,255,255,.9)" className="hidden md:block" />
         </svg>
 
         {/* Pestañas (izquierda / hueco central / derecha) */}
-        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
+        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center md:h-[74px] pb-[env(safe-area-inset-bottom)]">
           <div className="flex flex-1 justify-around">
             <Item href="/" label={t('home')} Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
             <Item href="/eventos" label={t('events')} Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
@@ -109,7 +109,7 @@ export default function SiteTabBar() {
           onClick={() => setOpen((o) => !o)}
           aria-label={t('cartas')}
           aria-expanded={open}
-          className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
+          className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
         >
           <IconToolsKitchen2 size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
         </button>

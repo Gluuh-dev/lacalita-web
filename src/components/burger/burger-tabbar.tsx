@@ -27,7 +27,7 @@ const BAR_PATH =
 // El agujero es una elipse en el viewBox que en pantalla queda circular.
 const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z ' +
-  'M170,60 a30,46 0 1 0 60,0 a30,46 0 1 0 -60,0 Z';
+  'M170,60 a30,30 0 1 0 60,0 a30,30 0 1 0 -60,0 Z';
 
 const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
   {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
@@ -63,13 +63,13 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
       {/* Movil: pegada abajo. Tablet (incluso horizontal): pildora flotante centrada. */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 overflow-visible md:bottom-8">
         <div className="relative md:mx-auto md:w-[460px]">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:rounded-[22px]" />
-        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:h-[74px] md:rounded-[22px]" />
+        <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full md:h-[106px]" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
           <path d={BAR_PATH} fill="rgba(255,255,255,.9)" className="md:hidden" />
           <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="rgba(255,255,255,.9)" className="hidden md:block" />
         </svg>
 
-        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
+        <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center md:h-[74px] pb-[env(safe-area-inset-bottom)]">
           <div className="flex flex-1 justify-around">
             <Item href="/burguer" label={tNav('home')} Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/burguer'} />
             <Item href="/burguer/video" label={tTabs('video')} Icon={IconVideo} IconFilled={IconVideoFilled} active={pathname === '/burguer/video'} disabled={!hasVideos} />
@@ -118,7 +118,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
             onClick={() => setOpen((o) => !o)}
             aria-label={tNav('cartas')}
             aria-expanded={open}
-            className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
             style={{background: C.brand, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconBurger size={26} stroke={2} style={{transform: open ? 'rotate(45deg)' : 'none', transition: 'transform .25s'}} />
@@ -127,7 +127,7 @@ export default function BurgerTabBar({hasVideos = true}: {hasVideos?: boolean}) 
           <Link
             href="/burguer/carta"
             aria-label={tNav('menu')}
-            className="absolute left-1/2 top-[32px] md:top-[53px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
+            className="absolute left-1/2 top-[32px] md:top-[69px] z-50 flex size-[62px] md:size-[52px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition active:scale-95"
             style={{background: `color-mix(in srgb, ${C.brand} 52%, #fff)`, color: C.bg, boxShadow: '0 6px 16px -4px rgba(0,0,0,.3)'}}
           >
             <IconBurger size={26} stroke={2} />
