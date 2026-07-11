@@ -5,7 +5,8 @@ import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {toast} from 'sonner';
-import {Plus, Pencil, Trash2, Star, Image as ImageIcon} from 'lucide-react';
+import DeleteButton from '@/components/admin/delete-button';
+import {Plus, Pencil, Star, Image as ImageIcon} from 'lucide-react';
 import {btn} from '@/components/admin/ui';
 import {tx} from '@/lib/localize';
 import {isVideoUrl} from '@/lib/utils';
@@ -46,25 +47,9 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
       else toast.error(r.error);
     });
   }
-  function delSlide(s: BurgerSlide) {
-    if (!confirm('¿Eliminar esta diapositiva?')) return;
-    start(async () => {
-      const r = await deleteBurgerSlide(s.id);
-      if (r.ok) router.refresh();
-      else toast.error(r.error);
-    });
-  }
   function togOffer(o: BurgerOffer) {
     start(async () => {
       const r = await toggleBurgerOffer(o.id, !o.active);
-      if (r.ok) router.refresh();
-      else toast.error(r.error);
-    });
-  }
-  function delOffer(o: BurgerOffer) {
-    if (!confirm('¿Eliminar esta oferta?')) return;
-    start(async () => {
-      const r = await deleteBurgerOffer(o.id);
       if (r.ok) router.refresh();
       else toast.error(r.error);
     });
@@ -95,7 +80,7 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
                 </div>
                 <Switch on={s.active} onClick={() => togSlide(s)} />
                 <Link href={`/admin/hamburgueseria/hero/${s.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-ink"><Pencil className="size-4" /></Link>
-                <button onClick={() => delSlide(s)} aria-label="Eliminar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-danger"><Trash2 className="size-4" /></button>
+                <DeleteButton icon onDelete={() => deleteBurgerSlide(s.id)} confirmText="¿Eliminar esta diapositiva?" onDone={() => router.refresh()} />
               </div>
             ))
           )}
@@ -128,7 +113,7 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
                 </div>
                 <Switch on={o.active} onClick={() => togOffer(o)} />
                 <Link href={`/admin/hamburgueseria/oferta/${o.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-ink"><Pencil className="size-4" /></Link>
-                <button onClick={() => delOffer(o)} aria-label="Eliminar" className="rounded-md p-1.5 text-ink-3 hover:bg-surface-2 hover:text-danger"><Trash2 className="size-4" /></button>
+                <DeleteButton icon onDelete={() => deleteBurgerOffer(o.id)} confirmText="¿Eliminar esta oferta?" onDone={() => router.refresh()} />
               </div>
             ))
           )}

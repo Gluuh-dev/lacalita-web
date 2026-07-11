@@ -162,7 +162,7 @@ export default function EventForm({
         <Checkbox checked={published} onCheckedChange={(v) => setPublished(v === true)} />
         Publicado
       </label>
-      <FormFooter pending={pending} onCancel={onSaved} />
+      <FormFooter pending={pending} onCancel={onSaved} cancelHref={onSaved ? undefined : '/admin/eventos'} />
     </form>
   );
 }

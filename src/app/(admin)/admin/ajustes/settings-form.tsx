@@ -5,6 +5,7 @@ import {toast} from 'sonner';
 import {card} from '@/components/admin/ui';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
+import FormFooter from '@/components/admin/form-footer';
 import {Textarea} from '@/components/ui/textarea';
 import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
@@ -180,7 +181,7 @@ export default function SettingsForm({settings}: {settings: Settings | null}) {
         </div>
       </div>
 
-      <Button disabled={pending}>{pending ? 'Guardando…' : 'Guardar'}</Button>
+      <FormFooter pending={pending} />
     </form>
   );
 }

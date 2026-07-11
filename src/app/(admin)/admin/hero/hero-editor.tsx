@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState, useTransition} from 'react';
+import {useEffect, useRef, useState, useTransition} from 'react';
 import {toast} from 'sonner';
 import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Check, MousePointerClick, Sparkles, List, Eye, EyeOff} from 'lucide-react';
 import {cn} from '@/lib/utils';
@@ -44,8 +44,23 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
   }, [slides, sel]);
   useEffect(() => setAnimKey((k) => k + 1), [sel, device]);
 
+  // Autoguardado: los cambios de estructura ya persistían, pero los de texto y
+  // color solo vivían en memoria hasta pulsar Guardar (y se perdían al salir).
+  const autoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const slidesRef = useRef(slides);
+  slidesRef.current = slides;
+  function autoSave() {
+    if (autoTimer.current) clearTimeout(autoTimer.current);
+    autoTimer.current = setTimeout(() => {
+      start(async () => {
+        const r = await saveHero(slidesRef.current);
+        if (!r.ok) toast.error(r.error);
+      });
+    }, 900);
+  }
   function set<K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) {
     setSlides((arr) => arr.map((s) => (s.id === slide.id ? {...s, [k]: v} : s)));
+    autoSave();
   }
   function setLine(i: number, key: 'text' | 'color' | 'font', value: string) {
     const lines = [0, 1, 2].map((j) => slide.rotuloLines?.[j] ?? {text: '', color: '#ffffff', font: 'romance' as HeroFont});
@@ -254,7 +269,7 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               <Swatch value={slide.bienvenidaColor} onPick={(c) => set('bienvenidaColor', c)} />
             </Field>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             <Field label="Tipografía eyebrow">
               <FontSelect value={slide.eyebrowFont ?? 'adam'} onChange={(v) => set('eyebrowFont', v as HeroFont)} />
             </Field>
@@ -265,7 +280,7 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
               <FontSelect value={slide.bienvenidaFont ?? 'sans'} onChange={(v) => set('bienvenidaFont', v as HeroFont)} />
             </Field>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             <Field label={`Tamaño eyebrow · ${Math.round((slide.eyebrowScale ?? 1) * 100)}%`}>
               <input type="range" min={0.6} max={1.6} step={0.05} value={slide.eyebrowScale ?? 1} onChange={(e) => set('eyebrowScale', +e.target.value)} className="w-full accent-brand" />
             </Field>

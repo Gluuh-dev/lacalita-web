@@ -5,6 +5,7 @@ import {toast} from 'sonner';
 import {Plus, Trash2, Star} from 'lucide-react';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import MediaUpload from '@/components/admin/media-upload';
+import FormFooter from '@/components/admin/form-footer';
 import {removeMedia} from '@/lib/storage';
 import {saveContent} from './actions';
 import {DEFAULT_CONTENT, type LandingContent} from '@/lib/content-types';
@@ -131,9 +132,7 @@ export default function ContentForm({initial}: {initial: LandingContent}) {
         <MediaUpload value={null} kind="image" label="Añadir foto" onChange={(url) => url && setGallery((arr) => [...arr, url])} />
       </Card>
 
-      <button onClick={save} disabled={pending} className={`${btn} w-fit`}>
-        {pending ? 'Guardando…' : 'Guardar contenido'}
-      </button>
+      <FormFooter pending={pending} onSave={save} label="Guardar contenido" />
     </div>
   );
 }

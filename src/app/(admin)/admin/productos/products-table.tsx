@@ -4,7 +4,8 @@ import {useMemo, useState, useTransition} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {toast} from 'sonner';
-import {Pencil, Trash2, Plus, Search, Star, UtensilsCrossed} from 'lucide-react';
+import DeleteButton from '@/components/admin/delete-button';
+import {Pencil, Plus, Search, Star, UtensilsCrossed} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import {btn} from '@/components/admin/ui';
 import EmptyState from '@/components/admin/empty-state';
@@ -67,15 +68,6 @@ export default function ProductsTable({products, cartaSlug}: {products: Row[]; c
         toast.error(r.error);
         setAvail((a) => ({...a, [p.id]: !next}));
       }
-    });
-  }
-
-  function remove(p: Row) {
-    if (!confirm('¿Eliminar este producto? Se borra también su imagen/vídeo.')) return;
-    start(async () => {
-      const r = await deleteProduct(p.id);
-      if (r && !r.ok) toast.error(r.error);
-      else toast.success('Eliminado');
     });
   }
 
@@ -172,9 +164,7 @@ export default function ProductsTable({products, cartaSlug}: {products: Row[]; c
                         <Link href={`/admin/productos/${cartaSlug}/${p.id}`} aria-label="Editar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-ink">
                           <Pencil className="size-4" />
                         </Link>
-                        <button onClick={() => remove(p)} aria-label="Eliminar" className="rounded-md p-1.5 text-ink-3 transition hover:bg-surface-2 hover:text-danger">
-                          <Trash2 className="size-4" />
-                        </button>
+                        <DeleteButton icon onDelete={() => deleteProduct(p.id)} confirmText="¿Eliminar este producto? Se borra también su imagen/vídeo." />
                       </div>
                     </td>
                   </tr>

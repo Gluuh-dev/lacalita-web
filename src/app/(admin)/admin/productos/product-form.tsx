@@ -218,7 +218,7 @@ export default function ProductForm({
 
       <div className="rounded-[14px] border border-line bg-surface p-3">
         <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">Hamburguesería · ofertas y favoritas</div>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid gap-3 sm:grid-cols-3">
           <div>
             <Label>Precio anterior (€)</Label>
             <Input type="number" step="0.01" value={oldPrice} onChange={(e) => setOldPrice(e.target.value)} placeholder="tachado" />

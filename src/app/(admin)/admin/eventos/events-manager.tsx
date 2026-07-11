@@ -1,26 +1,23 @@
 'use client';
 
-import {useState} from 'react';
+import Link from 'next/link';
 import {Pencil} from 'lucide-react';
 import {btn, btnEdit, card} from '@/components/admin/ui';
-import Drawer from '@/components/admin/drawer';
 import DeleteButton from '@/components/admin/delete-button';
-import EventForm from './event-form';
 import {deleteEvent} from './actions';
 import EmptyState from '@/components/admin/empty-state';
 import {tx} from '@/lib/localize';
 import type {EventRow} from '@/lib/queries';
 
+// Página propia en vez de cajón lateral: el formulario lleva una galería de
+// imágenes que no cabía bien en 520px (mismo cambio que se hizo en galería).
 export default function EventsManager({events}: {events: EventRow[]}) {
-  const [edit, setEdit] = useState<EventRow | null | undefined>(undefined);
-  const open = edit !== undefined;
-
   return (
     <>
       <div className="mb-4 flex justify-end">
-        <button className={btn} onClick={() => setEdit(null)}>
+        <Link href="/admin/eventos/nuevo" className={btn}>
           Nuevo evento
-        </button>
+        </Link>
       </div>
       {events.length === 0 && <EmptyState text="Aún no hay eventos. Crea el primero." />}
       <ul className="space-y-2">
@@ -37,20 +34,14 @@ export default function EventsManager({events}: {events: EventRow[]}) {
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-4">
-              <button type="button" onClick={() => setEdit(e)} className={btnEdit}>
+              <Link href={`/admin/eventos/${e.id}`} className={btnEdit}>
                 <Pencil className="size-3.5" /> Editar
-              </button>
+              </Link>
               <DeleteButton onDelete={() => deleteEvent(e.id)} />
             </div>
           </li>
         ))}
       </ul>
-
-      <Drawer open={open} title={edit ? 'Editar evento' : 'Nuevo evento'} onClose={() => setEdit(undefined)}>
-        {open && (
-          <EventForm id={edit ? edit.id : null} event={edit ?? null} onSaved={() => setEdit(undefined)} />
-        )}
-      </Drawer>
     </>
   );
 }
