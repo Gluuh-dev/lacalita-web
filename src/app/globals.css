@@ -110,10 +110,10 @@
 
 /* Tema Desayunos — amanecer: miel y dorado sobre crema cálida */
 [data-theme='desayunos'] {
-  --bg: #fbf5e8;
+  --bg: #faf0d8;
   --surface: #ffffff;
-  --surface-2: #f9f1df;
-  --surface-sunken: #f2e6cb;
+  --surface-2: #f7edd2;
+  --surface-sunken: #efe0ba;
   --brand: #d9a441;
   --brand-deep: #b9862a;
   --on-primary: #3a2c06;
@@ -126,9 +126,27 @@
   --line-strong: #dcc9a1;
 }
 
+/* Tema Restaurante — mediterráneo de cocina: oliva y hierbas sobre crema verdosa */
+[data-theme='restaurante'] {
+  --bg: #f5f6ec;
+  --surface: #ffffff;
+  --surface-2: #f1f3e4;
+  --surface-sunken: #e7ebd2;
+  --brand: #8a9a52;
+  --brand-deep: #6e7d3f;
+  --on-primary: #f7f8ef;
+  --ink: #2e3324;
+  --ink-2: #525a41;
+  --ink-3: #85896f;
+  --accent: #c98a4e;
+  --accent-soft: #f3e8d8;
+  --line: #e2e5cd;
+  --line-strong: #cdd2ab;
+}
+
 /* Tema Cócteles — mediterráneo: azul profundo y coral sobre bruma marina */
 [data-theme='cocteles'] {
-  --bg: #f2f7f8;
+  --bg: #ecf4f6;
   --surface: #ffffff;
   --surface-2: #ecf3f5;
   --surface-sunken: #dfeaee;

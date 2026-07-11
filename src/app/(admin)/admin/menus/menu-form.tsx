@@ -85,6 +85,7 @@ export default function MenuForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="calita">Calita (arena · marca)</SelectItem>
+              <SelectItem value="restaurante">Restaurante (verde oliva)</SelectItem>
               <SelectItem value="desayunos">Desayunos (miel dorada)</SelectItem>
               <SelectItem value="cocteles">Cócteles (azul mediterráneo)</SelectItem>
               <SelectItem value="burger">Burger (terracota)</SelectItem>
