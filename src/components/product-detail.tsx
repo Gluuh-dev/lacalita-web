@@ -26,6 +26,8 @@ export default function ProductDetail({
 }) {
   const isAdmin = useIsAdmin();
   const t = useTranslations('menu');
+  const tc = useTranslations('carta');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const reduce = useReducedMotion();
   const {isFav, qty, add, dec} = useMenuStore();
@@ -51,7 +53,7 @@ export default function ProductDetail({
       if (navigator.share) await navigator.share({title: item.name, url});
       else {
         await navigator.clipboard.writeText(url);
-        toast.success('Enlace copiado');
+        toast.success(tc('linkCopied'));
       }
     } catch {
       /* cancelado */
@@ -135,7 +137,7 @@ export default function ProductDetail({
         {menuSlug === 'hamburgueseria' && (
           <div className="mt-4 flex items-center gap-2">
             <VoteButton id={product.id} votes={product.votes ?? 0} />
-            <span className="text-sm text-ink-3">¿Te gusta? Vótala</span>
+            <span className="text-sm text-ink-3">{tc('vote')}</span>
           </div>
         )}
 
@@ -160,7 +162,7 @@ export default function ProductDetail({
 
         {product.ingredients && product.ingredients.length > 0 && (
           <motion.div {...fade(0.22)} className="mt-5">
-            <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">Lleva</div>
+            <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">{tc('carries')}</div>
             <div className="flex flex-wrap gap-1.5">
               {product.ingredients.map((ing, i) => (
                 <span key={i} className="rounded-full bg-surface-2 px-3 py-1 text-sm text-ink-2">{ing}</span>
@@ -172,7 +174,7 @@ export default function ProductDetail({
         {(product.extras?.length ?? 0) > 0 && (
           <motion.div {...fade(0.24)} className="mt-8">
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
-              Salsas para acompañar
+              {tc('sauces')}
             </h2>
             <ul className="divide-y divide-line rounded-2xl border border-line">
               {product.extras!.map((s, i) => (
@@ -232,17 +234,17 @@ export default function ProductDetail({
             <button
               onClick={() => {
                 add(item);
-                toast.success('Añadido a tu lista');
+                toast.success(tc('addedToList'));
               }}
               className="flex-1 rounded-full bg-brand py-3.5 font-semibold text-on-primary transition hover:bg-brand-deep"
             >
-              Añadir a mi lista
+              {tc('addToList')}
             </button>
           ) : (
             <div className="flex flex-1 items-center justify-between rounded-full bg-brand px-3 py-2 text-on-primary">
               <button onClick={() => dec(item.id)} aria-label="Quitar" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Minus className="size-5" /></button>
-              <span className="font-bold tabular-nums">{n} en tu lista</span>
-              <button onClick={() => add(item)} aria-label="Añadir" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Plus className="size-5" /></button>
+              <span className="font-bold tabular-nums">{tc('inList', {count: n})}</span>
+              <button onClick={() => add(item)} aria-label={tc('add')} className="flex size-9 items-center justify-center rounded-full bg-white/20"><Plus className="size-5" /></button>
             </div>
           )}
         </div>
@@ -251,7 +253,7 @@ export default function ProductDetail({
       {/* Lightbox: imagen/vídeo a pantalla grande */}
       {zoom && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 duration-200 animate-in fade-in" onClick={() => setZoom(false)}>
-          <button aria-label="Cerrar" className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+          <button aria-label={tCommon('close')} className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
             <X className="size-5" />
           </button>
           {product.video ? (

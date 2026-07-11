@@ -25,15 +25,17 @@ export default async function CartaSelector({
   const {locale} = await params;
   setRequestLocale(locale);
   const t = await getTranslations('menu');
+  const tCarta = await getTranslations('carta');
+  const tCommon = await getTranslations('common');
   const menus = await getMenus();
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-20 pt-28 sm:pt-32">
       <div className="mx-auto mb-10 max-w-xl text-center">
         <div className="eyebrow mb-3">{t('title')}</div>
-        <h1 className="font-serif text-4xl sm:text-5xl">¿Qué te apetece hoy?</h1>
+        <h1 className="font-serif text-4xl sm:text-5xl">{tCarta('question')}</h1>
         <p className="mt-3 text-lg text-ink-2">
-          Elige una carta. Todo es orientativo: platos, precios y alérgenos.
+          {tCarta('intro')}
         </p>
       </div>
 
@@ -53,7 +55,7 @@ export default async function CartaSelector({
               <h2 className="font-serif text-3xl leading-tight">{tx(m.name, locale)}</h2>
               {m.subtitle && <p className="mt-1 text-white/90">{tx(m.subtitle, locale)}</p>}
               <span className="mt-3 inline-flex items-center gap-1.5 font-adam text-[0.75rem] uppercase tracking-[0.12em]">
-                Ver carta <ArrowRight className="size-4" />
+                {tCommon('seeMenu')} <ArrowRight className="size-4" />
               </span>
             </Link>
           );

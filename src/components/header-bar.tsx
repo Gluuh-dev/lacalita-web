@@ -20,7 +20,21 @@ const M_CLOSED = `circle(0px at ${M_ORIGIN})`;
 export default function HeaderBar({
   labels
 }: {
-  labels: {menu: string; events: string; location: string};
+  labels: {
+    home: string;
+    menu: string;
+    events: string;
+    gallery: string;
+    location: string;
+    breakfast: string;
+    restaurant: string;
+    cocktails: string;
+    burger: string;
+    editMenu: string;
+    admin: string;
+    openMenu: string;
+    closeMenu: string;
+  };
 }) {
   const {mode} = useHeaderMode();
   const isAdmin = useIsAdmin();
@@ -30,23 +44,23 @@ export default function HeaderBar({
 
   const menuLinks = currentCarta
     ? [
-        {href: '/', label: 'Inicio', active: false},
-        {href: '/carta/desayunos', label: 'Desayunos', active: currentCarta === 'desayunos'},
-        {href: '/carta/restaurante', label: 'Restaurante', active: currentCarta === 'restaurante'},
-        {href: '/carta/cocteles', label: 'Cócteles', active: currentCarta === 'cocteles'},
-        {href: '/burguer/carta', label: 'Hamburguesería', active: currentCarta === 'hamburgueseria'}
+        {href: '/', label: labels.home, active: false},
+        {href: '/carta/desayunos', label: labels.breakfast, active: currentCarta === 'desayunos'},
+        {href: '/carta/restaurante', label: labels.restaurant, active: currentCarta === 'restaurante'},
+        {href: '/carta/cocteles', label: labels.cocktails, active: currentCarta === 'cocteles'},
+        {href: '/burguer/carta', label: labels.burger, active: currentCarta === 'hamburgueseria'}
       ]
     : [
-        {href: '/', label: 'Inicio', active: pathname === '/'},
+        {href: '/', label: labels.home, active: pathname === '/'},
         {href: '/carta', label: labels.menu, active: pathname === '/carta'},
         {href: '/eventos', label: labels.events, active: pathname.startsWith('/eventos')},
-        {href: '/galeria', label: 'Galería', active: pathname === '/galeria'},
+        {href: '/galeria', label: labels.gallery, active: pathname === '/galeria'},
         {href: '/ubicacion', label: labels.location, active: pathname === '/ubicacion'}
       ];
   const overlayLinks = [
     ...menuLinks,
-    ...(isAdmin && currentCarta ? [{href: '/admin/menus', label: 'Editar carta', active: false}] : []),
-    ...(isAdmin ? [{href: '/admin', label: 'Admin', active: false}] : [])
+    ...(isAdmin && currentCarta ? [{href: '/admin/menus', label: labels.editMenu, active: false}] : []),
+    ...(isAdmin ? [{href: '/admin', label: labels.admin, active: false}] : [])
   ];
   const {scrolled} = useHideOnScroll();
   const [open, setOpen] = useState(false);
@@ -100,7 +114,7 @@ export default function HeaderBar({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          aria-label={open ? 'Cerrar menú' : 'Menú'}
+          aria-label={open ? labels.closeMenu : labels.openMenu}
           className={cn('relative z-[46] flex size-9 items-center justify-center rounded-full', open ? 'text-ink' : light ? 'bg-black/25 text-white backdrop-blur' : 'text-ink')}
         >
           <span className="relative block h-4 w-6" aria-hidden>

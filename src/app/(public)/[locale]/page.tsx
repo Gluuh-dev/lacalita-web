@@ -118,7 +118,7 @@ export default async function Home({
       {/* Sobre el sitio */}
       <Reveal>
         <section className="mx-auto max-w-4xl px-4 py-16 text-center">
-          <div className="eyebrow mb-3">Bienvenidos a La Calita</div>
+          <div className="eyebrow mb-3">{t('home.welcome')}</div>
           <h2 className="font-serif text-3xl sm:text-4xl">{tx(about.title ?? {}, locale)}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
           <span
@@ -148,11 +148,11 @@ export default async function Home({
           <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
             <Waves className="mx-auto mb-8 size-9 text-brand" strokeWidth={2.2} />
             <blockquote className="font-serif text-[clamp(1.8rem,5.6vw,3.25rem)] font-bold italic leading-[1.15]">
-              “No somos un club de playa. Somos el <span className="text-brand">latido</span> del Mediterráneo capturado en una copa.”
+              “{t.rich('home.manifestoQuote', {brand: (chunks) => <span className="text-brand">{chunks}</span>})}”
             </blockquote>
             <div className="mt-10 flex items-center justify-center gap-4">
               <span className="h-px w-10 bg-white/25" />
-              <span className="font-adam text-[0.62rem] uppercase tracking-[0.28em] text-white/45">La Calita · Manifesto</span>
+              <span className="font-adam text-[0.62rem] uppercase tracking-[0.28em] text-white/45">{t('home.manifestoLabel')}</span>
               <span className="h-px w-10 bg-white/25" />
             </div>
           </div>
@@ -163,7 +163,7 @@ export default async function Home({
       <Reveal>
         <section id="carta" className="scroll-mt-20 py-20">
           <div className="mx-auto max-w-6xl px-4">
-            <SectionHead eyebrow="Nuestra cocina" title="Sabores" />
+            <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} />
             <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
@@ -189,7 +189,7 @@ export default async function Home({
                     <h3 className="font-serif text-3xl leading-tight">{tx(m.name, locale)}</h3>
                     {m.subtitle && <p className="mt-1 text-sm text-white/85">{tx(m.subtitle, locale)}</p>}
                     <span className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-white py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink transition group-hover:bg-white/90">
-                      Ver carta <ArrowRight className="size-4" />
+                      {t('common.seeMenu')} <ArrowRight className="size-4" />
                     </span>
                   </div>
                 </Link>
@@ -205,7 +205,7 @@ export default async function Home({
       {featured.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
-            <SectionHead eyebrow="De nuestra carta" title="Platos" />
+            <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} />
             <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
@@ -238,7 +238,7 @@ export default async function Home({
         <Reveal>
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
             <div className="mx-auto max-w-6xl px-4 py-16">
-              <SectionHead eyebrow={t('events.upcoming')} title="Eventos" />
+              <SectionHead eyebrow={t('events.upcoming')} title={t('events.title')} />
               <div className="-mx-4 md:mx-0 xl:-mx-20">
               <SnapCarousel itemClass="w-[74vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
                 {[
@@ -253,7 +253,7 @@ export default async function Home({
                       <ArrowRight className="size-7 transition-transform group-hover:translate-x-0.5" />
                     </span>
                     <span className="px-6 font-serif text-2xl font-bold leading-tight text-ink">{t('events.all')}</span>
-                    <span className="font-montserrat text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-ink-3">Agenda completa</span>
+                    <span className="font-montserrat text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-ink-3">{t('home.fullAgenda')}</span>
                   </Link>
                 ]}
               </SnapCarousel>
@@ -278,7 +278,7 @@ export default async function Home({
       {reviews.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-16">
-            <SectionHead eyebrow="Lo que dicen" title="Opiniones" />
+            <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} />
             <div className="grid gap-5 md:grid-cols-3">
               {reviews.map((r, idx) => (
                 <figure key={idx} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
@@ -303,7 +303,7 @@ export default async function Home({
       {gallery.length > 0 && (
         <Reveal>
           <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-            <SectionHead eyebrow="Momentos" title="Galería" />
+            <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
@@ -318,7 +318,7 @@ export default async function Home({
       {/* Ubicación */}
       <Reveal>
         <section id="info" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-          <SectionHead eyebrow="Dónde estamos" title="Ubicación" />
+          <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} />
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
             {/* Horario */}
             <div className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
@@ -339,7 +339,7 @@ export default async function Home({
                 {hours.rows.map((row, i) => (
                   <li key={i} className="flex items-center justify-between gap-4 rounded-lg px-2 py-2 text-sm">
                     <span className="font-medium text-ink">{row.label}</span>
-                    <span className="tabular-nums text-ink-2">{row.closed ? 'Cerrado' : formatRanges(row)}</span>
+                    <span className="tabular-nums text-ink-2">{row.closed ? t('home.closed') : formatRanges(row)}</span>
                   </li>
                 ))}
               </ul>
@@ -376,7 +376,7 @@ export default async function Home({
                       <Phone className="size-4" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">Reservas</span>
+                      <span className="block font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('home.reservations')}</span>
                       <span className="block truncate font-semibold">{settings.phone}</span>
                     </span>
                   </a>

@@ -1,6 +1,7 @@
 'use client';
 
 import {useState} from 'react';
+import {useTranslations} from 'next-intl';
 import {CalendarPlus, Share2, Check} from 'lucide-react';
 
 function pad(n: number) {
@@ -12,6 +13,7 @@ function icsLocal(d: Date) {
 }
 
 export default function EventActions({id, title, startsAt, description}: {id: string; title: string; startsAt: string; description?: string}) {
+  const t = useTranslations('events');
   const [copied, setCopied] = useState(false);
 
   const addToCalendar = () => {
@@ -66,10 +68,10 @@ export default function EventActions({id, title, startsAt, description}: {id: st
   return (
     <div className="mt-5 grid grid-cols-2 gap-2 border-t border-line pt-5">
       <button onClick={addToCalendar} className={btn}>
-        <CalendarPlus className="size-4" /> Calendario
+        <CalendarPlus className="size-4" /> {t('calendar')}
       </button>
       <button onClick={share} className={btn}>
-        {copied ? <Check className="size-4 text-green-600" /> : <Share2 className="size-4" />} {copied ? 'Copiado' : 'Compartir'}
+        {copied ? <Check className="size-4 text-green-600" /> : <Share2 className="size-4" />} {copied ? t('copied') : t('share')}
       </button>
     </div>
   );

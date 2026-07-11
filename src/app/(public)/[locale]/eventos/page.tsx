@@ -3,7 +3,7 @@ import Image from 'next/image';
 import {History} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import {getUpcomingEvents, getPastEvents} from '@/lib/queries';
-import {countdownLabel} from '@/lib/event-time';
+import {countdownToken} from '@/lib/event-time';
 import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
 import EventCard from '@/components/event-card';
@@ -23,6 +23,7 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
   const {locale} = await params;
   setRequestLocale(locale);
   const t = await getTranslations('events');
+  const tt = await getTranslations('time');
   const [up, past] = await Promise.all([getUpcomingEvents(50), getPastEvents(30)]);
 
   const fmtDate = (iso: string) => new Intl.DateTimeFormat(locale, {weekday: 'long', day: 'numeric', month: 'long'}).format(new Date(iso));
@@ -30,6 +31,9 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
 
   // Próximos: evento destacado + resto agrupado por mes.
   const feat = up[0];
+  const cd = feat ? countdownToken(feat.starts_at) : null;
+  let cdLabel: string | null = null;
+  if (cd) cdLabel = cd.kind === 'days' ? tt('left', {days: cd.days}) : tt(cd.kind);
   const groups: {key: string; label: string; items: EventRow[]}[] = [];
   for (const e of up.slice(1)) {
     const d = new Date(e.starts_at);
@@ -64,10 +68,10 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
 
             <div className="relative z-10 m-3 rounded-[20px] border border-white/12 bg-black/55 p-5 text-center backdrop-blur-md sm:m-5 sm:p-6">
               <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
-                <span className="rounded-full bg-brand px-3 py-1 font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-on-primary">Próximo</span>
-                {countdownLabel(feat.starts_at) && (
+                <span className="rounded-full bg-brand px-3 py-1 font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-on-primary">{t('next')}</span>
+                {cdLabel && (
                   <span className="rounded-full bg-white/20 px-3 py-1 font-montserrat text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white">
-                    {countdownLabel(feat.starts_at)}
+                    {cdLabel}
                   </span>
                 )}
               </div>
@@ -103,9 +107,9 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
         <span className="flex size-16 items-center justify-center rounded-full bg-brand/10 text-brand-deep">
           <History className="size-7" strokeWidth={1.6} />
         </span>
-        <p className="font-serif text-2xl font-bold text-ink">Todavía no hay recuerdos</p>
+        <p className="font-serif text-2xl font-bold text-ink">{t('noPastTitle')}</p>
         <p className="max-w-xs font-montserrat text-sm leading-relaxed text-ink-3">
-          Cuando celebremos los primeros eventos, aquí quedará el álbum de lo vivido.
+          {t('noPastText')}
         </p>
       </div>
     ) : (
@@ -133,13 +137,13 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
           <img src="/brand/palmeras/palm-inf-der.svg" alt="" className="absolute bottom-0 right-0 w-[clamp(90px,13vw,190px)] opacity-25" />
         </div>
         <div className="relative">
-          <div className="mb-2 font-montserrat text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-white/70">No te lo pierdas</div>
+          <div className="mb-2 font-montserrat text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-white/70">{t('heroEyebrow')}</div>
           <h1 className="font-serif text-5xl font-bold leading-[0.95] drop-shadow-sm sm:text-6xl">
             {t('title')}
             <span className="text-brand">.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-md font-montserrat text-[0.95rem] leading-relaxed text-white/80">
-            DJ sets, conciertos y noches de verano frente al mar.
+            {t('heroSub')}
           </p>
         </div>
       </header>

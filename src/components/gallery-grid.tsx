@@ -2,9 +2,11 @@
 
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
+import {useTranslations} from 'next-intl';
 import {X, ChevronLeft, ChevronRight} from 'lucide-react';
 
 export default function GalleryGrid({images, alt = ''}: {images: string[]; alt?: string}) {
+  const t = useTranslations('common');
   const [idx, setIdx] = useState<number | null>(null);
   const open = idx !== null;
   const touchX = useRef<number | null>(null);
@@ -49,13 +51,13 @@ export default function GalleryGrid({images, alt = ''}: {images: string[]; alt?:
 
       {open && idx !== null && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/92 p-4 duration-200 animate-in fade-in" onClick={() => setIdx(null)}>
-          <button aria-label="Cerrar" className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+          <button aria-label={t('close')} className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
             <X className="size-5" />
           </button>
           {images.length > 1 && (
             <>
               <button
-                aria-label="Anterior"
+                aria-label={t('previous')}
                 onClick={(e) => {
                   e.stopPropagation();
                   setIdx((i) => (i === null ? i : (i - 1 + images.length) % images.length));
@@ -65,7 +67,7 @@ export default function GalleryGrid({images, alt = ''}: {images: string[]; alt?:
                 <ChevronLeft className="size-6" />
               </button>
               <button
-                aria-label="Siguiente"
+                aria-label={t('next')}
                 onClick={(e) => {
                   e.stopPropagation();
                   setIdx((i) => (i === null ? i : (i + 1) % images.length));

@@ -1,4 +1,4 @@
-import {setRequestLocale} from 'next-intl/server';
+import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {MapPin, Phone, Mail, Clock, Navigation} from 'lucide-react';
 import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
 import {getSettings} from '@/lib/queries';
@@ -15,6 +15,7 @@ export function generateMetadata() {
 export default async function Page({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
   setRequestLocale(locale);
+  const t = await getTranslations();
   const settings = await getSettings();
   const hours = normalizeHours(settings?.hours);
   const q = encodeURIComponent(settings?.address || 'La Calita Salobreña');
@@ -22,8 +23,8 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   return (
     <main className="min-h-screen bg-bg pb-28 pt-20 text-ink">
       <div className="mx-auto max-w-3xl px-4">
-        <div className="eyebrow mb-2 text-center">Dónde estamos</div>
-        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">A pie de playa, en Salobreña</h1>
+        <div className="eyebrow mb-2 text-center">{t('location.eyebrow')}</div>
+        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">{t('location.title')}</h1>
         <div className="mb-8 flex justify-center">
           <OpenStatus hours={hours} />
         </div>
@@ -34,7 +35,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
 
         {settings?.maps_url && (
           <a href={settings.maps_url} target="_blank" rel="noreferrer" className="ds-btn ds-btn-primary mt-3 w-full">
-            <Navigation className="size-4" /> Cómo llegar
+            <Navigation className="size-4" /> {t('info.location')}
           </a>
         )}
 
@@ -86,14 +87,14 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
         <div className="mt-4 rounded-[20px] border border-line bg-surface p-5">
           <div className="mb-3 flex items-center gap-2">
             <Clock className="size-5 text-brand-deep" />
-            <h2 className="font-serif text-xl">Horario</h2>
+            <h2 className="font-serif text-xl">{t('location.hoursTitle')}</h2>
           </div>
           {hours.notice && <div className="mb-3 rounded-[14px] bg-amber-50 px-3 py-2.5 text-sm font-medium text-amber-700">{hours.notice}</div>}
           <ul className="flex flex-col">
             {hours.rows.map((row, i) => (
               <li key={i} className="flex items-center justify-between gap-4 border-b border-line py-2 text-sm last:border-0">
                 <span className="font-medium">{row.label}</span>
-                <span className="tabular-nums text-ink-2">{row.closed ? 'Cerrado' : formatRanges(row)}</span>
+                <span className="tabular-nums text-ink-2">{row.closed ? t('location.closed') : formatRanges(row)}</span>
               </li>
             ))}
           </ul>

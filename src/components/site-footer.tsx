@@ -5,6 +5,7 @@ import {getSettings} from '@/lib/queries';
 
 export default async function SiteFooter() {
   const t = await getTranslations('info');
+  const tFooter = await getTranslations('footer');
   const settings = await getSettings();
   const year = new Date().getFullYear();
 
@@ -16,12 +17,12 @@ export default async function SiteFooter() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/logo-texto-debajo.svg" alt="La Calita" className="mx-auto mb-4 h-24 w-auto brightness-0 invert sm:mx-0" />
           <p className="mx-auto max-w-[28ch] text-sm text-[#fbf7f0]/70 sm:mx-0">
-            Beach club, restaurante y cafetería frente al mar en Salobreña.
+            {tFooter('tagline')}
           </p>
         </div>
 
         <div>
-          <div className="eyebrow mb-4 !text-brand">Contacto</div>
+          <div className="eyebrow mb-4 !text-brand">{tFooter('contact')}</div>
           <ul className="flex flex-col gap-3 text-sm text-[#fbf7f0]/80">
             {settings?.address && (
               <li className="flex items-start justify-center gap-2 sm:justify-start">

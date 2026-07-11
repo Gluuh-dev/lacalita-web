@@ -1,6 +1,7 @@
 'use client';
 
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useTranslations} from 'next-intl';
 import Image from 'next/image';
 import {ChevronUp, X, ArrowRight} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
@@ -434,6 +435,8 @@ function logoOf(slide: HeroSlide): string | null {
 
 /** Vista responsive de una diapositiva (lo que se ve en la web). */
 function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
+  // Solo la vista pública traduce: la preview del admin (HeroStage) no tiene provider.
+  const t = useTranslations();
   const [active, setActive] = useState(0);
   const [sheet, setSheet] = useState(false);
   const [drag, setDrag] = useState(0);
@@ -585,7 +588,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                   </a>
                 ))}
               <a href="#info" className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10">
-                Cómo llegar
+                {t('info.location')}
               </a>
             </div>
 
@@ -606,7 +609,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <aside className="hidden rounded-[24px] border border-white/15 bg-black/35 p-5 text-white backdrop-blur-md lg:block">
               <div className="mb-4 flex items-center gap-2">
                 <span className="size-2 rounded-full bg-brand" />
-                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/80" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
+                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/80" style={{fontFamily: FONT.montserrat}}>{t('events.upcoming')}</span>
               </div>
               {/* El destacado lleva a SU evento, no al listado. */}
               <Link href={feat ? `/eventos/${feat.id}` : '/eventos'} className="mb-3 flex h-[8.5rem] flex-col justify-center border-b border-white/15 pb-4 transition hover:opacity-90">
@@ -614,7 +617,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                     rótulo del slide (script) quedaba irregular aquí. */}
                 <div className="line-clamp-2 text-[1.5rem] leading-[1.14] tracking-tight" style={{color: slide.color, fontFamily: FONT.alfa}}>{feat?.title}</div>
                 <div className="mt-1.5 text-[0.95rem] font-medium tracking-wide" style={{fontFamily: FONT.montserrat}}>{feat?.day} {feat?.month} · {feat?.time}</div>
-                <div className="mt-1 min-h-[1.25rem] text-sm text-white/70" style={{fontFamily: FONT.montserrat}}>{feat?.artist ? `con ${feat.artist}` : ''}</div>
+                <div className="mt-1 min-h-[1.25rem] text-sm text-white/70" style={{fontFamily: FONT.montserrat}}>{feat?.artist ? t('events.with', {name: feat.artist}) : ''}</div>
               </Link>
               <ul className="flex flex-col">
                 {evs.map((e, idx) => (
@@ -624,7 +627,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                 ))}
               </ul>
               <Link href="/eventos" className="mt-3 flex items-center justify-center gap-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/75 transition hover:text-white" style={{fontFamily: FONT.montserrat}}>
-                Ver todos los eventos <ArrowRight className="size-3.5" />
+                {t('events.allLong')} <ArrowRight className="size-3.5" />
               </Link>
             </aside>
           )}
@@ -653,7 +656,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <span className="flex min-w-0 items-center gap-2.5">
               <span className="size-2 shrink-0 rounded-full bg-brand" />
               <span className="min-w-0 text-left">
-                <span className="block text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/70" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
+                <span className="block text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/70" style={{fontFamily: FONT.montserrat}}>{t('events.upcoming')}</span>
                 <span className="block truncate text-sm font-semibold" style={{fontFamily: FONT.montserrat}}>{feat?.title} · {feat?.day} {feat?.month}</span>
               </span>
             </span>
@@ -683,8 +686,8 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             >
               <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-ink/20" />
               <div className="mb-3 flex items-center justify-between">
-                <span className="text-lg font-semibold" style={{fontFamily: FONT.montserrat}}>Próximos eventos</span>
-                <button onClick={() => setSheet(false)} aria-label="Cerrar" className="rounded-full bg-ink/10 p-1.5"><X className="size-5" /></button>
+                <span className="text-lg font-semibold" style={{fontFamily: FONT.montserrat}}>{t('events.upcoming')}</span>
+                <button onClick={() => setSheet(false)} aria-label={t('common.close')} className="rounded-full bg-ink/10 p-1.5"><X className="size-5" /></button>
               </div>
               <ul className="flex flex-col">
                 {evs.map((e) => (
@@ -693,7 +696,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
                   </li>
                 ))}
               </ul>
-              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary" style={{fontFamily: FONT.montserrat}}>Ver todos los eventos</Link>
+              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary" style={{fontFamily: FONT.montserrat}}>{t('events.allLong')}</Link>
             </div>
           </div>
         </>

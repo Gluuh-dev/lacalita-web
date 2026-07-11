@@ -7,7 +7,7 @@ import {tx, euro} from '@/lib/localize';
 import {altLanguages, SITE_URL} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import EventActions from '@/components/event-actions';
-import {countdownLabel} from '@/lib/event-time';
+import {countdownToken} from '@/lib/event-time';
 import CountdownBar from './countdown-bar';
 
 export const revalidate = 300;
@@ -29,6 +29,9 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
 export default async function EventoDetalle({params}: {params: Promise<{locale: string; id: string}>}) {
   const {locale, id} = await params;
   setRequestLocale(locale);
+  const t = await getTranslations('events');
+  const tt = await getTranslations('time');
+  const ti = await getTranslations('info');
   const tk = await getTranslations('events.kind');
   const [event, upcoming] = await Promise.all([getPublicEvent(id), getUpcomingEvents(8)]);
   if (!event) notFound();
@@ -43,7 +46,9 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
   const title = tx(event.title, locale);
   const desc = event.description ? tx(event.description, locale) : undefined;
 
-  const countdown = countdownLabel(event.starts_at);
+  const cd = countdownToken(event.starts_at);
+  let countdown: string | null = null;
+  if (cd) countdown = cd.kind === 'days' ? tt('left', {days: cd.days}) : tt(cd.kind);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -119,17 +124,17 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
         <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-start">
           <div>
             <div className="text-center">
-              <div className="mb-3 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">Sobre el evento</div>
+              <div className="mb-3 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">{t('about')}</div>
               {event.description ? (
                 <p className="mx-auto max-w-2xl font-montserrat text-[1.02rem] leading-[1.75] text-ink-2">{tx(event.description, locale)}</p>
               ) : (
-                <p className="mx-auto max-w-2xl font-montserrat leading-[1.75] text-ink-3">Una noche a pie de playa con la cocina de La Calita abierta y la mejor música frente al mar.</p>
+                <p className="mx-auto max-w-2xl font-montserrat leading-[1.75] text-ink-3">{t('aboutFallback')}</p>
               )}
             </div>
 
             {images.length > 1 && (
               <>
-                <div className="mb-3 mt-8 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">Galería</div>
+                <div className="mb-3 mt-8 font-cinzel text-sm font-semibold uppercase tracking-[0.16em] text-ink-2">{t('galleryTitle')}</div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {images.slice(1).map((url, i) => (
                     <div key={i} className="lc-img-loading relative aspect-square overflow-hidden rounded-[14px] border border-line">
@@ -144,20 +149,20 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
           <aside className="rounded-[20px] border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-20">
             {countdown && (
               <div className="mb-5 rounded-[14px] bg-brand/12 px-4 py-3 text-center">
-                <div className="font-montserrat text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-brand-deep">Cuenta atrás</div>
+                <div className="font-montserrat text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-brand-deep">{t('countdown')}</div>
                 <div className="mt-0.5 font-serif text-2xl font-bold text-ink">{countdown}</div>
               </div>
             )}
             <div className="flex flex-col gap-4">
-              <InfoRow Icon={Calendar} label="Fecha" value={fecha} />
-              <InfoRow Icon={Clock} label="Hora" value={time} />
-              {event.artist && <InfoRow Icon={Music} label="Artista" value={event.artist} />}
-              <InfoRow Icon={MapPin} label="Lugar" value="La Calita · Salobreña" />
+              <InfoRow Icon={Calendar} label={t('dateLabel')} value={fecha} />
+              <InfoRow Icon={Clock} label={t('timeLabel')} value={time} />
+              {event.artist && <InfoRow Icon={Music} label={t('artistLabel')} value={event.artist} />}
+              <InfoRow Icon={MapPin} label={t('placeLabel')} value="La Calita · Salobreña" />
             </div>
 
             {tickets.length > 0 && (
               <div className="mt-5 border-t border-line pt-5">
-                <div className="eyebrow mb-3">Entradas</div>
+                <div className="eyebrow mb-3">{t('tickets')}</div>
                 <div className="flex flex-col gap-2">
                   {tickets.map((tkt) => {
                     const soldOut = tkt.capacity != null && tkt.sold >= tkt.capacity;
@@ -166,7 +171,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
                         <div className="min-w-0">
                           <div className="font-semibold">{tx(tkt.name, locale)}</div>
                           {tx(tkt.description, locale) && <div className="text-xs text-ink-3">{tx(tkt.description, locale)}</div>}
-                          {soldOut && <div className="text-xs font-semibold text-danger">Agotadas</div>}
+                          {soldOut && <div className="text-xs font-semibold text-danger">{t('soldOut')}</div>}
                         </div>
                         <span className="shrink-0 font-bold text-brand-deep">{euro(Number(tkt.price), locale)}</span>
                       </div>
@@ -174,9 +179,9 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
                   })}
                 </div>
                 <button disabled className="mt-3 w-full cursor-default rounded-full bg-brand py-3 font-semibold text-on-primary opacity-60">
-                  Comprar entradas
+                  {t('buy')}
                 </button>
-                <p className="mt-2 text-center text-xs text-ink-3">Pago online disponible próximamente.</p>
+                <p className="mt-2 text-center text-xs text-ink-3">{t('paySoon')}</p>
               </div>
             )}
 
@@ -189,7 +194,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
               rel="noreferrer"
               className="ds-btn ds-btn-outline mt-3 w-full text-sm"
             >
-              <Navigation className="size-4" /> Cómo llegar
+              <Navigation className="size-4" /> {ti('location')}
             </a>
             <EventActions id={event.id} title={title} startsAt={event.starts_at} description={desc} />
           </aside>
@@ -200,7 +205,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
       {others.length > 0 && (
         <section className="bg-surface-2">
           <div className="mx-auto max-w-5xl px-4 py-14">
-            <div className="eyebrow mb-5">Más eventos</div>
+            <div className="eyebrow mb-5">{t('moreEvents')}</div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {others.map((e) => (
                 <EventCard key={e.id} event={e} locale={locale} layout="tile" />

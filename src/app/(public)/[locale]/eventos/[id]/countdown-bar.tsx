@@ -1,8 +1,7 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-
-import {faltan} from '@/lib/event-time';
+import {useTranslations} from 'next-intl';
 
 const p = (n: number) => String(n).padStart(2, '0');
 
@@ -10,6 +9,7 @@ const p = (n: number) => String(n).padStart(2, '0');
 // en PC ya está la del panel lateral). A más de un día, días; dentro del
 // último día, reloj hh:mm:ss.
 export default function CountdownBar({startsAt}: {startsAt: string}) {
+  const t = useTranslations('time');
   const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,13 +18,13 @@ export default function CountdownBar({startsAt}: {startsAt: string}) {
       const ms = target - Date.now();
       if (ms <= 0) return setLabel(null);
       const days = Math.floor(ms / 86400000);
-      if (days >= 1) return setLabel(faltan(days));
+      if (days >= 1) return setLabel(t('left', {days}));
       setLabel(`${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)}`);
     };
     tick(); // setInterval no dispara hasta pasado el intervalo.
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [startsAt]);
+  }, [startsAt, t]);
 
   // Null en el primer render: la hora del servidor y la del cliente no coinciden.
   if (!label) return null;

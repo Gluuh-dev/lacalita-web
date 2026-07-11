@@ -5,7 +5,6 @@ import {Link} from '@/i18n/navigation';
 import {tx} from '@/lib/localize';
 import type {EventRow} from '@/lib/queries';
 
-const MONTHS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
 const GRADIENTS: Record<string, string> = {
   dj: 'linear-gradient(145deg, #2e6e8e, #1c3a4b 80%)',
   concierto: 'linear-gradient(145deg, #4a3a6e, #241a3b 80%)',
@@ -23,10 +22,12 @@ export default async function EventCard({
   layout?: 'row' | 'tile';
 }) {
   const t = await getTranslations('events.kind');
+  const tt = await getTranslations('time');
   const d = new Date(event.starts_at);
   const ok = !isNaN(d.getTime());
   const day = ok ? String(d.getDate()).padStart(2, '0') : '--';
-  const month = ok ? MONTHS[d.getMonth()] : '';
+  // "jul." → "JUL": sin punto final, en mayúsculas y máximo 4 caracteres.
+  const month = ok ? new Intl.DateTimeFormat(locale, {month: 'short'}).format(d).replace(/\.$/, '').toUpperCase().slice(0, 4) : '';
   const time = ok ? new Intl.DateTimeFormat(locale, {hour: '2-digit', minute: '2-digit'}).format(d) : '';
   const kind = (event.kind as 'dj' | 'concierto' | 'otro') || 'dj';
   const KindIcon = KIND_ICON[kind] ?? Disc3;
@@ -38,9 +39,9 @@ export default async function EventCard({
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const days = startDay ? Math.round((startDay.getTime() - today.getTime()) / 86400000) : -1;
   const dow = ok ? d.getDay() : -1;
-  const flag = days === 0 ? 'Hoy' : days === 1 ? 'Mañana' : days >= 0 && days <= 6 && (dow === 5 || dow === 6 || dow === 0) ? 'Este finde' : null;
+  const flag = days === 0 ? 'today' : days === 1 ? 'tomorrow' : days >= 0 && days <= 6 && (dow === 5 || dow === 6 || dow === 0) ? 'weekend' : null;
   const Flag = flag ? (
-    <span className="absolute right-2.5 top-2.5 z-[2] rounded-full bg-brand px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-on-primary shadow">{flag}</span>
+    <span className="absolute right-2.5 top-2.5 z-[2] rounded-full bg-brand px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-on-primary shadow">{tt(flag)}</span>
   ) : null;
 
   const Media = (

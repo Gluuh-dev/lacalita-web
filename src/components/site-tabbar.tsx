@@ -16,6 +16,7 @@ import {
   IconGlassCocktail,
   IconBurger
 } from '@tabler/icons-react';
+import {useTranslations} from 'next-intl';
 import {Link, usePathname} from '@/i18n/navigation';
 
 // Se oculta donde hay otra barra inferior (cartas de menú, burguer) y en admin.
@@ -28,15 +29,16 @@ const BAR_PATH =
 const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L144.8,28 C148.8,28 152,31.2 152,35.2 C152,62.8 173.9,84.4 200.8,84.8 C227.1,83.5 248,61.5 248,35.2 C248,31.2 251.2,28 255.2,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z';
 
-// Las 4 cartas que se despliegan en abanico desde el botón central.
-const CARTAS: {href: string; label: string; Icon: TablerIcon; dx: number; dy: number}[] = [
-  {href: '/carta/desayunos', label: 'Desayunos', Icon: IconCoffee, dx: -132, dy: -62},
-  {href: '/carta/restaurante', label: 'Restaurante', Icon: IconToolsKitchen2, dx: -50, dy: -116},
-  {href: '/carta/cocteles', label: 'Cócteles', Icon: IconGlassCocktail, dx: 50, dy: -116},
-  {href: '/burguer/carta', label: 'Hamburguesería', Icon: IconBurger, dx: 132, dy: -62}
+// Las 4 cartas que se despliegan en abanico desde el botón central (labels = claves de `nav`).
+const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
+  {href: '/carta/restaurante', key: 'restaurant', Icon: IconToolsKitchen2, dx: -50, dy: -116},
+  {href: '/carta/cocteles', key: 'cocktails', Icon: IconGlassCocktail, dx: 50, dy: -116},
+  {href: '/burguer/carta', key: 'burger', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
 export default function SiteTabBar() {
+  const t = useTranslations('nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   if (HIDE.test(pathname)) return null;
@@ -64,13 +66,13 @@ export default function SiteTabBar() {
         {/* Pestañas (izquierda / hueco central / derecha) */}
         <div className="absolute inset-x-0 bottom-0 flex h-[54px] items-center pb-[env(safe-area-inset-bottom)]">
           <div className="flex flex-1 justify-around">
-            <Item href="/" label="Inicio" Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
-            <Item href="/eventos" label="Eventos" Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
+            <Item href="/" label={t('home')} Icon={IconHome} IconFilled={IconHomeFilled} active={pathname === '/'} />
+            <Item href="/eventos" label={t('events')} Icon={IconTicket} IconFilled={IconTicketFilled} active={pathname.startsWith('/eventos')} />
           </div>
           <div className="w-[74px] shrink-0" aria-hidden />
           <div className="flex flex-1 justify-around">
-            <Item href="/galeria" label="Galería" Icon={IconPhoto} IconFilled={IconPhotoFilled} active={pathname === '/galeria'} />
-            <Item href="/ubicacion" label="Ubicación" Icon={IconLocation} IconFilled={IconLocationFilled} active={pathname === '/ubicacion'} />
+            <Item href="/galeria" label={t('gallery')} Icon={IconPhoto} IconFilled={IconPhotoFilled} active={pathname === '/galeria'} />
+            <Item href="/ubicacion" label={t('location')} Icon={IconLocation} IconFilled={IconLocationFilled} active={pathname === '/ubicacion'} />
           </div>
         </div>
 
@@ -79,7 +81,7 @@ export default function SiteTabBar() {
           <Link
             key={c.href}
             href={c.href}
-            aria-label={c.label}
+            aria-label={t(c.key)}
             onClick={() => setOpen(false)}
             className="absolute left-1/2 top-[32px] z-40 flex flex-col items-center gap-1.5"
             style={{
@@ -93,7 +95,7 @@ export default function SiteTabBar() {
             <span className="flex size-14 items-center justify-center rounded-full bg-bg text-ink shadow-lg">
               <c.Icon size={22} stroke={1.9} />
             </span>
-            <span className="whitespace-nowrap rounded-full bg-ink px-2 py-0.5 text-[0.55rem] font-semibold text-bg">{c.label}</span>
+            <span className="whitespace-nowrap rounded-full bg-ink px-2 py-0.5 text-[0.55rem] font-semibold text-bg">{t(c.key)}</span>
           </Link>
         ))}
 
@@ -101,7 +103,7 @@ export default function SiteTabBar() {
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          aria-label="Cartas"
+          aria-label={t('cartas')}
           aria-expanded={open}
           className="absolute left-1/2 top-[32px] z-50 flex size-[62px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-bg text-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,.3)] transition active:scale-95"
         >

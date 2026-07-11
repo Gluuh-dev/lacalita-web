@@ -1,4 +1,4 @@
-import {setRequestLocale} from 'next-intl/server';
+import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {getGalleryAlbums, getSettings} from '@/lib/queries';
 import {altLanguages} from '@/lib/site';
 import GalleryGrid from '@/components/gallery-grid';
@@ -15,6 +15,7 @@ type Section = {key: string; title: string; dateLabel: string; imgs: string[]};
 export default async function Page({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
   setRequestLocale(locale);
+  const t = await getTranslations('gallery');
   const [albums, settings] = await Promise.all([getGalleryAlbums(), getSettings()]);
   const fmt = (d: string) => new Intl.DateTimeFormat(locale, {day: 'numeric', month: 'long', year: 'numeric'}).format(new Date(d));
 
@@ -22,20 +23,20 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   // aquí los carteles de los eventos, que no son fotos de la galería.
   const sections: Section[] = albums
     .filter((a) => a.images.length > 0)
-    .map((a) => ({key: a.id, title: a.title || (a.date ? fmt(a.date) : 'Galería'), dateLabel: a.date ? fmt(a.date) : '', imgs: a.images}));
+    .map((a) => ({key: a.id, title: a.title || (a.date ? fmt(a.date) : t('untitled')), dateLabel: a.date ? fmt(a.date) : '', imgs: a.images}));
 
   const legacy = (settings?.content?.gallery ?? []).filter(Boolean);
 
   return (
     <main className="min-h-screen bg-bg pb-28 pt-20 text-ink">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="eyebrow mb-2 text-center">Galería</div>
-        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">Momentos en La Calita</h1>
-        <p className="mb-6 text-center text-ink-2">Noches de música, atardeceres y buena mesa frente al mar.</p>
+        <div className="eyebrow mb-2 text-center">{t('title')}</div>
+        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">{t('heading')}</h1>
+        <p className="mb-6 text-center text-ink-2">{t('sub')}</p>
         <GalleryAdminCta />
 
         {sections.length === 0 && legacy.length === 0 ? (
-          <p className="py-16 text-center text-ink-3">Aún no hay fotos en la galería.</p>
+          <p className="py-16 text-center text-ink-3">{t('empty')}</p>
         ) : (
           <div className="mt-8 flex flex-col gap-12">
             {sections.map((s) => (
@@ -49,7 +50,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
             ))}
             {legacy.length > 0 && (
               <section>
-                <h2 className="mb-4 border-b border-line pb-2 font-serif text-2xl">Más fotos</h2>
+                <h2 className="mb-4 border-b border-line pb-2 font-serif text-2xl">{t('more')}</h2>
                 <GalleryGrid images={legacy} />
               </section>
             )}

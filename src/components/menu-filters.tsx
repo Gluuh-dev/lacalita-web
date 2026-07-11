@@ -2,7 +2,7 @@
 
 import {useState, useEffect, useRef} from 'react';
 import {useSearchParams} from 'next/navigation';
-import {useLocale} from 'next-intl';
+import {useLocale, useTranslations} from 'next-intl';
 import type {LucideIcon} from 'lucide-react';
 import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed, Search, X, SlidersHorizontal} from 'lucide-react';
 import {tx} from '@/lib/localize';
@@ -27,6 +27,8 @@ function catIcon(name: string): LucideIcon {
 
 export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?: boolean}) {
   const locale = useLocale();
+  const t = useTranslations('carta');
+  const tMenu = useTranslations('menu');
   const {hidden, scrolled} = useHideOnScroll();
   const params = useSearchParams();
   const cats = (menu.categories ?? []).filter((c) => c.products?.length);
@@ -84,7 +86,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar plato…"
+              placeholder={t('search')}
               aria-label="Buscar"
               className="w-full rounded-full border border-line bg-white py-2 pl-9 pr-9 text-sm text-ink outline-none transition focus:border-brand"
             />
@@ -101,13 +103,13 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
               className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-2 text-sm font-medium transition ${excluded.size || showAllergens ? 'border-brand bg-brand text-on-primary' : 'border-line bg-white text-ink-2'}`}
             >
               <SlidersHorizontal className="size-4" />
-              {excluded.size ? `Alérgenos · ${excluded.size}` : 'Alérgenos'}
+              {excluded.size ? `${tMenu('allergens')} · ${excluded.size}` : tMenu('allergens')}
             </button>
           )}
         </div>
         {showAllergens && allergens.length > 0 && (
           <div className="mx-auto max-w-5xl px-4 pt-3">
-            <p className="mb-2 text-xs text-ink-3">Ocultar platos que contengan:</p>
+            <p className="mb-2 text-xs text-ink-3">{t('hideMarked')}</p>
             <div className="flex flex-wrap gap-2">
               {allergens.map((a) => {
                 const on = excluded.has(a.code);
@@ -122,7 +124,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
         )}
         <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
-            Todos
+            {t('all')}
           </Chip>
           {cats.map((c) => (
             <Chip key={c.id} active={active === c.id} onClick={() => setActive(c.id)} icon={catIcon(tx(c.name, locale))}>
@@ -135,10 +137,10 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
       {filtering ? (
         <div className="mx-auto max-w-5xl px-4 py-8">
           {results.length === 0 ? (
-            <p className="py-16 text-center text-ink-3">No hay platos que coincidan.</p>
+            <p className="py-16 text-center text-ink-3">{t('noResults')}</p>
           ) : (
             <>
-              <p className="mb-4 text-sm text-ink-3">{results.length} {results.length === 1 ? 'resultado' : 'resultados'}</p>
+              <p className="mb-4 text-sm text-ink-3">{t('results', {count: results.length})}</p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {results.map((p) => (
                   <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />

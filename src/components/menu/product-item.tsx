@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import {useTranslations} from 'next-intl';
 import {Heart, Info, Plus, Minus} from 'lucide-react';
 import {useRouter} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
@@ -17,6 +18,7 @@ export default function ProductItem({
   menuSlug: string;
   locale: string;
 }) {
+  const t = useTranslations('carta');
   const {isFav, qty, add, dec} = useMenuStore();
   const favGate = useFavGate();
   const router = useRouter();
@@ -58,7 +60,7 @@ export default function ProductItem({
         ) : null}
         <span className="absolute left-1.5 top-1.5 flex flex-wrap gap-1">
           {product.tag && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[0.6rem] font-bold text-white shadow-sm">{product.tag}</span>}
-          {product.is_new && <span className="rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-semibold text-white shadow-sm">Nuevo</span>}
+          {product.is_new && <span className="rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-semibold text-white shadow-sm">{t('new')}</span>}
           {product.featured && <span className="rounded-full bg-brand px-2 py-0.5 text-[0.6rem] font-semibold text-on-primary shadow-sm">★</span>}
         </span>
       </button>
@@ -84,13 +86,13 @@ export default function ProductItem({
           <div className="ml-auto">
             {n === 0 ? (
               <button onClick={() => add(item)} className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition active:scale-95 hover:bg-brand-deep">
-                Añadir
+                {t('add')}
               </button>
             ) : (
               <div className="flex items-center gap-2.5">
                 <button onClick={() => dec(item.id)} aria-label="Quitar" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Minus className="size-4" /></button>
                 <span className="w-4 text-center font-bold tabular-nums">{n}</span>
-                <button onClick={() => add(item)} aria-label="Añadir" className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
+                <button onClick={() => add(item)} aria-label={t('add')} className="flex size-9 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
               </div>
             )}
           </div>

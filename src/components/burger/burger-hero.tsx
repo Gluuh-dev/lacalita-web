@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
+import {useTranslations} from 'next-intl';
 import {Link} from '@/i18n/navigation';
 import {UtensilsCrossed, MapPin, Play, Pause} from 'lucide-react';
 import {euro} from '@/lib/localize';
@@ -95,6 +96,7 @@ function sampleEdgeColors(url: string): Promise<Record<string, string>> {
 }
 
 export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; locale: string}) {
+  const t = useTranslations();
   const [i, setI] = useState(0);
   const [playing, setPlaying] = useState(false);
   const n = slides.length;
@@ -242,14 +244,14 @@ export default function BurgerHero({slides, locale}: {slides: HeroSlide[]; local
               filter: 'drop-shadow(0 6px 16px rgba(0,0,0,.12))'
             }}
           />
-          <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>Smash burgers · a pie de playa</div>
-          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>Carne fresca, pan brioche y queso fundido, frente al mar. Hechas al momento, sin atajos.</p>
+          <div className="mt-2.5 font-adam text-[0.78rem] uppercase tracking-[0.2em]" style={{color: cur?.accentColor || GOLD}}>{t('burger.tagline')}</div>
+          <p className="mx-auto mt-6 max-w-[36ch] text-lg leading-relaxed md:mx-0" style={{color: cur?.textColor || 'rgba(42,23,19,.65)'}}>{t('burger.desc')}</p>
           <div className="mt-7 hidden flex-wrap items-center justify-center gap-3 md:flex md:justify-start">
             <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold transition hover:brightness-105" style={{background: cur?.buttonColor || RED, color: '#fdfbf7'}}>
-              <UtensilsCrossed className="size-4" /> Ver la carta
+              <UtensilsCrossed className="size-4" /> {t('home.cta')}
             </Link>
             <a href="#local" className="inline-flex items-center gap-2 rounded-full border px-6 py-3.5 font-semibold transition hover:brightness-95" style={{borderColor: cur?.buttonColor || RED, color: cur?.buttonColor || RED}}>
-              <MapPin className="size-4" /> Cómo llegar
+              <MapPin className="size-4" /> {t('info.location')}
             </a>
           </div>
         </div>

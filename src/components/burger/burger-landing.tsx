@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import {getTranslations} from 'next-intl/server';
 import {Link} from '@/i18n/navigation';
 import {MapPin, Star, Heart, ArrowRight} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
@@ -43,7 +44,8 @@ function Chip({a, locale}: {a: Allergen; locale: string}) {
 }
 
 
-export default function BurgerLanding({menu, allergens, slides, offers, locale}: {menu: Menu | null; allergens: Allergen[]; slides: BurgerSlide[]; offers: BurgerOffer[]; locale: string}) {
+export default async function BurgerLanding({menu, allergens, slides, offers, locale}: {menu: Menu | null; allergens: Allergen[]; slides: BurgerSlide[]; offers: BurgerOffer[]; locale: string}) {
+  const t = await getTranslations();
   const products: Product[] = (menu?.categories ?? []).flatMap((c) => c.products ?? []).filter((p) => p.available);
   const videos: MenuItem[] = products
     .filter((p) => p.video)
@@ -66,7 +68,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
   // Hero: diapositivas configuradas en el admin; si no hay, derivar de productos nuevos/destacados.
   const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale), font: s.title_font, color: s.title_color, behind: s.title_behind, bgEffect: s.bg_effect, bgImage: s.bg_image, titleScale: s.title_scale, eyebrowScale: s.eyebrow_scale, priceScale: s.price_scale, showRings: s.show_rings, overlayFx: s.overlay_fx, gradient: s.title_gradient, fxSparks: s.fx_sparks, fxSmoke: s.fx_smoke, priceFont: s.price_font, priceColor: s.price_color, priceGradient: s.price_gradient, titleY: s.title_y, priceY: s.price_y, fxVideo: s.fx_video, fxVideoBehind: s.fx_video_behind, fxVideoX: s.fx_video_x, fxVideoY: s.fx_video_y, fxVideoScale: s.fx_video_scale, bgColor: s.bg_color, textShadow: s.text_shadow, titleOutline: s.title_outline, priceOutline: s.price_outline, hideTitle: s.hide_title, hidePrice: s.hide_price, accentColor: s.accent_color, buttonColor: s.button_color, textColor: s.text_color, navColor: s.nav_color, edgeColors: s.edge_colors, edgePoints: s.edge_points, mediaY: s.media_y}));
   const heroPool = (products.filter((p) => p.is_new || p.featured).length ? products.filter((p) => p.is_new || p.featured) : products).slice(0, 6);
-  const heroSlides = fromSlides.length ? fromSlides : heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? 'Nuevo' : p.tag || 'De siempre'}));
+  const heroSlides = fromSlides.length ? fromSlides : heroPool.map((p) => ({image: p.image, name: tx(p.name, locale), price: p.price, eyebrow: p.is_new ? t('burger.newBadge') : p.tag || t('burger.classic')}));
   const hero = heroSlides.length ? heroSlides : [{image: null, name: 'La Calita Burger', price: null, eyebrow: 'Próximamente'}];
 
   return (
@@ -103,18 +105,18 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       <section className="mx-auto max-w-7xl px-5 py-10">
         <div className="mb-6">
           <div className="flex items-center gap-2 font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>
-            <Heart className="size-3.5 fill-current" /> Las más votadas
+            <Heart className="size-3.5 fill-current" /> {t('burger.topVoted')}
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">favoritas de la gente</h2>
+            <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">{t('burger.topVotedSub')}</h2>
             <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
-              Ir a la carta <ArrowRight className="size-4" />
+              {t('burger.goMenu')} <ArrowRight className="size-4" />
             </Link>
           </div>
         </div>
         {favorites.length === 0 ? (
           // Lo lee el visitante, no el admin: nada de instrucciones internas.
-          <p style={{color: C.muted}}>Muy pronto verás aquí las hamburguesas favoritas de la gente.</p>
+          <p style={{color: C.muted}}>{t('burger.comingFavs')}</p>
         ) : (
           <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdItemClass="md:w-[320px]">
             {favorites.map((p, i) => (
@@ -125,7 +127,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
                   )}
                   {i === 0 && p.featured && (
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.62rem] font-bold uppercase shadow-sm" style={{background: C.gold, color: '#1a1209'}}>
-                      <Star className="size-3 fill-current" /> Favorita
+                      <Star className="size-3 fill-current" /> {t('burger.favorite')}
                     </span>
                   )}
                   <div className="absolute right-3 top-3">
@@ -160,7 +162,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
       {/* ---- Alérgenos + local ---- */}
       <section id="local" className="mx-auto max-w-7xl scroll-mt-20 px-5 py-12">
         <div className="rounded-[22px] border border-black/5 p-6 shadow-sm" style={{background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}>
-          <div className="mb-5 font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>Alérgenos · 14 oficiales UE</div>
+          <div className="mb-5 font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{t('burger.allergensNote')}</div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 lg:grid-cols-5">
             {allergens.map((a) => (
               <div key={a.code} className="flex items-center gap-2 text-sm" style={{color: C.muted}}>
@@ -172,7 +174,7 @@ export default function BurgerLanding({menu, allergens, slides, offers, locale}:
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-sm" style={{color: C.muted}}>
           <span>La Calita Burger · Salobreña, Granada</span>
           <a href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#c36148] px-5 py-2.5 font-semibold text-[#c36148] transition hover:bg-[#c36148]/10">
-            <MapPin className="size-4" /> Cómo llegar
+            <MapPin className="size-4" /> {t('info.location')}
           </a>
         </div>
       </section>

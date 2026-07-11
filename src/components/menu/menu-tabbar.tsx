@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react';
 import {useSearchParams, useRouter, usePathname} from 'next/navigation';
+import {useTranslations} from 'next-intl';
 import Image from 'next/image';
 import {Heart, PlayCircle, UtensilsCrossed, ListChecks, X, Plus, Minus, Trash2, ChevronUp, ChevronDown} from 'lucide-react';
 import {Link} from '@/i18n/navigation';
@@ -18,6 +19,7 @@ type ListEntry = {item: MenuItem; qty: number; note?: string};
 
 export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem[]; locale: string; menuSlug: string}) {
   const s = useMenuStore();
+  const t = useTranslations('tabs');
   const [view, setView] = useState<View>('none');
   // En hamburguesería la barra visible es el BurgerTabBar (en el layout); aquí solo
   // dejamos las vistas (vídeo/favoritos/lista), abiertas por el parámetro ?v=.
@@ -45,10 +47,10 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
   const activeKey = view === 'none' ? 'menu' : view;
 
   const tabs = [
-    {key: 'menu', label: 'Menú', Icon: UtensilsCrossed, onClick: () => setView('none'), badge: 0},
-    ...(videos.length ? [{key: 'video', label: 'Vídeo', Icon: PlayCircle, onClick: () => setView('video'), badge: 0}] : []),
-    {key: 'favs', label: 'Favoritos', Icon: Heart, onClick: () => setView('favs'), badge: favCount},
-    {key: 'list', label: 'Mi lista', Icon: ListChecks, onClick: () => setView('list'), badge: listCount}
+    {key: 'menu', label: t('menu'), Icon: UtensilsCrossed, onClick: () => setView('none'), badge: 0},
+    ...(videos.length ? [{key: 'video', label: t('video'), Icon: PlayCircle, onClick: () => setView('video'), badge: 0}] : []),
+    {key: 'favs', label: t('favorites'), Icon: Heart, onClick: () => setView('favs'), badge: favCount},
+    {key: 'list', label: t('list'), Icon: ListChecks, onClick: () => setView('list'), badge: listCount}
   ];
 
   return (
@@ -75,7 +77,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
       )}
 
       {(view === 'favs' || view === 'list') && (
-        <Sheet title={view === 'favs' ? 'Favoritos' : 'Mi lista'} onClose={closeView}>
+        <Sheet title={view === 'favs' ? t('favorites') : t('list')} onClose={closeView}>
           {view === 'favs' ? <FavsView items={favs} locale={locale} /> : <ListView items={listItems} locale={locale} />}
         </Sheet>
       )}
@@ -87,6 +89,7 @@ export default function MenuTabBar({videos, locale, menuSlug}: {videos: MenuItem
 }
 
 function Sheet({title, onClose, children}: {title: string; onClose: () => void; children: React.ReactNode}) {
+  const tCommon = useTranslations('common');
   const [drag, setDrag] = useState(0);
   const dy = useRef<number | null>(null);
   useBackClose(true, onClose);
@@ -112,7 +115,7 @@ function Sheet({title, onClose, children}: {title: string; onClose: () => void; 
         <div onClick={onClose} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-line-strong" />
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-serif text-xl">{title}</h2>
-          <button onClick={onClose} aria-label="Cerrar" className="rounded-full bg-surface-2 p-1.5">
+          <button onClick={onClose} aria-label={tCommon('close')} className="rounded-full bg-surface-2 p-1.5">
             <X className="size-5" />
           </button>
         </div>
@@ -138,15 +141,16 @@ function Thumb({item, locale}: {item: MenuItem; locale: string}) {
 
 export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
   const s = useMenuStore();
+  const t = useTranslations('carta');
   if (!items.length)
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center duration-500 animate-in fade-in zoom-in-95">
         <span className="flex size-20 items-center justify-center rounded-full bg-brand/10 text-brand">
           <Heart className="size-9" />
         </span>
-        <p className="font-serif text-xl text-ink">Aún no tienes favoritos</p>
+        <p className="font-serif text-xl text-ink">{t('favsEmptyTitle')}</p>
         {/* Se ve en todas las cartas, no solo en la hamburguesería. */}
-        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa el ♥ en los platos que más te gusten y los verás aquí.</p>
+        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">{t('favsEmptyText')}</p>
       </div>
     );
   return (
@@ -158,7 +162,7 @@ export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
             <div className="truncate font-medium">{it.name}</div>
             {it.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(it.price, locale)}</div>}
           </div>
-          <button onClick={() => s.add(it)} className="rounded-full bg-brand px-3.5 py-1.5 text-sm font-semibold text-on-primary">Añadir</button>
+          <button onClick={() => s.add(it)} className="rounded-full bg-brand px-3.5 py-1.5 text-sm font-semibold text-on-primary">{t('add')}</button>
           <button onClick={() => s.toggleFav(it)} aria-label="Quitar" className="p-1.5 text-red-500">
             <Heart className="size-5" fill="currentColor" />
           </button>
@@ -170,14 +174,15 @@ export function FavsView({items, locale}: {items: MenuItem[]; locale: string}) {
 
 export function ListView({items, locale}: {items: ListEntry[]; locale: string}) {
   const s = useMenuStore();
+  const t = useTranslations('carta');
   if (!items.length)
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center duration-500 animate-in fade-in zoom-in-95">
         <span className="flex size-20 items-center justify-center rounded-full bg-brand/10 text-brand">
           <ListChecks className="size-9" />
         </span>
-        <p className="font-serif text-xl text-ink">Tu lista está vacía</p>
-        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">Pulsa “Añadir” en los platos para guardarlos y enseñárselos al camarero.</p>
+        <p className="font-serif text-xl text-ink">{t('listEmptyTitle')}</p>
+        <p className="max-w-[17rem] text-sm leading-relaxed text-ink-3">{t('listEmptyText')}</p>
       </div>
     );
   const total = items.reduce((sum, x) => sum + (x.item.price ?? 0) * x.qty, 0);
@@ -194,22 +199,24 @@ export function ListView({items, locale}: {items: ListEntry[]; locale: string}) 
           <div className="flex items-center gap-2">
             <button onClick={() => s.dec(item.id)} aria-label="Quitar" className="flex size-8 items-center justify-center rounded-full bg-brand text-on-primary"><Minus className="size-4" /></button>
             <span className="w-4 text-center font-bold tabular-nums">{qty}</span>
-            <button onClick={() => s.add(item)} aria-label="Añadir" className="flex size-8 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
+            <button onClick={() => s.add(item)} aria-label={t('add')} className="flex size-8 items-center justify-center rounded-full bg-brand text-on-primary"><Plus className="size-4" /></button>
           </div>
           <button onClick={() => s.remove(item.id)} aria-label="Eliminar" className="p-1 text-ink-3 hover:text-danger"><Trash2 className="size-4" /></button>
         </div>
       ))}
       <div className="mt-2 flex items-center justify-between border-t border-line pt-3">
-        <span className="font-medium text-ink-2">Total orientativo</span>
+        <span className="font-medium text-ink-2">{t('total')}</span>
         <span className="font-bold tabular-nums text-brand-deep">{euro(total, locale)}</span>
       </div>
-      <button onClick={() => s.clear()} className="mt-1 self-end text-sm text-ink-3 hover:text-danger">Vaciar lista</button>
+      <button onClick={() => s.clear()} className="mt-1 self-end text-sm text-ink-3 hover:text-danger">{t('clearList')}</button>
     </div>
   );
 }
 
 export function VideoReels({videos, locale, onClose, asPage = false}: {videos: MenuItem[]; locale: string; onClose: () => void; asPage?: boolean}) {
   const s = useMenuStore();
+  const t = useTranslations('carta');
+  const tCommon = useTranslations('common');
   const favGate = useFavGate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
@@ -262,17 +269,17 @@ export function VideoReels({videos, locale, onClose, asPage = false}: {videos: M
       <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/brand/logo-texto-derecha.svg" alt="La Calita" className="h-9 w-auto brightness-0 invert" />
-        <button onClick={onClose} aria-label="Cerrar" className="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+        <button onClick={onClose} aria-label={tCommon('close')} className="flex size-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
           <X className="size-5" />
         </button>
       </div>
 
       {controls && videos.length > 1 && (
         <div className="absolute right-4 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3">
-          <button onClick={() => goTo(idx - 1)} disabled={idx === 0} aria-label="Anterior" className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
+          <button onClick={() => goTo(idx - 1)} disabled={idx === 0} aria-label={tCommon('previous')} className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
             <ChevronUp className="size-6" />
           </button>
-          <button onClick={() => goTo(idx + 1)} disabled={idx === videos.length - 1} aria-label="Siguiente" className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
+          <button onClick={() => goTo(idx + 1)} disabled={idx === videos.length - 1} aria-label={tCommon('next')} className="flex size-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition disabled:opacity-30">
             <ChevronDown className="size-6" />
           </button>
         </div>
@@ -312,12 +319,12 @@ export function VideoReels({videos, locale, onClose, asPage = false}: {videos: M
                     <Heart className="size-6" fill={fav ? 'currentColor' : 'none'} />
                   </button>
                   {n === 0 ? (
-                    <button onClick={() => s.add(v)} aria-label="Añadir" className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
+                    <button onClick={() => s.add(v)} aria-label={t('add')} className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary">
                       <Plus className="size-6" />
                     </button>
                   ) : (
                     <div className="flex w-12 flex-col items-center gap-1 rounded-full bg-brand py-2 text-on-primary">
-                      <button onClick={() => s.add(v)} aria-label="Añadir"><Plus className="size-6" /></button>
+                      <button onClick={() => s.add(v)} aria-label={t('add')}><Plus className="size-6" /></button>
                       <span className="text-base font-bold tabular-nums">{n}</span>
                       <button onClick={() => s.dec(v.id)} aria-label="Quitar"><Minus className="size-6" /></button>
                     </div>
@@ -334,6 +341,8 @@ export function VideoReels({videos, locale, onClose, asPage = false}: {videos: M
 
 export function ProductModal({locale}: {locale: string}) {
   const s = useMenuStore();
+  const t = useTranslations('carta');
+  const tCommon = useTranslations('common');
   const it = s.open;
   const n = it ? s.qty(it.id) : 0;
   const [note, setNote] = useState('');
@@ -357,7 +366,7 @@ export function ProductModal({locale}: {locale: string}) {
           ) : (
             <UtensilsCrossed className="size-14" strokeWidth={1.25} />
           )}
-          <button onClick={close} aria-label="Cerrar" className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
+          <button onClick={close} aria-label={tCommon('close')} className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur">
             <X className="size-5" />
           </button>
         </div>
@@ -367,7 +376,7 @@ export function ProductModal({locale}: {locale: string}) {
           {it.price != null && <p className="mt-3 text-xl font-bold text-brand-deep">{euro(it.price, locale)}</p>}
           {it.ingredients && it.ingredients.length > 0 && (
             <div className="mt-3">
-              <div className="mb-1.5 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">Lleva</div>
+              <div className="mb-1.5 font-adam text-[0.66rem] uppercase tracking-[0.1em] text-ink-3">{t('carries')}</div>
               <div className="flex flex-wrap gap-1.5">
                 {it.ingredients.map((ing, i) => (
                   <span key={i} className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-ink-2">{ing}</span>
@@ -414,11 +423,11 @@ export function ProductModal({locale}: {locale: string}) {
             onClick={() => {
               if (n === 0) s.add(it);
               s.setNote(it.id, note);
-              toast.success('Añadido a tu lista');
+              toast.success(t('addedToList'));
             }}
             className="flex-1 rounded-full bg-brand py-3 font-semibold text-on-primary transition hover:bg-brand-deep"
           >
-            {n === 0 ? 'Añadir a mi lista' : 'Guardar'}
+            {n === 0 ? t('addToList') : 'Guardar'}
           </button>
         </div>
       </div>
