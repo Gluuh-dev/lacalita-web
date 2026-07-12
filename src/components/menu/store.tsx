@@ -21,6 +21,7 @@ export type MenuItem = {
   menuSlug: string;
   video?: string | null;
   desc?: string;
+  variant?: string; // tamaño/unidades elegidos (Media, 6 uds…) para "Mi lista"
   ingredients?: string[];
   allergens?: {code: string; icon: string; name: Record<string, string>}[];
 };

@@ -82,7 +82,14 @@
     "favsEmptyTitle": "Aún no tienes favoritos",
     "favsEmptyText": "Pulsa el ♥ en los platos que más te gusten y los verás aquí.",
     "listEmptyTitle": "Tu lista está vacía",
-    "listEmptyText": "Añade platos con el botón + y tenlos a mano al pedir."
+    "listEmptyText": "Añade platos con el botón + y tenlos a mano al pedir.",
+    "choose": "Elegir",
+    "buildTitle": "Arma tu tostada",
+    "buildBread": "Elige el pan",
+    "buildSize": "Tamaño",
+    "buildTopping": "¿Qué le echas?",
+    "included": "incluido",
+    "buildTotal": "Total"
   },
   "tabs": {
     "menu": "Carta",

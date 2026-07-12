@@ -33,6 +33,7 @@ export default function CategoryForm({
   const [pending, start] = useTransition();
   const [menuId, setMenuId] = useState(category?.menu_id ?? menus[0]?.id ?? '');
   const [visible, setVisible] = useState(category?.visible ?? true);
+  const [role, setRole] = useState(category?.role ?? 'normal');
   const [f, setF] = useState({
     name: category?.name?.es ?? '',
     description: category?.description?.es ?? '',
@@ -49,7 +50,8 @@ export default function CategoryForm({
         name: f.name,
         description: f.description,
         position: Number(f.position) || 0,
-        visible
+        visible,
+        role
       });
       if (r.ok) {
         toast.success('Guardado');
@@ -94,6 +96,20 @@ export default function CategoryForm({
           <Checkbox checked={visible} onCheckedChange={(v) => setVisible(v === true)} />
           Visible
         </label>
+      </div>
+      <div>
+        <Label>Rol en el configurador «Arma tu tostada»</Label>
+        <Select value={role} onValueChange={(v) => setRole(v ?? 'normal')}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="normal">Normal (categoría corriente)</SelectItem>
+            <SelectItem value="base">Base — los productos son la base (panes)</SelectItem>
+            <SelectItem value="topping">Relleno — se suma a la base (toppings)</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="mt-1 text-xs text-ink-3">Con una categoría «base» y otra «relleno» en la misma carta, la web muestra el configurador arriba.</p>
       </div>
       <FormFooter pending={pending} onCancel={onSaved} />
     </form>

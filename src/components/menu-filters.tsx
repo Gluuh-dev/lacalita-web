@@ -8,6 +8,7 @@ import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Uten
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
+import ToastBuilder from '@/components/menu/toast-builder';
 import AllergenIcon from '@/components/allergen-icon';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
@@ -32,6 +33,10 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   const {hidden, scrolled} = useHideOnScroll();
   const params = useSearchParams();
   const cats = (menu.categories ?? []).filter((c) => c.products?.length);
+  // Configurador "Arma tu tostada": si hay una categoría base (panes) y otra
+  // topping (rellenos). Convive con las listas normales.
+  const baseCat = cats.find((c) => c.role === 'base');
+  const toppingCat = cats.find((c) => c.role === 'topping');
   const catParam = params.get('cat');
   const [active, setActive] = useState<string>(catParam && cats.some((c) => c.id === catParam) ? catParam : 'all');
   const groups = active === 'all' ? cats : cats.filter((c) => c.id === active);
@@ -150,7 +155,11 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
           )}
         </div>
       ) : (
-        <div key={active} className="ds-grid-enter mx-auto max-w-5xl px-4 py-8">
+        <div key={active} className="ds-grid-enter py-8">
+          {active === 'all' && baseCat && toppingCat && (
+            <ToastBuilder base={baseCat} topping={toppingCat} menuSlug={menu.slug} />
+          )}
+          <div className="mx-auto max-w-5xl px-4">
           {groups.map((c) => (
             <div key={c.id} className="mb-9">
               {active === 'all' && <h2 className="eyebrow mb-4">{tx(c.name, locale)}</h2>}
@@ -161,6 +170,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
     </>

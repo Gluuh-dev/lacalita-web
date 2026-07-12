@@ -37,6 +37,7 @@ export type Category = {
   image: string | null;
   position: number;
   visible: boolean;
+  role: 'normal' | 'base' | 'topping'; // configurador "Arma tu tostada"
   extras: Extra[];
   products: Product[];
 };
@@ -114,7 +115,7 @@ async function fetchMenu(slug: string): Promise<Menu | null> {
     .select(
       `id, slug, name, subtitle, theme, header_image, header_video, position,
        categories (
-         id, menu_id, name, description, position, visible, image, extras,
+         id, menu_id, name, description, position, visible, image, extras, role,
          products (
            id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
            product_variants ( id, name, price, position ),
@@ -282,7 +283,7 @@ export async function getCategoriesAdmin() {
   const supabase = await createClient();
   const {data} = await supabase
     .from('categories')
-    .select('id, menu_id, name, description, position, visible, menus ( name, slug )')
+    .select('id, menu_id, name, description, position, visible, role, menus ( name, slug )')
     .order('position');
   return (data as unknown as (Category & {menus: {name: I18n; slug: string}})[]) ?? [];
 }
@@ -291,7 +292,7 @@ export async function getCategoryById(id: string) {
   const supabase = await createClient();
   const {data} = await supabase
     .from('categories')
-    .select('id, menu_id, name, description, position, visible')
+    .select('id, menu_id, name, description, position, visible, role')
     .eq('id', id)
     .maybeSingle();
   return (data as unknown as Category) ?? null;

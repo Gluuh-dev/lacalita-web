@@ -82,7 +82,14 @@
     "favsEmptyTitle": "No favourites yet",
     "favsEmptyText": "Tap the ♥ on the dishes you love and they will show up here.",
     "listEmptyTitle": "Your list is empty",
-    "listEmptyText": "Add dishes with the + button and keep them handy when ordering."
+    "listEmptyText": "Add dishes with the + button and keep them handy when ordering.",
+    "choose": "Choose",
+    "buildTitle": "Build your toast",
+    "buildBread": "Choose the bread",
+    "buildSize": "Size",
+    "buildTopping": "What's on top?",
+    "included": "included",
+    "buildTotal": "Total"
   },
   "tabs": {
     "menu": "Menu",

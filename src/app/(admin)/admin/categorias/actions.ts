@@ -11,6 +11,7 @@ export type CategoryInput = {
   description: string;
   position: number;
   visible: boolean;
+  role: string;
 };
 
 export async function saveCategory(id: string | null, form: CategoryInput) {
@@ -22,7 +23,8 @@ export async function saveCategory(id: string | null, form: CategoryInput) {
     name: await translateField(form.name),
     description: form.description ? await translateField(form.description) : null,
     position: form.position,
-    visible: form.visible
+    visible: form.visible,
+    role: form.role || 'normal'
   };
   const res = id
     ? await supabase.from('categories').update(row).eq('id', id).select('id')

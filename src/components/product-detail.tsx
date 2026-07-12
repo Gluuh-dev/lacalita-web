@@ -32,25 +32,35 @@ export default function ProductDetail({
   const reduce = useReducedMotion();
   const {isFav, qty, add, dec} = useMenuStore();
   const favGate = useFavGate();
-  const item: MenuItem = {
+  const variants = product.product_variants ?? [];
+  // Variante elegida (Media/Entera, 3/6 uds). El precio y "Añadir" la siguen.
+  const [vi, setVi] = useState(0);
+  const sel = variants[vi];
+  const name = tx(product.name, locale);
+  const shownPrice = sel ? Number(sel.price) : product.price != null ? Number(product.price) : null;
+  const favItem: MenuItem = {
     id: product.id,
-    name: tx(product.name, locale),
+    name,
     price: product.price != null ? Number(product.price) : null,
     image: product.image ?? null,
     slug: product.slug,
     menuSlug,
     video: product.video ?? null
   };
+  // Lo que va a "Mi lista": con variante, id e importe propios (líneas separadas).
+  const listItem: MenuItem = sel
+    ? {...favItem, id: `${product.id}::${sel.id}`, name: `${name} · ${tx(sel.name, locale)}`, price: Number(sel.price), variant: tx(sel.name, locale)}
+    : favItem;
   const [zoom, setZoom] = useState(false);
   // Atrás (Android) cierra la imagen ampliada en vez de salir de la página.
   useBackClose(zoom, () => setZoom(false));
-  const n = qty(product.id);
+  const n = qty(listItem.id);
   const fav = isFav(product.id);
 
   async function share() {
     const url = typeof window !== 'undefined' ? window.location.href : '';
     try {
-      if (navigator.share) await navigator.share({title: item.name, url});
+      if (navigator.share) await navigator.share({title: name, url});
       else {
         await navigator.clipboard.writeText(url);
         toast.success(tc('linkCopied'));
@@ -60,7 +70,6 @@ export default function ProductDetail({
     }
   }
   const hasMedia = !!(product.video || product.image);
-  const variants = product.product_variants ?? [];
   const allergens = (product.product_allergens ?? [])
     .map((pa) => pa.allergens)
     .filter(Boolean);
@@ -125,12 +134,12 @@ export default function ProductDetail({
           {tx(product.name, locale)}
         </motion.h1>
 
-        {product.price != null && (
+        {shownPrice != null && (
           <motion.p
             {...fade(0.15)}
             className="mt-2 text-2xl font-semibold text-brand-deep"
           >
-            {euro(Number(product.price), locale)}
+            {euro(shownPrice, locale)}
           </motion.p>
         )}
 
@@ -141,17 +150,24 @@ export default function ProductDetail({
           </div>
         )}
 
+        {/* Selector de tamaño/unidades: el precio de arriba y "Añadir" lo siguen. */}
         {variants.length > 0 && (
-          <motion.ul {...fade(0.15)} className="mt-3 space-y-1">
-            {variants.map((v) => (
-              <li key={v.id} className="flex justify-between border-b border-line py-1.5">
-                <span>{tx(v.name, locale)}</span>
-                <span className="font-semibold text-brand-deep">
-                  {euro(Number(v.price), locale)}
-                </span>
-              </li>
-            ))}
-          </motion.ul>
+          <motion.div {...fade(0.16)} className="mt-4 flex flex-wrap gap-2">
+            {variants.map((v, i) => {
+              const on = i === vi;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => setVi(i)}
+                  className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${on ? 'border-brand bg-brand text-on-primary' : 'border-line bg-surface text-ink-2 hover:border-brand'}`}
+                >
+                  <span className="font-medium">{tx(v.name, locale)}</span>
+                  <span className={`font-semibold ${on ? '' : 'text-brand-deep'}`}>{euro(Number(v.price), locale)}</span>
+                </button>
+              );
+            })}
+          </motion.div>
         )}
 
         {product.description && (
@@ -217,7 +233,7 @@ export default function ProductDetail({
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <button
-            onClick={() => favGate(item)}
+            onClick={() => favGate(favItem)}
             aria-label="Favorito"
             className={`flex size-12 shrink-0 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
           >
@@ -233,7 +249,7 @@ export default function ProductDetail({
           {n === 0 ? (
             <button
               onClick={() => {
-                add(item);
+                add(listItem);
                 toast.success(tc('addedToList'));
               }}
               className="flex-1 rounded-full bg-brand py-3.5 font-semibold text-on-primary transition hover:bg-brand-deep"
@@ -242,9 +258,9 @@ export default function ProductDetail({
             </button>
           ) : (
             <div className="flex flex-1 items-center justify-between rounded-full bg-brand px-3 py-2 text-on-primary">
-              <button onClick={() => dec(item.id)} aria-label="Quitar" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Minus className="size-5" /></button>
+              <button onClick={() => dec(listItem.id)} aria-label="Quitar" className="flex size-9 items-center justify-center rounded-full bg-white/20"><Minus className="size-5" /></button>
               <span className="font-bold tabular-nums">{tc('inList', {count: n})}</span>
-              <button onClick={() => add(item)} aria-label={tc('add')} className="flex size-9 items-center justify-center rounded-full bg-white/20"><Plus className="size-5" /></button>
+              <button onClick={() => add(listItem)} aria-label={tc('add')} className="flex size-9 items-center justify-center rounded-full bg-white/20"><Plus className="size-5" /></button>
             </div>
           )}
         </div>

@@ -82,7 +82,14 @@
     "favsEmptyTitle": "Pas encore de favoris",
     "favsEmptyText": "Touchez le ♥ sur vos plats préférés et retrouvez-les ici.",
     "listEmptyTitle": "Votre liste est vide",
-    "listEmptyText": "Ajoutez des plats avec le bouton + et gardez-les sous la main pour commander."
+    "listEmptyText": "Ajoutez des plats avec le bouton + et gardez-les sous la main pour commander.",
+    "choose": "Choisir",
+    "buildTitle": "Composez votre tartine",
+    "buildBread": "Choisissez le pain",
+    "buildSize": "Taille",
+    "buildTopping": "Quelle garniture ?",
+    "included": "inclus",
+    "buildTotal": "Total"
   },
   "tabs": {
     "menu": "Carte",

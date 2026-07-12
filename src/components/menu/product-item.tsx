@@ -19,9 +19,14 @@ export default function ProductItem({
   locale: string;
 }) {
   const t = useTranslations('carta');
+  const tMenu = useTranslations('menu');
   const {isFav, qty, add, dec} = useMenuStore();
   const favGate = useFavGate();
   const router = useRouter();
+  // Con variantes (Media/Entera, 3/6 uds) no hay precio único: se elige en el detalle.
+  const variants = product.product_variants ?? [];
+  const hasVariants = variants.length > 0;
+  const fromPrice = hasVariants ? Math.min(...variants.map((v) => Number(v.price))) : null;
   // Todas las cartas abren el detalle como PÁGINA (no modal), como la hamburguesería.
   const detailHref = menuSlug === 'hamburgueseria' ? `/burguer/carta/${product.slug}` : `/carta/${menuSlug}/${product.slug}`;
   const openIt = () => router.push(detailHref);
@@ -68,7 +73,11 @@ export default function ProductItem({
         <div role="button" tabIndex={0} onClick={() => openIt()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openIt()} className="min-w-0 cursor-pointer text-left">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="truncate font-serif text-base font-semibold sm:whitespace-normal sm:text-lg">{item.name}</h3>
-            {item.price != null && <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(item.price, locale)}</span>}
+            {item.price != null ? (
+              <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(item.price, locale)}</span>
+            ) : fromPrice != null ? (
+              <span className="shrink-0 whitespace-nowrap text-sm font-semibold text-brand-deep">{tMenu('from')} {euro(fromPrice, locale)}</span>
+            ) : null}
           </div>
           {item.desc && <p className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-ink-2">{item.desc}</p>}
         </div>
@@ -84,7 +93,11 @@ export default function ProductItem({
             <Info className="size-4" />
           </button>
           <div className="ml-auto">
-            {n === 0 ? (
+            {hasVariants ? (
+              <button onClick={() => openIt()} className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition active:scale-95 hover:bg-brand-deep">
+                {t('choose')}
+              </button>
+            ) : n === 0 ? (
               <button onClick={() => add(item)} className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-on-primary shadow-sm transition active:scale-95 hover:bg-brand-deep">
                 {t('add')}
               </button>
