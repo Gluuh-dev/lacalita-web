@@ -46,7 +46,7 @@ export default function VoteButton({id, votes, className = ''}: {id: string; vot
       onClick={toggle}
       aria-pressed={voted}
       aria-label={voted ? 'Quitar voto' : 'Votar'}
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm backdrop-blur transition active:scale-90 ${voted ? 'bg-[#c36148] text-white' : 'bg-white/90 text-[#c36148]'} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm backdrop-blur transition active:scale-90 ${voted ? 'bg-brand text-on-primary' : 'bg-surface text-brand-deep ring-1 ring-line'} ${className}`}
     >
       <Heart className={`size-4 transition ${voted ? 'scale-110' : ''}`} fill={voted ? 'currentColor' : 'none'} />
       {count}

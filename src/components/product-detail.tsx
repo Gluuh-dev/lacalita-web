@@ -143,12 +143,11 @@ export default function ProductDetail({
           </motion.p>
         )}
 
-        {menuSlug === 'hamburgueseria' && (
-          <div className="mt-4 flex items-center gap-2">
-            <VoteButton id={product.id} votes={product.votes ?? 0} />
-            <span className="text-sm text-ink-3">{tc('vote')}</span>
-          </div>
-        )}
+        {/* Votar disponible en todas las cartas (antes solo hamburguesería). */}
+        <div className="mt-4 flex items-center gap-2">
+          <VoteButton id={product.id} votes={product.votes ?? 0} />
+          <span className="text-sm text-ink-3">{tc('vote')}</span>
+        </div>
 
         {/* Selector de tamaño/unidades: el precio de arriba y "Añadir" lo siguen. */}
         {variants.length > 0 && (
