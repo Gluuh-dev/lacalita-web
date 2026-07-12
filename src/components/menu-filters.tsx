@@ -127,7 +127,8 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
             </div>
           </div>
         )}
-        <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Móvil: scroll horizontal. PC: todos a la vista, envuelven a 2ª fila si no caben. */}
+        <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:pr-4">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
             {t('all')}
           </Chip>
