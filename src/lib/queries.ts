@@ -103,7 +103,9 @@ export async function getMenus() {
 export async function getMenu(slug: string): Promise<Menu | null> {
   return unstable_cache(
     () => fetchMenu(slug),
-    ['menu', slug],
+    // 'v2': los cambios de tema por SQL directo no invalidaron esta caché y
+    // servía el color viejo; subir la key la descarta de golpe.
+    ['menu', slug, 'v2'],
     {revalidate: 300, tags: ['menu']}
   )();
 }
