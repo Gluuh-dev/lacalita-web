@@ -79,7 +79,7 @@ export default function SnapCarousel({
     <>
       <div
         ref={scrollRef}
-        className={`flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-[10vw] px-[10vw] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:scroll-px-1 md:gap-5 md:px-1 ${overflow ? '' : 'justify-center'}`}
+        className={`relative left-1/2 flex w-screen -translate-x-1/2 snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-5 px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] scroll-px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] ${overflow ? '' : 'justify-center'}`}
       >
         {items.map((c, i) => (
           <div

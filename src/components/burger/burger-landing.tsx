@@ -148,7 +148,7 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
             <h2 className="font-eight text-3xl md:text-4xl" style={{color: C.ink}}>{t('burger.saucesTitle')}</h2>
             <p className="mt-1 text-sm" style={{color: C.muted}}>{t('burger.saucesSub')}</p>
           </div>
-          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="relative left-1/2 flex w-screen -translate-x-1/2 snap-x snap-mandatory gap-4 overflow-x-auto pb-2 px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] scroll-px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="mx-auto flex w-max gap-4">
               {sauces.map((p) => (
                 <Link
