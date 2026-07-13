@@ -175,8 +175,9 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
             <p className="border-t border-line pt-4 text-sm font-medium text-ink-2">{summary}</p>
           </div>
 
-          {/* Pie: solo total + añadir */}
-          <DrawerFooter className="flex-row items-center justify-center gap-4 border-t border-line bg-surface-2">
+          {/* Pie: solo total + añadir. py explícito porque el DrawerFooter trae
+              pt-0 de serie y el contenido quedaba pegado al borde. */}
+          <DrawerFooter className="flex-row items-center justify-center gap-4 border-t border-line bg-surface-2 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
             <div className="flex items-baseline gap-1.5">
               <span className="font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-ink-3">{t('buildTotal')}</span>
               <span className="font-serif text-2xl font-bold text-brand-deep">{euro(total, locale)}</span>
