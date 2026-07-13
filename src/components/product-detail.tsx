@@ -227,9 +227,8 @@ export default function ProductDetail({
               asCombo ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand'
             }`}
           >
-            <span className={`flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-3.5 transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
-              <MaskIcon src="/iconos/patatas.svg" className="size-[1.35rem]" />
-              <MaskIcon src="/iconos/bebida.svg" className="size-[1.15rem]" />
+            <span className={`flex size-12 shrink-0 items-center justify-center rounded-full transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
+              <MaskIcon src="/iconos/menu.svg" className="size-7" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block font-ui text-base font-bold leading-tight text-ink">{tc('comboTitle')}</span>
