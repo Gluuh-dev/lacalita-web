@@ -13,19 +13,20 @@ export default function MapCard({
   label: string;
   className?: string;
 }) {
-  // Se funde con el fondo: los bordes se desvanecen con una máscara de gradiente
-  // y la imagen va ligeramente traslúcida, para que no parezca una foto pegada.
+  // Se funde con el fondo: los bordes se desvanecen con una máscara de gradiente.
+  // El dibujo ya es de por sí tenue, así que va a plena opacidad: rebajarla lo
+  // deslavaba.
   const fade =
-    'radial-gradient(115% 115% at 50% 45%, #000 55%, rgba(0,0,0,.55) 78%, transparent 100%)';
+    'radial-gradient(120% 120% at 50% 45%, #000 70%, rgba(0,0,0,.6) 88%, transparent 100%)';
 
   const map = (
     <>
       <Image
-        src="/mapa-la-calita.webp"
+        src="/mapa-la-calita-v2.webp"
         alt="La Calita, a pie de playa en Salobreña"
         fill
         sizes="(max-width: 768px) 100vw, 768px"
-        className="object-cover opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100"
+        className="object-cover transition duration-500 group-hover:scale-[1.03]"
         style={{maskImage: fade, WebkitMaskImage: fade}}
       />
       {href && (
