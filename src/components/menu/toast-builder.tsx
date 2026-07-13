@@ -75,7 +75,7 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
           <Sandwich className="size-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-serif text-xl font-bold leading-tight text-ink">{t('buildTitle')}</h2>
+          <h2 className="font-ui text-lg font-bold leading-tight text-ink">{t('buildTitle')}</h2>
           <p className="truncate text-xs text-ink-3">{t('buildSub')}</p>
         </div>
         <ChevronRight className="size-5 shrink-0 text-ink-3" />
@@ -86,7 +86,7 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
             contenedor de la carta y perdía su color (salía siempre naranja). */}
         <DrawerContent data-theme={theme} className="max-h-[88vh] bg-bg text-ink">
           <DrawerHeader className="text-center">
-            <DrawerTitle className="font-serif text-2xl">{t('buildTitle')}</DrawerTitle>
+            <DrawerTitle className="font-ui text-2xl font-bold tracking-[-0.01em]">{t('buildTitle')}</DrawerTitle>
             <DrawerDescription>{t('buildSub')}</DrawerDescription>
           </DrawerHeader>
 
@@ -180,7 +180,7 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
           <DrawerFooter className="flex-row items-center justify-center gap-4 border-t border-line bg-surface-2 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
             <div className="flex items-baseline gap-1.5">
               <span className="font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-ink-3">{t('buildTotal')}</span>
-              <span className="font-serif text-2xl font-bold text-brand-deep">{euro(total, locale)}</span>
+              <span className="font-ui text-2xl font-bold tabular-nums text-brand-deep">{euro(total, locale)}</span>
             </div>
             <button
               type="button"
