@@ -7,6 +7,8 @@
 @theme inline {
   --font-sans: var(--font-geist);
   --font-serif: var(--font-playfair);
+  /* Tipografía de interfaz: la de la cabecera de la carta (Segoe UI en Windows). */
+  --font-ui: 'Segoe UI', system-ui, -apple-system, 'Segoe UI Variable', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);

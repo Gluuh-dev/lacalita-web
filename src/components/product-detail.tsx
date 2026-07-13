@@ -150,7 +150,7 @@ export default function ProductDetail({
           ) : null}
         </motion.div>
 
-        <motion.h1 {...fade(0.1)} className="mt-6 font-serif text-[2.6rem] font-bold leading-[1.05] tracking-[-0.015em] text-ink">
+        <motion.h1 {...fade(0.1)} className="mt-6 font-ui text-3xl font-bold leading-tight tracking-[-0.01em] text-ink">
           {tx(product.name, locale)}
         </motion.h1>
 
@@ -230,7 +230,7 @@ export default function ProductDetail({
               <UtensilsCrossed className="size-5" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block font-serif text-lg font-bold leading-tight text-ink">{tc('comboTitle')}</span>
+              <span className="block font-ui text-base font-bold leading-tight text-ink">{tc('comboTitle')}</span>
               <span className="block text-xs text-ink-3">{tc('comboSub')}</span>
             </span>
             <span className="flex shrink-0 items-center gap-2">
@@ -292,7 +292,7 @@ export default function ProductDetail({
           {...fade(0.28)}
           className="mt-10 flex flex-col items-center gap-3 rounded-[24px] border border-line bg-surface px-6 py-8 text-center"
         >
-          <h2 className="font-serif text-2xl font-bold leading-tight text-ink">{tc('voteTitle')}</h2>
+          <h2 className="font-ui text-xl font-bold leading-tight text-ink">{tc('voteTitle')}</h2>
           <p className="max-w-xs text-sm leading-relaxed text-ink-2">{tc('voteText')}</p>
           <VoteButton item={favItem} votes={product.votes ?? 0} className="mt-1 h-12 px-6 text-base" />
           <p className="text-xs text-ink-3">

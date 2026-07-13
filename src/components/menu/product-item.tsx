@@ -70,7 +70,7 @@ export default function ProductItem({
       <div className="flex min-w-0 flex-1 flex-col sm:p-4">
         <div role="button" tabIndex={0} onClick={() => openIt()} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openIt()} className="min-w-0 cursor-pointer text-left">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="truncate font-serif text-base font-semibold sm:whitespace-normal sm:text-lg">{item.name}</h3>
+            <h3 className="truncate font-ui text-base font-semibold sm:whitespace-normal sm:text-lg">{item.name}</h3>
             {item.price != null ? (
               <span className="shrink-0 font-bold tabular-nums text-brand-deep">{euro(item.price, locale)}</span>
             ) : fromPrice != null ? (
