@@ -393,10 +393,10 @@ export default async function Home({
 
 // Texturas de la casa para las tarjetas de carta (hielo, brasa, arena, café).
 const FONDOS: Record<string, string> = {
-  desayunos: '/fondos/desayunos.webp',
-  restaurante: '/fondos/restaurante.webp',
-  cocteles: '/fondos/cocteles.webp',
-  hamburgueseria: '/fondos/hamburgueseria.webp'
+  desayunos: '/fondos/desayunos-v2.webp',
+  restaurante: '/fondos/restaurante-v2.webp',
+  cocteles: '/fondos/cocteles-v2.webp',
+  hamburgueseria: '/fondos/hamburgueseria-v2.webp'
 };
 
 const ICONS: Record<string, typeof Coffee> = {
