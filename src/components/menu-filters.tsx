@@ -158,7 +158,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
       ) : (
         <div key={active} className="ds-grid-enter py-8">
           {active === 'all' && baseCat && toppingCat && (
-            <ToastBuilder base={baseCat} topping={toppingCat} menuSlug={menu.slug} />
+            <ToastBuilder base={baseCat} topping={toppingCat} menuSlug={menu.slug} theme={menu.theme} />
           )}
           <div className="mx-auto max-w-5xl px-4">
           {groups.map((c) => (

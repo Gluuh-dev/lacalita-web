@@ -3,14 +3,15 @@
 import {useState} from 'react';
 import {useLocale, useTranslations} from 'next-intl';
 import {toast} from 'sonner';
-import {Sandwich, Plus, ChevronDown} from 'lucide-react';
+import {Sandwich, Plus, ChevronRight} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import type {Category, Product} from '@/lib/queries';
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter} from '@/components/ui/drawer';
 import {useMenuStore, type MenuItem} from './store';
 
 // Configurador "Arma tu tostada": pan + tamaño + varios rellenos que se suman.
 // Todo en píldoras que se encienden (nada de casillas de formulario).
-export default function ToastBuilder({base, topping, menuSlug}: {base: Category; topping: Category; menuSlug: string}) {
+export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Category; topping: Category; menuSlug: string; theme: string}) {
   const t = useTranslations('carta');
   const locale = useLocale();
   const {add} = useMenuStore();
@@ -52,6 +53,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
     };
     add(item);
     toast.success(t('addedToList'));
+    setOpen(false);
   }
 
   // Resumen en vivo: "Blanco · Entera · Tomate, Aguacate"
@@ -63,128 +65,132 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
 
   return (
     <div className="mx-auto mb-9 max-w-5xl px-4">
-      <div className="overflow-hidden rounded-[26px] border border-line bg-surface">
-        {/* Cabecera = botón que despliega el configurador */}
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          aria-expanded={open}
-          className="flex w-full items-center gap-3 bg-gradient-to-r from-brand/15 to-transparent px-5 py-4 text-left transition hover:from-brand/25"
-        >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary">
-            <Sandwich className="size-5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <h2 className="font-serif text-xl font-bold leading-tight text-ink">{t('buildTitle')}</h2>
-            <p className="truncate text-xs text-ink-3">{t('buildSub')}</p>
-          </div>
-          <ChevronDown className={`size-5 shrink-0 text-ink-3 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
-        </button>
+      {/* Tarjeta-lanzador: el configurador vive en un bottom sheet arrastrable. */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex w-full items-center gap-3 rounded-[26px] border border-line bg-gradient-to-r from-brand/15 to-surface px-5 py-4 text-left transition hover:from-brand/25"
+      >
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary">
+          <Sandwich className="size-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-serif text-xl font-bold leading-tight text-ink">{t('buildTitle')}</h2>
+          <p className="truncate text-xs text-ink-3">{t('buildSub')}</p>
+        </div>
+        <ChevronRight className="size-5 shrink-0 text-ink-3" />
+      </button>
 
-        {open && (
-        <>
-        <div className="space-y-5 px-5 py-5 duration-300 animate-in fade-in slide-in-from-top-2">
-          {/* Pan */}
-          <div>
-            <span className={eyebrow}>{t('buildBread')}</span>
-            <div className="flex flex-wrap gap-2">
-              {breads.map((b, i) => {
-                const on = i === breadIdx;
-                return (
-                  <button
-                    key={b.id}
-                    type="button"
-                    onClick={() => setBreadIdx(i)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
-                      on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
-                    }`}
-                  >
-                    {tx(b.name, locale)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      <Drawer open={open} onOpenChange={setOpen} showSwipeHandle>
+        {/* data-theme aquí: el drawer se renderiza en un portal fuera del
+            contenedor de la carta y perdía su color (salía siempre naranja). */}
+        <DrawerContent data-theme={theme} className="max-h-[88vh] bg-bg text-ink">
+          <DrawerHeader className="text-center">
+            <DrawerTitle className="font-serif text-2xl">{t('buildTitle')}</DrawerTitle>
+            <DrawerDescription>{t('buildSub')}</DrawerDescription>
+          </DrawerHeader>
 
-          {/* Tamaño: control segmentado */}
-          {sizes.length > 0 && (
-            <div>
-              <span className={eyebrow}>{t('buildSize')}</span>
-              <div className="inline-flex rounded-full bg-surface-sunken p-1">
-                {sizes.map((s, i) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSizeIdx(i)}
-                    className={`rounded-full px-5 py-1.5 text-sm font-semibold transition ${
-                      i === sizeIdx ? 'bg-surface text-brand-deep' : 'text-ink-3'
-                    }`}
-                  >
-                    {tx(s.name, locale)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Rellenos: píldoras que se encienden (multi) */}
-          <div>
-            <div className="flex items-center gap-2">
-              <span className={`${eyebrow} mb-0`}>{t('buildTopping')}</span>
-              {chosen.length > 0 && (
-                <span className="mb-2.5 flex size-5 items-center justify-center rounded-full bg-brand text-[0.65rem] font-bold text-on-primary">
-                  {chosen.length}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {toppings.map((p) => {
-                const on = sel.has(p.id);
-                const ex = priceOf(p);
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => toggle(p.id)}
-                    className={`group flex items-center gap-1.5 rounded-full py-2 pl-3.5 pr-2.5 text-sm transition active:scale-95 ${
-                      on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
-                    }`}
-                  >
-                    <span className="font-medium">{tx(p.name, locale)}</span>
-                    <span
-                      className={`rounded-full px-1.5 py-0.5 text-[0.68rem] font-bold ${
-                        on ? 'bg-white/25' : 'bg-surface text-brand-deep'
+          <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-5 pb-4 text-center">
+            {/* 1 · Tamaño (lo primero: manda sobre todos los precios) */}
+            {sizes.length > 0 && (
+              <div>
+                <span className={eyebrow}>{t('buildSize')}</span>
+                <div className="inline-flex rounded-full bg-surface-sunken p-1">
+                  {sizes.map((s, i) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setSizeIdx(i)}
+                      className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
+                        i === sizeIdx ? 'bg-surface text-brand-deep' : 'text-ink-3'
                       }`}
                     >
-                      {ex > 0 ? `+${euro(ex, locale)}` : t('included')}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+                      {tx(s.name, locale)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {/* Barra de total: resumen en vivo + precio + añadir */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface-2 px-5 py-4">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs text-ink-3">{summary}</p>
+            {/* 2 · Pan */}
+            <div>
+              <span className={eyebrow}>{t('buildBread')}</span>
+              <div className="flex flex-wrap justify-center gap-2">
+                {breads.map((b, i) => {
+                  const on = i === breadIdx;
+                  return (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => setBreadIdx(i)}
+                      className={`rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
+                        on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      }`}
+                    >
+                      {tx(b.name, locale)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 3 · Rellenos: píldoras que se encienden (multi) */}
+            <div>
+              <div className="flex items-center justify-center gap-2">
+                <span className={`${eyebrow} mb-0`}>{t('buildTopping')}</span>
+                {chosen.length > 0 && (
+                  <span className="mb-2.5 flex size-5 items-center justify-center rounded-full bg-brand text-[0.65rem] font-bold text-on-primary">
+                    {chosen.length}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap justify-center gap-2">
+                {toppings.map((p) => {
+                  const on = sel.has(p.id);
+                  const ex = priceOf(p);
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => toggle(p.id)}
+                      className={`flex items-center gap-1.5 rounded-full py-2 pl-3.5 pr-2.5 text-sm transition active:scale-95 ${
+                        on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      }`}
+                    >
+                      <span className="font-medium">{tx(p.name, locale)}</span>
+                      <span
+                        className={`rounded-full px-1.5 py-0.5 text-[0.68rem] font-bold ${
+                          on ? 'bg-white/25' : 'bg-surface text-brand-deep'
+                        }`}
+                      >
+                        {ex > 0 ? `+${euro(ex, locale)}` : t('included')}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Resumen de la tostada, centrado (no en el pie) */}
+            <p className="border-t border-line pt-4 text-sm font-medium text-ink-2">{summary}</p>
+          </div>
+
+          {/* Pie: solo total + añadir */}
+          <DrawerFooter className="flex-row items-center justify-center gap-4 border-t border-line bg-surface-2">
             <div className="flex items-baseline gap-1.5">
               <span className="font-montserrat text-[0.62rem] font-bold uppercase tracking-[0.16em] text-ink-3">{t('buildTotal')}</span>
               <span className="font-serif text-2xl font-bold text-brand-deep">{euro(total, locale)}</span>
             </div>
-          </div>
-          <button
-            type="button"
-            onClick={addToast}
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-on-primary transition hover:bg-brand-deep active:scale-95"
-          >
-            <Plus className="size-4" /> {t('addToList')}
-          </button>
-        </div>
-        </>
-        )}
-      </div>
+            <button
+              type="button"
+              onClick={addToast}
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-on-primary transition hover:bg-brand-deep active:scale-95"
+            >
+              <Plus className="size-4" /> {t('addToList')}
+            </button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

@@ -3,11 +3,11 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useTranslations} from 'next-intl';
 import Image from 'next/image';
-import {ChevronUp, X, ArrowRight} from 'lucide-react';
+import {ChevronUp, ArrowRight} from 'lucide-react';
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter} from '@/components/ui/drawer';
 import {Link} from '@/i18n/navigation';
 import {useHeaderMode} from './header-mode';
 import {inkOn, type HeroEvent} from '@/lib/hero';
-import {useScrollLock} from '@/lib/use-scroll-lock';
 import type {HeroSlide} from '@/lib/hero-types';
 
 const FONT: Record<string, string> = {
@@ -439,8 +439,6 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
   const t = useTranslations();
   const [active, setActive] = useState(0);
   const [sheet, setSheet] = useState(false);
-  const [drag, setDrag] = useState(0);
-  const dragY = useRef<number | null>(null);
 
   const agenda = slide.heroMode === 'agenda';
   const evs = events.slice(0, 4);
@@ -459,10 +457,7 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
     const t = setInterval(() => setActive((a) => (a + 1) % evs.length), 4200);
     return () => clearInterval(t);
   }, [agenda, evs.length]);
-  useEffect(() => {
-    if (sheet) setDrag(0);
-  }, [sheet]);
-  useScrollLock(sheet);
+  // El Drawer ya bloquea el scroll y gestiona el arrastre.
 
   if (slide.heroMode === 'poster') return <PosterView slide={slide} />;
 
@@ -663,42 +658,27 @@ function HeroView({slide, events}: {slide: HeroSlide; events: HeroEvent[]}) {
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary"><ChevronUp className="size-4" /></span>
           </button>
 
-          {/* Siempre montado: con `hidden` (display:none) el navegador no tenía
-              fotograma de partida y la apertura no se animaba, solo aparecía. */}
-          <div aria-hidden={sheet ? undefined : true} className={`fixed inset-0 z-[200] lg:hidden ${sheet ? '' : 'pointer-events-none'}`}>
-            {/* inset-0, no top-14: el velo tapa también la barra de navegación. */}
-            <div onClick={() => setSheet(false)} className={`absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-300 ${sheet ? 'opacity-100' : 'opacity-0'}`} />
-            <div
-              className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[26px] bg-bg p-4 pb-8 text-ink shadow-2xl"
-              style={{transform: sheet ? `translateY(${drag}px)` : 'translateY(100%)', transition: drag ? 'none' : 'transform .38s cubic-bezier(0.16,1,0.3,1)'}}
-              onTouchStart={(e) => (dragY.current = e.touches[0].clientY)}
-              onTouchMove={(e) => {
-                if (dragY.current != null) {
-                  const d = e.touches[0].clientY - dragY.current;
-                  if (d > 0) setDrag(d);
-                }
-              }}
-              onTouchEnd={() => {
-                if (drag > 110) setSheet(false);
-                setDrag(0);
-                dragY.current = null;
-              }}
-            >
-              <div onClick={() => setSheet(false)} className="mx-auto mb-3 h-1.5 w-11 cursor-pointer rounded-full bg-ink/20" />
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-lg font-semibold" style={{fontFamily: FONT.montserrat}}>{t('events.upcoming')}</span>
-                <button onClick={() => setSheet(false)} aria-label={t('common.close')} className="rounded-full bg-ink/10 p-1.5"><X className="size-5" /></button>
-              </div>
-              <ul className="flex flex-col">
+          {/* Drawer de Base UI: gesto de arrastre con inercia, foco atrapado y
+              cierre por deslizamiento. Antes era un panel con touch a mano. */}
+          <Drawer open={sheet} onOpenChange={setSheet} showSwipeHandle>
+            <DrawerContent className="lg:hidden">
+              <DrawerHeader>
+                <DrawerTitle style={{fontFamily: FONT.montserrat}}>{t('events.upcoming')}</DrawerTitle>
+              </DrawerHeader>
+              <ul className="flex flex-col px-4">
                 {evs.map((e) => (
                   <li key={e.id}>
                     <EvRow e={e} on={false} href={`/eventos/${e.id}`} onClick={() => setSheet(false)} light />
                   </li>
                 ))}
               </ul>
-              <Link href="/eventos" className="mt-4 block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary" style={{fontFamily: FONT.montserrat}}>{t('events.allLong')}</Link>
-            </div>
-          </div>
+              <DrawerFooter>
+                <Link href="/eventos" onClick={() => setSheet(false)} className="block rounded-full bg-brand py-2.5 text-center text-sm font-semibold text-on-primary" style={{fontFamily: FONT.montserrat}}>
+                  {t('events.allLong')}
+                </Link>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         </>
       )}
     </div>
