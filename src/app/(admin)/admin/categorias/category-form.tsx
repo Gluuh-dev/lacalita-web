@@ -98,7 +98,7 @@ export default function CategoryForm({
         </label>
       </div>
       <div>
-        <Label>Rol en el configurador «Arma tu tostada»</Label>
+        <Label>Cómo se muestra esta categoría</Label>
         <Select value={role} onValueChange={(v) => setRole(v ?? 'normal')}>
           <SelectTrigger>
             <SelectValue />
@@ -107,6 +107,7 @@ export default function CategoryForm({
             <SelectItem value="normal">Normal (categoría corriente)</SelectItem>
             <SelectItem value="base">Base — los productos son la base (panes)</SelectItem>
             <SelectItem value="topping">Relleno — se suma a la base (toppings)</SelectItem>
+            <SelectItem value="carousel">Carrusel — tarros/fotos en fila (salsas)</SelectItem>
           </SelectContent>
         </Select>
         <p className="mt-1 text-xs text-ink-3">Con una categoría «base» y otra «relleno» en la misma carta, la web muestra el configurador arriba.</p>

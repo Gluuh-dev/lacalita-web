@@ -37,7 +37,7 @@ export type Category = {
   image: string | null;
   position: number;
   visible: boolean;
-  role: 'normal' | 'base' | 'topping'; // configurador "Arma tu tostada"
+  role: 'normal' | 'base' | 'topping' | 'carousel'; // configurador y presentación
   extras: Extra[];
   products: Product[];
 };

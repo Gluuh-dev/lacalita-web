@@ -9,6 +9,7 @@ import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
 import ToastBuilder from '@/components/menu/toast-builder';
+import SauceCarousel from '@/components/menu/sauce-carousel';
 import AllergenIcon from '@/components/allergen-icon';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
@@ -161,16 +162,20 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
             <ToastBuilder base={baseCat} topping={toppingCat} menuSlug={menu.slug} theme={menu.theme} />
           )}
           <div className="mx-auto max-w-5xl px-4">
-          {groups.map((c) => (
-            <div key={c.id} className="mb-9">
-              {active === 'all' && <h2 className="eyebrow mb-4">{tx(c.name, locale)}</h2>}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {c.products.map((p) => (
-                  <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />
-                ))}
+          {groups.map((c) =>
+            c.role === 'carousel' ? (
+              <SauceCarousel key={c.id} cat={c} menuSlug={menu.slug} />
+            ) : (
+              <div key={c.id} className="mb-9">
+                {active === 'all' && <h2 className="eyebrow mb-4">{tx(c.name, locale)}</h2>}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {c.products.map((p) => (
+                    <ProductItem key={p.id} product={p} menuSlug={menu.slug} locale={locale} />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
           </div>
         </div>
       )}
