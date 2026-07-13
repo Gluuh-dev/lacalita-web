@@ -3,9 +3,9 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Phone, Waves, Quote, Star} from 'lucide-react';
 import {IconBrandInstagram, IconBrandFacebook, IconCoffee, IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
 import MapCard from '@/components/map-card';
-import MenuCard from '@/components/menu-card';
+import MenuCard, {FONDOS} from '@/components/menu-card';
 import {Link} from '@/i18n/navigation';
-import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
+import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE, getGalleryAlbums} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
 import {DEFAULT_CONTENT} from '@/lib/content-types';
 import {tx, euro} from '@/lib/localize';
@@ -33,11 +33,12 @@ export default async function Home({
   const {locale} = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const [settings, events, menus, featured] = await Promise.all([
+  const [settings, events, menus, featured, albums] = await Promise.all([
     getSettings(),
     getUpcomingEvents(6),
     getMenus(),
-    getFeaturedProducts(4)
+    getFeaturedProducts(8),
+    getGalleryAlbums()
   ]);
 
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
@@ -47,7 +48,9 @@ export default async function Home({
   const about = {...DEFAULT_CONTENT.about, ...content.about};
   const story = {...DEFAULT_CONTENT.story, ...content.story};
   const reviews = content.reviews ?? [];
-  const gallery = content.gallery ?? [];
+  // La galería sale de los álbumes (antes leía un campo de ajustes que nadie
+  // rellenaba, así que las 28 fotos subidas no se veían en la portada).
+  const gallery = albums.flatMap((a) => a.images ?? []).slice(0, 8);
 
   const heroEvents = toHeroEvents(events, locale);
   // Todas las diapositivas activas del admin (incluidas las de tipo 'poster').
@@ -192,11 +195,14 @@ export default async function Home({
                   href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
                   className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-4 text-white shadow-md"
                 >
-                  {p.image ? (
-                    <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 64vw, 260px" className="object-cover transition duration-500 group-hover:scale-105" />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
-                  )}
+                  {(() => {
+                    const bg = p.image || FONDOS[p.categories?.menus?.slug ?? ''];
+                    return bg ? (
+                      <Image src={bg} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 64vw, 260px" className="object-cover transition duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
+                    );
+                  })()}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
                   <div className="relative z-10">
                     <h3 className="font-serif text-xl leading-tight">{tx(p.name, locale)}</h3>
@@ -281,6 +287,7 @@ export default async function Home({
         <Reveal>
           <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} />
+            <MoreLink href="/galeria" label={t('home.galleryTitle')} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">

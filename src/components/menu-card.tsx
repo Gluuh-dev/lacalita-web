@@ -10,7 +10,7 @@ type MenuHead = Pick<Menu, 'id' | 'slug' | 'name' | 'subtitle' | 'theme' | 'head
 
 // Texturas de la casa (café, arena, hielo, brasa). El admin puede pisarlas
 // subiendo una imagen de cabecera a la carta.
-const FONDOS: Record<string, string> = {
+export const FONDOS: Record<string, string> = {
   desayunos: '/fondos/desayunos-v2.webp',
   restaurante: '/fondos/restaurante-v2.webp',
   cocteles: '/fondos/cocteles-v2.webp',

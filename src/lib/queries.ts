@@ -203,7 +203,6 @@ async function _fetchFeatured(limit: number) {
     .select('id, slug, name, price, image, categories ( menus ( slug ) )')
     .eq('featured', true)
     .eq('available', true)
-    .not('image', 'is', null)
     .limit(limit);
   return (
     (data as unknown as {
