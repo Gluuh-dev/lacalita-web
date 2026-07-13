@@ -93,7 +93,11 @@
     "buildSub": "Elige el pan y ponle lo que quieras",
     "listNotOrder": "Esta lista no es un pedido ni un pago: solo te ayuda a recordar lo que quieres y enseñárselo al camarero.",
     "comboTitle": "Hazlo menú",
-    "comboSub": "Incluye patatas y bebida"
+    "comboSub": "Incluye patatas y bebida",
+    "voteTitle": "¿Te ha gustado?",
+    "voteText": "Vótalo y ayuda a los demás a descubrir lo mejor de la carta. También se guarda en tus favoritos.",
+    "voteCount": "{count, plural, one {# persona lo ha votado} other {# personas lo han votado}}",
+    "voteFirst": "Sé el primero en votarlo"
   },
   "tabs": {
     "menu": "Carta",

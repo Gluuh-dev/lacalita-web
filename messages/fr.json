@@ -93,7 +93,11 @@
     "buildSub": "Choisissez le pain et garnissez-le",
     "listNotOrder": "Cette liste n'est ni une commande ni un paiement : elle vous aide simplement à retenir vos choix et à les montrer au serveur.",
     "comboTitle": "En menu",
-    "comboSub": "Frites et boisson inclus"
+    "comboSub": "Frites et boisson inclus",
+    "voteTitle": "Ça vous a plu ?",
+    "voteText": "Votez et aidez les autres à découvrir le meilleur de la carte. C’est aussi ajouté à vos favoris.",
+    "voteCount": "{count, plural, one {# personne a voté} other {# personnes ont voté}}",
+    "voteFirst": "Soyez le premier à voter"
   },
   "tabs": {
     "menu": "Carte",

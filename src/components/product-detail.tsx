@@ -14,6 +14,7 @@ import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
 import {useBackClose} from '@/lib/use-back-close';
 import VoteButton from '@/components/burger/vote-button';
+import {useVotes} from '@/lib/vote';
 import {useMenuStore, type MenuItem} from '@/components/menu/store';
 
 export default function ProductDetail({
@@ -38,6 +39,7 @@ export default function ProductDetail({
   const locale = useLocale();
   const reduce = useReducedMotion();
   const {qty, add, dec} = useMenuStore();
+  const votes = useVotes(product.id, product.votes ?? 0);
   const variants = product.product_variants ?? [];
   // Variante elegida (Media/Entera, 3/6 uds). El precio y "Añadir" la siguen.
   const [vi, setVi] = useState(0);
@@ -148,7 +150,7 @@ export default function ProductDetail({
           ) : null}
         </motion.div>
 
-        <motion.h1 {...fade(0.1)} className="mt-6 font-serif text-4xl">
+        <motion.h1 {...fade(0.1)} className="mt-6 font-serif text-[2.6rem] font-bold leading-[1.05] tracking-[-0.015em] text-ink">
           {tx(product.name, locale)}
         </motion.h1>
 
@@ -181,6 +183,37 @@ export default function ProductDetail({
           </motion.div>
         )}
 
+        {product.description && (
+          <motion.p {...fade(0.2)} className="mt-4 text-lg leading-relaxed text-ink-2">
+            {tx(product.description, locale)}
+          </motion.p>
+        )}
+
+        {product.ingredients && product.ingredients.length > 0 && (
+          <motion.div {...fade(0.22)} className="mt-5">
+            <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">{tc('carries')}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {product.ingredients.map((ing, i) => (
+                <span key={i} className="rounded-full bg-surface-2 px-3 py-1 text-sm text-ink-2">{ing}</span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {allergens.length > 0 && (
+          <motion.div {...fade(0.25)} className="mt-8">
+            <h2 className="eyebrow mb-3">{t('allergens')}</h2>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink/70">
+              {allergens.map((a) => (
+                <li key={a.code} className="flex items-center gap-1.5">
+                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={24} />
+                  {tx(a.name, locale)}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+
         {/* "Hazlo menú": patatas + bebida. Al activarlo suma su precio arriba y
             en el botón de añadir. Solo si la categoría lo ofrece. */}
         {combo != null && basePrice != null && (
@@ -209,44 +242,11 @@ export default function ProductDetail({
           </motion.button>
         )}
 
-        {product.description && (
-          <motion.p {...fade(0.2)} className="mt-4 text-lg leading-relaxed text-ink-2">
-            {tx(product.description, locale)}
-          </motion.p>
-        )}
-
-        {product.ingredients && product.ingredients.length > 0 && (
-          <motion.div {...fade(0.22)} className="mt-5">
-            <div className="mb-2 font-adam text-[0.66rem] uppercase tracking-[0.12em] text-ink-3">{tc('carries')}</div>
-            <div className="flex flex-wrap gap-1.5">
-              {product.ingredients.map((ing, i) => (
-                <span key={i} className="rounded-full bg-surface-2 px-3 py-1 text-sm text-ink-2">{ing}</span>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {allergens.length > 0 && (
-          <motion.div {...fade(0.25)} className="mt-8">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
-              {t('allergens')}
-            </h2>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink/70">
-              {allergens.map((a) => (
-                <li key={a.code} className="flex items-center gap-1.5">
-                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={24} />
-                  {tx(a.name, locale)}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-
         {/* Salsas con su tarro, en scroll lateral (como en la carta). Si no hay
             fotos cargadas, cae a la lista de texto de los extras. */}
         {sauces.length > 0 ? (
           <motion.div {...fade(0.24)} className="mt-8">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-3">{tc('sauces')}</h2>
+            <h2 className="eyebrow mb-3">{tc('sauces')}</h2>
             <div className="-mx-4 snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="mx-auto flex w-max gap-3">
               {sauces.map((s) => (
@@ -269,9 +269,7 @@ export default function ProductDetail({
           </motion.div>
         ) : (product.extras?.length ?? 0) > 0 ? (
           <motion.div {...fade(0.24)} className="mt-8">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
-              {tc('sauces')}
-            </h2>
+            <h2 className="eyebrow mb-3">{tc('sauces')}</h2>
             <ul className="divide-y divide-line rounded-2xl border border-line">
               {product.extras!.map((s, i) => (
                 <li key={i} className="flex items-center justify-between px-4 py-2.5">
@@ -287,6 +285,20 @@ export default function ProductDetail({
         {related.map((c) => (
           <ProductRail key={c.id} cat={c} menuSlug={menuSlug} excludeId={product.id} />
         ))}
+
+        {/* Llamada a votar al cierre del plato: el mismo corazón de la barra,
+            pero aquí explicado — el voto es lo que ordena "lo más votado". */}
+        <motion.div
+          {...fade(0.28)}
+          className="mt-10 flex flex-col items-center gap-3 rounded-[24px] border border-line bg-surface px-6 py-8 text-center"
+        >
+          <h2 className="font-serif text-2xl font-bold leading-tight text-ink">{tc('voteTitle')}</h2>
+          <p className="max-w-xs text-sm leading-relaxed text-ink-2">{tc('voteText')}</p>
+          <VoteButton item={favItem} votes={product.votes ?? 0} className="mt-1 h-12 px-6 text-base" />
+          <p className="text-xs text-ink-3">
+            {votes > 0 ? tc('voteCount', {count: votes}) : tc('voteFirst')}
+          </p>
+        </motion.div>
 
         {isAdmin && (
           <a

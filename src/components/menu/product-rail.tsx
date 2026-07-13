@@ -23,7 +23,7 @@ export default function ProductRail({cat, menuSlug, excludeId}: {cat: Category; 
 
   return (
     <div className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-3">{tx(cat.name, locale)}</h2>
+      <h2 className="eyebrow mb-3">{tx(cat.name, locale)}</h2>
       <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((p) => (
           <RailCard key={p.id} p={p} menuSlug={menuSlug} href={href(p.slug)} locale={locale} t={t} tMenu={tMenu} qty={qty} add={add} dec={dec} push={router.push} />

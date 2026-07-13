@@ -93,7 +93,11 @@
     "buildSub": "Pick your bread and pile it up",
     "listNotOrder": "This list is not an order or a payment: it just helps you remember what you want and show it to the waiter.",
     "comboTitle": "Make it a meal",
-    "comboSub": "Includes fries and a drink"
+    "comboSub": "Includes fries and a drink",
+    "voteTitle": "Did you like it?",
+    "voteText": "Vote for it and help others find the best of the menu. It also gets saved to your favourites.",
+    "voteCount": "{count, plural, one {# person voted for it} other {# people voted for it}}",
+    "voteFirst": "Be the first to vote for it"
   },
   "tabs": {
     "menu": "Menu",
