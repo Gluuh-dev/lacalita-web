@@ -2,54 +2,36 @@
 
 import {useEffect, useState} from 'react';
 import {Heart} from 'lucide-react';
-import {createClient} from '@/lib/supabase/client';
+import {useMenuStore, type MenuItem} from '@/components/menu/store';
+import {syncVote} from '@/lib/vote';
 
-const KEY = 'lc_votes';
-function getVoted(): Record<string, boolean> {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) || '{}');
-  } catch {
-    return {};
-  }
-}
-let _sb: ReturnType<typeof createClient> | null = null;
-
-// Botón de voto/valoración: 1 voto por dispositivo (localStorage). Suma/resta en BD.
-export default function VoteButton({id, votes, className = ''}: {id: string; votes: number; className?: string}) {
-  const [voted, setVoted] = useState(false);
+// Un solo corazón: guarda en favoritos y vota a la vez. El número es el voto
+// público del plato; el relleno del corazón, que lo tienes en tus favoritos.
+export default function VoteButton({item, votes, className = ''}: {item: MenuItem; votes: number; className?: string}) {
+  const {isFav, toggleFav} = useMenuStore();
+  const on = isFav(item.id);
   const [count, setCount] = useState(votes);
-
-  useEffect(() => {
-    setVoted(!!getVoted()[id]);
-  }, [id]);
+  // El voto de la BD manda mientras no lo toques (ISR puede traer otro número).
+  useEffect(() => setCount(votes), [votes]);
 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const map = getVoted();
-    const now = !map[id];
-    if (now) map[id] = true;
-    else delete map[id];
-    try {
-      localStorage.setItem(KEY, JSON.stringify(map));
-    } catch {}
-    setVoted(now);
-    setCount((c) => Math.max(0, c + (now ? 1 : -1)));
-    try {
-      (_sb ??= createClient()).rpc('bump_votes', {pid: id, delta: now ? 1 : -1}).then(() => {}, () => {});
-    } catch {}
+    const next = !on;
+    toggleFav(item);
+    setCount((c) => Math.max(0, c + syncVote(item.id, next)));
   };
 
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-pressed={voted}
-      aria-label={voted ? 'Quitar voto' : 'Votar'}
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold shadow-sm backdrop-blur transition active:scale-90 ${voted ? 'bg-brand text-on-primary' : 'bg-surface text-brand-deep ring-1 ring-line'} ${className}`}
+      aria-pressed={on}
+      aria-label={on ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold transition active:scale-90 ${on ? 'bg-brand text-on-primary' : 'bg-surface text-brand-deep ring-1 ring-line hover:ring-brand'} ${className}`}
     >
-      <Heart className={`size-4 transition ${voted ? 'scale-110' : ''}`} fill={voted ? 'currentColor' : 'none'} />
-      {count}
+      <Heart className={`size-4 transition ${on ? 'scale-110' : ''}`} fill={on ? 'currentColor' : 'none'} />
+      {count > 0 && count}
     </button>
   );
 }

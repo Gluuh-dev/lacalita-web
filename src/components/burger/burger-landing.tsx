@@ -131,7 +131,7 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
                     </span>
                   )}
                   <div className="absolute right-3 top-3">
-                    <VoteButton id={p.id} votes={p.votes ?? 0} />
+                    <VoteButton item={{id: p.id, name: tx(p.name, locale), price: p.price != null ? Number(p.price) : null, image: p.image ?? null, slug: p.slug, menuSlug: 'hamburgueseria'}} votes={p.votes ?? 0} className="shadow-sm backdrop-blur" />
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col p-4">

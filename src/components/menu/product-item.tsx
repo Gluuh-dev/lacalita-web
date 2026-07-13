@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import {useTranslations} from 'next-intl';
-import {Heart, Info, Plus, Minus} from 'lucide-react';
+import {Info, Plus, Minus} from 'lucide-react';
 import {useRouter} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
-import {useFavGate} from '@/lib/use-fav-gate';
+import VoteButton from '@/components/burger/vote-button';
 import {useMenuStore, type MenuItem} from './store';
 import type {Product} from '@/lib/queries';
 
@@ -20,8 +20,7 @@ export default function ProductItem({
 }) {
   const t = useTranslations('carta');
   const tMenu = useTranslations('menu');
-  const {isFav, qty, add, dec} = useMenuStore();
-  const favGate = useFavGate();
+  const {qty, add, dec} = useMenuStore();
   const router = useRouter();
   // Con variantes (Media/Entera, 3/6 uds) no hay precio único: se elige en el detalle.
   const variants = product.product_variants ?? [];
@@ -46,7 +45,6 @@ export default function ProductItem({
       .map((a) => ({code: a.code, icon: a.icon, name: a.name}))
   };
   const n = qty(item.id);
-  const fav = isFav(item.id);
 
   return (
     <article className="ds-card--link group flex gap-3 overflow-hidden rounded-[18px] border border-line bg-surface p-3 sm:flex-col sm:gap-0 sm:p-0">
@@ -82,13 +80,8 @@ export default function ProductItem({
           {item.desc && <p className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-ink-2">{item.desc}</p>}
         </div>
         <div className="mt-2 flex items-center gap-2 sm:mt-3">
-          <button
-            onClick={() => favGate(item)}
-            aria-label="Favorito"
-            className={`flex size-9 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
-          >
-            <Heart className="size-4" fill={fav ? 'currentColor' : 'none'} />
-          </button>
+          {/* Un solo corazón: guarda en favoritos y vota. */}
+          <VoteButton item={item} votes={product.votes ?? 0} className="h-9 px-3.5" />
           <button onClick={() => openIt()} aria-label="Más información" className="flex size-9 items-center justify-center rounded-full border border-line text-ink-3 transition hover:border-brand">
             <Info className="size-4" />
           </button>

@@ -4,7 +4,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Heart, Plus, Minus, X, Maximize2, Share2, UtensilsCrossed, Check} from 'lucide-react';
+import {Plus, Minus, X, Maximize2, Share2, UtensilsCrossed, Check} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
@@ -12,7 +12,6 @@ import type {Product, Category} from '@/lib/queries';
 import ProductRail from '@/components/menu/product-rail';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
-import {useFavGate} from '@/lib/use-fav-gate';
 import {useBackClose} from '@/lib/use-back-close';
 import VoteButton from '@/components/burger/vote-button';
 import {useMenuStore, type MenuItem} from '@/components/menu/store';
@@ -38,8 +37,7 @@ export default function ProductDetail({
   const tCommon = useTranslations('common');
   const locale = useLocale();
   const reduce = useReducedMotion();
-  const {isFav, qty, add, dec} = useMenuStore();
-  const favGate = useFavGate();
+  const {qty, add, dec} = useMenuStore();
   const variants = product.product_variants ?? [];
   // Variante elegida (Media/Entera, 3/6 uds). El precio y "Añadir" la siguen.
   const [vi, setVi] = useState(0);
@@ -76,7 +74,6 @@ export default function ProductDetail({
   // Atrás (Android) cierra la imagen ampliada en vez de salir de la página.
   useBackClose(zoom, () => setZoom(false));
   const n = qty(listItem.id);
-  const fav = isFav(product.id);
 
   async function share() {
     const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -163,12 +160,6 @@ export default function ProductDetail({
             {euro(shownPrice, locale)}
           </motion.p>
         )}
-
-        {/* Votar disponible en todas las cartas (antes solo hamburguesería). */}
-        <div className="mt-4 flex items-center gap-2">
-          <VoteButton id={product.id} votes={product.votes ?? 0} />
-          <span className="text-sm text-ink-3">{tc('vote')}</span>
-        </div>
 
         {/* Selector de tamaño/unidades: el precio de arriba y "Añadir" lo siguen. */}
         {variants.length > 0 && (
@@ -310,13 +301,8 @@ export default function ProductDetail({
       {/* Barra de acciones: favorito + añadir a mi lista */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center gap-3">
-          <button
-            onClick={() => favGate(favItem)}
-            aria-label="Favorito"
-            className={`flex size-12 shrink-0 items-center justify-center rounded-full border transition active:scale-90 ${fav ? 'border-red-300 bg-red-50 text-red-500' : 'border-line text-ink-3 hover:border-brand'}`}
-          >
-            <Heart className="size-5" fill={fav ? 'currentColor' : 'none'} />
-          </button>
+          {/* Corazón único: favorito + voto, con el número de votos del plato. */}
+          <VoteButton item={favItem} votes={product.votes ?? 0} className="h-12 shrink-0 px-4 text-base" />
           <button
             onClick={share}
             aria-label="Compartir"
