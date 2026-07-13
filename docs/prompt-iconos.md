@@ -7,41 +7,62 @@ del tab-bar y en la tarjeta de "Hazlo menú".
 **Categorías (4):** smash burger · entrantes · chicken wings · salsas
 **Menú (3):** hamburguesa · patatas fritas · vaso de refresco
 
-El de *smash burger* debe ser el mismo trazo que ya usamos en el botón circular de la
-carta (la hamburguesa de línea), para que todo case.
+Estilo objetivo: **pictogramas**, no dibujos. Lo mismo que Lucide o Feather (los iconos
+que ya usa la web): trazo único y uniforme, formas geométricas simples, la silueta
+mínima que hace reconocible cada cosa. Nada de textura, sombreado, semillas de sésamo,
+bordes ondulados ni detalles decorativos. Si un rasgo se puede quitar sin que deje de
+entenderse el icono, se quita.
+
+El de *smash burger* debe casar con la hamburguesa de línea del botón circular del
+tab-bar.
 
 ---
 
 ## Prompt (pégalo tal cual)
 
 ```
-A single flat icon sheet on a pure white background (#FFFFFF), 2 rows x 4 columns,
-evenly spaced, generous margins between icons.
+A sheet of 8 minimalist pictogram icons on a pure white background (#FFFFFF),
+arranged in a 2 x 4 grid, evenly spaced, generous margins.
 
-Style: minimalist line icons, pure black (#000000) strokes only, uniform stroke
-weight (about 6% of the icon height), rounded line caps and rounded joins, no fill,
-no color, no gradients, no shadows, no drop shadows, no background shapes, no
-circles or frames around the icons, no text, no labels, no captions, no watermarks.
-Every icon must be perfectly centred inside its own invisible square cell and drawn
-at the same optical size, as if they belonged to the same icon font.
+Style: extreme minimalism, in the style of Lucide / Feather icons. Pure black
+(#000000) outline strokes only. One single uniform stroke weight across the whole
+sheet (roughly 5% of the icon height), rounded caps, rounded joins. Geometric,
+reduced shapes: only the minimum silhouette needed to recognise the object.
+
+Strictly avoid: filled areas, solid black shapes, hatching, texture, shading,
+gradients, shadows, outlines of outlines, double lines, perspective, 3/4 views,
+decorative details, sesame seeds, wavy or bumpy edges, background shapes, circles
+or frames around the icons, text, labels, captions, watermarks.
+
+Every icon: flat front or side view, perfectly centred in its own invisible square
+cell, same optical size, drawn as if they all belonged to a single icon font.
+Aim for about 6 to 10 strokes per icon, no more.
 
 The icons, in reading order:
-1. A stacked smash burger seen from the side: bun with sesame seeds on top, one
-   thin smashed patty, a slice of cheese with a wavy melting edge, lettuce leaf,
-   bottom bun.
-2. Starters / sharing plate: a small oval plate with three croquettes on it.
-3. Chicken wing: a single drumstick-style chicken wing, side view.
-4. Sauce: a small dip pot / ramekin seen at a three-quarter angle with a swirl of
-   sauce on top.
-5. Burger for the meal deal: a simple side-view burger, same construction as icon 1
-   but without the sesame seeds.
-6. French fries: an open carton of fries with the fries fanning out of the top.
-7. Soft drink: a tall takeaway cup with a lid and a straw, with a horizontal band
-   near the bottom.
+1. Burger: three stacked rounded horizontal shapes — a dome for the top bun, one
+   straight line for the patty, a flat rounded base for the bottom bun. Nothing else.
+2. Starters: a simple flat plate (one shallow curve with a rim line) with two small
+   ovals resting on it.
+3. Chicken wing: one simple drumstick silhouette — a rounded shape and a straight
+   bone with a small knob at the end.
+4. Sauce: a small dip bowl — a half-circle bowl with a straight rim line and one
+   short curved swirl above it.
+5. Burger (meal deal): same as icon 1.
+6. Fries: a trapezoid carton with three or four straight sticks poking out of the top.
+7. Drink: a straight tapered cup with a lid line on top and one diagonal straw.
 8. Leave this cell EMPTY (pure white).
 
-Aspect ratio 4:2, high resolution, crisp vector-like edges, suitable for cutting
-each icon out and using it as an SVG.
+Aspect ratio 4:2, high resolution, crisp vector-like edges, suitable for cutting each
+icon out and using it as an SVG.
+```
+
+## Si aún salen demasiado detallados
+
+Añade al final del prompt esta línea, que suele ser la que los termina de calmar:
+
+```
+Think of each icon as a UI symbol on a mobile app button at 24 x 24 pixels: if a
+detail would disappear at that size, do not draw it.
 ```
 
 ## Notas para recortarlos
