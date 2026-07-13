@@ -4,12 +4,13 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Plus, Minus, X, Maximize2, Share2, UtensilsCrossed, Check} from 'lucide-react';
+import {Plus, Minus, X, Maximize2, Share2, Check} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import type {Product, Category} from '@/lib/queries';
 import ProductRail from '@/components/menu/product-rail';
+import MaskIcon from '@/components/menu/mask-icon';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
 import {useBackClose} from '@/lib/use-back-close';
@@ -226,8 +227,9 @@ export default function ProductDetail({
               asCombo ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand'
             }`}
           >
-            <span className={`flex size-11 shrink-0 items-center justify-center rounded-full transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
-              <UtensilsCrossed className="size-5" />
+            <span className={`flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-3.5 transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
+              <MaskIcon src="/iconos/patatas.svg" className="size-[1.35rem]" />
+              <MaskIcon src="/iconos/bebida.svg" className="size-[1.15rem]" />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block font-ui text-base font-bold leading-tight text-ink">{tc('comboTitle')}</span>

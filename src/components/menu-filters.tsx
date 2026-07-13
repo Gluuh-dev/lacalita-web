@@ -3,8 +3,9 @@
 import {useState, useEffect, useRef} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {useLocale, useTranslations} from 'next-intl';
-import type {LucideIcon} from 'lucide-react';
-import {Flame, Sandwich, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed, Search, X, SlidersHorizontal} from 'lucide-react';
+import {Flame, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed, Search, X, SlidersHorizontal} from 'lucide-react';
+import {IconBurger} from '@tabler/icons-react';
+import MaskIcon from '@/components/menu/mask-icon';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
 import ProductItem from '@/components/menu/product-item';
@@ -14,18 +15,29 @@ import AllergenIcon from '@/components/allergen-icon';
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter} from '@/components/ui/drawer';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
-// Las categorías no tienen icono en BD: lo inferimos por el nombre.
-function catIcon(name: string): LucideIcon {
+// Las categorías no tienen icono en BD: lo inferimos por el nombre. Los de la
+// hamburguesería son los dibujos propios (y el mismo burger del botón del tab-bar).
+function CatIcon({name, className = 'size-4'}: {name: string; className?: string}) {
   const s = name.toLowerCase();
-  if (/hamburg|burger|smash/.test(s)) return Sandwich;
-  if (/postre|dulce|helado|tarta|dessert/.test(s)) return IceCreamCone;
-  if (/bebida|refresco|drink|batido|zumo/.test(s)) return CupSoda;
-  if (/caf|desayuno|coffee|merienda|t[ée]\b/.test(s)) return Coffee;
-  if (/pizza/.test(s)) return Pizza;
-  if (/ensalada|salad|veggie|verdura/.test(s)) return Salad;
-  if (/carne|parrilla|grill|meat/.test(s)) return Beef;
-  if (/entrante|aperitivo|starter|tapa|snack|patata|frit/.test(s)) return Utensils;
-  return UtensilsCrossed;
+  if (/hamburg|burger|smash/.test(s)) return <IconBurger className={className} stroke={2} />;
+  if (/salsa|sauce/.test(s)) return <MaskIcon src="/iconos/salsas.svg" className={className} />;
+  if (/wing|alita|pollo|chicken/.test(s)) return <MaskIcon src="/iconos/wings.svg" className={className} />;
+  if (/entrante|aperitivo|starter|tapa|snack|croqueta/.test(s)) return <MaskIcon src="/iconos/entrantes.svg" className={className} />;
+  if (/patata|frit|fries/.test(s)) return <MaskIcon src="/iconos/patatas.svg" className={className} />;
+  const Lucide = /postre|dulce|helado|tarta|dessert/.test(s)
+    ? IceCreamCone
+    : /bebida|refresco|drink|batido|zumo/.test(s)
+      ? CupSoda
+      : /caf|desayuno|coffee|merienda|t[ée]\b/.test(s)
+        ? Coffee
+        : /pizza/.test(s)
+          ? Pizza
+          : /ensalada|salad|veggie|verdura/.test(s)
+            ? Salad
+            : /carne|parrilla|grill|meat/.test(s)
+              ? Beef
+              : UtensilsCrossed;
+  return <Lucide className={className} strokeWidth={2} />;
 }
 
 export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?: boolean}) {
@@ -117,11 +129,11 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
         </div>
         {/* Móvil: scroll horizontal. PC: todos a la vista, envuelven a 2ª fila si no caben. */}
         <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:pr-4">
-          <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
+          <Chip active={active === 'all'} onClick={() => setActive('all')} icon={<Flame className="size-4 shrink-0" strokeWidth={2} />}>
             {t('all')}
           </Chip>
           {cats.map((c) => (
-            <Chip key={c.id} active={active === c.id} onClick={() => setActive(c.id)} icon={catIcon(tx(c.name, locale))}>
+            <Chip key={c.id} active={active === c.id} onClick={() => setActive(c.id)} icon={<CatIcon name={tx(c.name, locale)} className="size-4 shrink-0" />}>
               {tx(c.name, locale)}
             </Chip>
           ))}
@@ -205,7 +217,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   );
 }
 
-function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick: () => void; icon: LucideIcon; children: React.ReactNode}) {
+function Chip({active, onClick, icon, children}: {active: boolean; onClick: () => void; icon: React.ReactNode; children: React.ReactNode}) {
   return (
     <button
       onClick={onClick}
@@ -214,7 +226,7 @@ function Chip({active, onClick, icon: Icon, children}: {active: boolean; onClick
         active ? 'border-brand bg-brand text-on-primary' : 'border-black/5 bg-white text-brand hover:border-brand/40'
       }`}
     >
-      <Icon className="size-4 shrink-0" strokeWidth={2} />
+      {icon}
       {children}
     </button>
   );
