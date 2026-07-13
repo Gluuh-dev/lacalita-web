@@ -16,6 +16,7 @@ import {
   IconGlassCocktail,
   IconBurger
 } from '@tabler/icons-react';
+import IconCoffeeCup from '@/components/icons/coffee-cup';
 import {useTranslations} from 'next-intl';
 import {Link, usePathname} from '@/i18n/navigation';
 
@@ -33,8 +34,10 @@ const BAR_PATH_FLOAT =
   'M170,60 a30,30 0 1 0 60,0 a30,30 0 1 0 -60,0 Z';
 
 // Las 4 cartas que se despliegan en abanico desde el botón central (labels = claves de `nav`).
-const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
-  {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
+type CartaIcon = React.ComponentType<{size?: number; stroke?: number; className?: string; style?: React.CSSProperties}>;
+
+const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: CartaIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffeeCup, dx: -132, dy: -62},
   {href: '/carta/restaurante', key: 'restaurant', Icon: IconToolsKitchen2, dx: -50, dy: -116},
   {href: '/carta/cocteles', key: 'cocktails', Icon: IconGlassCocktail, dx: 50, dy: -116},
   {href: '/burguer/carta', key: 'burger', Icon: IconBurger, dx: 132, dy: -62}

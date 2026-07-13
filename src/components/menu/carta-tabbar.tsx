@@ -16,6 +16,7 @@ import {
   IconGlassCocktail,
   IconBurger
 } from '@tabler/icons-react';
+import IconCoffeeCup from '@/components/icons/coffee-cup';
 import {useTranslations} from 'next-intl';
 import {Link, usePathname} from '@/i18n/navigation';
 import {useMenuStore} from '@/components/menu/store';
@@ -29,16 +30,18 @@ const BAR_PATH_FLOAT =
   'M0,48 Q0,28 20,28 L380,28 Q400,28 400,48 L400,70 Q400,92 378,92 L22,92 Q0,92 0,70 Z ' +
   'M170,60 a30,30 0 1 0 60,0 a30,30 0 1 0 -60,0 Z';
 
-const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: TablerIcon; dx: number; dy: number}[] = [
-  {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffee, dx: -132, dy: -62},
+type CartaIcon = React.ComponentType<{size?: number; stroke?: number; className?: string; style?: React.CSSProperties}>;
+
+const CARTAS: {href: string; key: 'breakfast' | 'restaurant' | 'cocktails' | 'burger'; Icon: CartaIcon; dx: number; dy: number}[] = [
+  {href: '/carta/desayunos', key: 'breakfast', Icon: IconCoffeeCup, dx: -132, dy: -62},
   {href: '/carta/restaurante', key: 'restaurant', Icon: IconToolsKitchen2, dx: -50, dy: -116},
   {href: '/carta/cocteles', key: 'cocktails', Icon: IconGlassCocktail, dx: 50, dy: -116},
   {href: '/burguer/carta', key: 'burger', Icon: IconBurger, dx: 132, dy: -62}
 ];
 
 // Icono del botón central según la carta; el color lo da el tema (var --brand).
-const MENU_ICON: Record<string, TablerIcon> = {
-  desayunos: IconCoffee,
+const MENU_ICON: Record<string, CartaIcon> = {
+  desayunos: IconCoffeeCup,
   restaurante: IconToolsKitchen2,
   cocteles: IconGlassCocktail
 };

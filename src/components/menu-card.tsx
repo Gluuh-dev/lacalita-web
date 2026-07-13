@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import {ArrowRight} from 'lucide-react';
-import {IconCoffee, IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
+import {IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
+import IconCoffeeCup from '@/components/icons/coffee-cup';
 import {Link} from '@/i18n/navigation';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
@@ -17,8 +18,8 @@ const FONDOS: Record<string, string> = {
 };
 
 // Los mismos iconos que el círculo del tab-bar.
-const ICONS: Record<string, typeof IconCoffee> = {
-  desayunos: IconCoffee,
+const ICONS: Record<string, typeof IconToolsKitchen2 | typeof IconCoffeeCup> = {
+  desayunos: IconCoffeeCup,
   restaurante: IconToolsKitchen2,
   cocteles: IconGlassCocktail,
   hamburgueseria: IconBurger
