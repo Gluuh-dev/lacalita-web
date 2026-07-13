@@ -95,14 +95,14 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
             {sizes.length > 0 && (
               <div>
                 <span className={eyebrow}>{t('buildSize')}</span>
-                <div className="inline-flex rounded-full bg-surface-sunken p-1">
+                <div className="inline-flex rounded-full border border-line-strong bg-surface-sunken p-1">
                   {sizes.map((s, i) => (
                     <button
                       key={s.id}
                       type="button"
                       onClick={() => setSizeIdx(i)}
                       className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
-                        i === sizeIdx ? 'bg-surface text-brand-deep' : 'text-ink-3'
+                        i === sizeIdx ? 'bg-brand text-on-primary' : 'text-ink-2'
                       }`}
                     >
                       {tx(s.name, locale)}
@@ -123,8 +123,8 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
                       key={b.id}
                       type="button"
                       onClick={() => setBreadIdx(i)}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
-                        on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      className={`rounded-full border px-4 py-2 text-sm font-semibold transition active:scale-95 ${
+                        on ? 'border-brand bg-brand text-on-primary' : 'border-line-strong bg-surface text-ink-2 hover:border-brand'
                       }`}
                     >
                       {tx(b.name, locale)}
@@ -153,14 +153,14 @@ export default function ToastBuilder({base, topping, menuSlug, theme}: {base: Ca
                       key={p.id}
                       type="button"
                       onClick={() => toggle(p.id)}
-                      className={`flex items-center gap-1.5 rounded-full py-2 pl-3.5 pr-2.5 text-sm transition active:scale-95 ${
-                        on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      className={`flex items-center gap-1.5 rounded-full border py-2 pl-3.5 pr-2.5 text-sm transition active:scale-95 ${
+                        on ? 'border-brand bg-brand text-on-primary' : 'border-line-strong bg-surface text-ink-2 hover:border-brand'
                       }`}
                     >
                       <span className="font-medium">{tx(p.name, locale)}</span>
                       <span
                         className={`rounded-full px-1.5 py-0.5 text-[0.68rem] font-bold ${
-                          on ? 'bg-white/25' : 'bg-surface text-brand-deep'
+                          on ? 'bg-white/25' : 'bg-surface-sunken text-brand-deep'
                         }`}
                       >
                         {ex > 0 ? `+${euro(ex, locale)}` : t('included')}
