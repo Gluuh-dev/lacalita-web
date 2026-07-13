@@ -370,17 +370,23 @@ export default async function Home({
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
-    <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-5 text-center sm:mb-11 sm:py-7">
-      {/* Destellos: dos luces cálidas fuera de foco, como los bokeh de la sala. */}
+    <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-x-clip py-5 text-center sm:mb-11 sm:py-7">
+      {/* Destellos: luces cálidas fuera de foco (bokeh), como las guirnaldas de
+          la terraza al atardecer. Van sobre el fondo, bajo la palabra grabada. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -left-24 -top-16 size-72 rounded-full opacity-70 blur-3xl sm:size-96"
-        style={{background: 'radial-gradient(closest-side, rgba(201,138,78,.28), transparent)'}}
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -bottom-20 -right-24 size-72 rounded-full opacity-70 blur-3xl sm:size-96"
-        style={{background: 'radial-gradient(closest-side, rgba(201,138,78,.22), transparent)'}}
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: [
+            'radial-gradient(120px 120px at 8% 18%, rgba(214,150,88,.45), transparent 70%)',
+            'radial-gradient(60px 60px at 16% 42%, rgba(230,180,120,.40), transparent 70%)',
+            'radial-gradient(38px 38px at 4% 62%, rgba(214,150,88,.35), transparent 70%)',
+            'radial-gradient(150px 150px at 93% 78%, rgba(214,150,88,.42), transparent 70%)',
+            'radial-gradient(70px 70px at 84% 30%, rgba(230,180,120,.35), transparent 70%)',
+            'radial-gradient(40px 40px at 97% 22%, rgba(214,150,88,.30), transparent 70%)'
+          ].join(','),
+          filter: 'blur(14px)'
+        }}
       />
       <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
       <div className="relative mx-auto max-w-6xl px-4">
