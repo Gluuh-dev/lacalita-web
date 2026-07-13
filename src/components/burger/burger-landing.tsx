@@ -133,7 +133,7 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
             </div>
             <span className="min-w-0 flex-1">
               <span className="block font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{t('burger.comboEyebrow')}</span>
-              <span className="mt-1 block font-eight text-2xl leading-tight sm:text-3xl" style={{color: C.ink}}>{t('burger.comboTitle')}</span>
+              <span className="mt-1 block font-eight text-xl leading-tight sm:text-2xl" style={{color: C.ink}}>{t('burger.comboTitle')}</span>
               <span className="mt-1 block text-sm" style={{color: C.muted}}>{t('burger.comboText')}</span>
             </span>
           </Link>
@@ -145,7 +145,7 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
         <section className="py-8">
           <div className="mx-auto mb-5 max-w-7xl px-5">
             <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{t('burger.saucesEyebrow')}</div>
-            <h2 className="font-eight text-4xl md:text-5xl" style={{color: C.ink}}>{t('burger.saucesTitle')}</h2>
+            <h2 className="font-eight text-3xl md:text-4xl" style={{color: C.ink}}>{t('burger.saucesTitle')}</h2>
             <p className="mt-1 text-sm" style={{color: C.muted}}>{t('burger.saucesSub')}</p>
           </div>
           <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -180,19 +180,15 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
           <div className="flex items-center gap-2 font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>
             <Heart className="size-3.5 fill-current" /> {t('burger.topVoted')}
           </div>
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-eight text-4xl text-[#2a1713] md:text-5xl">{t('burger.topVotedSub')}</h2>
-            <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
-              {t('burger.goMenu')} <ArrowRight className="size-4" />
-            </Link>
-          </div>
+          <h2 className="font-eight text-3xl text-[#2a1713] md:text-4xl">{t('burger.topVotedSub')}</h2>
         </div>
         {favorites.length === 0 ? (
           // Lo lee el visitante, no el admin: nada de instrucciones internas.
           <p style={{color: C.muted}}>{t('burger.comingFavs')}</p>
         ) : (
           <SnapCarousel itemClass="w-[80vw] max-w-[320px]" mdItemClass="md:w-[320px]">
-            {favorites.map((p, i) => (
+            {[
+              ...favorites.map((p, i) => (
               <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
                 <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">
                   {p.image && (
@@ -227,7 +223,9 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
                   )}
                 </div>
               </Link>
-            ))}
+              )),
+              <SeeAllCard key="all" label={t('burger.goMenu')} />
+            ]}
           </SnapCarousel>
         )}
       </section>
@@ -266,15 +264,11 @@ function Rail({eyebrow, title, cta, products, locale}: {eyebrow: string; title: 
     <section className="mx-auto max-w-7xl px-5 py-8">
       <div className="mb-5">
         <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{eyebrow}</div>
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="font-eight text-4xl md:text-5xl" style={{color: C.ink}}>{title}</h2>
-          <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
-            {cta} <ArrowRight className="size-4" />
-          </Link>
-        </div>
+        <h2 className="font-eight text-3xl md:text-4xl" style={{color: C.ink}}>{title}</h2>
       </div>
       <SnapCarousel itemClass="w-[70vw] max-w-[260px]" mdItemClass="md:w-[260px]">
-        {products.map((p) => (
+        {[
+          ...products.map((p) => (
           <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
             <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">
               {p.image && (
@@ -300,10 +294,28 @@ function Rail({eyebrow, title, cta, products, locale}: {eyebrow: string; title: 
                 ) : null}
               </div>
               {p.description && <p className="line-clamp-2 text-sm" style={{color: C.muted}}>{tx(p.description, locale)}</p>}
-            </div>
-          </Link>
-        ))}
+              </div>
+            </Link>
+          )),
+          <SeeAllCard key="all" label={cta} />
+        ]}
       </SnapCarousel>
     </section>
+  );
+}
+
+// Última tarjeta del carrusel: lleva a la carta (antes era un botón suelto).
+function SeeAllCard({label}: {label: string}) {
+  return (
+    <Link
+      href="/burguer/carta"
+      className="group flex h-full flex-col items-center justify-center gap-3 rounded-[22px] border-2 border-dashed p-6 text-center transition hover:bg-white"
+      style={{borderColor: C.orange, color: C.orange}}
+    >
+      <span className="flex size-12 items-center justify-center rounded-full transition group-hover:scale-110" style={{background: C.orange, color: '#fdfbf7'}}>
+        <ArrowRight className="size-5" />
+      </span>
+      <span className="font-eight text-lg leading-tight">{label}</span>
+    </Link>
   );
 }
