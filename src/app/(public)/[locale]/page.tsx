@@ -120,7 +120,7 @@ export default async function Home({
 
       {/* Sobre el sitio */}
       <Reveal>
-        <section className="mx-auto max-w-4xl px-4 py-16 text-center">
+        <section className="mx-auto max-w-4xl px-4 py-10 text-center sm:py-14">
           <div className="eyebrow mb-3">{t('home.welcome')}</div>
           <h2 className="font-serif text-3xl sm:text-4xl">{tx(about.title ?? {}, locale)}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
@@ -145,7 +145,7 @@ export default async function Home({
 
       {/* Manifesto */}
       <Reveal>
-        <section className="relative overflow-hidden bg-[#15110b] py-24 text-white sm:py-28">
+        <section className="relative overflow-hidden bg-[#15110b] py-16 text-white sm:py-20">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/manifesto.svg" alt="" aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-full w-auto max-w-none -translate-x-1/2 -translate-y-1/2 select-none object-cover opacity-[0.18]" />
           <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
@@ -164,7 +164,7 @@ export default async function Home({
 
       {/* Cartas */}
       <Reveal>
-        <section id="carta" className="scroll-mt-20 py-20">
+        <section id="carta" className="scroll-mt-20 py-10 sm:py-14">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
@@ -181,7 +181,7 @@ export default async function Home({
       {/* Platos destacados */}
       {featured.length > 0 && (
         <Reveal>
-          <section className="mx-auto max-w-6xl px-4 py-16">
+          <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
             <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} />
             <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
@@ -214,7 +214,7 @@ export default async function Home({
       {events.length > 0 && (
         <Reveal>
           <section id="eventos" className="scroll-mt-20 bg-surface-2">
-            <div className="mx-auto max-w-6xl px-4 py-16">
+            <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
               <SectionHead eyebrow={t('events.upcoming')} title={t('events.title')} />
               <div className="-mx-4 md:mx-0 xl:-mx-20">
               <SnapCarousel itemClass="w-[74vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
@@ -243,7 +243,7 @@ export default async function Home({
       {/* Historia */}
       <Reveal>
         <section className="bg-surface-2">
-          <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <div className="mx-auto max-w-3xl px-4 py-10 text-center sm:py-14">
             <div className="eyebrow mb-3">La Calita</div>
             <h2 className="font-serif text-3xl sm:text-4xl">{tx(story.title ?? {}, locale)}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(story.text ?? {}, locale)}</p>
@@ -254,7 +254,7 @@ export default async function Home({
       {/* Reseñas */}
       {reviews.length > 0 && (
         <Reveal>
-          <section className="mx-auto max-w-6xl px-4 py-16">
+          <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
             <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} />
             <div className="grid gap-5 md:grid-cols-3">
               {reviews.map((r, idx) => (
@@ -279,7 +279,7 @@ export default async function Home({
       {/* Galería */}
       {gallery.length > 0 && (
         <Reveal>
-          <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
+          <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-14">
             <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
@@ -294,7 +294,7 @@ export default async function Home({
 
       {/* Ubicación */}
       <Reveal>
-        <section id="info" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
+        <section id="info" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-14">
           <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} />
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
             {/* Horario */}
@@ -370,7 +370,7 @@ export default async function Home({
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
-    <div className="relative left-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden py-6 text-center">
+    <div className="relative left-1/2 mb-6 w-screen -translate-x-1/2 overflow-hidden py-3 text-center sm:mb-8 sm:py-5">
       <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
       <div className="relative mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
