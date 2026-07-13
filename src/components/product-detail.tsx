@@ -8,7 +8,8 @@ import {Heart, Plus, Minus, X, Maximize2, Share2} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
-import type {Product} from '@/lib/queries';
+import type {Product, Category} from '@/lib/queries';
+import ProductRail from '@/components/menu/product-rail';
 import AllergenIcon from './allergen-icon';
 import {useIsAdmin} from '@/lib/use-is-admin';
 import {useFavGate} from '@/lib/use-fav-gate';
@@ -20,12 +21,14 @@ export default function ProductDetail({
   product,
   menuSlug,
   theme,
-  sauces = []
+  sauces = [],
+  related = []
 }: {
   product: Product;
   menuSlug: string;
   theme: string;
   sauces?: Product[];
+  related?: Category[];
 }) {
   // Las salsas viven en la misma carta: enlace a su detalle.
   const sauceHref = (slug: string) => (menuSlug === 'hamburgueseria' ? `/burguer/carta/${slug}` : `/carta/${menuSlug}/${slug}`);
@@ -245,6 +248,11 @@ export default function ProductDetail({
             </ul>
           </motion.div>
         )}
+
+        {/* Venta cruzada: el resto de la carta, para añadir sin volver atrás. */}
+        {related.map((c) => (
+          <ProductRail key={c.id} cat={c} menuSlug={menuSlug} excludeId={product.id} />
+        ))}
 
         {isAdmin && (
           <a
