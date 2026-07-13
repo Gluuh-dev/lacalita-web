@@ -91,7 +91,9 @@
     "included": "inclus",
     "buildTotal": "Total",
     "buildSub": "Choisissez le pain et garnissez-le",
-    "listNotOrder": "Cette liste n'est ni une commande ni un paiement : elle vous aide simplement à retenir vos choix et à les montrer au serveur."
+    "listNotOrder": "Cette liste n'est ni une commande ni un paiement : elle vous aide simplement à retenir vos choix et à les montrer au serveur.",
+    "comboTitle": "En menu",
+    "comboSub": "Frites et boisson inclus"
   },
   "tabs": {
     "menu": "Carte",

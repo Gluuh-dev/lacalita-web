@@ -4,7 +4,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Heart, Plus, Minus, X, Maximize2, Share2} from 'lucide-react';
+import {Heart, Plus, Minus, X, Maximize2, Share2, UtensilsCrossed, Check} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
@@ -44,8 +44,12 @@ export default function ProductDetail({
   // Variante elegida (Media/Entera, 3/6 uds). El precio y "Añadir" la siguen.
   const [vi, setVi] = useState(0);
   const sel = variants[vi];
+  // "Hazlo menú": patatas + bebida. Se suma al precio y viaja a la lista.
+  const combo = product.combo_price != null ? Number(product.combo_price) : null;
+  const [asCombo, setAsCombo] = useState(false);
   const name = tx(product.name, locale);
-  const shownPrice = sel ? Number(sel.price) : product.price != null ? Number(product.price) : null;
+  const basePrice = sel ? Number(sel.price) : product.price != null ? Number(product.price) : null;
+  const shownPrice = basePrice != null && asCombo && combo ? basePrice + combo : basePrice;
   const favItem: MenuItem = {
     id: product.id,
     name,
@@ -55,10 +59,19 @@ export default function ProductDetail({
     menuSlug,
     video: product.video ?? null
   };
-  // Lo que va a "Mi lista": con variante, id e importe propios (líneas separadas).
-  const listItem: MenuItem = sel
+  // Lo que va a "Mi lista": variante y menú dan línea propia (id y precio propios).
+  const withVariant: MenuItem = sel
     ? {...favItem, id: `${product.id}::${sel.id}`, name: `${name} · ${tx(sel.name, locale)}`, price: Number(sel.price), variant: tx(sel.name, locale)}
     : favItem;
+  const listItem: MenuItem =
+    asCombo && combo && withVariant.price != null
+      ? {
+          ...withVariant,
+          id: `${withVariant.id}::menu`,
+          name: `${withVariant.name} · ${tc('comboTitle')}`,
+          price: withVariant.price + combo
+        }
+      : withVariant;
   const [zoom, setZoom] = useState(false);
   // Atrás (Android) cierra la imagen ampliada en vez de salir de la página.
   useBackClose(zoom, () => setZoom(false));
@@ -177,6 +190,34 @@ export default function ProductDetail({
           </motion.div>
         )}
 
+        {/* "Hazlo menú": patatas + bebida. Al activarlo suma su precio arriba y
+            en el botón de añadir. Solo si la categoría lo ofrece. */}
+        {combo != null && basePrice != null && (
+          <motion.button
+            {...fade(0.18)}
+            type="button"
+            onClick={() => setAsCombo((v) => !v)}
+            aria-pressed={asCombo}
+            className={`mt-5 flex w-full items-center gap-3 rounded-[20px] border-2 border-dashed p-4 text-left transition ${
+              asCombo ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand'
+            }`}
+          >
+            <span className={`flex size-11 shrink-0 items-center justify-center rounded-full transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
+              <UtensilsCrossed className="size-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-serif text-lg font-bold leading-tight text-ink">{tc('comboTitle')}</span>
+              <span className="block text-xs text-ink-3">{tc('comboSub')}</span>
+            </span>
+            <span className="flex shrink-0 items-center gap-2">
+              <span className={`rounded-full px-3 py-1 text-sm font-bold ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
+                +{euro(combo, locale)}
+              </span>
+              {asCombo && <Check className="size-5 text-brand-deep" />}
+            </span>
+          </motion.button>
+        )}
+
         {product.description && (
           <motion.p {...fade(0.2)} className="mt-4 text-lg leading-relaxed text-ink-2">
             {tx(product.description, locale)}
@@ -215,7 +256,8 @@ export default function ProductDetail({
         {sauces.length > 0 ? (
           <motion.div {...fade(0.24)} className="mt-8">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-3">{tc('sauces')}</h2>
-            <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="-mx-4 snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="mx-auto flex w-max gap-3">
               {sauces.map((s) => (
                 <Link
                   key={s.id}
@@ -231,6 +273,7 @@ export default function ProductDetail({
                   {s.price != null && <span className="text-xs font-bold text-brand-deep">{euro(Number(s.price), locale)}</span>}
                 </Link>
               ))}
+              </div>
             </div>
           </motion.div>
         ) : (product.extras?.length ?? 0) > 0 ? (

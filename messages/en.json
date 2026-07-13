@@ -91,7 +91,9 @@
     "included": "included",
     "buildTotal": "Total",
     "buildSub": "Pick your bread and pile it up",
-    "listNotOrder": "This list is not an order or a payment: it just helps you remember what you want and show it to the waiter."
+    "listNotOrder": "This list is not an order or a payment: it just helps you remember what you want and show it to the waiter.",
+    "comboTitle": "Make it a meal",
+    "comboSub": "Includes fries and a drink"
   },
   "tabs": {
     "menu": "Menu",

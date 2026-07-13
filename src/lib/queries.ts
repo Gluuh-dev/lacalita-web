@@ -28,6 +28,7 @@ export type Product = {
   product_variants: Variant[];
   product_allergens: {allergens: Allergen}[];
   extras?: Extra[]; // salsas de la categoría, copiadas al producto para el detalle
+  combo_price?: number | null; // copiado de la categoría, como los extras
 };
 export type Category = {
   id: string;
@@ -38,6 +39,7 @@ export type Category = {
   position: number;
   visible: boolean;
   role: 'normal' | 'base' | 'topping' | 'carousel'; // configurador y presentación
+  combo_price: number | null; // "Hazlo menú": se suma al precio del plato
   extras: Extra[];
   products: Product[];
 };
@@ -117,7 +119,7 @@ async function fetchMenu(slug: string): Promise<Menu | null> {
     .select(
       `id, slug, name, subtitle, theme, header_image, header_video, position,
        categories (
-         id, menu_id, name, description, position, visible, image, extras, role,
+         id, menu_id, name, description, position, visible, image, extras, role, combo_price,
          products (
            id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
            product_variants ( id, name, price, position ),
@@ -136,6 +138,7 @@ async function fetchMenu(slug: string): Promise<Menu | null> {
     for (const p of c.products ?? []) {
       p.product_variants?.sort((a, b) => a.position - b.position);
       p.extras = c.extras ?? []; // el detalle lee las salsas desde el producto
+      p.combo_price = c.combo_price ?? null;
     }
   }
   return menu;
@@ -149,14 +152,15 @@ export async function getProduct(slug: string): Promise<{product: Product; theme
       `id, slug, name, description, price, image, video, featured, is_new, tag, ingredients, available, position, category_id, old_price, votes, rating,
        product_variants ( id, name, price, position ),
        product_allergens ( allergens ( id, code, name, icon ) ),
-       categories ( extras, menus ( slug, theme ) )`
+       categories ( extras, combo_price, menus ( slug, theme ) )`
     )
     .eq('slug', slug)
     .maybeSingle();
   if (!data) return null;
-  const d = data as unknown as Product & {categories?: {extras?: Extra[]; menus?: {slug: string; theme: string}}};
+  const d = data as unknown as Product & {categories?: {extras?: Extra[]; combo_price?: number | null; menus?: {slug: string; theme: string}}};
   d.product_variants?.sort((a, b) => a.position - b.position);
   d.extras = d.categories?.extras ?? [];
+  d.combo_price = d.categories?.combo_price ?? null;
   return {product: d as Product, theme: d.categories?.menus?.theme ?? 'default'};
 }
 
@@ -304,7 +308,7 @@ export async function getCategoriesAdmin() {
   const supabase = await createClient();
   const {data} = await supabase
     .from('categories')
-    .select('id, menu_id, name, description, position, visible, role, menus ( name, slug )')
+    .select('id, menu_id, name, description, position, visible, role, combo_price, menus ( name, slug )')
     .order('position');
   return (data as unknown as (Category & {menus: {name: I18n; slug: string}})[]) ?? [];
 }
@@ -313,7 +317,7 @@ export async function getCategoryById(id: string) {
   const supabase = await createClient();
   const {data} = await supabase
     .from('categories')
-    .select('id, menu_id, name, description, position, visible, role')
+    .select('id, menu_id, name, description, position, visible, role, combo_price')
     .eq('id', id)
     .maybeSingle();
   return (data as unknown as Category) ?? null;

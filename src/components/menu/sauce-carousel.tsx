@@ -19,7 +19,10 @@ export default function SauceCarousel({cat, menuSlug}: {cat: Category; menuSlug:
 
       {/* Full-bleed: se sale del contenedor y ocupa el ancho de la pantalla, así
           los tarros asoman por los bordes e invitan a deslizar. */}
-      <div className="relative left-1/2 w-screen -translate-x-1/2 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="relative left-1/2 w-screen -translate-x-1/2 snap-x snap-mandatory overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* w-max + mx-auto: centrado en PC cuando caben todos; si no caben, el
+            margen auto vale 0 y se comporta como el scroll de siempre. */}
+        <div className="mx-auto flex w-max gap-3">
         {cat.products.map((p) => (
           <Link
             key={p.id}
@@ -45,6 +48,7 @@ export default function SauceCarousel({cat, menuSlug}: {cat: Category; menuSlug:
             )}
           </Link>
         ))}
+        </div>
       </div>
     </div>
   );

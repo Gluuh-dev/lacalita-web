@@ -113,7 +113,7 @@ export default async function MenuView({
         ))}
       {menu.slug === 'hamburgueseria' ? (
         <header className="relative z-10 px-5 pb-6 pt-24 text-center duration-500 animate-in fade-in slide-in-from-top-2 fill-mode-both">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-brand" style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}>La Calita Burger</div>
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-brand" style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}>La Calita Smash Burgers</div>
           <h1 className="font-eight text-4xl text-ink sm:text-5xl">{tx(menu.name, locale)}</h1>
           {menu.subtitle && <p className="mx-auto mt-1.5 max-w-md text-sm text-ink-2">{tx(menu.subtitle, locale)}</p>}
         </header>

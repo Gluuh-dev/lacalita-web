@@ -11,6 +11,7 @@ import ProductItem from '@/components/menu/product-item';
 import ToastBuilder from '@/components/menu/toast-builder';
 import SauceCarousel from '@/components/menu/sauce-carousel';
 import AllergenIcon from '@/components/allergen-icon';
+import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter} from '@/components/ui/drawer';
 import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 
 // Las categorías no tienen icono en BD: lo inferimos por el nombre.
@@ -31,6 +32,7 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
   const locale = useLocale();
   const t = useTranslations('carta');
   const tMenu = useTranslations('menu');
+  const tCommon = useTranslations('common');
   const {hidden, scrolled} = useHideOnScroll();
   const params = useSearchParams();
   const cats = (menu.categories ?? []).filter((c) => c.products?.length);
@@ -113,21 +115,6 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
             </button>
           )}
         </div>
-        {showAllergens && allergens.length > 0 && (
-          <div className="mx-auto max-w-5xl px-4 pt-3">
-            <p className="mb-2 text-xs text-ink-3">{t('hideMarked')}</p>
-            <div className="flex flex-wrap gap-2">
-              {allergens.map((a) => {
-                const on = excluded.has(a.code);
-                return (
-                  <button key={a.code} type="button" onClick={() => toggleEx(a.code)} className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs transition ${on ? 'border-danger bg-danger/10 text-danger' : 'border-line bg-white text-ink-2'}`}>
-                    <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={16} /> {tx(a.name, locale)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
         {/* Móvil: scroll horizontal. PC: todos a la vista, envuelven a 2ª fila si no caben. */}
         <div ref={rowRef} className="mx-auto flex max-w-5xl gap-2.5 overflow-x-auto py-3 pl-4 pr-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:overflow-visible md:pr-4">
           <Chip active={active === 'all'} onClick={() => setActive('all')} icon={Flame}>
@@ -179,6 +166,41 @@ export default function MenuFilters({menu, pinned = false}: {menu: Menu; pinned?
           </div>
         </div>
       )}
+
+      {/* Alérgenos en bottom sheet: mismo patrón que "Arma tu tostada".
+          data-theme porque el portal sale fuera del contenedor de la carta. */}
+      <Drawer open={showAllergens} onOpenChange={setShowAllergens} showSwipeHandle>
+        <DrawerContent data-theme={menu.theme} className="max-h-[80vh] bg-bg text-ink">
+          <DrawerHeader className="text-center">
+            <DrawerTitle className="font-serif text-2xl">{tMenu('allergens')}</DrawerTitle>
+            <DrawerDescription>{t('hideMarked')}</DrawerDescription>
+          </DrawerHeader>
+          <div className="flex flex-wrap justify-center gap-2 overflow-y-auto px-5 pb-4">
+            {allergens.map((a) => {
+              const on = excluded.has(a.code);
+              return (
+                <button
+                  key={a.code}
+                  type="button"
+                  onClick={() => toggleEx(a.code)}
+                  className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-sm transition ${on ? 'border-danger bg-danger/10 text-danger' : 'border-line bg-surface text-ink-2'}`}
+                >
+                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={18} /> {tx(a.name, locale)}
+                </button>
+              );
+            })}
+          </div>
+          <DrawerFooter className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5">
+            <button
+              type="button"
+              onClick={() => setShowAllergens(false)}
+              className="w-full rounded-full bg-brand py-3.5 text-sm font-bold uppercase tracking-wide text-on-primary transition active:scale-[0.98]"
+            >
+              {excluded.size ? `${t('results', {count: results.length})}` : tCommon('close')}
+            </button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
