@@ -9,19 +9,33 @@ export default function Watermark({word, className = ''}: {word: string; classNa
     <svg
       aria-hidden
       viewBox="0 0 1000 220"
-      // Móvil: de lado a lado y más tenue; en PC deja aire y sube la presencia.
-      className={`pointer-events-none absolute left-1/2 top-1/2 w-full max-w-[1080px] -translate-x-1/2 -translate-y-[47%] select-none opacity-65 md:w-[94%] md:opacity-100 ${className}`}
+      // Más ancha que la pantalla a propósito: la palabra se sale por los lados
+      // (se recorta) y gana presencia, como un grabado a sangre.
+      className={`pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-[47%] select-none opacity-65 md:w-[112%] md:opacity-100 ${className}`}
     >
       <defs>
-        {/* Sombra INTERIOR: la letra parece hundida en el papel. Se recorta la
-            silueta contra una copia de sí misma desplazada y difuminada. */}
-        <filter id={id} x="-10%" y="-15%" width="120%" height="140%">
-          <feOffset in="SourceAlpha" dx="0" dy="3" result="off" />
-          <feGaussianBlur in="off" stdDeviation="3" result="blur" />
-          <feComposite in="SourceAlpha" in2="blur" operator="out" result="inverse" />
-          <feFlood floodColor="#000" floodOpacity="0.5" result="color" />
-          <feComposite in="color" in2="inverse" operator="in" result="shadow" />
-          <feComposite in="shadow" in2="SourceGraphic" operator="over" />
+        {/* Tallada: sombra dentro por arriba y filo de luz dentro por abajo.
+            Se recorta la silueta contra copias de sí misma desplazadas. */}
+        <filter id={id} x="-10%" y="-20%" width="120%" height="150%">
+          {/* sombra interior (arriba) */}
+          <feOffset in="SourceAlpha" dx="0" dy="5" result="offDark" />
+          <feGaussianBlur in="offDark" stdDeviation="4" result="blurDark" />
+          <feComposite in="SourceAlpha" in2="blurDark" operator="out" result="cutDark" />
+          <feFlood floodColor="#000" floodOpacity="0.75" result="colDark" />
+          <feComposite in="colDark" in2="cutDark" operator="in" result="shadow" />
+
+          {/* filo de luz interior (abajo) */}
+          <feOffset in="SourceAlpha" dx="0" dy="-4" result="offLight" />
+          <feGaussianBlur in="offLight" stdDeviation="3" result="blurLight" />
+          <feComposite in="SourceAlpha" in2="blurLight" operator="out" result="cutLight" />
+          <feFlood floodColor="#fff" floodOpacity="0.9" result="colLight" />
+          <feComposite in="colLight" in2="cutLight" operator="in" result="light" />
+
+          <feMerge>
+            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="light" />
+            <feMergeNode in="shadow" />
+          </feMerge>
         </filter>
       </defs>
       <text
@@ -32,12 +46,12 @@ export default function Watermark({word, className = ''}: {word: string; classNa
         lengthAdjust="spacingAndGlyphs"
         className="font-cinzel"
         filter={`url(#${id})`}
-        // El filo de luz por debajo remata el grabado: hundido arriba, brillo abajo.
+        // Remate exterior: un hilo de luz por debajo termina de hundir la letra.
         style={{
           fontSize: 205,
           fontWeight: 600,
           fill: 'currentColor',
-          filter: 'drop-shadow(0 1.5px 0 rgba(255,255,255,.9))'
+          filter: 'drop-shadow(0 2px 0 rgba(255,255,255,.95))'
         }}
       >
         {word.toUpperCase()}
