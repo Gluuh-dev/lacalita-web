@@ -4,7 +4,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
-import {Plus, Minus, X, Maximize2, Share2, Check} from 'lucide-react';
+import {Plus, Minus, X, Maximize2, Share2} from 'lucide-react';
 import {toast} from 'sonner';
 import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
@@ -218,29 +218,35 @@ export default function ProductDetail({
         {/* "Hazlo menú": patatas + bebida. Al activarlo suma su precio arriba y
             en el botón de añadir. Solo si la categoría lo ofrece. */}
         {combo != null && basePrice != null && (
-          <motion.button
-            {...fade(0.18)}
-            type="button"
-            onClick={() => setAsCombo((v) => !v)}
-            aria-pressed={asCombo}
-            className={`mt-5 flex w-full items-center gap-3 rounded-[20px] border-2 border-dashed p-4 text-left transition ${
-              asCombo ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand'
-            }`}
-          >
-            <span className={`flex size-12 shrink-0 items-center justify-center rounded-full transition ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
-              <MaskIcon src="/iconos/menu.svg" className="size-7" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-ui text-base font-bold leading-tight text-ink">{tc('comboTitle')}</span>
-              <span className="block text-xs text-ink-3">{tc('comboSub')}</span>
-            </span>
-            <span className="flex shrink-0 items-center gap-2">
-              <span className={`rounded-full px-3 py-1 text-sm font-bold ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
+          // El fade de entrada va fuera: framer deja un transform inline en el
+          // elemento que anima, y eso pisaría el active:scale del botón.
+          <motion.div {...fade(0.18)} className="mt-5">
+            <button
+              type="button"
+              onClick={() => setAsCombo((v) => !v)}
+              aria-pressed={asCombo}
+              // Al pulsar, la tarjeta se hunde y el icono rebota: basta como
+              // confirmación, sin marca de verificación.
+              className={`flex w-full items-center gap-3 rounded-[20px] border-2 border-dashed p-4 text-left transition duration-150 active:scale-[0.97] ${
+                asCombo ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand'
+              }`}
+            >
+              <motion.span
+                animate={reduce ? undefined : {scale: asCombo ? 1.08 : 1}}
+                transition={{type: 'spring', stiffness: 500, damping: 16}}
+                className={`flex size-12 shrink-0 items-center justify-center rounded-full transition-colors ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}
+              >
+                <MaskIcon src="/iconos/menu.svg" className="size-7" />
+              </motion.span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-ui text-base font-bold leading-tight text-ink">{tc('comboTitle')}</span>
+                <span className="block text-xs text-ink-3">{tc('comboSub')}</span>
+              </span>
+              <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold transition-colors ${asCombo ? 'bg-brand text-on-primary' : 'bg-surface-sunken text-brand-deep'}`}>
                 +{euro(combo, locale)}
               </span>
-              {asCombo && <Check className="size-5 text-brand-deep" />}
-            </span>
-          </motion.button>
+            </button>
+          </motion.div>
         )}
 
         {/* Salsas con su tarro, en scroll lateral (como en la carta). Si no hay
