@@ -63,7 +63,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
 
   return (
     <div className="mx-auto mb-9 max-w-5xl px-4">
-      <div className="overflow-hidden rounded-[26px] border border-line bg-surface shadow-md">
+      <div className="overflow-hidden rounded-[26px] border border-line bg-surface">
         {/* Cabecera = botón que despliega el configurador */}
         <button
           type="button"
@@ -71,7 +71,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
           aria-expanded={open}
           className="flex w-full items-center gap-3 bg-gradient-to-r from-brand/15 to-transparent px-5 py-4 text-left transition hover:from-brand/25"
         >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary shadow-sm">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary">
             <Sandwich className="size-5" />
           </span>
           <div className="min-w-0 flex-1">
@@ -96,7 +96,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
                     type="button"
                     onClick={() => setBreadIdx(i)}
                     className={`rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
-                      on ? 'bg-brand text-on-primary shadow-sm' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
                     }`}
                   >
                     {tx(b.name, locale)}
@@ -117,7 +117,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
                     type="button"
                     onClick={() => setSizeIdx(i)}
                     className={`rounded-full px-5 py-1.5 text-sm font-semibold transition ${
-                      i === sizeIdx ? 'bg-surface text-brand-deep shadow-sm' : 'text-ink-3'
+                      i === sizeIdx ? 'bg-surface text-brand-deep' : 'text-ink-3'
                     }`}
                   >
                     {tx(s.name, locale)}
@@ -147,7 +147,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
                     type="button"
                     onClick={() => toggle(p.id)}
                     className={`group flex items-center gap-1.5 rounded-full py-2 pl-3.5 pr-2.5 text-sm transition active:scale-95 ${
-                      on ? 'bg-brand text-on-primary shadow-sm' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
+                      on ? 'bg-brand text-on-primary' : 'bg-surface-2 text-ink-2 hover:bg-surface-sunken'
                     }`}
                   >
                     <span className="font-medium">{tx(p.name, locale)}</span>
@@ -177,7 +177,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
           <button
             type="button"
             onClick={addToast}
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-on-primary shadow-sm transition hover:bg-brand-deep active:scale-95"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-on-primary transition hover:bg-brand-deep active:scale-95"
           >
             <Plus className="size-4" /> {t('addToList')}
           </button>
