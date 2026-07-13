@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Quote, Star} from 'lucide-react';
+import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Phone, Waves, Quote, Star} from 'lucide-react';
+import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
+import MapCard from '@/components/map-card';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
@@ -347,27 +349,7 @@ export default async function Home({
 
             {/* Mapa + contacto */}
             <div className="flex flex-col gap-5">
-              <a
-                href={settings?.maps_url ?? '#'}
-                target="_blank"
-                rel="noreferrer"
-                className="ds-card--link relative block min-h-[280px] overflow-hidden rounded-[20px] border border-line shadow-sm"
-                style={{background: 'linear-gradient(160deg, #e7eff1 0%, #d3e4e8 55%, #bcd8df 100%)'}}
-              >
-                <span className="absolute inset-0 opacity-50" style={{background: 'repeating-linear-gradient(35deg, transparent 0 38px, rgba(255,255,255,.9) 38px 42px), repeating-linear-gradient(-52deg, transparent 0 54px, rgba(255,255,255,.7) 54px 57px)'}} />
-                <span className="absolute inset-x-0 bottom-0 h-[38%]" style={{background: 'linear-gradient(180deg, rgba(46,110,142,0), rgba(46,110,142,.55))'}} />
-                <span className="absolute bottom-3 left-4 font-serif italic text-white/90" style={{textShadow: '0 1px 4px rgba(20,40,55,.5)'}}>Mar de Alborán</span>
-                <span className="absolute left-1/2 top-[42%] flex size-11 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] items-center justify-center rounded-[50%_50%_50%_0] border-2 border-white bg-brand-deep shadow-lg">
-                  <MapPin className="size-5 rotate-45 text-white" />
-                </span>
-                <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm font-medium text-ink shadow-sm">
-                  <MapPin className="size-3.5 text-brand-deep" />
-                  {settings?.address ?? 'Pº Marítimo'}
-                </span>
-                <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-white shadow-sm">
-                  <Navigation className="size-4" /> {t('info.directions')}
-                </span>
-              </a>
+              <MapCard href={settings?.maps_url} label={t('info.directions')} className="min-h-[280px]" />
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {settings?.phone && (
@@ -381,14 +363,21 @@ export default async function Home({
                     </span>
                   </a>
                 )}
-                <div className="flex min-w-0 flex-col gap-2 rounded-[14px] border border-line bg-surface px-4 py-3">
-                  <span className="font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('info.follow')}</span>
-                  <span className="flex flex-wrap gap-2">
+                <div className="flex min-w-0 items-center gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('info.follow')}</span>
+                    <span className="block truncate font-semibold">@lacalitabeach</span>
+                  </span>
+                  <span className="flex shrink-0 gap-2">
                     {settings?.social?.instagram && (
-                      <a href={settings.social.instagram} target="_blank" rel="noreferrer" className="rounded-full bg-surface-sunken px-3 py-1 text-xs font-medium">Instagram</a>
+                      <a href={settings.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="flex size-10 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep transition hover:bg-brand hover:text-on-primary">
+                        <IconBrandInstagram className="size-5" />
+                      </a>
                     )}
                     {settings?.social?.facebook && (
-                      <a href={settings.social.facebook} target="_blank" rel="noreferrer" className="rounded-full bg-surface-sunken px-3 py-1 text-xs font-medium">Facebook</a>
+                      <a href={settings.social.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="flex size-10 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep transition hover:bg-brand hover:text-on-primary">
+                        <IconBrandFacebook className="size-5" />
+                      </a>
                     )}
                   </span>
                 </div>

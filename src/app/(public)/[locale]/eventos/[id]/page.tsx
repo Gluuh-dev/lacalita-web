@@ -1,7 +1,7 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import Image from 'next/image';
-import {Calendar, Clock, Music, MapPin, Navigation} from 'lucide-react';
+import {Calendar, Clock, Music, MapPin} from 'lucide-react';
 import {getPublicEvent, getUpcomingEvents, getEventTickets} from '@/lib/queries';
 import {tx, euro} from '@/lib/localize';
 import {altLanguages, SITE_URL} from '@/lib/site';
@@ -186,17 +186,8 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
               </div>
             )}
 
-            <div className="mt-5 overflow-hidden rounded-[14px] border border-line">
-              <MapCard href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" label={ti('location')} className="h-40" />
-            </div>
-            <a
-              href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"
-              target="_blank"
-              rel="noreferrer"
-              className="ds-btn ds-btn-outline mt-3 w-full text-sm"
-            >
-              <Navigation className="size-4" /> {ti('location')}
-            </a>
+            {/* El mapa ya es el enlace: sin botón repetido debajo. */}
+            <MapCard href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" label={ti('location')} className="mt-5 h-40" />
             <EventActions id={event.id} title={title} startsAt={event.starts_at} description={desc} />
           </aside>
         </div>
