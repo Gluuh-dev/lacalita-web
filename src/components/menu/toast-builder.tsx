@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import {useLocale, useTranslations} from 'next-intl';
 import {toast} from 'sonner';
-import {Sandwich, Plus} from 'lucide-react';
+import {Sandwich, Plus, ChevronDown} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
 import type {Category, Product} from '@/lib/queries';
 import {useMenuStore, type MenuItem} from './store';
@@ -17,6 +17,7 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
 
   const breads = base.products;
   const toppings = topping.products;
+  const [open, setOpen] = useState(false); // plegado: no roba sitio a la carta
   const [breadIdx, setBreadIdx] = useState(0);
   const [sizeIdx, setSizeIdx] = useState(1); // Entera por defecto
   const [sel, setSel] = useState<Set<string>>(new Set());
@@ -63,18 +64,26 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
   return (
     <div className="mx-auto mb-9 max-w-5xl px-4">
       <div className="overflow-hidden rounded-[26px] border border-line bg-surface shadow-md">
-        {/* Cabecera: icono en círculo + título con la serif de la marca */}
-        <div className="flex items-center gap-3 bg-gradient-to-r from-brand/15 to-transparent px-5 py-4">
+        {/* Cabecera = botón que despliega el configurador */}
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="flex w-full items-center gap-3 bg-gradient-to-r from-brand/15 to-transparent px-5 py-4 text-left transition hover:from-brand/25"
+        >
           <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-on-primary shadow-sm">
             <Sandwich className="size-5" />
           </span>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h2 className="font-serif text-xl font-bold leading-tight text-ink">{t('buildTitle')}</h2>
             <p className="truncate text-xs text-ink-3">{t('buildSub')}</p>
           </div>
-        </div>
+          <ChevronDown className={`size-5 shrink-0 text-ink-3 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+        </button>
 
-        <div className="space-y-5 px-5 py-5">
+        {open && (
+        <>
+        <div className="space-y-5 px-5 py-5 duration-300 animate-in fade-in slide-in-from-top-2">
           {/* Pan */}
           <div>
             <span className={eyebrow}>{t('buildBread')}</span>
@@ -173,6 +182,8 @@ export default function ToastBuilder({base, topping, menuSlug}: {base: Category;
             <Plus className="size-4" /> {t('addToList')}
           </button>
         </div>
+        </>
+        )}
       </div>
     </div>
   );
