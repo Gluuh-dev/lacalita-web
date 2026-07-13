@@ -94,9 +94,9 @@ export default function SnapCarousel({
         ))}
       </div>
 
-      {/* Controles solo si de verdad hay algo que desplazar. */}
+      {/* Controles solo en PC: en móvil se desliza con el dedo. */}
       {overflow && n > 1 && (
-        <div className="mt-5 flex items-center justify-center gap-3">
+        <div className="mt-5 hidden items-center justify-center gap-3 md:flex">
           <button onClick={() => go(active - 1)} aria-label="Anterior" style={btnStyle} className={btn}>
             <ChevronLeft className="size-5" />
           </button>
