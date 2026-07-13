@@ -192,8 +192,14 @@ export function ListView({items, locale}: {items: ListEntry[]; locale: string}) 
         <div key={item.id} className="flex items-center gap-3 rounded-[16px] border border-line bg-surface p-2.5">
           <Thumb item={item} locale={locale} />
           <div className="min-w-0 flex-1">
-            <div className="truncate font-medium">{item.name}</div>
-            {item.price != null && <div className="text-sm font-semibold text-brand-deep">{euro(item.price, locale)}</div>}
+            {/* line-clamp y no truncate: una tostada armada trae varios rellenos. */}
+            <div className="line-clamp-2 text-sm font-medium leading-snug">{item.name}</div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              {item.variant && (
+                <span className="rounded-full bg-surface-sunken px-2 py-0.5 text-[0.65rem] font-semibold text-ink-2">{item.variant}</span>
+              )}
+              {item.price != null && <span className="text-sm font-semibold text-brand-deep">{euro(item.price, locale)}</span>}
+            </div>
             {note && <div className="mt-0.5 line-clamp-2 text-xs text-ink-3">📝 {note}</div>}
           </div>
           <div className="flex items-center gap-2">

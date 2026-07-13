@@ -90,7 +90,8 @@
     "buildTopping": "¿Qué le echas?",
     "included": "incluido",
     "buildTotal": "Total",
-    "buildSub": "Elige el pan y ponle lo que quieras"
+    "buildSub": "Elige el pan y ponle lo que quieras",
+    "listNotOrder": "Esta lista no es un pedido ni un pago: solo te ayuda a recordar lo que quieres y enseñárselo al camarero."
   },
   "tabs": {
     "menu": "Carta",

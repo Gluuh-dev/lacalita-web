@@ -90,7 +90,8 @@
     "buildTopping": "Quelle garniture ?",
     "included": "inclus",
     "buildTotal": "Total",
-    "buildSub": "Choisissez le pain et garnissez-le"
+    "buildSub": "Choisissez le pain et garnissez-le",
+    "listNotOrder": "Cette liste n'est ni une commande ni un paiement : elle vous aide simplement à retenir vos choix et à les montrer au serveur."
   },
   "tabs": {
     "menu": "Carte",
