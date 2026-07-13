@@ -89,7 +89,8 @@
     "buildSize": "Tamaño",
     "buildTopping": "¿Qué le echas?",
     "included": "incluido",
-    "buildTotal": "Total"
+    "buildTotal": "Total",
+    "buildSub": "Elige el pan y ponle lo que quieras"
   },
   "tabs": {
     "menu": "Carta",

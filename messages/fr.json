@@ -89,7 +89,8 @@
     "buildSize": "Taille",
     "buildTopping": "Quelle garniture ?",
     "included": "inclus",
-    "buildTotal": "Total"
+    "buildTotal": "Total",
+    "buildSub": "Choisissez le pain et garnissez-le"
   },
   "tabs": {
     "menu": "Carte",
