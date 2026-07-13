@@ -168,7 +168,7 @@ export default async function Home({
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
-            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
+            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08" controls={false}>
             {menus.map((m) => (
               <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
             ))}

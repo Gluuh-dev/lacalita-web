@@ -10,13 +10,15 @@ export default function SnapCarousel({
   itemClass = 'w-[80vw] max-w-[340px]',
   mdItemClass = 'md:w-[320px]',
   accent = '#c36148',
-  ink = '#2a1713'
+  ink = '#2a1713',
+  controls = true
 }: {
   children: React.ReactNode[];
   itemClass?: string;
   mdItemClass?: string;
   accent?: string;
   ink?: string;
+  controls?: boolean; // false: sin flechas ni puntos (las tarjetas hablan solas)
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -95,7 +97,7 @@ export default function SnapCarousel({
       </div>
 
       {/* Controles solo en PC: en móvil se desliza con el dedo. */}
-      {overflow && n > 1 && (
+      {controls && overflow && n > 1 && (
         <div className="mt-5 hidden items-center justify-center gap-3 md:flex">
           <button onClick={() => go(active - 1)} aria-label="Anterior" style={btnStyle} className={btn}>
             <ChevronLeft className="size-5" />
