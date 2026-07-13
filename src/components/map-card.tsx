@@ -22,7 +22,7 @@ export default function MapCard({
   const map = (
     <>
       <Image
-        src="/mapa-la-calita-v4.webp"
+        src="/mapa-la-calita-v5.webp"
         alt="La Calita, a pie de playa en Salobreña"
         fill
         sizes="(max-width: 768px) 100vw, 768px"
