@@ -371,15 +371,8 @@ export default async function Home({
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
-    <div
-      className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-[clamp(2rem,6vw,4.5rem)] text-center [isolation:isolate] sm:mb-11"
-      style={dark ? undefined : {background: 'linear-gradient(180deg, var(--bg) 0%, #ece5d6 100%)'}}
-    >
+    <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-[clamp(2rem,6vw,4.5rem)] text-center [isolation:isolate] sm:mb-11">
       <Watermark word={word} dark={dark} />
-
-      {/* Filigranas de esquina: dos trazos dorados muy finos. */}
-      <Filigree className="left-0 top-0 -translate-x-[18%] -translate-y-[12%]" />
-      <Filigree className="bottom-0 right-0 translate-x-[18%] translate-y-[12%] rotate-180" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4">
         <p
@@ -397,20 +390,6 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
         </h2>
       </div>
     </div>
-  );
-}
-
-// Trazos finos de las esquinas (el "papel de menú").
-function Filigree({className = ''}: {className?: string}) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 200 160"
-      className={`pointer-events-none absolute z-0 w-[clamp(180px,22vw,340px)] fill-none stroke-[#b0895a] stroke-1 opacity-35 ${className}`}
-    >
-      <path d="M-20 40 C 40 10, 90 30, 130 70 S 200 130, 240 120" />
-      <path d="M-10 90 C 50 70, 100 90, 150 120" />
-    </svg>
   );
 }
 
