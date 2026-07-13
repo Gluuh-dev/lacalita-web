@@ -371,7 +371,7 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   const word = (bg ?? title).trim();
   return (
     <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-x-clip py-5 text-center sm:mb-11 sm:py-7">
-      <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
+      <Watermark word={word} dark={dark} className={dark ? 'text-white/[0.04]' : 'text-[#efeae1]'} />
       <div className="relative z-10 mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
             espacio fantasma bajo el texto que separaba el par.

@@ -1,7 +1,7 @@
 // Palabra gigante de fondo (SABORES, EVENTOS, AGENDA…). SVG con textLength:
 // el navegador encaja la palabra EXACTA en el ancho disponible, sin estimar
 // métricas de la fuente — con spans se recortaba en según qué anchos de PC.
-export default function Watermark({word, className = ''}: {word: string; className?: string}) {
+export default function Watermark({word, className = '', dark = false}: {word: string; className?: string; dark?: boolean}) {
   // Cada palabra necesita su propio id de filtro: con un id repetido el
   // navegador reutiliza el primero y el resto de cabeceras salen sin relieve.
   const id = `wm-${word.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
@@ -14,21 +14,23 @@ export default function Watermark({word, className = ''}: {word: string; classNa
       className={`pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-[47%] select-none opacity-65 md:w-[112%] md:opacity-100 ${className}`}
     >
       <defs>
-        {/* Tallada: sombra dentro por arriba y filo de luz dentro por abajo.
-            Se recorta la silueta contra copias de sí misma desplazadas. */}
-        <filter id={id} x="-10%" y="-20%" width="120%" height="150%">
-          {/* sombra interior (arriba) */}
-          <feOffset in="SourceAlpha" dx="0" dy="5" result="offDark" />
-          <feGaussianBlur in="offDark" stdDeviation="4" result="blurDark" />
+        {/* Hueco en el papel. La clave del letterpress: la letra es del MISMO
+            color que el fondo, así que solo se ve por su relieve — sombra dentro
+            arriba, luz dentro abajo. Si la letra es más oscura que el fondo, el
+            ojo la lee como texto encima y no como hueco. */}
+        <filter id={id} x="-15%" y="-25%" width="130%" height="160%">
+          {/* sombra dentro, arriba: el borde superior del hueco */}
+          <feOffset in="SourceAlpha" dx="0" dy="3" result="offDark" />
+          <feGaussianBlur in="offDark" stdDeviation="2.5" result="blurDark" />
           <feComposite in="SourceAlpha" in2="blurDark" operator="out" result="cutDark" />
-          <feFlood floodColor="#000" floodOpacity="0.75" result="colDark" />
+          <feFlood floodColor={dark ? '#000' : '#9a9286'} floodOpacity={dark ? '0.9' : '0.45'} result="colDark" />
           <feComposite in="colDark" in2="cutDark" operator="in" result="shadow" />
 
-          {/* filo de luz interior (abajo) */}
-          <feOffset in="SourceAlpha" dx="0" dy="-4" result="offLight" />
-          <feGaussianBlur in="offLight" stdDeviation="3" result="blurLight" />
+          {/* luz dentro, abajo: el canto iluminado del hueco */}
+          <feOffset in="SourceAlpha" dx="0" dy="-2.5" result="offLight" />
+          <feGaussianBlur in="offLight" stdDeviation="2" result="blurLight" />
           <feComposite in="SourceAlpha" in2="blurLight" operator="out" result="cutLight" />
-          <feFlood floodColor="#fff" floodOpacity="0.9" result="colLight" />
+          <feFlood floodColor="#fff" floodOpacity={dark ? '0.25' : '0.95'} result="colLight" />
           <feComposite in="colLight" in2="cutLight" operator="in" result="light" />
 
           <feMerge>
@@ -46,12 +48,13 @@ export default function Watermark({word, className = ''}: {word: string; classNa
         lengthAdjust="spacingAndGlyphs"
         className="font-cinzel"
         filter={`url(#${id})`}
-        // Remate exterior: un hilo de luz por debajo termina de hundir la letra.
+        // El relleno es el color del fondo (un pelín más oscuro para dar cuerpo),
+        // no un gris: lo que se ve es el hueco, no la letra.
         style={{
           fontSize: 205,
           fontWeight: 600,
           fill: 'currentColor',
-          filter: 'drop-shadow(0 2px 0 rgba(255,255,255,.95))'
+          filter: `drop-shadow(0 1.5px 0.5px rgba(255,255,255,${dark ? 0.12 : 0.9}))`
         }}
       >
         {word.toUpperCase()}
