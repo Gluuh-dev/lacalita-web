@@ -371,6 +371,17 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
   const word = (bg ?? title).trim();
   return (
     <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-5 text-center sm:mb-11 sm:py-7">
+      {/* Destellos: dos luces cálidas fuera de foco, como los bokeh de la sala. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -left-24 -top-16 size-72 rounded-full opacity-70 blur-3xl sm:size-96"
+        style={{background: 'radial-gradient(closest-side, rgba(201,138,78,.28), transparent)'}}
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -bottom-20 -right-24 size-72 rounded-full opacity-70 blur-3xl sm:size-96"
+        style={{background: 'radial-gradient(closest-side, rgba(201,138,78,.22), transparent)'}}
+      />
       <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
       <div className="relative mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
@@ -386,6 +397,12 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
           {title}
           <span className="text-brand">.</span>
         </h2>
+        {/* Filete: se desvanece a los lados, como en un menú impreso. */}
+        <span
+          aria-hidden
+          className="mx-auto mt-4 block h-px w-40 sm:w-56"
+          style={{background: `linear-gradient(90deg, transparent, ${dark ? 'rgba(255,255,255,.45)' : 'rgba(201,138,78,.7)'}, transparent)`}}
+        />
       </div>
     </div>
   );
