@@ -169,7 +169,19 @@
     "goMenu": "Ir a la carta",
     "favorite": "Favorita",
     "allergensNote": "Alérgenos · 14 oficiales UE",
-    "comingFavs": "Muy pronto verás aquí las hamburguesas favoritas de la gente."
+    "comingFavs": "Muy pronto verás aquí las hamburguesas favoritas de la gente.",
+    "ticker": "Rubia gallega dry aged · Pan potato · Salsas caseras · Smash a la plancha · ",
+    "burgersEyebrow": "Nuestras smash",
+    "burgersTitle": "Carne rubia gallega, prensada al momento",
+    "wingsEyebrow": "Chicken wings",
+    "wingsTitle": "Alitas crujientes, salsa a elegir",
+    "saucesEyebrow": "Nuestras salsas",
+    "saucesTitle": "Todas caseras, receta propia",
+    "saucesSub": "Elige la tuya y añádela a cualquier plato.",
+    "comboEyebrow": "Hazlo menú",
+    "comboTitle": "Cualquier smash, con patatas y bebida",
+    "comboText": "Añade el menú desde la ficha de tu hamburguesa: patatas Calita y bebida.",
+    "seeAll": "Ver todas"
   },
   "info": {
     "title": "Información",

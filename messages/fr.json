@@ -169,7 +169,19 @@
     "goMenu": "Voir la carte",
     "favorite": "Favori",
     "allergensNote": "Allergènes · 14 officiels UE",
-    "comingFavs": "Très bientôt, les burgers préférés du public seront ici."
+    "comingFavs": "Très bientôt, les burgers préférés du public seront ici.",
+    "ticker": "Bœuf galicien dry aged · Pain potato · Sauces maison · Smash à la plancha · ",
+    "burgersEyebrow": "Nos smash",
+    "burgersTitle": "Bœuf galicien, écrasé à la minute",
+    "wingsEyebrow": "Chicken wings",
+    "wingsTitle": "Ailes croustillantes, sauce au choix",
+    "saucesEyebrow": "Nos sauces",
+    "saucesTitle": "Toutes maison, recette propre",
+    "saucesSub": "Choisissez la vôtre et ajoutez-la à tout plat.",
+    "comboEyebrow": "En menu",
+    "comboTitle": "Tout smash, avec frites et boisson",
+    "comboText": "Ajoutez le menu depuis la fiche de votre burger : frites Calita et boisson.",
+    "seeAll": "Voir tout"
   },
   "info": {
     "title": "Informations",

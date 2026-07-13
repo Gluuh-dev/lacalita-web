@@ -3,7 +3,7 @@ import {getTranslations} from 'next-intl/server';
 import {Link} from '@/i18n/navigation';
 import {MapPin, Star, Heart, ArrowRight} from 'lucide-react';
 import {tx, euro} from '@/lib/localize';
-import type {Menu, Allergen, Product, BurgerSlide, BurgerOffer} from '@/lib/queries';
+import type {Menu, Allergen, Product, Category, BurgerSlide, BurgerOffer} from '@/lib/queries';
 import BurgerHero from './burger-hero';
 import BurgerCategoryCarousel from './burger-category-carousel';
 import BurgerOfferCarousel from './burger-offer-carousel';
@@ -11,6 +11,7 @@ import SnapCarousel from './snap-carousel';
 import VoteButton from './vote-button';
 import AllergenIcon from '@/components/allergen-icon';
 import BurgerData from './burger-data';
+import MaskIcon from '@/components/menu/mask-icon';
 import type {MenuItem} from '@/components/menu/store';
 
 // ---- Tema oscuro de la hamburguesería (colores independientes del DS claro) ----
@@ -65,6 +66,18 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
         .map((a) => ({code: a.code, icon: a.icon, name: a.name}))
     }));
   const favorites = [...products].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0)).filter((p) => p.featured || (p.votes ?? 0) > 0).slice(0, 3);
+  // Bloques de portada: salen de las categorías que ya existen (nada nuevo en BD).
+  const cats = menu?.categories ?? [];
+  const catBy = (re: RegExp) => cats.find((c) => re.test(tx(c.name, 'es').toLowerCase()));
+  const top = (c?: Category) =>
+    [...(c?.products ?? [])]
+      .filter((p) => p.available)
+      .sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0) || a.position - b.position)
+      .slice(0, 8);
+  const burgers = top(catBy(/hamburg|burger|smash/));
+  const wings = top(catBy(/wing|alita|pollo|chicken/));
+  const sauces = (cats.find((c) => c.role === 'carousel')?.products ?? []).filter((p) => p.available);
+  const combo = cats.find((c) => c.combo_price != null)?.combo_price ?? null;
   // Hero: diapositivas configuradas en el admin; si no hay, derivar de productos nuevos/destacados.
   const fromSlides = slides.map((s) => ({image: s.image, name: tx(s.title, locale), price: s.price, eyebrow: tx(s.eyebrow, locale), font: s.title_font, color: s.title_color, behind: s.title_behind, bgEffect: s.bg_effect, bgImage: s.bg_image, titleScale: s.title_scale, eyebrowScale: s.eyebrow_scale, priceScale: s.price_scale, showRings: s.show_rings, overlayFx: s.overlay_fx, gradient: s.title_gradient, fxSparks: s.fx_sparks, fxSmoke: s.fx_smoke, priceFont: s.price_font, priceColor: s.price_color, priceGradient: s.price_gradient, titleY: s.title_y, priceY: s.price_y, fxVideo: s.fx_video, fxVideoBehind: s.fx_video_behind, fxVideoX: s.fx_video_x, fxVideoY: s.fx_video_y, fxVideoScale: s.fx_video_scale, bgColor: s.bg_color, textShadow: s.text_shadow, titleOutline: s.title_outline, priceOutline: s.price_outline, hideTitle: s.hide_title, hidePrice: s.hide_price, accentColor: s.accent_color, buttonColor: s.button_color, textColor: s.text_color, navColor: s.nav_color, edgeColors: s.edge_colors, edgePoints: s.edge_points, mediaY: s.media_y}));
   const heroPool = (products.filter((p) => p.is_new || p.featured).length ? products.filter((p) => p.is_new || p.featured) : products).slice(0, 6);
@@ -86,7 +99,7 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
         <div className="lc-mq" style={{animationDuration: '18s'}}>
           {[0, 1].map((k) => (
             <span key={k} className="whitespace-nowrap font-eight uppercase" style={{fontSize: '1.35rem', color: '#fdfbf7', letterSpacing: '0.06em', paddingRight: 14}}>
-              {'smash · juicy · crispy · '.repeat(8)}
+              {t('burger.ticker').repeat(4)}
             </span>
           ))}
         </div>
@@ -97,6 +110,66 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
         categories={(menu?.categories ?? []).filter((c) => c.visible !== false && ((c.products?.length ?? 0) > 0 || !!c.image))}
         locale={locale}
       />
+
+      {/* ---- Nuestras smash ---- */}
+      <Rail eyebrow={t('burger.burgersEyebrow')} title={t('burger.burgersTitle')} cta={t('burger.seeAll')} products={burgers} locale={locale} />
+
+      {/* ---- Hazlo menú: el combo solo se veía dentro de cada hamburguesa ---- */}
+      {combo != null && (
+        <section className="mx-auto max-w-7xl px-5 py-8">
+          {/* En móvil se apila: el icono y el precio arriba, el texto debajo. */}
+          <Link
+            href="/burguer/carta"
+            className="flex flex-col gap-4 rounded-[26px] border-2 border-dashed p-5 transition hover:bg-white sm:flex-row sm:items-center sm:gap-6 sm:p-6"
+            style={{borderColor: C.orange, background: 'linear-gradient(180deg,#ffffff,#fbf2ef)'}}
+          >
+            <div className="flex items-center justify-between gap-4 sm:contents">
+              <span className="flex size-14 shrink-0 items-center justify-center rounded-full sm:size-20" style={{background: C.orange, color: '#fdfbf7'}}>
+                <MaskIcon src="/iconos/menu.svg" className="size-8 sm:size-11" />
+              </span>
+              <span className="shrink-0 rounded-full px-4 py-2 font-eight text-lg sm:order-last sm:text-xl" style={{background: C.orange, color: '#fdfbf7'}}>
+                +{euro(Number(combo), locale)}
+              </span>
+            </div>
+            <span className="min-w-0 flex-1">
+              <span className="block font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{t('burger.comboEyebrow')}</span>
+              <span className="mt-1 block font-eight text-2xl leading-tight sm:text-3xl" style={{color: C.ink}}>{t('burger.comboTitle')}</span>
+              <span className="mt-1 block text-sm" style={{color: C.muted}}>{t('burger.comboText')}</span>
+            </span>
+          </Link>
+        </section>
+      )}
+
+      {/* ---- Nuestras salsas: los tarros, a todo el ancho ---- */}
+      {sauces.length > 0 && (
+        <section className="py-8">
+          <div className="mx-auto mb-5 max-w-7xl px-5">
+            <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{t('burger.saucesEyebrow')}</div>
+            <h2 className="font-eight text-4xl md:text-5xl" style={{color: C.ink}}>{t('burger.saucesTitle')}</h2>
+            <p className="mt-1 text-sm" style={{color: C.muted}}>{t('burger.saucesSub')}</p>
+          </div>
+          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-auto flex w-max gap-4">
+              {sauces.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/burguer/carta/${p.slug}`}
+                  className="group flex w-[8.5rem] shrink-0 snap-start flex-col items-center gap-2 rounded-[22px] border border-black/5 bg-white p-4 shadow-sm transition hover:shadow-md"
+                >
+                  <span className="lc-img-loading relative flex size-24 items-center justify-center overflow-hidden rounded-full" style={{background: '#f6ece4'}}>
+                    {p.image && <Image src={p.image} alt={tx(p.name, locale)} fill sizes="96px" className="object-contain transition duration-300 group-hover:scale-110" />}
+                  </span>
+                  <span className="line-clamp-2 text-center text-sm font-semibold leading-tight" style={{color: C.ink}}>{tx(p.name, locale)}</span>
+                  {p.price != null && <span className="font-eight text-sm" style={{color: C.orange}}>{euro(Number(p.price), locale)}</span>}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ---- Chicken wings ---- */}
+      <Rail eyebrow={t('burger.wingsEyebrow')} title={t('burger.wingsTitle')} cta={t('burger.seeAll')} products={wings} locale={locale} />
 
       {/* ---- Ofertas ---- */}
       <BurgerOfferCarousel offers={offers} locale={locale} />
@@ -181,5 +254,56 @@ export default async function BurgerLanding({menu, allergens, slides, offers, lo
       <div className="h-16 md:hidden" />
       <BurgerData videos={videos} />
     </main>
+  );
+}
+
+// Carrusel de una categoría en portada (smash, alitas...): los más votados
+// primero, con el corazón que vota y guarda. Sin foto se ve el marco: se
+// encenderá solo en cuanto se suban las imágenes desde el admin.
+function Rail({eyebrow, title, cta, products, locale}: {eyebrow: string; title: string; cta: string; products: Product[]; locale: string}) {
+  if (!products.length) return null;
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-8">
+      <div className="mb-5">
+        <div className="font-adam text-[0.7rem] uppercase tracking-[0.2em]" style={{color: C.orange}}>{eyebrow}</div>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="font-eight text-4xl md:text-5xl" style={{color: C.ink}}>{title}</h2>
+          <Link href="/burguer/carta" className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em]" style={{borderColor: C.orange, color: C.orange}}>
+            {cta} <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      </div>
+      <SnapCarousel itemClass="w-[70vw] max-w-[260px]" mdItemClass="md:w-[260px]">
+        {products.map((p) => (
+          <Link key={p.id} href={`/burguer/carta/${p.slug}`} className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-black/5 bg-white shadow-sm transition hover:shadow-md">
+            <div className="lc-img-loading relative aspect-[4/3] overflow-hidden">
+              {p.image && (
+                <Image src={p.image} alt={tx(p.name, locale)} fill sizes="(min-width:1024px) 16rem, 70vw" className="object-cover transition duration-500 group-hover:scale-105" />
+              )}
+              <div className="absolute right-3 top-3">
+                <VoteButton
+                  item={{id: p.id, name: tx(p.name, locale), price: p.price != null ? Number(p.price) : null, image: p.image ?? null, slug: p.slug, menuSlug: 'hamburgueseria'}}
+                  votes={p.votes ?? 0}
+                  className="shadow-sm backdrop-blur"
+                />
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col gap-1 p-4">
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-eight text-lg leading-tight" style={{color: C.ink}}>{tx(p.name, locale)}</h3>
+                {p.price != null ? (
+                  <span className="shrink-0 font-eight" style={{color: C.orange}}>{euro(Number(p.price), locale)}</span>
+                ) : (p.product_variants?.length ?? 0) > 0 ? (
+                  <span className="shrink-0 whitespace-nowrap text-xs font-semibold" style={{color: C.orange}}>
+                    {euro(Math.min(...p.product_variants!.map((v) => Number(v.price))), locale)}
+                  </span>
+                ) : null}
+              </div>
+              {p.description && <p className="line-clamp-2 text-sm" style={{color: C.muted}}>{tx(p.description, locale)}</p>}
+            </div>
+          </Link>
+        ))}
+      </SnapCarousel>
+    </section>
   );
 }

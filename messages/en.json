@@ -169,7 +169,19 @@
     "goMenu": "Go to the menu",
     "favorite": "Favourite",
     "allergensNote": "Allergens · 14 official EU",
-    "comingFavs": "Very soon you will see people's favourite burgers here."
+    "comingFavs": "Very soon you will see people's favourite burgers here.",
+    "ticker": "Galician dry aged beef · Potato bun · House sauces · Smashed on the grill · ",
+    "burgersEyebrow": "Our smash",
+    "burgersTitle": "Galician beef, smashed to order",
+    "wingsEyebrow": "Chicken wings",
+    "wingsTitle": "Crispy wings, pick your sauce",
+    "saucesEyebrow": "Our sauces",
+    "saucesTitle": "All homemade, our own recipe",
+    "saucesSub": "Pick yours and add it to any dish.",
+    "comboEyebrow": "Make it a meal",
+    "comboTitle": "Any smash, with fries and a drink",
+    "comboText": "Add the meal from your burger page: Calita fries and a drink.",
+    "seeAll": "See all"
   },
   "info": {
     "title": "Information",
