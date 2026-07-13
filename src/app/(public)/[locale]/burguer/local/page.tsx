@@ -3,6 +3,7 @@ import {MapPin, Phone, Mail, Clock, Navigation} from 'lucide-react';
 import {getSettings} from '@/lib/queries';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {altLanguages} from '@/lib/site';
+import MapCard from '@/components/map-card';
 
 export const revalidate = 300;
 
@@ -20,7 +21,6 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   setRequestLocale(locale);
   const settings = await getSettings();
   const hours = normalizeHours(settings?.hours);
-  const q = encodeURIComponent(settings?.address || 'La Calita Salobreña');
 
   return (
     <main className="min-h-screen bg-[#fdfbf7] px-4 pb-28 pt-20 text-[#2a1713]">
@@ -35,22 +35,8 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
           </div>
         </div>
 
-        {/* Mapa */}
-        <div className="overflow-hidden rounded-[22px] border border-black/5 shadow-sm">
-          <iframe
-            title="Mapa La Calita"
-            src={`https://www.google.com/maps?q=${q}&output=embed`}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="h-64 w-full border-0"
-          />
-        </div>
-
-        {settings?.maps_url && (
-          <a href={settings.maps_url} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 rounded-full bg-[#c36148] px-6 py-3.5 font-semibold text-[#fdfbf7] transition hover:brightness-105">
-            <Navigation className="size-4" /> Cómo llegar
-          </a>
-        )}
+        {/* Mapa (dibujo propio, no el iframe de Google) */}
+        <MapCard href={settings?.maps_url} label='Cómo llegar' />
 
         {/* Contacto */}
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

@@ -9,6 +9,7 @@ import EventCard from '@/components/event-card';
 import EventActions from '@/components/event-actions';
 import {countdownToken} from '@/lib/event-time';
 import CountdownBar from './countdown-bar';
+import MapCard from '@/components/map-card';
 
 export const revalidate = 300;
 
@@ -186,7 +187,7 @@ export default async function EventoDetalle({params}: {params: Promise<{locale: 
             )}
 
             <div className="mt-5 overflow-hidden rounded-[14px] border border-line">
-              <iframe title="Mapa La Calita" src="https://www.google.com/maps?q=La+Calita+Salobre%C3%B1a&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-40 w-full border-0" />
+              <MapCard href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a" label={ti('location')} className="h-40" />
             </div>
             <a
               href="https://maps.google.com/?q=La+Calita+Salobre%C3%B1a"

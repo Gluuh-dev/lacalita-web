@@ -5,6 +5,7 @@ import {getSettings} from '@/lib/queries';
 import {normalizeHours, formatRanges} from '@/lib/hours';
 import {altLanguages} from '@/lib/site';
 import OpenStatus from '@/components/open-status';
+import MapCard from '@/components/map-card';
 
 export const revalidate = 300;
 
@@ -29,15 +30,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
           <OpenStatus hours={hours} />
         </div>
 
-        <div className="overflow-hidden rounded-[20px] border border-line shadow-sm">
-          <iframe title="Mapa La Calita" src={`https://www.google.com/maps?q=${q}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-72 w-full border-0" />
-        </div>
-
-        {settings?.maps_url && (
-          <a href={settings.maps_url} target="_blank" rel="noreferrer" className="ds-btn ds-btn-primary mt-3 w-full">
-            <Navigation className="size-4" /> {t('info.location')}
-          </a>
-        )}
+        <MapCard href={settings?.maps_url} label={t('info.location')} className="mb-4 h-72" />
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {settings?.address && (
