@@ -5,7 +5,7 @@ import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
 import type {Product} from '@/lib/queries';
 import ProductDetail from '@/components/product-detail';
-import type {Category} from '@/lib/queries';
+import {relatedFor} from '@/lib/related';
 
 export const revalidate = 300;
 
@@ -53,15 +53,6 @@ export default async function ProductPage({
   if (!product) notFound();
   // Las salsas ya vienen en el menú cargado: sin consulta extra.
   const sauces = data.categories.find((c) => c.role === 'carousel')?.products ?? [];
-  const related = relatedCats(data.categories, product.category_id);
+  const related = relatedFor(data.categories, product);
   return <ProductDetail product={product} menuSlug={menu} theme={data.theme} sauces={sauces} related={related} />;
-}
-
-// Resto de la carta para los carruseles del pie: primero la categoría del
-// propio plato ("más hamburguesas"), y sin las salsas (ya salen arriba).
-function relatedCats(cats: Category[], catId: string): Category[] {
-  const usable = cats.filter((c) => c.role !== 'carousel' && (c.products?.length ?? 0) > 0);
-  const own = usable.filter((c) => c.id === catId);
-  const rest = usable.filter((c) => c.id !== catId);
-  return [...own, ...rest];
 }
