@@ -3,6 +3,7 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Phone, Waves, Quote, Star} from 'lucide-react';
 import {IconBrandInstagram, IconBrandFacebook, IconCoffee, IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
 import MapCard from '@/components/map-card';
+import MenuCard from '@/components/menu-card';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
@@ -169,36 +170,9 @@ export default async function Home({
             <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
-            {menus.map((m) => {
-              const Icon = ICONS[m.slug] ?? IconToolsKitchen2;
-              return (
-                <Link
-                  key={m.id}
-                  href={m.slug === 'hamburgueseria' ? '/burguer' : `/carta/${m.slug}`}
-                  data-theme={m.theme}
-                  className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md"
-                >
-                  {/* Fondo: el que suba el admin manda; si no, la textura de la casa. */}
-                  {m.header_image || FONDOS[m.slug] ? (
-                    <Image src={m.header_image || FONDOS[m.slug]} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
-                  {/* Icono al centro, en cristal: el mismo que el círculo del tab-bar. */}
-                  <span className="absolute left-1/2 top-1/2 z-10 flex size-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,.25)] backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:bg-white/20">
-                    <Icon className="size-9" stroke={1.6} />
-                  </span>
-                  <div className="relative z-10">
-                    <h3 className="font-serif text-3xl leading-tight">{tx(m.name, locale)}</h3>
-                    {m.subtitle && <p className="mt-1 text-sm text-white/85">{tx(m.subtitle, locale)}</p>}
-                    <span className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-white py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink transition group-hover:bg-white/90">
-                      {t('common.seeMenu')} <ArrowRight className="size-4" />
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
+            {menus.map((m) => (
+              <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
+            ))}
             </SnapCarousel>
             </div>
           </div>
@@ -392,20 +366,6 @@ export default async function Home({
   );
 }
 
-// Texturas de la casa para las tarjetas de carta (hielo, brasa, arena, café).
-const FONDOS: Record<string, string> = {
-  desayunos: '/fondos/desayunos-v2.webp',
-  restaurante: '/fondos/restaurante-v2.webp',
-  cocteles: '/fondos/cocteles-v2.webp',
-  hamburgueseria: '/fondos/hamburgueseria-v2.webp'
-};
-
-const ICONS: Record<string, typeof IconCoffee> = {
-  desayunos: IconCoffee,
-  restaurante: IconToolsKitchen2,
-  cocteles: IconGlassCocktail,
-  hamburgueseria: IconBurger
-};
 
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
