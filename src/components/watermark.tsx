@@ -9,9 +9,9 @@ export default function Watermark({word, className = '', dark = false}: {word: s
     <svg
       aria-hidden
       viewBox="0 0 1000 220"
-      // Más ancha que la pantalla a propósito: la palabra se sale por los lados
-      // (se recorta) y gana presencia, como un grabado a sangre.
-      className={`pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-[47%] select-none opacity-65 md:w-[112%] md:opacity-100 ${className}`}
+      // Móvil: a sangre, se sale por los lados y gana presencia. PC: contenida,
+      // porque a pantalla completa se volvía descomunal.
+      className={`pointer-events-none absolute left-1/2 top-1/2 w-[130%] max-w-none -translate-x-1/2 -translate-y-[47%] select-none opacity-65 md:w-[82%] md:max-w-[1000px] md:opacity-100 ${className}`}
     >
       <defs>
         {/* Hueco en el papel. La clave del letterpress: la letra es del MISMO
