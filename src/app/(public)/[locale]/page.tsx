@@ -366,30 +366,53 @@ export default async function Home({
 }
 
 
+// Composiciones de destellos: se elige una según el título, así ninguna cabecera
+// repite la misma disposición.
+const SPARKS: {cls: string; rot: number}[][] = [
+  [
+    {cls: 'left-[-8%] top-[-12%] size-[14rem] sm:left-[2%] sm:size-[19rem]', rot: 8},
+    {cls: 'right-[-10%] bottom-[-14%] size-[12rem] sm:right-[3%] sm:size-[16rem]', rot: -14}
+  ],
+  [
+    {cls: 'left-[-6%] bottom-[-16%] size-[13rem] sm:left-[6%] sm:size-[17rem]', rot: -20},
+    {cls: 'right-[-8%] top-[-14%] size-[14rem] sm:right-[7%] sm:size-[18rem]', rot: 16}
+  ],
+  [
+    {cls: 'left-[-10%] top-[8%] size-[12rem] sm:left-[-2%] sm:size-[16rem]', rot: 24},
+    {cls: 'right-[-6%] bottom-[-10%] size-[15rem] sm:right-[10%] sm:size-[19rem]', rot: -6}
+  ]
+];
+
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
     <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-x-clip py-5 text-center sm:mb-11 sm:py-7">
-      {/* Destellos: luces cálidas fuera de foco (bokeh), como las guirnaldas de
-          la terraza al atardecer. Van sobre el fondo, bajo la palabra grabada. */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            'radial-gradient(120px 120px at 8% 18%, rgba(214,150,88,.45), transparent 70%)',
-            'radial-gradient(60px 60px at 16% 42%, rgba(230,180,120,.40), transparent 70%)',
-            'radial-gradient(38px 38px at 4% 62%, rgba(214,150,88,.35), transparent 70%)',
-            'radial-gradient(150px 150px at 93% 78%, rgba(214,150,88,.42), transparent 70%)',
-            'radial-gradient(70px 70px at 84% 30%, rgba(230,180,120,.35), transparent 70%)',
-            'radial-gradient(40px 40px at 97% 22%, rgba(214,150,88,.30), transparent 70%)'
-          ].join(','),
-          filter: 'blur(14px)'
-        }}
-      />
+      {/* Destellos (fotos de bokeh): en su propia capa recortada al alto de la
+          cabecera y detrás de todo. La composición cambia con el título — cada
+          sección los lleva en otro sitio, girados de otra forma. */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        {SPARKS[[...title].reduce((n, c) => n + c.charCodeAt(0), 0) % SPARKS.length].map((d, i) => (
+          <Image
+            key={i}
+            src={dark ? '/destellos/brasa.webp' : '/destellos/dorado.webp'}
+            alt=""
+            width={520}
+            height={520}
+            // Máscara circular: sin ella se ve el borde recto de la foto.
+            style={{
+              maskImage: 'radial-gradient(closest-side, #000 40%, transparent 92%)',
+              WebkitMaskImage: 'radial-gradient(closest-side, #000 40%, transparent 92%)',
+              transform: `rotate(${d.rot}deg)`
+            }}
+            className={`absolute select-none blur-[2px] ${d.cls} ${
+              dark ? 'opacity-45 mix-blend-screen' : 'opacity-40 mix-blend-multiply'
+            }`}
+          />
+        ))}
+      </span>
       <Watermark word={word} className={dark ? 'text-white/[0.09]' : 'text-ink/[0.075]'} />
-      <div className="relative mx-auto max-w-6xl px-4">
+      <div className="relative z-10 mx-auto max-w-6xl px-4">
         {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
             espacio fantasma bajo el texto que separaba el par.
             Segoe UI es del sistema (Windows); fuera de ahí cae a la reserva. */}
