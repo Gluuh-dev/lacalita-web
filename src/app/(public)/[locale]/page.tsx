@@ -167,7 +167,6 @@ export default async function Home({
         <section id="carta" className="scroll-mt-20 py-20">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} />
-            <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
             {menus.map((m) => (
