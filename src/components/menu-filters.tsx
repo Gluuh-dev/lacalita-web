@@ -4,7 +4,7 @@ import {useState, useEffect, useRef} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {useLocale, useTranslations} from 'next-intl';
 import {Flame, IceCreamCone, CupSoda, Coffee, Pizza, Salad, Beef, Utensils, UtensilsCrossed, Search, X, SlidersHorizontal} from 'lucide-react';
-import {IconBurger, IconSalad} from '@tabler/icons-react';
+import {IconBurger, IconSalad, IconBowl} from '@tabler/icons-react';
 import MaskIcon from '@/components/menu/mask-icon';
 import {tx} from '@/lib/localize';
 import type {Menu} from '@/lib/queries';
@@ -20,7 +20,7 @@ import {useHideOnScroll} from '@/lib/use-hide-on-scroll';
 function CatIcon({name, className = 'size-4'}: {name: string; className?: string}) {
   const s = name.toLowerCase();
   if (/hamburg|burger|smash/.test(s)) return <IconBurger className={className} stroke={2} />;
-  if (/salsa|sauce/.test(s)) return <MaskIcon src="/iconos/salsas.svg" className={className} />;
+  if (/salsa|sauce/.test(s)) return <IconBowl className={className} stroke={2} />;
   if (/wing|alita|pollo|chicken/.test(s)) return <MaskIcon src="/iconos/wings.svg" className={className} />;
   if (/entrante|aperitivo|starter|tapa|snack|croqueta/.test(s)) return <IconSalad className={className} stroke={2} />;
   if (/patata|frit|fries/.test(s)) return <MaskIcon src="/iconos/patatas.svg" className={className} />;
