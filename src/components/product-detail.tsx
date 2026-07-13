@@ -194,6 +194,22 @@ export default function ProductDetail({
           </motion.div>
         )}
 
+        {allergens.length > 0 && (
+          <motion.div {...fade(0.25)} className="mt-8">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
+              {t('allergens')}
+            </h2>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink/70">
+              {allergens.map((a) => (
+                <li key={a.code} className="flex items-center gap-1.5">
+                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={24} />
+                  {tx(a.name, locale)}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+
         {/* Salsas con su tarro, en scroll lateral (como en la carta). Si no hay
             fotos cargadas, cae a la lista de texto de los extras. */}
         {sauces.length > 0 ? (
@@ -232,22 +248,6 @@ export default function ProductDetail({
             </ul>
           </motion.div>
         ) : null}
-
-        {allergens.length > 0 && (
-          <motion.div {...fade(0.25)} className="mt-8">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
-              {t('allergens')}
-            </h2>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink/70">
-              {allergens.map((a) => (
-                <li key={a.code} className="flex items-center gap-1.5">
-                  <AllergenIcon src={a.icon} label={tx(a.name, locale)} size={24} />
-                  {tx(a.name, locale)}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
 
         {/* Venta cruzada: el resto de la carta, para añadir sin volver atrás. */}
         {related.map((c) => (
