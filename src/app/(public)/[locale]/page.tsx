@@ -178,8 +178,9 @@ export default async function Home({
                   data-theme={m.theme}
                   className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md"
                 >
-                  {m.header_image ? (
-                    <Image src={m.header_image} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
+                  {/* Fondo: el que suba el admin manda; si no, la textura de la casa. */}
+                  {m.header_image || FONDOS[m.slug] ? (
+                    <Image src={m.header_image || FONDOS[m.slug]} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
                   )}
@@ -389,6 +390,14 @@ export default async function Home({
     </main>
   );
 }
+
+// Texturas de la casa para las tarjetas de carta (hielo, brasa, arena, café).
+const FONDOS: Record<string, string> = {
+  desayunos: '/fondos/desayunos.webp',
+  restaurante: '/fondos/restaurante.webp',
+  cocteles: '/fondos/cocteles.webp',
+  hamburgueseria: '/fondos/hamburgueseria.webp'
+};
 
 const ICONS: Record<string, typeof Coffee> = {
   desayunos: Coffee,
