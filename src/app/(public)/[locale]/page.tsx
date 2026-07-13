@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Phone, Waves, Quote, Star} from 'lucide-react';
-import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
+import {IconBrandInstagram, IconBrandFacebook, IconCoffee, IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
 import MapCard from '@/components/map-card';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE} from '@/lib/queries';
@@ -170,7 +170,7 @@ export default async function Home({
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08">
             {menus.map((m) => {
-              const Icon = ICONS[m.slug] ?? UtensilsCrossed;
+              const Icon = ICONS[m.slug] ?? IconToolsKitchen2;
               return (
                 <Link
                   key={m.id}
@@ -185,8 +185,9 @@ export default async function Home({
                     <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
-                  <span className="absolute left-4 top-4 z-10 flex size-10 items-center justify-center rounded-full bg-white/15 backdrop-blur">
-                    <Icon className="size-5" />
+                  {/* Icono al centro, en cristal: el mismo que el círculo del tab-bar. */}
+                  <span className="absolute left-1/2 top-1/2 z-10 flex size-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,.25)] backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:bg-white/20">
+                    <Icon className="size-9" stroke={1.6} />
                   </span>
                   <div className="relative z-10">
                     <h3 className="font-serif text-3xl leading-tight">{tx(m.name, locale)}</h3>
@@ -399,11 +400,11 @@ const FONDOS: Record<string, string> = {
   hamburgueseria: '/fondos/hamburgueseria-v2.webp'
 };
 
-const ICONS: Record<string, typeof Coffee> = {
-  desayunos: Coffee,
-  restaurante: UtensilsCrossed,
-  cocteles: Martini,
-  hamburgueseria: Sandwich
+const ICONS: Record<string, typeof IconCoffee> = {
+  desayunos: IconCoffee,
+  restaurante: IconToolsKitchen2,
+  cocteles: IconGlassCocktail,
+  hamburgueseria: IconBurger
 };
 
 // Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
