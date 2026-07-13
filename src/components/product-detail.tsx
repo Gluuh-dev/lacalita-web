@@ -6,6 +6,7 @@ import {motion, useReducedMotion} from 'framer-motion';
 import {useTranslations, useLocale} from 'next-intl';
 import {Heart, Plus, Minus, X, Maximize2, Share2} from 'lucide-react';
 import {toast} from 'sonner';
+import {Link} from '@/i18n/navigation';
 import {tx, euro} from '@/lib/localize';
 import type {Product} from '@/lib/queries';
 import AllergenIcon from './allergen-icon';
@@ -18,12 +19,16 @@ import {useMenuStore, type MenuItem} from '@/components/menu/store';
 export default function ProductDetail({
   product,
   menuSlug,
-  theme
+  theme,
+  sauces = []
 }: {
   product: Product;
   menuSlug: string;
   theme: string;
+  sauces?: Product[];
 }) {
+  // Las salsas viven en la misma carta: enlace a su detalle.
+  const sauceHref = (slug: string) => (menuSlug === 'hamburgueseria' ? `/burguer/carta/${slug}` : `/carta/${menuSlug}/${slug}`);
   const isAdmin = useIsAdmin();
   const t = useTranslations('menu');
   const tc = useTranslations('carta');
@@ -186,7 +191,30 @@ export default function ProductDetail({
           </motion.div>
         )}
 
-        {(product.extras?.length ?? 0) > 0 && (
+        {/* Salsas con su tarro, en scroll lateral (como en la carta). Si no hay
+            fotos cargadas, cae a la lista de texto de los extras. */}
+        {sauces.length > 0 ? (
+          <motion.div {...fade(0.24)} className="mt-8">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-3">{tc('sauces')}</h2>
+            <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {sauces.map((s) => (
+                <Link
+                  key={s.id}
+                  href={sauceHref(s.slug)}
+                  className="group flex w-[7.5rem] shrink-0 snap-start flex-col items-center gap-1.5 rounded-[20px] border border-line bg-surface p-3 transition hover:border-brand"
+                >
+                  <span className="lc-img-loading relative flex size-20 items-center justify-center overflow-hidden rounded-full bg-surface-sunken">
+                    {s.image && (
+                      <Image src={s.image} alt={tx(s.name, locale)} fill sizes="80px" className="object-contain transition duration-300 group-hover:scale-110" />
+                    )}
+                  </span>
+                  <span className="line-clamp-2 text-center text-[0.78rem] font-semibold leading-tight text-ink">{tx(s.name, locale)}</span>
+                  {s.price != null && <span className="text-xs font-bold text-brand-deep">{euro(Number(s.price), locale)}</span>}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        ) : (product.extras?.length ?? 0) > 0 ? (
           <motion.div {...fade(0.24)} className="mt-8">
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-3">
               {tc('sauces')}
@@ -200,7 +228,7 @@ export default function ProductDetail({
               ))}
             </ul>
           </motion.div>
-        )}
+        ) : null}
 
         {allergens.length > 0 && (
           <motion.div {...fade(0.25)} className="mt-8">

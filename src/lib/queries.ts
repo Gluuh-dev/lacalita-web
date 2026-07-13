@@ -160,6 +160,25 @@ export async function getProduct(slug: string): Promise<{product: Product; theme
   return {product: d as Product, theme: d.categories?.menus?.theme ?? 'default'};
 }
 
+// Salsas de una carta: los productos de su categoría marcada como 'carousel'.
+// Las usa el detalle de producto para enseñarlas con foto (no solo texto).
+export async function getSauces(menuSlug: string): Promise<Product[]> {
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('categories')
+        .select('role, menus!inner ( slug ), products ( id, slug, name, price, image, position )')
+        .eq('role', 'carousel')
+        .eq('menus.slug', menuSlug)
+        .maybeSingle();
+      const prods = ((data as unknown as {products?: Product[]})?.products ?? []) as Product[];
+      return prods.sort((a, b) => a.position - b.position);
+    },
+    ['sauces', menuSlug],
+    {revalidate: 300, tags: ['menu']}
+  )();
+}
+
 export async function getSettings(): Promise<Settings | null> {
   return unstable_cache(
     async () => {

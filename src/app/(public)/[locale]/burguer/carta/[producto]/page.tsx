@@ -1,6 +1,6 @@
 import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
-import {getProduct} from '@/lib/queries';
+import {getProduct, getSauces} from '@/lib/queries';
 import {tx} from '@/lib/localize';
 import {altLanguages} from '@/lib/site';
 import ProductDetail from '@/components/product-detail';
@@ -24,7 +24,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
 export default async function Page({params}: {params: Promise<{locale: string; producto: string}>}) {
   const {locale, producto} = await params;
   setRequestLocale(locale);
-  const data = await getProduct(producto);
+  const [data, sauces] = await Promise.all([getProduct(producto), getSauces('hamburgueseria')]);
   if (!data) notFound();
-  return <ProductDetail product={data.product} menuSlug="hamburgueseria" theme={data.theme} />;
+  return <ProductDetail product={data.product} menuSlug="hamburgueseria" theme={data.theme} sauces={sauces} />;
 }

@@ -17,8 +17,9 @@ export default function SauceCarousel({cat, menuSlug}: {cat: Category; menuSlug:
       <h2 className="eyebrow mb-1 px-4">{tx(cat.name, locale)}</h2>
       {cat.description && <p className="mb-3 px-4 text-sm text-ink-3">{tx(cat.description, locale)}</p>}
 
-      {/* Scroll lateral a sangre: los tarros se salen por los lados. */}
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* Full-bleed: se sale del contenedor y ocupa el ancho de la pantalla, así
+          los tarros asoman por los bordes e invitan a deslizar. */}
+      <div className="relative left-1/2 w-screen -translate-x-1/2 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {cat.products.map((p) => (
           <Link
             key={p.id}

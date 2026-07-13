@@ -50,5 +50,7 @@ export default async function ProductPage({
   if (!data) notFound();
   const product = findProduct(data.categories, producto);
   if (!product) notFound();
-  return <ProductDetail product={product} menuSlug={menu} theme={data.theme} />;
+  // Las salsas ya vienen en el menú cargado: sin consulta extra.
+  const sauces = data.categories.find((c) => c.role === 'carousel')?.products ?? [];
+  return <ProductDetail product={product} menuSlug={menu} theme={data.theme} sauces={sauces} />;
 }
