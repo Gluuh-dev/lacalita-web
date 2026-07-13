@@ -366,34 +366,51 @@ export default async function Home({
 }
 
 
-// Cabecera unificada estilo "Sabores.": palabra gigante de fondo + eyebrow + título con punto.
+// Cabecera de sección: papel crema en degradado, palabra grabada de fondo,
+// filigranas doradas en las esquinas, antesala espaciada y título con su punto.
 function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
-    <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-x-clip py-5 text-center sm:mb-11 sm:py-7">
-      <Watermark word={word} dark={dark} className={dark ? 'text-white/[0.04]' : 'text-[#efeae1]'} />
+    <div
+      className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-[clamp(2rem,6vw,4.5rem)] text-center [isolation:isolate] sm:mb-11"
+      style={dark ? undefined : {background: 'linear-gradient(180deg, var(--bg) 0%, #ece5d6 100%)'}}
+    >
+      <Watermark word={word} dark={dark} />
+
+      {/* Filigranas de esquina: dos trazos dorados muy finos. */}
+      <Filigree className="left-0 top-0 -translate-x-[18%] -translate-y-[12%]" />
+      <Filigree className="bottom-0 right-0 translate-x-[18%] translate-y-[12%] rotate-180" />
+
       <div className="relative z-10 mx-auto max-w-6xl px-4">
-        {/* leading-none: el eyebrow heredaba interlineado 1.5 y arrastraba un
-            espacio fantasma bajo el texto que separaba el par.
-            Segoe UI es del sistema (Windows); fuera de ahí cae a la reserva. */}
-        <div
-          className="eyebrow -mb-0.5 leading-none"
-          style={{fontFamily: '"Segoe UI", system-ui, -apple-system, "Segoe UI Variable", Roboto, "Helvetica Neue", Arial, sans-serif'}}
+        <p
+          className="mb-[clamp(0.4rem,1vw,0.9rem)] font-montserrat font-medium uppercase text-[clamp(0.8rem,1.5vw,1.15rem)] leading-none tracking-[0.42em] max-[520px]:tracking-[0.3em]"
+          style={{color: dark ? 'rgba(255,255,255,.75)' : '#b0895a', paddingLeft: '0.42em'}}
         >
           {eyebrow}
-        </div>
-        <h2 className="font-serif text-5xl font-bold leading-[0.9] sm:text-6xl">
+        </p>
+        <h2
+          className="font-serif font-bold leading-none tracking-[-0.01em] text-[clamp(3rem,9vw,7rem)]"
+          style={{color: dark ? '#fff' : '#23374f'}}
+        >
           {title}
-          <span className="text-brand">.</span>
+          <span className="ml-[0.02em] inline-block size-[0.16em] -translate-y-[0.02em] rounded-full align-baseline bg-[#c06a44]" />
         </h2>
-        {/* Filete: se desvanece a los lados, como en un menú impreso. */}
-        <span
-          aria-hidden
-          className="mx-auto mt-4 block h-px w-40 sm:w-56"
-          style={{background: `linear-gradient(90deg, transparent, ${dark ? 'rgba(255,255,255,.45)' : 'rgba(201,138,78,.7)'}, transparent)`}}
-        />
       </div>
     </div>
+  );
+}
+
+// Trazos finos de las esquinas (el "papel de menú").
+function Filigree({className = ''}: {className?: string}) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 200 160"
+      className={`pointer-events-none absolute z-0 w-[clamp(180px,22vw,340px)] fill-none stroke-[#b0895a] stroke-1 opacity-35 ${className}`}
+    >
+      <path d="M-20 40 C 40 10, 90 30, 130 70 S 200 130, 240 120" />
+      <path d="M-10 90 C 50 70, 100 90, 150 120" />
+    </svg>
   );
 }
 
