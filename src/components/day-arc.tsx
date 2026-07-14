@@ -12,6 +12,8 @@ const X0 = 90;
 const X1 = 910;
 // Los colores de la carta: del dorado de la mañana a la tinta de la noche.
 const PUNTO = ['var(--brand)', 'var(--brand)', 'var(--brand-deep)', 'var(--ink)'];
+// Altura del punto más bajo de la curva: la referencia desde la que sube cada etiqueta.
+const SUELO = 173;
 
 // Parábola invertida: el sol sube al mediodía y baja al cerrar.
 const curveY = (x: number) => 0.0007 * (x - 500) * (x - 500) + 55;
@@ -140,7 +142,7 @@ export default function DayArc({
             className={`absolute z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-full px-3.5 py-1.5 font-adam text-[0.68rem] uppercase tracking-[0.14em] text-white ${
               abierto ? 'bg-ink' : 'bg-ink-3'
             }`}
-            style={{left: `${(sunX / VBW) * 100}%`, top: `calc(${(sunY / 280) * 100}% - 2.6rem)`}}
+            style={{left: `${(sunX / VBW) * 100}%`, top: `calc(${(sunY / 280) * 100}% - 4rem)`}}
           >
             {abierto ? `${nowLabel} · ${hhmm(mins)}` : `${closedLabel} ${hhmm(rango.from)}`}
           </div>
@@ -162,19 +164,25 @@ export default function DayArc({
           );
         })}
 
-        {stops.map((s, i) => (
-          <div
-            key={s.min}
-            className={`absolute bottom-0 w-[170px] -translate-x-1/2 px-2 text-center transition-opacity duration-500 sm:w-[200px] ${
-              activa >= 0 && i !== activa ? 'opacity-55' : ''
-            }`}
-            style={{left: `${(x(s.min) / VBW) * 100}%`}}
-          >
-            <div className={`font-adam text-[0.62rem] uppercase tracking-[0.16em] ${i === activa ? 'text-ink' : 'text-brand-deep'}`}>{s.time}</div>
-            <h3 className="mt-1.5 font-serif text-lg font-bold leading-tight text-ink sm:text-xl">{s.title}</h3>
-            <p className="mt-1.5 text-[0.82rem] leading-snug text-ink-2">{s.desc}</p>
-          </div>
-        ))}
+        {stops.map((s, i) => {
+          const sx = x(s.min);
+          // Cada etiqueta sube lo que sube su punto: así el texto dibuja también
+          // la parábola en vez de quedar todo alineado abajo.
+          const alto = ((SUELO - curveY(sx)) / 280) * 100 * 0.5;
+          return (
+            <div
+              key={s.min}
+              className={`absolute w-[170px] -translate-x-1/2 px-2 text-center transition-opacity duration-500 sm:w-[200px] ${
+                activa >= 0 && i !== activa ? 'opacity-55' : ''
+              }`}
+              style={{left: `${(sx / VBW) * 100}%`, bottom: `${alto}%`}}
+            >
+              <div className={`font-adam text-[0.6rem] uppercase tracking-[0.22em] ${i === activa ? 'text-ink' : 'text-brand-deep'}`}>{s.time}</div>
+              <h3 className="mt-2 font-serif text-[1.35rem] font-bold leading-[1.1] tracking-[-0.01em] text-ink sm:text-[1.55rem]">{s.title}</h3>
+              <p className="mx-auto mt-2 max-w-[16rem] text-[0.84rem] leading-relaxed text-ink-2">{s.desc}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -57,9 +57,10 @@ export default function SiteTabBar() {
 
   return (
     <>
-      {/* Espaciador: fluye al final de la página para que el contenido no
-          termine escondido debajo de la barra. Desaparece con ella en PC. */}
-      <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)]" />
+      {/* Espaciador: fluye al final de la página para que el contenido no termine
+          escondido debajo de la barra. En PC sobra —el footer ya deja hueco con
+          su md:pb-32— y dejaba una franja clara entre la última sección y él. */}
+      <div aria-hidden className="h-[calc(env(safe-area-inset-bottom)+6.5rem)] xl:hidden" />
 
       {open && <div className="fixed inset-0 z-30 bg-black/15 duration-200 animate-in fade-in" onClick={() => { setOpen(false); navShield(); }} />}
 

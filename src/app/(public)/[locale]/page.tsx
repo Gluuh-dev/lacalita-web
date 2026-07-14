@@ -358,38 +358,8 @@ export default async function Home({
         </Reveal>
       )}
 
-      {/* Reserva: el cierre de la portada, justo antes de la información de servicio. */}
-      {settings?.phone && (
-        <Reveal>
-          <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden py-12 text-center text-white sm:py-14">
-            {/* Atardecer: del terracota de la casa a la noche. */}
-            <div
-              className="absolute inset-0 -z-10"
-              style={{background: 'radial-gradient(120% 100% at 30% 0%, #c98a4e 0%, #8a4f2c 35%, #3b2417 70%, #23150e 100%)'}}
-            />
-            <div className="mx-auto max-w-2xl px-5">
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <a
-                  href={`tel:${settings.phone}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#e2a869] px-6 py-3.5 font-semibold text-[#2a1713] transition hover:brightness-105"
-                >
-                  <Phone className="size-4" /> {t('home.bookPhone')}
-                </a>
-                <a
-                  href={`https://wa.me/${settings.phone.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/35 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10"
-                >
-                  WhatsApp <ArrowRight className="size-4" />
-                </a>
-              </div>
-            </div>
-          </section>
-        </Reveal>
-      )}
-
-      {/* Dónde estamos: bloque oscuro con la tarjeta de datos y el plano al lado. */}
+      {/* Dónde estamos: bloque oscuro con la tarjeta de datos y el plano al lado.
+          Los botones de reservar y WhatsApp ya viven aquí dentro. */}
       <Reveal>
         <section
           id="info"
