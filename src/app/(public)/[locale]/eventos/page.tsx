@@ -128,7 +128,7 @@ export default async function EventosPage({params}: {params: Promise<{locale: st
         style={{background: 'radial-gradient(125% 135% at 78% 0%, #e8ab6f 0%, #c67c46 30%, #8a5230 62%, #2f1d12 100%)'}}
       >
         {/* Misma marca de agua que en la portada. */}
-        <Watermark word="Agenda" className="text-white/[0.07]" />
+        <Watermark word="Agenda" dark />
         {/* Palmeras de marca, como en el hero. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
