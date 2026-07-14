@@ -69,7 +69,8 @@ export default async function EventCard({
     return (
       <Link
         href={`/eventos/${event.id}`}
-        className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[20px] bg-ink text-white shadow-md"
+        // Sin sombra ni elevación al pasar por encima: solo un borde fino.
+        className="lc-img-loading group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[20px] border border-line bg-ink text-white"
       >
         {/* Ajustada a lo ancho y anclada arriba: el recorte se lo lleva la parte
             baja del cartel, no la cabecera. */}

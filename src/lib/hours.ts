@@ -60,6 +60,21 @@ function labelDays(label: string): Set<number> {
   return set;
 }
 
+// Franja de hoy en minutos desde medianoche. Si cierra de madrugada (09:00 – 02:00)
+// el cierre se pasa de 1440 para que la línea del día no se corte al llegar a las 12.
+export function todayRange(hours: Hours, now = new Date()): {from: number; to: number} | null {
+  const day = now.getDay();
+  for (const row of hours.rows) {
+    if (row.closed || !labelDays(row.label).has(day)) continue;
+    const r = row.ranges[0];
+    if (!r) continue;
+    const from = toMin(r.from);
+    const to = toMin(r.to);
+    return {from, to: to > from ? to : to + 1440};
+  }
+  return null;
+}
+
 // ¿Está abierto ahora? Devuelve también a qué hora cierra. Maneja rangos que cruzan
 // medianoche (p. ej. 09:00 – 02:00).
 export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; closesAt: string | null; opensAt: string | null} {

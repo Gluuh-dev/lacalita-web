@@ -18,6 +18,7 @@ import SnapCarousel from '@/components/burger/snap-carousel';
 import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
 import SectionHead from '@/components/section-head';
+import DayArc from '@/components/day-arc';
 import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
@@ -142,6 +143,26 @@ export default async function Home({
               WebkitMaskPosition: 'center',
               maskPosition: 'center'
             }}
+          />
+        </section>
+      </Reveal>
+
+      {/* Un día en La Calita: el arco del sol marca la hora que es ahora. */}
+      <Reveal>
+        <section className="overflow-hidden bg-sand-deep px-4 py-10 sm:py-12">
+          <SectionHead eyebrow={t('home.dayEyebrow')} title={t('home.dayTitle')} sub={t('home.daySub')} bg="El día" />
+          <DayArc
+            hours={hours}
+            nowLabel={t('home.dayNow')}
+            closedLabel={t('home.dayClosed')}
+            todayLabel={t('home.dayToday')}
+            stops={[540, 810, 1080, 1320].map((min, i) => ({
+              min,
+              time: t(`home.dayStop${i + 1}Time`),
+              title: t(`home.dayStop${i + 1}Title`),
+              desc: t(`home.dayStop${i + 1}Desc`)
+            }))}
+            events={events.map((e) => ({id: e.id, title: tx(e.title, locale), startsAt: e.starts_at}))}
           />
         </section>
       </Reveal>
