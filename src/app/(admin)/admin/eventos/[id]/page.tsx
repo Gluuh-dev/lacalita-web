@@ -27,7 +27,7 @@ export default async function EventoAdminPage({params}: {params: Promise<{id: st
       <Link href="/admin/eventos" className="mb-5 inline-flex items-center gap-1.5 text-sm text-ink-3 transition hover:text-ink">
         <ArrowLeft className="size-4" /> Volver a eventos
       </Link>
-      <div className="max-w-2xl">
+      <div className="w-full">
         <EventForm id={esNuevo ? null : id} event={event} />
       </div>
     </AdminShell>

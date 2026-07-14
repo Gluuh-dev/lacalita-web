@@ -131,7 +131,7 @@ export default function ProductForm({
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-2xl space-y-4 pb-24">
+    <form onSubmit={submit} className="w-full space-y-4 pb-24">
       <div>
         <Label>Categoría</Label>
         <div className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-3">

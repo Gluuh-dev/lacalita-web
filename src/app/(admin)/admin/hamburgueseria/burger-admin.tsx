@@ -56,7 +56,7 @@ export default function BurgerAdmin({slides, offers}: {slides: BurgerSlide[]; of
   }
 
   return (
-    <div className="flex max-w-4xl flex-col gap-10">
+    <div className="flex w-full flex-col gap-10">
       <section>
         <div className="mb-3 flex items-center justify-between">
           <div>

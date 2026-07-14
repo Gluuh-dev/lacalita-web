@@ -17,20 +17,18 @@ export default function ContentForm({initial}: {initial: LandingContent}) {
   const [features, setFeatures] = useState<string[]>(initial.about?.features ?? D.about.features ?? ['', '', '']);
   const [storyTitle, setStoryTitle] = useState(initial.story?.title?.es ?? D.story.title!.es ?? '');
   const [storyText, setStoryText] = useState(initial.story?.text?.es ?? D.story.text!.es ?? '');
-  const [reviews, setReviews] = useState(initial.reviews ?? []);
-  const [gallery, setGallery] = useState<string[]>(initial.gallery ?? []);
   const [pending, start] = useTransition();
 
   function save() {
     start(async () => {
-      const r = await saveContent({aboutTitle, aboutText, features, storyTitle, storyText, reviews, gallery});
+      const r = await saveContent({aboutTitle, aboutText, features, storyTitle, storyText, reviews: initial.reviews ?? [], gallery: initial.gallery ?? []});
       if (r.ok) toast.success('Contenido guardado');
       else toast.error(r.error);
     });
   }
 
   return (
-    <div className="flex max-w-2xl flex-col gap-5">
+    <div className="flex w-full flex-col gap-5">
       {/* Sobre el sitio */}
       <Card title="Sobre el sitio">
         <Field label="Título">
@@ -62,74 +60,6 @@ export default function ContentForm({initial}: {initial: LandingContent}) {
         <Field label="Texto">
           <textarea className={inputCls} rows={4} value={storyText} onChange={(e) => setStoryText(e.target.value)} />
         </Field>
-      </Card>
-
-      {/* Reseñas */}
-      <Card title="Reseñas">
-        <div className="flex flex-col gap-3">
-          {reviews.map((r, i) => (
-            <div key={i} className="rounded-[14px] border border-line p-3">
-              <textarea
-                className={`${inputCls} mb-2`}
-                rows={2}
-                placeholder="Reseña…"
-                value={r.quote}
-                onChange={(e) => setReviews((arr) => arr.map((x, j) => (j === i ? {...x, quote: e.target.value} : x)))}
-              />
-              <div className="flex gap-2">
-                <input
-                  className={inputCls}
-                  placeholder="Autor/a"
-                  value={r.author}
-                  onChange={(e) => setReviews((arr) => arr.map((x, j) => (j === i ? {...x, author: e.target.value} : x)))}
-                />
-                <button onClick={() => setReviews((arr) => arr.filter((_, j) => j !== i))} className="shrink-0 p-2 text-ink-3 hover:text-danger" aria-label="Eliminar">
-                  <Trash2 className="size-4" />
-                </button>
-              </div>
-              <div className="mt-2 flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    aria-label={`${n} estrella${n > 1 ? 's' : ''}`}
-                    onClick={() => setReviews((arr) => arr.map((x, j) => (j === i ? {...x, rating: n} : x)))}
-                  >
-                    <Star className={`size-5 ${(r.rating ?? 5) >= n ? 'fill-amber-400 text-amber-400' : 'text-ink-3'}`} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-          <button onClick={() => setReviews((arr) => [...arr, {quote: '', author: '', rating: 5}])} className={`${btnGhost} inline-flex w-fit items-center gap-1.5`}>
-            <Plus className="size-4" /> Añadir reseña
-          </button>
-        </div>
-      </Card>
-
-      {/* Galería */}
-      <Card title="Galería de fotos">
-        {gallery.length > 0 && (
-          <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {gallery.map((url, i) => (
-              <div key={i} className="group relative aspect-square overflow-hidden rounded-[12px] border border-line">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" className="h-full w-full object-cover" />
-                <button
-                  onClick={() => {
-                    removeMedia(url);
-                    setGallery((arr) => arr.filter((u) => u !== url));
-                  }}
-                  className="absolute right-1 top-1 rounded-full bg-danger p-1 text-white opacity-0 transition group-hover:opacity-100"
-                  aria-label="Eliminar"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        <MediaUpload value={null} kind="image" label="Añadir foto" onChange={(url) => url && setGallery((arr) => [...arr, url])} />
       </Card>
 
       <FormFooter pending={pending} onSave={save} label="Guardar contenido" />

@@ -456,25 +456,35 @@ export default async function Home({
               </div>
             </div>
 
-            {/* Mapa real de Google: aquí interesa el entorno (playa, calles, cómo llegar). */}
-            <div className="relative min-h-[320px] overflow-hidden rounded-[22px] border border-white/10 lg:min-h-full">
+            {/* Mapa real de Google, sin las tarjetas que mete el embed: se centra en
+                las coordenadas del local y encima van nuestro chip y el botón. */}
+            <div className="relative min-h-[460px] overflow-hidden rounded-[22px] border border-white/10 shadow-xl">
               <iframe
-                title="La Calita Beach Club en el mapa"
-                src={`https://www.google.com/maps?q=${encodeURIComponent(settings?.address || 'La Calita Beach Club, Salobreña')}&output=embed`}
+                title="Mapa de La Calita en Salobreña"
+                src="https://www.google.com/maps?q=36.7386,-3.5885&z=15&output=embed"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full border-0"
+                style={{filter: 'saturate(1.05)'}}
               />
-              {settings?.maps_url && (
-                <a
-                  href={settings.maps_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-black/70 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-black/85"
-                >
-                  <Navigation className="size-4" /> {t('info.directions')}
-                </a>
-              )}
+
+              {/* Chip con la dirección */}
+              <div className="absolute bottom-4 left-4 flex max-w-[80%] items-center gap-3 rounded-[16px] border border-white/10 bg-[rgba(20,15,8,0.72)] px-4 py-3 backdrop-blur-md">
+                <MapPin className="size-5 shrink-0 text-[#e2a869]" />
+                <div className="leading-tight">
+                  <p className="text-[0.92rem] font-bold text-white">La Calita Beach Club</p>
+                  <p className="text-[0.78rem] text-white/60">{settings?.address ?? 'C. Pº Marítimo, s/n · Salobreña'}</p>
+                </div>
+              </div>
+
+              <a
+                href={settings?.maps_url ?? 'https://maps.google.com/?q=La+Calita+Salobre%C3%B1a'}
+                target="_blank"
+                rel="noreferrer"
+                className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-bg px-5 py-2.5 font-adam text-[0.7rem] uppercase tracking-[0.12em] text-ink shadow-md transition hover:brightness-105"
+              >
+                {t('info.directions')} <ArrowRight className="size-3.5" />
+              </a>
             </div>
           </div>
         </section>

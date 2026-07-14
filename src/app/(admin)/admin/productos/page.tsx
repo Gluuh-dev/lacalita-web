@@ -17,7 +17,7 @@ export default async function ProductosHome() {
   return (
     <AdminShell title="Productos">
       <p className="mb-5 text-sm text-ink-2">Elige una carta para gestionar sus productos.</p>
-      <div className="grid max-w-3xl gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {menus.map((m) => {
           const Icon = ICONS[m.slug] ?? UtensilsCrossed;
           return (
