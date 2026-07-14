@@ -71,10 +71,12 @@ export default function SiteTabBar() {
         {/* El centrado va por mx-auto (no left/translate): el circulo y su
             bolsillo quedan clavados al centro en cualquier ancho. */}
         <div className="relative md:mx-auto md:w-[460px]">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[57px] rounded-t-[20px] backdrop-blur-md md:h-[74px] md:rounded-[22px]" />
+        {/* Sin blur ni transparencia: como app instalada, la barra translúcida
+            dejaba ver el contenido por debajo y se veía sucia. Color sólido de
+            superficie, que además es el mismo del manifiesto. */}
         <svg viewBox="0 0 400 92" preserveAspectRatio="none" className="block h-[82px] w-full md:h-[106px]" style={{filter: 'drop-shadow(0 4px 14px rgba(0,0,0,.16))'}}>
-          <path d={BAR_PATH} fill="rgba(255,255,255,.9)" className="md:hidden" />
-          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="rgba(255,255,255,.9)" className="hidden md:block" />
+          <path d={BAR_PATH} fill="var(--surface)" className="md:hidden" />
+          <path d={BAR_PATH_FLOAT} fillRule="evenodd" fill="var(--surface)" className="hidden md:block" />
         </svg>
 
         {/* Pestañas (izquierda / hueco central / derecha) */}
