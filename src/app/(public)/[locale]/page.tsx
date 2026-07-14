@@ -461,7 +461,9 @@ export default async function Home({
             <div className="relative min-h-[460px] overflow-hidden rounded-[22px] border border-white/10 shadow-xl">
               <iframe
                 title="Mapa de La Calita en Salobreña"
-                src="https://www.google.com/maps?q=36.7386,-3.5885&z=15&output=embed"
+                // Por nombre del negocio: así el pin cae en el local y no en mitad
+                // de la calle (con la dirección genérica salía desviado).
+                src="https://www.google.com/maps?q=La+Calita+Beach+Salobre%C3%B1a&z=17&output=embed"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 h-full w-full border-0"
