@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import {ArrowRight} from 'lucide-react';
 import {IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
 import IconCoffeeCup from '@/components/icons/coffee-cup';
 import {Link} from '@/i18n/navigation';
@@ -25,16 +24,16 @@ const ICONS: Record<string, typeof IconToolsKitchen2 | typeof IconCoffeeCup> = {
   hamburgueseria: IconBurger
 };
 
-export default function MenuCard({menu: m, locale, cta}: {menu: MenuHead; locale: string; cta: string}) {
+export default function MenuCard({menu: m, locale}: {menu: MenuHead; locale: string}) {
   const Icon = ICONS[m.slug] ?? IconToolsKitchen2;
   const bg = m.header_image || FONDOS[m.slug];
   return (
     <Link
       href={m.slug === 'hamburgueseria' ? '/burguer' : `/carta/${m.slug}`}
       data-theme={m.theme}
-      // En móvil la tarjeta es baja (icono arriba, título abajo); de tablet en
-      // adelante recupera el formato alto 3/4. Misma textura en las dos.
-      className="lc-img-loading ds-card--link group relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md sm:aspect-[3/4] sm:min-h-0"
+      // Mismo estilo en todas las pantallas: icono arriba, título abajo. Solo
+      // cambia la forma — baja en móvil y tablet, casi cuadrada en PC.
+      className="lc-img-loading ds-card--link group relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md sm:min-h-[230px] sm:p-6 lg:aspect-square lg:min-h-0"
     >
       {bg ? (
         <Image src={bg} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, (min-width:640px) 50vw, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
@@ -43,22 +42,17 @@ export default function MenuCard({menu: m, locale, cta}: {menu: MenuHead; locale
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
 
-      {/* Móvil: el mismo icono, en un círculo pequeño arriba a la izquierda. */}
-      <span className="absolute left-5 top-5 z-10 flex size-11 items-center justify-center rounded-full border border-white/35 bg-white/10 text-white backdrop-blur-md sm:hidden">
-        <Icon className="size-5" stroke={1.6} />
-      </span>
-
-      {/* Tablet y PC: icono en cristal, algo por encima del centro. */}
-      <span className="absolute left-1/2 top-[34%] z-10 hidden size-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,.25)] backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:bg-white/20 sm:flex">
-        <Icon className="size-9" stroke={1.6} />
+      <span className="absolute left-5 top-5 z-10 flex size-11 items-center justify-center rounded-full border border-white/35 bg-white/10 text-white backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:bg-white/20 sm:size-12">
+        <Icon className="size-5 sm:size-6" stroke={1.6} />
       </span>
 
       <div className="relative z-10">
-        <h2 className="font-serif text-2xl leading-tight sm:text-3xl">{tx(m.name, locale)}</h2>
-        {m.subtitle && <p className="mt-1.5 text-sm leading-relaxed text-white/85 sm:mt-1">{tx(m.subtitle, locale)}</p>}
-        <span className="mt-4 hidden items-center justify-center gap-1.5 rounded-full bg-white py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink transition group-hover:bg-white/90 sm:flex">
-          {cta} <ArrowRight className="size-4" />
-        </span>
+        {/* Dos líneas reservadas y el texto pegado abajo: los cuatro títulos
+            arrancan a la misma altura aunque uno rompa en dos líneas. */}
+        <h2 className="flex min-h-[2.5em] items-end font-serif text-2xl leading-tight sm:text-[1.7rem]">{tx(m.name, locale)}</h2>
+        {/* Alto reservado para dos líneas: así el título queda a la misma altura
+            en las cuatro tarjetas, tenga el subtítulo una línea o dos. */}
+        <p className="mt-1.5 line-clamp-2 min-h-[2.75rem] text-sm leading-relaxed text-white/85">{m.subtitle ? tx(m.subtitle, locale) : ''}</p>
       </div>
     </Link>
   );

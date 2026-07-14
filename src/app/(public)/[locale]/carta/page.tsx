@@ -14,7 +14,6 @@ export default async function CartaSelector({params}: {params: Promise<{locale: 
   setRequestLocale(locale);
   const t = await getTranslations('menu');
   const tCarta = await getTranslations('carta');
-  const tCommon = await getTranslations('common');
   const menus = await getMenus();
 
   return (
@@ -28,7 +27,7 @@ export default async function CartaSelector({params}: {params: Promise<{locale: 
       {/* Mismas tarjetas que la portada: textura de cada carta e icono en cristal. */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {menus.map((m) => (
-          <MenuCard key={m.id} menu={m} locale={locale} cta={tCommon('seeMenu')} />
+          <MenuCard key={m.id} menu={m} locale={locale} />
         ))}
       </div>
     </main>

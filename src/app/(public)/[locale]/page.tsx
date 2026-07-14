@@ -195,7 +195,7 @@ export default async function Home({
                 escondía tres de las cuatro cartas tras un gesto. */}
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {menus.map((m) => (
-                <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
+                <MenuCard key={m.id} menu={m} locale={locale} />
               ))}
             </div>
           </div>
