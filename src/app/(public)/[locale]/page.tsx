@@ -50,7 +50,7 @@ export default async function Home({
   const reviews = content.reviews ?? [];
   // La galería sale de los álbumes (antes leía un campo de ajustes que nadie
   // rellenaba, así que las 28 fotos subidas no se veían en la portada).
-  const gallery = albums.flatMap((a) => a.images ?? []).slice(0, 8);
+  const gallery = albums.flatMap((a) => a.images ?? []).slice(0, 7);
 
   const heroEvents = toHeroEvents(events, locale);
   // Todas las diapositivas activas del admin (incluidas las de tipo 'poster').
@@ -305,17 +305,16 @@ export default async function Home({
                   <Image src={url} alt="" fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" className="object-cover" />
                 </div>
               ))}
-            </div>
-
-            {/* Bajo las fotos, solo el "ver más". */}
-            <div className="mt-8 text-center">
+              {/* La última celda cierra la cuadrícula y lleva a la galería. */}
               <Link
                 href="/galeria"
-                className="inline-flex items-center gap-1.5 rounded-full border border-brand px-6 py-3 font-adam text-[0.72rem] uppercase tracking-[0.14em] text-brand-deep transition hover:bg-brand hover:text-on-primary"
+                className="flex aspect-square items-center justify-center rounded-[16px] border border-line bg-surface-sunken text-center font-adam text-[0.72rem] uppercase tracking-[0.14em] text-ink-2 transition hover:bg-brand hover:text-on-primary"
               >
-                {t('common.seeMore')} <ArrowRight className="size-4" />
+                {t('common.seeMore')}
               </Link>
             </div>
+
+
           </section>
         </Reveal>
       )}
