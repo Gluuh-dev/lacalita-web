@@ -259,16 +259,18 @@ export default async function Home({
                 {[
                   ...events.slice(0, 4).map((e) => <EventCard key={e.id} event={e} locale={locale} layout="tile" />),
                   // Última card: la puerta a la agenda completa (sustituye al enlace de arriba).
+                  // Borde de puntos en naranja: se distingue de un cartel y
+                  // destaca sobre la arena, sin el bloque blanco de antes.
                   <Link
                     key="ver-todos"
                     href="/eventos"
-                    className="ds-card--link group flex aspect-[3/4] flex-col items-center justify-center gap-4 rounded-[20px] border border-line bg-surface text-center shadow-sm"
+                    className="group flex aspect-[3/4] flex-col items-center justify-center gap-4 rounded-[20px] border-2 border-dotted border-[#c0603a] bg-[#c0603a]/[0.06] text-center transition hover:bg-[#c0603a]/15"
                   >
-                    <span className="flex size-16 items-center justify-center rounded-full bg-brand/10 text-brand-deep transition group-hover:bg-brand group-hover:text-on-primary">
+                    <span className="flex size-16 items-center justify-center rounded-full border-2 border-dotted border-[#c0603a] text-[#c0603a] transition group-hover:bg-[#c0603a] group-hover:text-white">
                       <ArrowRight className="size-7 transition-transform group-hover:translate-x-0.5" />
                     </span>
-                    <span className="px-6 font-serif text-2xl font-bold leading-tight text-ink">{t('events.all')}</span>
-                    <span className="font-montserrat text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-ink-3">{t('home.fullAgenda')}</span>
+                    <span className="px-6 font-serif text-2xl font-bold leading-tight text-[#c0603a]">{t('events.all')}</span>
+                    <span className="font-montserrat text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[#c0603a]/75">{t('home.fullAgenda')}</span>
                   </Link>
                 ]}
               </SnapCarousel>
