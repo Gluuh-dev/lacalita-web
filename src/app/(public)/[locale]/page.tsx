@@ -325,17 +325,14 @@ export default async function Home({
       {/* Reserva: el cierre de la portada, justo antes de la información de servicio. */}
       {settings?.phone && (
         <Reveal>
-          <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden py-16 text-center text-white sm:py-20">
+          <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden py-12 text-center text-white sm:py-14">
             {/* Atardecer: del terracota de la casa a la noche. */}
             <div
               className="absolute inset-0 -z-10"
               style={{background: 'radial-gradient(120% 100% at 30% 0%, #c98a4e 0%, #8a4f2c 35%, #3b2417 70%, #23150e 100%)'}}
             />
             <div className="mx-auto max-w-2xl px-5">
-              <div className="eyebrow !text-white/70">{t('home.bookEyebrow')}</div>
-              <h2 className="h-section mt-2 font-serif">{t('home.bookTitle')}</h2>
-              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/75 sm:text-base">{t('home.bookText')}</p>
-              <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <a
                   href={`tel:${settings.phone}`}
                   className="inline-flex items-center gap-2 rounded-full bg-[#e2a869] px-6 py-3.5 font-semibold text-[#2a1713] transition hover:brightness-105"
