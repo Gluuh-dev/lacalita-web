@@ -6,6 +6,7 @@ import {Plus, Trash2, ChevronUp, ChevronDown, Monitor, Smartphone, RotateCcw, Ch
 import {cn} from '@/lib/utils';
 import {input as inputCls, label as labelCls, btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
+import FormFooter from '@/components/admin/form-footer';
 import Drawer from '@/components/admin/drawer';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
 import {HeroPreview} from '@/components/hero';
@@ -520,9 +521,7 @@ export default function HeroEditor({initial, events}: {initial: HeroSlide[]; eve
           </Card>
         )}
 
-        <button onClick={save} disabled={pending} className={`${btn} inline-flex items-center justify-center gap-1.5`}>
-          <Check className="size-4" /> {pending ? 'Guardando…' : 'Guardar portada'}
-        </button>
+        <FormFooter pending={pending} onSave={save} label="Guardar portada" cancelHref="/admin" />
       </div>
 
       {/* PREVIEW */}

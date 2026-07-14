@@ -4,6 +4,7 @@ import {useState, useTransition} from 'react';
 import {useRouter} from 'next/navigation';
 import {toast} from 'sonner';
 import {card, btn, btnGhost} from '@/components/admin/ui';
+import FormFooter from '@/components/admin/form-footer';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
@@ -342,14 +343,7 @@ export default function ProductForm({
         </label>
       </div>
 
-      <div className="sticky bottom-0 z-10 mt-2 flex gap-3 border-t border-line bg-bg/95 py-3 backdrop-blur">
-        <button type="button" onClick={() => router.push(backHref)} className={`${btnGhost} flex-1`}>
-          Cancelar
-        </button>
-        <button type="button" onClick={doSave} disabled={pending} className={`${btn} flex-1`}>
-          {pending ? 'Guardando…' : 'Guardar'}
-        </button>
-      </div>
+      <FormFooter pending={pending} cancelHref={backHref} onSave={doSave} />
     </form>
   );
 }

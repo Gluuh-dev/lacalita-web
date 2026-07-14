@@ -8,6 +8,7 @@ import {Star, ArrowRight, UtensilsCrossed} from 'lucide-react';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem} from '@/components/ui/select';
+import FormFooter from '@/components/admin/form-footer';
 import {btn, btnGhost} from '@/components/admin/ui';
 import HeroMedia from '@/components/admin/hero-media';
 import {I18nField} from '@/components/admin/i18n-field';
@@ -127,10 +128,7 @@ export default function BurgerOfferEditor({offer}: {offer: BurgerOffer | null}) 
             <span className={`absolute top-0.5 size-5 rounded-full bg-white transition-all ${active ? 'left-[18px]' : 'left-0.5'}`} />
           </button>
         </label>
-        <div className="sticky bottom-0 z-20 -mx-1 mt-2 flex gap-3 border-t border-line bg-bg/95 px-1 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur">
-          <button type="button" onClick={() => router.push(back)} className={`${btnGhost} flex-1`}>Cancelar</button>
-          <button type="submit" disabled={pending} className={`${btn} flex-1`}>{pending ? 'Guardando…' : 'Guardar'}</button>
-        </div>
+        <FormFooter pending={pending} cancelHref={back} />
       </form>
 
       {/* Previsualización */}

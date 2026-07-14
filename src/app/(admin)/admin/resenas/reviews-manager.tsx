@@ -5,6 +5,7 @@ import {Star, Pencil, Plus, Eye, EyeOff} from 'lucide-react';
 import {toast} from 'sonner';
 import {btn, btnGhost, btnEdit, card, input, label} from '@/components/admin/ui';
 import DeleteButton from '@/components/admin/delete-button';
+import FormFooter from '@/components/admin/form-footer';
 import EmptyState from '@/components/admin/empty-state';
 import type {Review} from '@/lib/queries';
 import {saveReview, deleteReview, type ReviewInput} from './actions';
@@ -101,14 +102,7 @@ export default function ReviewsManager({reviews}: {reviews: Review[]}) {
             Se ve en la web
           </label>
 
-          <div className="mt-5 flex justify-end gap-2">
-            <button type="button" onClick={() => setEditing(null)} className={btnGhost}>
-              Cancelar
-            </button>
-            <button type="button" onClick={guardar} disabled={pending} className={btn}>
-              {pending ? 'Guardando…' : 'Guardar'}
-            </button>
-          </div>
+          <FormFooter pending={pending} onCancel={() => setEditing(null)} onSave={guardar} />
         </div>
       )}
 
