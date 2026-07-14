@@ -124,7 +124,7 @@ export default async function Home({
 
       {/* Sobre el sitio */}
       <Reveal>
-        <section className="mx-auto max-w-4xl px-4 py-10 text-center sm:py-12">
+        <section className="bg-cream px-4 py-10 text-center sm:py-12">
           <SectionHead eyebrow={t('home.welcome')} title={tx(about.title ?? {}, locale)} bg="Calita" />
           <p className="mx-auto -mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
           <span
@@ -167,7 +167,7 @@ export default async function Home({
 
       {/* Cartas */}
       <Reveal>
-        <section id="carta" className="scroll-mt-20 py-10 sm:py-12">
+        <section id="carta" className="scroll-mt-20 bg-sand py-10 sm:py-12">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} sub={t('home.kitchenSub')} bg="Sabores" />
             <div className="-mx-4 md:mx-0 xl:-mx-20 lg:mx-0">
@@ -184,7 +184,7 @@ export default async function Home({
       {/* Platos destacados */}
       {featured.length > 0 && (
         <Reveal>
-          <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+          <section className="bg-cream px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} sub={t('home.featuredSub')} bg="Platos" />
 
             {/* Como una carta impresa: nombre, descripción, puntos guía y precio. */}
@@ -230,7 +230,7 @@ export default async function Home({
       {/* Eventos */}
       {events.length > 0 && (
         <Reveal>
-          <section id="eventos" className="scroll-mt-20 bg-surface-2">
+          <section id="eventos" className="scroll-mt-20 bg-sand-deep">
             <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
               <SectionHead eyebrow={t('events.upcoming')} title={t('home.eventsTitle')} sub={t('home.eventsSub')} bg="Eventos" />
               <div className="-mx-4 md:mx-0 xl:-mx-20">
@@ -259,11 +259,10 @@ export default async function Home({
 
       {/* Historia */}
       <Reveal>
-        <section className="bg-surface-2">
+        <section className="overflow-hidden bg-night text-white">
           <div className="mx-auto max-w-3xl px-4 py-10 text-center sm:py-12">
-            <div className="eyebrow mb-3">La Calita</div>
-            <h2 className="h-section font-serif">{tx(story.title ?? {}, locale)}</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(story.text ?? {}, locale)}</p>
+            <SectionHead eyebrow="La Calita" title={tx(story.title ?? {}, locale)} bg="Historia" dark />
+            <p className="mx-auto -mt-4 max-w-2xl text-lg leading-relaxed text-white/80">{tx(story.text ?? {}, locale)}</p>
             {/* Ilustración de la casa: máscara para que tome el color de marca. */}
             <span
               aria-hidden
@@ -288,9 +287,9 @@ export default async function Home({
       {/* Reseñas */}
       {reviews.length > 0 && (
         <Reveal>
-          <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+          <section className="bg-sand px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} sub={t('home.reviewsSub')} bg="Opiniones" />
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-3">
               {reviews.map((r) => (
                 <figure key={r.id} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
                   <div className="mb-3 flex items-center justify-between">
@@ -316,9 +315,9 @@ export default async function Home({
       {/* Galería */}
       {gallery.length > 0 && (
         <Reveal>
-          <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-12">
+          <section id="galeria" className="scroll-mt-20 bg-cream px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} sub={t('home.gallerySub')} bg="Galería" />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
                   <Image src={url} alt="" fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" className="object-cover" />
@@ -373,8 +372,7 @@ export default async function Home({
       <Reveal>
         <section
           id="info"
-          className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden pb-16 text-white sm:pb-20"
-          style={{background: '#1a1512'}}
+          className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden bg-night-2 pb-16 text-white sm:pb-20"
         >
           <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} sub={t('home.locationSub')} bg="Ubicación" dark />
 

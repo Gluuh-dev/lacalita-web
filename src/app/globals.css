@@ -24,6 +24,13 @@
   --color-accent-soft: var(--accent-soft);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  /* Fondos de sección de la portada: tres arenas que se alternan y dos noches
+     que hacen de ancla. Ver docs/colores-secciones.md. */
+  --color-cream: #fbf6ee;
+  --color-sand: #f3e9d8;
+  --color-sand-deep: #e9dac0;
+  --color-night: #0f2a3c;
+  --color-night-2: #143a4c;
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
