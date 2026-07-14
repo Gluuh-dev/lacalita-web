@@ -393,6 +393,15 @@
   font-weight: 400;
 }
 
+/* Un único tamaño para todos los títulos de sección y de página. Los héroes
+   (portada, evento) van aparte: ahí el titular manda sobre una foto. */
+.h-section {
+  font-size: clamp(2.3rem, 5.4vw, 4.1rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
 /* ---- Hero: marquesina + animación de entrada ---- */
 @keyframes lc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes lc-marquee-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }

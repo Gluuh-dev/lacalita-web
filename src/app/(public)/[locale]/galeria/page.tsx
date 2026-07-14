@@ -38,7 +38,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
     <main className="min-h-screen bg-bg pb-28 pt-20 text-ink">
       <div className="mx-auto max-w-6xl px-4">
         <div className="eyebrow mb-2 text-center">{t('title')}</div>
-        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">{t('heading')}</h1>
+        <h1 className="h-section mb-4 text-center font-serif">{t('heading')}</h1>
         <p className="mb-6 text-center text-ink-2">{t('sub')}</p>
         <GalleryAdminCta />
 

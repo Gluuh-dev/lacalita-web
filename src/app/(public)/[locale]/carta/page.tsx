@@ -19,9 +19,9 @@ export default async function CartaSelector({params}: {params: Promise<{locale: 
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-32 pt-28 sm:pt-32">
-      <div className="mx-auto mb-10 max-w-xl text-center">
+      <div className="mx-auto mb-10 max-w-3xl text-center">
         <div className="eyebrow mb-3">{t('title')}</div>
-        <h1 className="font-serif text-4xl sm:text-5xl">{tCarta('question')}</h1>
+        <h1 className="h-section font-serif">{tCarta('question')}</h1>
         <p className="mt-3 text-lg text-ink-2">{tCarta('intro')}</p>
       </div>
 

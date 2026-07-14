@@ -31,12 +31,8 @@ export default function SectionHead({
           {eyebrow}
         </p>
         <H
-          className="font-serif font-bold leading-[1.05] tracking-[-0.01em]"
-          style={{
-            color: dark ? '#fff' : '#23374f',
-            // Los títulos largos (frases) no pueden ir al tamaño de una palabra suelta.
-            fontSize: title.length > 14 ? 'clamp(2.3rem, 5.4vw, 4.1rem)' : 'clamp(3rem, 9vw, 7rem)'
-          }}
+          className="h-section font-serif"
+          style={{color: dark ? '#fff' : '#23374f'}}
         >
           {title}
           <span className="ml-[0.02em] inline-block size-[0.16em] -translate-y-[0.02em] rounded-full align-baseline bg-[#c06a44]" />

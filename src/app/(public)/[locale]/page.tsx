@@ -126,7 +126,7 @@ export default async function Home({
       <Reveal>
         <section className="mx-auto max-w-4xl px-4 py-10 text-center sm:py-12">
           <div className="eyebrow mb-3">{t('home.welcome')}</div>
-          <h2 className="font-serif text-3xl sm:text-4xl">{tx(about.title ?? {}, locale)}</h2>
+          <h2 className="h-section font-serif">{tx(about.title ?? {}, locale)}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
           <span
             aria-hidden
@@ -264,7 +264,7 @@ export default async function Home({
         <section className="bg-surface-2">
           <div className="mx-auto max-w-3xl px-4 py-10 text-center sm:py-12">
             <div className="eyebrow mb-3">La Calita</div>
-            <h2 className="font-serif text-3xl sm:text-4xl">{tx(story.title ?? {}, locale)}</h2>
+            <h2 className="h-section font-serif">{tx(story.title ?? {}, locale)}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(story.text ?? {}, locale)}</p>
           </div>
         </section>
@@ -334,7 +334,7 @@ export default async function Home({
             />
             <div className="mx-auto max-w-2xl px-5">
               <div className="eyebrow !text-white/70">{t('home.bookEyebrow')}</div>
-              <h2 className="mt-2 font-serif text-[clamp(2rem,5vw,3.4rem)] font-bold leading-[1.1]">{t('home.bookTitle')}</h2>
+              <h2 className="h-section mt-2 font-serif">{t('home.bookTitle')}</h2>
               <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/75 sm:text-base">{t('home.bookText')}</p>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                 <a
