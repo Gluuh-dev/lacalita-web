@@ -39,7 +39,7 @@
     "featuredEyebrow": "From our menu",
     "featuredTitle": "The ones that never fail",
     "reviewsEyebrow": "What people say",
-    "reviewsTitle": "Reviews",
+    "reviewsTitle": "What our guests think",
     "galleryEyebrow": "Moments",
     "galleryTitle": "This is La Calita",
     "locationEyebrow": "Where we are",
@@ -60,7 +60,8 @@
     "bookPhone": "Book by phone",
     "today": "Today",
     "bestMoment": "The best moment",
-    "call": "Call"
+    "call": "Call",
+    "reviewsSub": "No edits: straight from Google."
   },
   "menu": {
     "title": "Our menu",
@@ -166,7 +167,8 @@
     "eyebrow": "Where we are",
     "title": "Right on the beach, in Salobreña",
     "hoursTitle": "Opening hours",
-    "closed": "Closed"
+    "closed": "Closed",
+    "sub": "Between the Peñón and the sea, feet almost in the sand: sunny breakfasts, unhurried lunches and sunsets worth staying for."
   },
   "footer": {
     "tagline": "Beach club, restaurant and café by the sea in Salobreña.",

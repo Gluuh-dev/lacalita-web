@@ -6,6 +6,7 @@ import {normalizeHours, formatRanges} from '@/lib/hours';
 import {altLanguages} from '@/lib/site';
 import OpenStatus from '@/components/open-status';
 import MapCard from '@/components/map-card';
+import SectionHead from '@/components/section-head';
 
 export const revalidate = 300;
 
@@ -24,9 +25,8 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   return (
     <main className="min-h-screen bg-bg pb-28 pt-20 text-ink">
       <div className="mx-auto max-w-3xl px-4">
-        <div className="eyebrow mb-2 text-center">{t('location.eyebrow')}</div>
-        <h1 className="mb-4 text-center font-serif text-4xl sm:text-5xl">{t('location.title')}</h1>
-        <div className="mb-8 flex justify-center">
+        <SectionHead eyebrow={t('location.eyebrow')} title={t('location.title')} sub={t('location.sub')} bg="Ubicación" h1 />
+        <div className="-mt-6 mb-8 flex justify-center">
           <OpenStatus hours={hours} />
         </div>
 

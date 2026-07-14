@@ -17,7 +17,7 @@ import EventCard from '@/components/event-card';
 import SnapCarousel from '@/components/burger/snap-carousel';
 import Hero from '@/components/hero';
 import Reveal from '@/components/reveal';
-import Watermark from '@/components/watermark';
+import SectionHead from '@/components/section-head';
 import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
@@ -274,7 +274,7 @@ export default async function Home({
       {reviews.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
-            <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} />
+            <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} sub={t('home.reviewsSub')} bg="Opiniones" />
             <div className="grid gap-5 md:grid-cols-3">
               {reviews.map((r) => (
                 <figure key={r.id} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
@@ -506,42 +506,6 @@ function isTodayRow(label: string): boolean {
   const esRango = citados.length >= 2 && (s.includes(' a ') || s.includes('-') || s.includes('–') || s.includes('hasta'));
   if (esRango) return hoy >= citados[0] && hoy <= citados[citados.length - 1];
   return citados.includes(hoy);
-}
-
-// Cabecera de sección: papel crema en degradado, palabra grabada de fondo,
-// filigranas doradas en las esquinas, antesala espaciada y título con su punto.
-function SectionHead({eyebrow, title, sub, bg, dark = false}: {eyebrow: string; title: string; sub?: string; bg?: string; dark?: boolean}) {
-  const word = (bg ?? title).trim();
-  return (
-    <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-[clamp(2rem,6vw,4.5rem)] text-center [isolation:isolate] sm:mb-11">
-      <Watermark word={word} dark={dark} />
-
-      <div className="relative z-10 mx-auto max-w-6xl px-4">
-        <p
-          className="mb-[clamp(0.4rem,1vw,0.9rem)] font-montserrat font-medium uppercase text-[clamp(0.8rem,1.5vw,1.15rem)] leading-none tracking-[0.42em] max-[520px]:tracking-[0.3em]"
-          style={{color: dark ? 'rgba(255,255,255,.75)' : '#b0895a', paddingLeft: '0.42em'}}
-        >
-          {eyebrow}
-        </p>
-        <h2
-          className="font-serif font-bold leading-[1.05] tracking-[-0.01em]"
-          style={{
-            color: dark ? '#fff' : '#23374f',
-            // Los títulos largos (frases) no pueden ir al tamaño de una palabra suelta.
-            fontSize: title.length > 14 ? 'clamp(2.3rem, 5.4vw, 4.1rem)' : 'clamp(3rem, 9vw, 7rem)'
-          }}
-        >
-          {title}
-          <span className="ml-[0.02em] inline-block size-[0.16em] -translate-y-[0.02em] rounded-full align-baseline bg-[#c06a44]" />
-        </h2>
-        {sub && (
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed sm:text-base" style={{color: dark ? 'rgba(255,255,255,.7)' : 'var(--ink-2)'}}>
-            {sub}
-          </p>
-        )}
-      </div>
-    </div>
-  );
 }
 
 // CTA "ver todo" justo bajo la cabecera de sección: solo texto, sin flecha ni

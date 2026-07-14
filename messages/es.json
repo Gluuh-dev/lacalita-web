@@ -39,7 +39,7 @@
     "featuredEyebrow": "De nuestra carta",
     "featuredTitle": "Los que no fallan",
     "reviewsEyebrow": "Lo que dicen",
-    "reviewsTitle": "Opiniones",
+    "reviewsTitle": "Lo que los clientes piensan",
     "galleryEyebrow": "Momentos",
     "galleryTitle": "Así se vive La Calita",
     "locationEyebrow": "Dónde estamos",
@@ -60,7 +60,8 @@
     "bookPhone": "Reservar por teléfono",
     "today": "Hoy",
     "bestMoment": "El mejor momento",
-    "call": "Llamar"
+    "call": "Llamar",
+    "reviewsSub": "Sin retoques: tal cual las dejan en Google."
   },
   "menu": {
     "title": "Nuestra carta",
@@ -166,7 +167,8 @@
     "eyebrow": "Dónde estamos",
     "title": "A pie de playa, en Salobreña",
     "hoursTitle": "Horario",
-    "closed": "Cerrado"
+    "closed": "Cerrado",
+    "sub": "Entre el Peñón y el mar, con los pies casi en la arena: desayunos al sol, comidas sin prisa y puestas de sol que hacen sobremesa."
   },
   "footer": {
     "tagline": "Beach club, restaurante y cafetería frente al mar en Salobreña.",
