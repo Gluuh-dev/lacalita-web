@@ -298,7 +298,7 @@ export default async function Home({
       {gallery.length > 0 && (
         <Reveal>
           <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-12">
-            {/* Aquí mandan las fotos: el texto va debajo y hace de "ver más". */}
+            <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} sub={t('home.gallerySub')} bg="Galería" />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
@@ -307,17 +307,15 @@ export default async function Home({
               ))}
             </div>
 
-            <Link href="/galeria" className="group mx-auto mt-8 block max-w-lg text-center">
-              <span className="eyebrow block">{t('home.galleryEyebrow')}</span>
-              <span className="mt-1 block font-serif text-[clamp(1.7rem,4vw,2.6rem)] font-bold leading-tight text-[#23374f]">
-                {t('home.galleryTitle')}
-                <span className="ml-[0.02em] inline-block size-[0.16em] rounded-full align-baseline bg-[#c06a44]" />
-              </span>
-              <span className="mt-2 block text-sm leading-relaxed text-ink-2">{t('home.gallerySub')}</span>
-              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-brand px-5 py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.14em] text-brand-deep transition group-hover:bg-brand group-hover:text-on-primary">
+            {/* Bajo las fotos, solo el "ver más". */}
+            <div className="mt-8 text-center">
+              <Link
+                href="/galeria"
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand px-6 py-3 font-adam text-[0.72rem] uppercase tracking-[0.14em] text-brand-deep transition hover:bg-brand hover:text-on-primary"
+              >
                 {t('common.seeMore')} <ArrowRight className="size-4" />
-              </span>
-            </Link>
+              </Link>
+            </div>
           </section>
         </Reveal>
       )}
