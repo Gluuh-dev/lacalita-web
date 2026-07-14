@@ -34,9 +34,9 @@
     "cta": "Ver la carta",
     "welcome": "Bienvenidos a La Calita",
     "kitchenEyebrow": "Nuestra cocina",
-    "kitchenTitle": "Sabores",
+    "kitchenTitle": "Cuatro mundos, un mismo mar",
     "featuredEyebrow": "De nuestra carta",
-    "featuredTitle": "Platos",
+    "featuredTitle": "Los que no fallan",
     "reviewsEyebrow": "Lo que dicen",
     "reviewsTitle": "Opiniones",
     "galleryEyebrow": "Momentos",
@@ -47,7 +47,9 @@
     "reservations": "Reservas",
     "fullAgenda": "Agenda completa",
     "manifestoQuote": "No somos un club de playa. Somos el <brand>latido</brand> del Mediterráneo capturado en una copa.",
-    "manifestoLabel": "La Calita · Manifesto"
+    "manifestoLabel": "La Calita · Manifesto",
+    "kitchenSub": "Elige por dónde empezar el día — o por dónde terminarlo.",
+    "featuredSub": "Producto de temporada, brasa y mucho mar."
   },
   "menu": {
     "title": "Nuestra carta",

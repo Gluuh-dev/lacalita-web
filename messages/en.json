@@ -34,9 +34,9 @@
     "cta": "See the menu",
     "welcome": "Welcome to La Calita",
     "kitchenEyebrow": "Our kitchen",
-    "kitchenTitle": "Flavours",
+    "kitchenTitle": "Four worlds, one same sea",
     "featuredEyebrow": "From our menu",
-    "featuredTitle": "Dishes",
+    "featuredTitle": "The ones that never fail",
     "reviewsEyebrow": "What people say",
     "reviewsTitle": "Reviews",
     "galleryEyebrow": "Moments",
@@ -47,7 +47,9 @@
     "reservations": "Reservations",
     "fullAgenda": "Full agenda",
     "manifestoQuote": "We are not a beach club. We are the <brand>heartbeat</brand> of the Mediterranean, captured in a glass.",
-    "manifestoLabel": "La Calita · Manifesto"
+    "manifestoLabel": "La Calita · Manifesto",
+    "kitchenSub": "Choose how to start the day — or how to end it.",
+    "featuredSub": "Seasonal produce, embers and plenty of sea."
   },
   "menu": {
     "title": "Our menu",

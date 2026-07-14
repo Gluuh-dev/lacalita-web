@@ -169,7 +169,7 @@ export default async function Home({
       <Reveal>
         <section id="carta" className="scroll-mt-20 py-10 sm:py-12">
           <div className="mx-auto max-w-6xl px-4">
-            <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} />
+            <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} sub={t('home.kitchenSub')} bg="Sabores" />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08" controls={false}>
             {menus.map((m) => (
@@ -185,7 +185,7 @@ export default async function Home({
       {featured.length > 0 && (
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
-            <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} />
+            <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} sub={t('home.featuredSub')} bg="Platos" />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
               {[
@@ -387,7 +387,7 @@ export default async function Home({
 
 // Cabecera de sección: papel crema en degradado, palabra grabada de fondo,
 // filigranas doradas en las esquinas, antesala espaciada y título con su punto.
-function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title: string; bg?: string; dark?: boolean}) {
+function SectionHead({eyebrow, title, sub, bg, dark = false}: {eyebrow: string; title: string; sub?: string; bg?: string; dark?: boolean}) {
   const word = (bg ?? title).trim();
   return (
     <div className="relative left-1/2 mb-9 w-screen -translate-x-1/2 overflow-hidden py-[clamp(2rem,6vw,4.5rem)] text-center [isolation:isolate] sm:mb-11">
@@ -401,12 +401,21 @@ function SectionHead({eyebrow, title, bg, dark = false}: {eyebrow: string; title
           {eyebrow}
         </p>
         <h2
-          className="font-serif font-bold leading-none tracking-[-0.01em] text-[clamp(3rem,9vw,7rem)]"
-          style={{color: dark ? '#fff' : '#23374f'}}
+          className="font-serif font-bold leading-[1.05] tracking-[-0.01em]"
+          style={{
+            color: dark ? '#fff' : '#23374f',
+            // Los títulos largos (frases) no pueden ir al tamaño de una palabra suelta.
+            fontSize: title.length > 14 ? 'clamp(2rem, 4.6vw, 3.4rem)' : 'clamp(3rem, 9vw, 7rem)'
+          }}
         >
           {title}
           <span className="ml-[0.02em] inline-block size-[0.16em] -translate-y-[0.02em] rounded-full align-baseline bg-[#c06a44]" />
         </h2>
+        {sub && (
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed sm:text-base" style={{color: dark ? 'rgba(255,255,255,.7)' : 'var(--ink-2)'}}>
+            {sub}
+          </p>
+        )}
       </div>
     </div>
   );
