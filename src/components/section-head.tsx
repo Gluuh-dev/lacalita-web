@@ -26,7 +26,7 @@ export default function SectionHead({
       <div className="relative z-10 mx-auto max-w-6xl px-4">
         <p
           className="mb-[clamp(0.4rem,1vw,0.9rem)] font-montserrat font-medium uppercase text-[clamp(0.8rem,1.5vw,1.15rem)] leading-none tracking-[0.42em] max-[520px]:tracking-[0.3em]"
-          style={{color: dark ? 'rgba(255,255,255,.75)' : '#b0895a', paddingLeft: '0.42em'}}
+          style={{color: dark ? '#e2a869' : '#b0895a', paddingLeft: '0.42em'}}
         >
           {eyebrow}
         </p>

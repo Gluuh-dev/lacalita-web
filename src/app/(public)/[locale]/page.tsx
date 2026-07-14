@@ -125,9 +125,8 @@ export default async function Home({
       {/* Sobre el sitio */}
       <Reveal>
         <section className="mx-auto max-w-4xl px-4 py-10 text-center sm:py-12">
-          <div className="eyebrow mb-3">{t('home.welcome')}</div>
-          <h2 className="h-section font-serif">{tx(about.title ?? {}, locale)}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
+          <SectionHead eyebrow={t('home.welcome')} title={tx(about.title ?? {}, locale)} bg="Calita" />
+          <p className="mx-auto -mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(about.text ?? {}, locale)}</p>
           <span
             aria-hidden
             className="mx-auto mt-8 block h-32 sm:h-40"
