@@ -186,44 +186,43 @@ export default async function Home({
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} sub={t('home.featuredSub')} bg="Platos" />
-            <div className="-mx-4 md:mx-0 xl:-mx-20 lg:mx-0">
-            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08" gridCols="lg:grid-cols-3 xl:grid-cols-4">
-              {[
-                ...featured.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
-                  className="lc-img-loading ds-card--link group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[24px] p-4 text-white shadow-md"
-                >
-                  {(() => {
-                    const bg = p.image || FONDOS[p.categories?.menus?.slug ?? ''];
-                    return bg ? (
-                      <Image src={bg} alt={tx(p.name, locale)} fill sizes="(max-width:768px) 64vw, 260px" className="object-cover transition duration-500 group-hover:scale-105" />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
-                    );
-                  })()}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
-                  <div className="relative z-10">
-                    <h3 className="font-serif text-xl leading-tight">{tx(p.name, locale)}</h3>
-                    {p.price != null && <span className="mt-1 block font-bold tabular-nums text-white/95">{euro(Number(p.price), locale)}</span>}
-                  </div>
-                </Link>
-                )),
-                // Última tarjeta: a la carta (antes era un enlace suelto arriba).
-                <Link
-                  key="all"
-                  href="/carta"
-                  className="group flex aspect-[3/4] flex-col items-center justify-center gap-3 rounded-[24px] border-2 border-dashed border-brand/50 p-6 text-center text-brand-deep transition hover:bg-surface"
-                >
-                  <span className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary transition group-hover:scale-110">
-                    <ArrowRight className="size-5" />
-                  </span>
-                  <span className="font-serif text-xl leading-tight">{t('common.seeMenu')}</span>
-                </Link>
-              ]}
-            </SnapCarousel>
+
+            {/* Como una carta impresa: nombre, descripción, puntos guía y precio. */}
+            <ul className="mx-auto max-w-3xl border-t border-line">
+              {featured.map((p) => (
+                <li key={p.id} className="border-b border-line">
+                  <Link
+                    href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
+                    className="group flex items-baseline gap-3 py-5 transition hover:bg-surface-2/60"
+                  >
+                    <h3 className="shrink-0 font-serif text-xl leading-tight text-ink sm:text-2xl">{tx(p.name, locale)}</h3>
+                    {p.description && (
+                      <p className="hidden min-w-0 flex-1 text-sm leading-snug text-ink-2 sm:block">{tx(p.description, locale)}</p>
+                    )}
+                    {/* Los puntos guía rellenan lo que sobra entre plato y precio. */}
+                    <span aria-hidden className="hidden h-px flex-1 self-center border-b border-dotted border-line-strong sm:block" />
+                    {p.price != null && (
+                      <span className="ml-auto shrink-0 font-serif text-lg font-bold tabular-nums text-brand-deep sm:ml-0 sm:text-xl">
+                        {euro(Number(p.price), locale)}
+                      </span>
+                    )}
+                  </Link>
+                  {p.description && (
+                    <p className="-mt-3 pb-5 text-sm leading-snug text-ink-2 sm:hidden">{tx(p.description, locale)}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex justify-center">
+              <Link
+                href="/carta"
+                className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 font-semibold text-ink transition hover:bg-surface-2"
+              >
+                {t('common.seeMenu')} <ArrowRight className="size-4" />
+              </Link>
             </div>
+
           </section>
         </Reveal>
       )}

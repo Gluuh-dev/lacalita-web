@@ -200,7 +200,7 @@ export async function getFeaturedProducts(limit = 4) {
 async function _fetchFeatured(limit: number) {
   const {data} = await supabasePublic
     .from('products')
-    .select('id, slug, name, price, image, categories ( menus ( slug ) )')
+    .select('id, slug, name, description, price, image, categories ( menus ( slug ) )')
     .eq('featured', true)
     .eq('available', true)
     .limit(limit);
@@ -209,6 +209,7 @@ async function _fetchFeatured(limit: number) {
       id: string;
       slug: string;
       name: I18n;
+      description: I18n | null;
       price: number | null;
       image: string | null;
       categories: {menus: {slug: string} | null} | null;
