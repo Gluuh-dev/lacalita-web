@@ -265,6 +265,23 @@ export default async function Home({
             <div className="eyebrow mb-3">La Calita</div>
             <h2 className="h-section font-serif">{tx(story.title ?? {}, locale)}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-ink-2">{tx(story.text ?? {}, locale)}</p>
+            {/* Ilustración de la casa: máscara para que tome el color de marca. */}
+            <span
+              aria-hidden
+              className="mx-auto mt-8 block w-full max-w-2xl"
+              style={{
+                aspectRatio: '1880.99 / 1348.67',
+                backgroundColor: '#E9AE74',
+                WebkitMaskImage: 'url(/brand/escena.svg)',
+                maskImage: 'url(/brand/escena.svg)',
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center'
+              }}
+            />
           </div>
         </section>
       </Reveal>
