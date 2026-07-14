@@ -226,5 +226,17 @@
     "weekdays": "Mon – Fri",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+  "meta": {
+    "homeTitle": "La Calita · Beach club on the sand in Salobreña",
+    "homeDesc": "Beachfront club in Salobreña (Costa Tropical, Spain): breakfast with sea views, Mediterranean cooking, sunset cocktails, smash burgers and live music. Feet almost in the sand.",
+    "cartaTitle": "Menus · Breakfast, restaurant, cocktails and burgers",
+    "cartaDesc": "Our four menus in Salobreña: breakfast and snacks, Mediterranean cooking, seafront cocktails and smash burgers. Prices, allergens and photos.",
+    "eventosTitle": "Events and live music in Salobreña",
+    "eventosDesc": "What is on at La Calita: DJs, concerts, comedy and summer nights by the sea in Salobreña, Costa Tropical.",
+    "galeriaTitle": "Gallery · Life at La Calita",
+    "galeriaDesc": "Photos of the beach club: sunsets, lunches by the sea, live music and summer nights in Salobreña.",
+    "ubicacionTitle": "Where we are · Right on the beach in Salobreña",
+    "ubicacionDesc": "La Calita Beach Club is on the seafront promenade of Salobreña (Granada), next to the Peñón. Opening hours, directions, phone and map."
   }
 }

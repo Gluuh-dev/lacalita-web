@@ -10,11 +10,11 @@ import {offerPanel} from '@/lib/offer-panel';
 export const revalidate = 300;
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
-  await params;
+  const {locale} = await params;
   return {
     title: 'Ofertas · La Calita Burger',
     description: 'Las ofertas y combos de La Calita Burger en Salobreña.',
-    alternates: altLanguages('/burguer/ofertas')
+    alternates: altLanguages('/burguer/ofertas', locale)
   };
 }
 

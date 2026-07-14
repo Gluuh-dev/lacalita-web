@@ -1,12 +1,14 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {getMenus} from '@/lib/queries';
-import {altLanguages} from '@/lib/site';
+import {pageMeta} from '@/lib/site';
 import MenuCard from '@/components/menu-card';
 
 export const revalidate = 300;
 
-export function generateMetadata() {
-  return {alternates: altLanguages('/carta')};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'meta'});
+  return pageMeta({title: t('cartaTitle'), description: t('cartaDesc'), path: '/carta', locale});
 }
 
 export default async function CartaSelector({params}: {params: Promise<{locale: string}>}) {

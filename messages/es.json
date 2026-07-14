@@ -226,5 +226,17 @@
     "weekdays": "Lun – Vie",
     "saturday": "Sábado",
     "sunday": "Domingo"
+  },
+  "meta": {
+    "homeTitle": "La Calita · Beach club a pie de playa en Salobreña",
+    "homeDesc": "Beach club frente al mar en Salobreña (Costa Tropical): desayunos con vistas, cocina mediterránea de producto, cócteles al atardecer, smash burgers y música en directo. Con los pies casi en la arena.",
+    "cartaTitle": "Carta · Desayunos, restaurante, cócteles y burgers",
+    "cartaDesc": "Nuestras cuatro cartas en Salobreña: desayunos y meriendas, cocina mediterránea, coctelería frente al mar y smash burgers. Precios, alérgenos y fotos.",
+    "eventosTitle": "Eventos y música en directo en Salobreña",
+    "eventosDesc": "Agenda de La Calita: DJ, conciertos, monólogos y noches de verano frente al mar en la playa de Salobreña, Costa Tropical.",
+    "galeriaTitle": "Galería · Así se vive La Calita",
+    "galeriaDesc": "Fotos del beach club: atardeceres, comidas frente al mar, música en directo y noches de verano en Salobreña.",
+    "ubicacionTitle": "Dónde estamos · A pie de playa en Salobreña",
+    "ubicacionDesc": "La Calita Beach Club está en el Paseo Marítimo de Salobreña (Granada), junto al Peñón. Horarios, cómo llegar, teléfono y mapa."
   }
 }

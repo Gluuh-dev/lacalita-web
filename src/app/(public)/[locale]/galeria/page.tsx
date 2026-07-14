@@ -1,14 +1,16 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {getGalleryAlbums, getSettings} from '@/lib/queries';
-import {altLanguages} from '@/lib/site';
+import {pageMeta} from '@/lib/site';
 import GalleryGrid from '@/components/gallery-grid';
 import GalleryAlbums from '@/components/gallery-albums';
 import GalleryAdminCta from '@/components/gallery-admin-cta';
 
 export const revalidate = 300;
 
-export function generateMetadata() {
-  return {title: 'Galería · La Calita Beach Club', alternates: altLanguages('/galeria')};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'meta'});
+  return pageMeta({title: t('galeriaTitle'), description: t('galeriaDesc'), path: '/galeria', locale});
 }
 
 type Section = {key: string; title: string; dateLabel: string; kind: string; imgs: string[]};

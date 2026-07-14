@@ -11,8 +11,8 @@ import type {HeroSlide} from '@/lib/queries';
 import {DEFAULT_CONTENT} from '@/lib/content-types';
 import {tx, euro} from '@/lib/localize';
 import {toHeroEvents} from '@/lib/hero';
-import {normalizeHours, formatRanges} from '@/lib/hours';
-import {SITE_URL, altLanguages} from '@/lib/site';
+import {normalizeHours, formatRanges, openingSpec} from '@/lib/hours';
+import {SITE_URL, pageMeta} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import SnapCarousel from '@/components/burger/snap-carousel';
 import Hero from '@/components/hero';
@@ -23,8 +23,10 @@ import OpenStatus from '@/components/open-status';
 
 export const revalidate = 300;
 
-export function generateMetadata() {
-  return {alternates: altLanguages('')};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'meta'});
+  return pageMeta({title: t('homeTitle'), description: t('homeDesc'), path: '', locale});
 }
 
 export default async function Home({
@@ -80,10 +82,11 @@ export default async function Home({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
+    '@id': `${SITE_URL}/#restaurante`,
     name: 'La Calita Beach Club',
     servesCuisine: 'Mediterránea',
     priceRange: '€€',
-    url: SITE_URL,
+    url: `${SITE_URL}/${locale}`,
     telephone: settings?.phone || undefined,
     address: {
       '@type': 'PostalAddress',
@@ -93,9 +96,13 @@ export default async function Home({
       postalCode: '18680',
       addressCountry: 'ES'
     },
+    // Coordenadas del local (las mismas del mapa).
+    geo: {'@type': 'GeoCoordinates', latitude: 36.7386, longitude: -3.5885},
+    openingHoursSpecification: openingSpec(hours),
     sameAs: [settings?.social?.instagram, settings?.social?.facebook].filter(Boolean),
     image: settings?.hero_image ? [settings.hero_image] : undefined,
-    hasMenu: `${SITE_URL}/carta`,
+    // Con prefijo de idioma: sin él la URL no existe (todo cuelga de /[locale]).
+    hasMenu: `${SITE_URL}/${locale}/carta`,
     acceptsReservations: false,
     ...(reviews.length
       ? {

@@ -60,6 +60,21 @@ function labelDays(label: string): Set<number> {
   return set;
 }
 
+// Horario en el formato que entiende Google (openingHoursSpecification).
+const DIAS_SCHEMA = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export function openingSpec(hours: Hours) {
+  const spec: {'@type': string; dayOfWeek: string[]; opens: string; closes: string}[] = [];
+  for (const row of hours.rows) {
+    if (row.closed) continue;
+    const dias = [...labelDays(row.label)].map((d) => DIAS_SCHEMA[d]);
+    if (!dias.length) continue;
+    for (const r of row.ranges) {
+      spec.push({'@type': 'OpeningHoursSpecification', dayOfWeek: dias, opens: r.from, closes: r.to});
+    }
+  }
+  return spec;
+}
+
 // Franja de hoy en minutos desde medianoche. Si cierra de madrugada (09:00 – 02:00)
 // el cierre se pasa de 1440 para que la línea del día no se corte al llegar a las 12.
 export function todayRange(hours: Hours, now = new Date()): {from: number; to: number} | null {

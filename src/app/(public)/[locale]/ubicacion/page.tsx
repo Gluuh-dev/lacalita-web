@@ -3,15 +3,17 @@ import {MapPin, Phone, Mail, Clock, Navigation} from 'lucide-react';
 import {IconBrandInstagram, IconBrandFacebook} from '@tabler/icons-react';
 import {getSettings} from '@/lib/queries';
 import {normalizeHours, formatRanges} from '@/lib/hours';
-import {altLanguages} from '@/lib/site';
+import {pageMeta} from '@/lib/site';
 import OpenStatus from '@/components/open-status';
 import MapCard from '@/components/map-card';
 import SectionHead from '@/components/section-head';
 
 export const revalidate = 300;
 
-export function generateMetadata() {
-  return {title: 'Dónde estamos · La Calita Beach Club', alternates: altLanguages('/ubicacion')};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'meta'});
+  return pageMeta({title: t('ubicacionTitle'), description: t('ubicacionDesc'), path: '/ubicacion', locale});
 }
 
 export default async function Page({params}: {params: Promise<{locale: string}>}) {

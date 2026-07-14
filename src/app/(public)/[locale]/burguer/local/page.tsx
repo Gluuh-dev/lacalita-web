@@ -8,11 +8,11 @@ import MapCard from '@/components/map-card';
 export const revalidate = 300;
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
-  await params;
+  const {locale} = await params;
   return {
     title: 'Dónde estamos · La Calita Burger',
     description: 'La Calita Burger en Salobreña: ubicación, horario y contacto. A pie de playa.',
-    alternates: altLanguages('/burguer/local')
+    alternates: altLanguages('/burguer/local', locale)
   };
 }
 

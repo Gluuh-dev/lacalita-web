@@ -5,7 +5,7 @@ import {Link} from '@/i18n/navigation';
 import {getUpcomingEvents, getPastEvents} from '@/lib/queries';
 import {countdownToken} from '@/lib/event-time';
 import {tx} from '@/lib/localize';
-import {altLanguages} from '@/lib/site';
+import {pageMeta} from '@/lib/site';
 import EventCard from '@/components/event-card';
 import Watermark from '@/components/watermark';
 import EventsToggle from './events-toggle';
@@ -15,8 +15,8 @@ export const revalidate = 300;
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
-  const t = await getTranslations({locale, namespace: 'events'});
-  return {title: `${t('title')} · La Calita`, alternates: altLanguages('/eventos')};
+  const t = await getTranslations({locale, namespace: 'meta'});
+  return pageMeta({title: t('eventosTitle'), description: t('eventosDesc'), path: '/eventos', locale});
 }
 
 export default async function EventosPage({params}: {params: Promise<{locale: string}>}) {

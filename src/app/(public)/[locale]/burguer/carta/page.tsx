@@ -14,7 +14,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
   return {
     title: `Carta · ${tx(data.name, locale)} | La Calita Burger`,
     description: data.subtitle ? tx(data.subtitle, locale) : 'Todas nuestras hamburguesas, entrantes y bebidas. Smash burgers a pie de playa en Salobreña.',
-    alternates: altLanguages('/burguer/carta')
+    alternates: altLanguages('/burguer/carta', locale)
   };
 }
 

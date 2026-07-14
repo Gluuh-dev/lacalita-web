@@ -20,7 +20,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: altLanguages(`/carta/${menu}`),
+    alternates: altLanguages(`/carta/${menu}`, locale),
     openGraph: {title, description, images: data.header_image ? [data.header_image] : undefined}
   };
 }

@@ -17,7 +17,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
   return {
     title,
     description,
-    alternates: altLanguages(`/burguer/carta/${producto}`),
+    alternates: altLanguages(`/burguer/carta/${producto}`, locale),
     openGraph: {title, description, images: data.product.image ? [data.product.image] : undefined}
   };
 }
