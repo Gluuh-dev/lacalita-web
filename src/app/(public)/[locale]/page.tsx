@@ -191,12 +191,12 @@ export default async function Home({
         <section id="carta" className="scroll-mt-20 bg-sand py-10 sm:py-12">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} sub={t('home.kitchenSub')} bg="Sabores" />
-            <div className="-mx-4 md:mx-0 xl:-mx-20 lg:mx-0">
-            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08" controls={false} gridCols="lg:grid-cols-4">
-            {menus.map((m) => (
-              <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
-            ))}
-            </SnapCarousel>
+            {/* Cuatro tarjetas fijas: rejilla, no carrusel. En móvil el carrusel
+                escondía tres de las cuatro cartas tras un gesto. */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {menus.map((m) => (
+                <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
+              ))}
             </div>
           </div>
         </section>
