@@ -20,7 +20,8 @@
     "close": "Cerrar",
     "previous": "Anterior",
     "next": "Siguiente",
-    "seeMenu": "Ver carta"
+    "seeMenu": "Ver carta",
+    "seeMore": "Ver más"
   },
   "time": {
     "today": "¡Hoy!",
@@ -52,7 +53,11 @@
     "featuredSub": "Producto de temporada, brasa y mucho mar.",
     "eventsTitle": "Música a pie de playa",
     "eventsSub": "Djs, conciertos, monólogos y noches que se alargan.",
-    "gallerySub": "Sobremesas que no acaban, brindis al atardecer y los pies en la arena."
+    "gallerySub": "Sobremesas que no acaban, brindis al atardecer y los pies en la arena.",
+    "bookEyebrow": "Reserva tu mesa",
+    "bookTitle": "Vive el atardecer en primera línea",
+    "bookText": "Las mejores mesas frente al mar vuelan. Asegura la tuya para cenar con la puesta de sol y música en directo.",
+    "bookPhone": "Reservar por teléfono"
   },
   "menu": {
     "title": "Nuestra carta",

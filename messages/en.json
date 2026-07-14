@@ -20,7 +20,8 @@
     "close": "Close",
     "previous": "Previous",
     "next": "Next",
-    "seeMenu": "See menu"
+    "seeMenu": "See menu",
+    "seeMore": "See more"
   },
   "time": {
     "today": "Today!",
@@ -52,7 +53,11 @@
     "featuredSub": "Seasonal produce, embers and plenty of sea.",
     "eventsTitle": "Music by the shore",
     "eventsSub": "DJs, live music, comedy nights and evenings that run long.",
-    "gallerySub": "Long lunches, sunset toasts and sand under your feet."
+    "gallerySub": "Long lunches, sunset toasts and sand under your feet.",
+    "bookEyebrow": "Book your table",
+    "bookTitle": "Watch the sunset from the front row",
+    "bookText": "The best seafront tables go fast. Book yours for dinner with the sunset and live music.",
+    "bookPhone": "Book by phone"
   },
   "menu": {
     "title": "Our menu",

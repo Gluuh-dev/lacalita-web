@@ -298,14 +298,59 @@ export default async function Home({
       {gallery.length > 0 && (
         <Reveal>
           <section id="galeria" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-12">
-            <SectionHead eyebrow={t('home.galleryEyebrow')} title={t('home.galleryTitle')} sub={t('home.gallerySub')} bg="Galería" />
-            <MoreLink href="/galeria" label={t('home.galleryTitle')} />
+            {/* Aquí mandan las fotos: el texto va debajo y hace de "ver más". */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {gallery.map((url, idx) => (
                 <div key={idx} className="lc-img-loading ds-media-zoom relative aspect-square overflow-hidden rounded-[16px] border border-line">
                   <Image src={url} alt="" fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" className="object-cover" />
                 </div>
               ))}
+            </div>
+
+            <Link href="/galeria" className="group mx-auto mt-8 block max-w-lg text-center">
+              <span className="eyebrow block">{t('home.galleryEyebrow')}</span>
+              <span className="mt-1 block font-serif text-[clamp(1.7rem,4vw,2.6rem)] font-bold leading-tight text-[#23374f]">
+                {t('home.galleryTitle')}
+                <span className="ml-[0.02em] inline-block size-[0.16em] rounded-full align-baseline bg-[#c06a44]" />
+              </span>
+              <span className="mt-2 block text-sm leading-relaxed text-ink-2">{t('home.gallerySub')}</span>
+              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-brand px-5 py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.14em] text-brand-deep transition group-hover:bg-brand group-hover:text-on-primary">
+                {t('common.seeMore')} <ArrowRight className="size-4" />
+              </span>
+            </Link>
+          </section>
+        </Reveal>
+      )}
+
+      {/* Reserva: el cierre de la portada, justo antes de la información de servicio. */}
+      {settings?.phone && (
+        <Reveal>
+          <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden py-16 text-center text-white sm:py-20">
+            {/* Atardecer: del terracota de la casa a la noche. */}
+            <div
+              className="absolute inset-0 -z-10"
+              style={{background: 'radial-gradient(120% 100% at 30% 0%, #c98a4e 0%, #8a4f2c 35%, #3b2417 70%, #23150e 100%)'}}
+            />
+            <div className="mx-auto max-w-2xl px-5">
+              <div className="eyebrow !text-white/70">{t('home.bookEyebrow')}</div>
+              <h2 className="mt-2 font-serif text-[clamp(2rem,5vw,3.4rem)] font-bold leading-[1.1]">{t('home.bookTitle')}</h2>
+              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/75 sm:text-base">{t('home.bookText')}</p>
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+                <a
+                  href={`tel:${settings.phone}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#e2a869] px-6 py-3.5 font-semibold text-[#2a1713] transition hover:brightness-105"
+                >
+                  <Phone className="size-4" /> {t('home.bookPhone')}
+                </a>
+                <a
+                  href={`https://wa.me/${settings.phone.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/35 px-6 py-3.5 font-semibold text-white transition hover:bg-white/10"
+                >
+                  WhatsApp <ArrowRight className="size-4" />
+                </a>
+              </div>
             </div>
           </section>
         </Reveal>

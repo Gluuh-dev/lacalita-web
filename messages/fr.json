@@ -20,7 +20,8 @@
     "close": "Fermer",
     "previous": "Précédent",
     "next": "Suivant",
-    "seeMenu": "Voir la carte"
+    "seeMenu": "Voir la carte",
+    "seeMore": "Voir plus"
   },
   "time": {
     "today": "Aujourd'hui !",
@@ -52,7 +53,11 @@
     "featuredSub": "Produit de saison, braise et beaucoup de mer.",
     "eventsTitle": "De la musique au bord de la plage",
     "eventsSub": "DJs, concerts, one-man-shows et soirées qui s’étirent.",
-    "gallerySub": "Des repas qui s’étirent, des toasts au coucher du soleil et les pieds dans le sable."
+    "gallerySub": "Des repas qui s’étirent, des toasts au coucher du soleil et les pieds dans le sable.",
+    "bookEyebrow": "Réservez votre table",
+    "bookTitle": "Vivez le coucher de soleil au premier rang",
+    "bookText": "Les meilleures tables face à la mer partent vite. Réservez la vôtre pour dîner au coucher du soleil, en musique.",
+    "bookPhone": "Réserver par téléphone"
   },
   "menu": {
     "title": "Notre carte",
