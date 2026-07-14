@@ -25,15 +25,6 @@ const ICONS: Record<string, typeof IconToolsKitchen2 | typeof IconCoffeeCup> = {
   hamburgueseria: IconBurger
 };
 
-// Color plano de cada carta: es lo que se ve en móvil, donde la foto sobra y
-// las tarjetas de 3/4 obligaban a un scroll larguísimo.
-const COLORES: Record<string, string> = {
-  desayunos: '#0f2a3c',
-  restaurante: '#2c6e6b',
-  cocteles: '#c0603a',
-  hamburgueseria: '#3a2f27'
-};
-
 export default function MenuCard({menu: m, locale, cta}: {menu: MenuHead; locale: string; cta: string}) {
   const Icon = ICONS[m.slug] ?? IconToolsKitchen2;
   const bg = m.header_image || FONDOS[m.slug];
@@ -41,22 +32,19 @@ export default function MenuCard({menu: m, locale, cta}: {menu: MenuHead; locale
     <Link
       href={m.slug === 'hamburgueseria' ? '/burguer' : `/carta/${m.slug}`}
       data-theme={m.theme}
-      style={{backgroundColor: COLORES[m.slug] ?? '#0f2a3c'}}
-      className="ds-card--link group relative flex flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white sm:aspect-[3/4] sm:shadow-md"
+      // En móvil la tarjeta es baja (icono arriba, título abajo); de tablet en
+      // adelante recupera el formato alto 3/4. Misma textura en las dos.
+      className="lc-img-loading ds-card--link group relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-[24px] p-5 text-white shadow-md sm:aspect-[3/4] sm:min-h-0"
     >
-      {/* La foto y su velo: solo de tablet en adelante. El marcador de carga va
-          aquí, no en la tarjeta: en móvil no hay foto que esperar. */}
-      <div className="lc-img-loading absolute inset-0 hidden sm:block">
-        {bg ? (
-          <Image src={bg} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, 50vw" className="object-cover transition duration-500 group-hover:scale-105" />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
-      </div>
+      {bg ? (
+        <Image src={bg} alt={tx(m.name, locale)} fill sizes="(min-width:1024px) 22rem, (min-width:640px) 50vw, 90vw" className="object-cover transition duration-500 group-hover:scale-105" />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-brand to-brand-deep" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
 
-      {/* Móvil: icono en un círculo arriba, sin foto. */}
-      <span className="mb-14 flex size-11 items-center justify-center rounded-full border border-white/40 text-white sm:hidden">
+      {/* Móvil: el mismo icono, en un círculo pequeño arriba a la izquierda. */}
+      <span className="absolute left-5 top-5 z-10 flex size-11 items-center justify-center rounded-full border border-white/35 bg-white/10 text-white backdrop-blur-md sm:hidden">
         <Icon className="size-5" stroke={1.6} />
       </span>
 
@@ -67,7 +55,7 @@ export default function MenuCard({menu: m, locale, cta}: {menu: MenuHead; locale
 
       <div className="relative z-10">
         <h2 className="font-serif text-2xl leading-tight sm:text-3xl">{tx(m.name, locale)}</h2>
-        {m.subtitle && <p className="mt-1.5 text-sm leading-relaxed text-white/80 sm:mt-1 sm:text-white/85">{tx(m.subtitle, locale)}</p>}
+        {m.subtitle && <p className="mt-1.5 text-sm leading-relaxed text-white/85 sm:mt-1">{tx(m.subtitle, locale)}</p>}
         <span className="mt-4 hidden items-center justify-center gap-1.5 rounded-full bg-white py-2.5 font-adam text-[0.72rem] uppercase tracking-[0.12em] text-ink transition group-hover:bg-white/90 sm:flex">
           {cta} <ArrowRight className="size-4" />
         </span>
