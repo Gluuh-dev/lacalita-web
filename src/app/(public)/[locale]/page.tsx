@@ -477,15 +477,6 @@ export default async function Home({
                 style={{filter: 'saturate(1.05)'}}
               />
 
-              {/* Chip con la dirección */}
-              <div className="absolute bottom-4 left-4 flex max-w-[80%] items-center gap-3 rounded-[16px] border border-white/10 bg-[rgba(20,15,8,0.72)] px-4 py-3 backdrop-blur-md">
-                <MapPin className="size-5 shrink-0 text-[#e2a869]" />
-                <div className="leading-tight">
-                  <p className="text-[0.92rem] font-bold text-white">La Calita Beach Club</p>
-                  <p className="text-[0.78rem] text-white/60">{settings?.address ?? 'C. Pº Marítimo, s/n · Salobreña'}</p>
-                </div>
-              </div>
-
               <a
                 href={settings?.maps_url ?? 'https://maps.google.com/?q=La+Calita+Salobre%C3%B1a'}
                 target="_blank"
