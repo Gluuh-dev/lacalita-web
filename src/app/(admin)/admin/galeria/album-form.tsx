@@ -11,12 +11,35 @@ import {removeMedia} from '@/lib/storage';
 import {saveAlbum} from './actions';
 import type {GalleryAlbum} from '@/lib/queries';
 
-export default function AlbumForm({id, album, onSaved}: {id: string | null; album: GalleryAlbum | null; onSaved?: () => void}) {
+const TIPOS: {value: string; label: string}[] = [
+  {value: 'evento', label: 'Evento'},
+  {value: 'comida', label: 'Comida'},
+  {value: 'local', label: 'El local'},
+  {value: 'gente', label: 'Gente'}
+];
+
+export default function AlbumForm({
+  id,
+  album,
+  events = [],
+  onSaved
+}: {
+  id: string | null;
+  album: GalleryAlbum | null;
+  events?: {id: string; title: string}[];
+  onSaved?: () => void;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [albumId, setAlbumId] = useState<string | null>(id);
   const [images, setImages] = useState<string[]>(album?.images ?? []);
-  const [f, setF] = useState({title: album?.title ?? '', date: album?.date ?? '', position: String(album?.position ?? 0)});
+  const [f, setF] = useState({
+    title: album?.title ?? '',
+    date: album?.date ?? '',
+    position: String(album?.position ?? 0),
+    kind: (album?.kind ?? 'evento') as string,
+    event_id: album?.event_id ?? ''
+  });
   const [savedNote, setSavedNote] = useState(false);
 
   // Refs para guardar siempre el estado más reciente desde el temporizador.
@@ -40,7 +63,11 @@ export default function AlbumForm({id, album, onSaved}: {id: string | null; albu
         title: fRef.current.title,
         date: fRef.current.date || null,
         images: imagesRef.current,
-        position: Number(fRef.current.position) || 0
+        position: Number(fRef.current.position) || 0,
+        kind: fRef.current.kind,
+        // La portada es la primera foto: el propio orden la decide.
+        cover: imagesRef.current[0] ?? null,
+        event_id: fRef.current.kind === 'evento' ? fRef.current.event_id || null : null
       });
       if (!r.ok) {
         toast.error(r.error);
@@ -91,6 +118,51 @@ export default function AlbumForm({id, album, onSaved}: {id: string | null; albu
           required
         />
       </div>
+      <div>
+        <Label>Tipo de álbum</Label>
+        <div className="mt-1 flex flex-wrap gap-2">
+          {TIPOS.map((t) => {
+            const on = f.kind === t.value;
+            return (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => {
+                  setF({...f, kind: t.value});
+                  autoSave();
+                }}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition ${on ? 'border-brand bg-brand text-on-primary' : 'border-line bg-surface text-ink-2 hover:border-brand'}`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1.5 text-xs text-ink-3">Con esto la galería puede filtrarse: eventos, comida, el local o gente.</p>
+      </div>
+
+      {f.kind === 'evento' && events.length > 0 && (
+        <div>
+          <Label>¿De qué evento son? (opcional)</Label>
+          <select
+            className="w-full rounded-[14px] border border-line bg-surface px-3 py-2 text-sm text-ink focus:border-brand focus:outline-none"
+            value={f.event_id}
+            onChange={(e) => {
+              setF({...f, event_id: e.target.value});
+              autoSave();
+            }}
+          >
+            <option value="">Ninguno</option>
+            {events.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.title}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1.5 text-xs text-ink-3">Si lo enlazas, las fotos saldrán también en la ficha de ese evento.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label>Fecha</Label>

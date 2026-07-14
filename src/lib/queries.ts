@@ -470,8 +470,19 @@ export async function getBurgerOffersAdmin(): Promise<BurgerOffer[]> {
   return (data as BurgerOffer[]) ?? [];
 }
 
-// ---- Galería: álbumes (independientes de eventos) ----
-export type GalleryAlbum = {id: string; title: string; date: string | null; images: string[]; position: number};
+// ---- Galería: álbumes ----
+// kind separa el contenido: la noche del sábado no es lo mismo que un plato.
+export type AlbumKind = 'evento' | 'comida' | 'local' | 'gente';
+export type GalleryAlbum = {
+  id: string;
+  title: string;
+  date: string | null;
+  images: string[];
+  position: number;
+  kind: AlbumKind;
+  cover: string | null;       // la foto que manda; si no, la primera
+  event_id: string | null;    // si salió de un evento
+};
 
 export async function getGalleryAlbums(): Promise<GalleryAlbum[]> {
   // Sin caché de consulta: la galería es poco frecuentada y así los álbumes nuevos
@@ -488,4 +499,38 @@ export async function getGalleryAlbumsAdmin(): Promise<GalleryAlbum[]> {
   const supabase = await createClient();
   const {data} = await supabase.from('gallery_albums').select('*').order('date', {ascending: false, nullsFirst: false}).order('position');
   return (data as GalleryAlbum[]) ?? [];
+}
+
+// ---- Reseñas ----
+export type Review = {
+  id: string;
+  author: string;
+  text: string;
+  rating: number;
+  source: string | null;
+  date: string | null;
+  visible: boolean;
+  position: number;
+};
+
+export async function getReviews(): Promise<Review[]> {
+  return unstable_cache(
+    async () => {
+      const {data} = await supabasePublic
+        .from('reviews')
+        .select('*')
+        .eq('visible', true)
+        .order('position')
+        .order('created_at', {ascending: false});
+      return (data as Review[]) ?? [];
+    },
+    ['reviews'],
+    {revalidate: 300, tags: ['reviews']}
+  )();
+}
+
+export async function getReviewsAdmin(): Promise<Review[]> {
+  const supabase = await createClient();
+  const {data} = await supabase.from('reviews').select('*').order('position').order('created_at', {ascending: false});
+  return (data as Review[]) ?? [];
 }

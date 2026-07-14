@@ -5,7 +5,7 @@ import {IconBrandInstagram, IconBrandFacebook, IconCoffee, IconToolsKitchen2, Ic
 import MapCard from '@/components/map-card';
 import MenuCard, {FONDOS} from '@/components/menu-card';
 import {Link} from '@/i18n/navigation';
-import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE, getGalleryAlbums} from '@/lib/queries';
+import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE, getGalleryAlbums, getReviews} from '@/lib/queries';
 import type {HeroSlide} from '@/lib/queries';
 import {DEFAULT_CONTENT} from '@/lib/content-types';
 import {tx, euro} from '@/lib/localize';
@@ -33,12 +33,13 @@ export default async function Home({
   const {locale} = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const [settings, events, menus, featured, albums] = await Promise.all([
+  const [settings, events, menus, featured, albums, reviews] = await Promise.all([
     getSettings(),
     getUpcomingEvents(6),
     getMenus(),
     getFeaturedProducts(5),
-    getGalleryAlbums()
+    getGalleryAlbums(),
+    getReviews()
   ]);
 
   const intro = settings?.landing ? tx(settings.landing, locale) : t('home.intro');
@@ -47,7 +48,6 @@ export default async function Home({
   const content = settings?.content ?? {};
   const about = {...DEFAULT_CONTENT.about, ...content.about};
   const story = {...DEFAULT_CONTENT.story, ...content.story};
-  const reviews = content.reviews ?? [];
   // La galería sale de los álbumes (antes leía un campo de ajustes que nadie
   // rellenaba, así que las 28 fotos subidas no se veían en la portada).
   const gallery = albums.flatMap((a) => a.images ?? []).slice(0, 7);
@@ -107,7 +107,7 @@ export default async function Home({
             '@type': 'Review',
             reviewRating: {'@type': 'Rating', ratingValue: r.rating ?? 5, bestRating: 5},
             author: {'@type': 'Person', name: r.author},
-            reviewBody: r.quote
+            reviewBody: r.text
           }))
         }
       : {})
@@ -275,8 +275,8 @@ export default async function Home({
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.reviewsEyebrow')} title={t('home.reviewsTitle')} />
             <div className="grid gap-5 md:grid-cols-3">
-              {reviews.map((r, idx) => (
-                <figure key={idx} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
+              {reviews.map((r) => (
+                <figure key={r.id} className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
                   <div className="mb-3 flex items-center justify-between">
                     <div className="flex gap-0.5">
                       {Array.from({length: 5}).map((_, s) => (
@@ -285,8 +285,11 @@ export default async function Home({
                     </div>
                     <Quote className="size-5 text-brand/60" />
                   </div>
-                  <blockquote className="leading-relaxed text-ink-2">{r.quote}</blockquote>
-                  <figcaption className="mt-4 font-semibold text-brand-deep">— {r.author}</figcaption>
+                  <blockquote className="leading-relaxed text-ink-2">{r.text}</blockquote>
+                  <figcaption className="mt-4 font-semibold text-brand-deep">
+                    — {r.author}
+                    {r.source && <span className="ml-1 font-normal text-ink-3">· {r.source}</span>}
+                  </figcaption>
                 </figure>
               ))}
             </div>

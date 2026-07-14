@@ -2,6 +2,7 @@ import {setRequestLocale, getTranslations} from 'next-intl/server';
 import {getGalleryAlbums, getSettings} from '@/lib/queries';
 import {altLanguages} from '@/lib/site';
 import GalleryGrid from '@/components/gallery-grid';
+import GalleryAlbums from '@/components/gallery-albums';
 import GalleryAdminCta from '@/components/gallery-admin-cta';
 
 export const revalidate = 300;
@@ -10,7 +11,7 @@ export function generateMetadata() {
   return {title: 'Galería · La Calita Beach Club', alternates: altLanguages('/galeria')};
 }
 
-type Section = {key: string; title: string; dateLabel: string; imgs: string[]};
+type Section = {key: string; title: string; dateLabel: string; kind: string; imgs: string[]};
 
 export default async function Page({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
@@ -23,7 +24,13 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
   // aquí los carteles de los eventos, que no son fotos de la galería.
   const sections: Section[] = albums
     .filter((a) => a.images.length > 0)
-    .map((a) => ({key: a.id, title: a.title || (a.date ? fmt(a.date) : t('untitled')), dateLabel: a.date ? fmt(a.date) : '', imgs: a.images}));
+    .map((a) => ({
+      key: a.id,
+      title: a.title || (a.date ? fmt(a.date) : t('untitled')),
+      dateLabel: a.date ? fmt(a.date) : '',
+      kind: a.kind ?? 'evento',
+      imgs: a.images
+    }));
 
   const legacy = (settings?.content?.gallery ?? []).filter(Boolean);
 
@@ -39,15 +46,7 @@ export default async function Page({params}: {params: Promise<{locale: string}>}
           <p className="py-16 text-center text-ink-3">{t('empty')}</p>
         ) : (
           <div className="mt-8 flex flex-col gap-12">
-            {sections.map((s) => (
-              <section key={s.key}>
-                <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-2">
-                  <h2 className="font-serif text-2xl">{s.title}</h2>
-                  {s.dateLabel && <span className="font-adam text-[0.72rem] uppercase tracking-[0.1em] text-ink-3">{s.dateLabel}</span>}
-                </div>
-                <GalleryGrid images={s.imgs} alt={s.title} />
-              </section>
-            ))}
+            <GalleryAlbums sections={sections} />
             {legacy.length > 0 && (
               <section>
                 <h2 className="mb-4 border-b border-line pb-2 font-serif text-2xl">{t('more')}</h2>

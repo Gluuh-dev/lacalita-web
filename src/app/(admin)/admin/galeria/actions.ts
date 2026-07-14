@@ -5,13 +5,30 @@ import {createClient} from '@/lib/supabase/server';
 import {actionGuard} from '@/lib/auth';
 import {removeMediaServer} from '@/lib/storage-server';
 
-export type AlbumInput = {title: string; date: string | null; images: string[]; position: number};
+export type AlbumInput = {
+  title: string;
+  date: string | null;
+  images: string[];
+  position: number;
+  kind: string;            // evento | comida | local | gente
+  cover: string | null;    // foto de portada; si no, la primera
+  event_id: string | null; // si el álbum salió de un evento
+};
 
 export async function saveAlbum(id: string | null, input: AlbumInput) {
   const supabase = await createClient();
   const denied = await actionGuard(supabase);
   if (denied) return denied;
-  const row = {title: input.title, date: input.date || null, images: input.images, position: input.position};
+  const row = {
+    title: input.title,
+    date: input.date || null,
+    images: input.images,
+    position: input.position,
+    kind: input.kind || 'evento',
+    // Si la portada elegida ya no está entre las fotos, cae a la primera.
+    cover: input.cover && input.images.includes(input.cover) ? input.cover : (input.images[0] ?? null),
+    event_id: input.event_id || null
+  };
   let savedId = id;
   if (id) {
     const {data, error} = await supabase.from('gallery_albums').update(row).eq('id', id).select('id');
