@@ -11,7 +11,8 @@ export default function SnapCarousel({
   mdItemClass = 'md:w-[320px]',
   accent = '#c36148',
   ink = '#2a1713',
-  controls = true
+  controls = true,
+  gridCols
 }: {
   children: React.ReactNode[];
   itemClass?: string;
@@ -19,6 +20,9 @@ export default function SnapCarousel({
   accent?: string;
   ink?: string;
   controls?: boolean; // false: sin flechas ni puntos (las tarjetas hablan solas)
+  // En PC deja de ser carrusel y pasa a rejilla: 'lg:grid-cols-3 xl:grid-cols-4'.
+  // En tablet y móvil sigue siendo carrusel.
+  gridCols?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -77,11 +81,17 @@ export default function SnapCarousel({
   const btn = 'flex size-11 items-center justify-center rounded-full border transition hover:brightness-110 active:scale-95';
   const btnStyle = {borderColor: `${ink}33`, color: ink};
 
+  // En PC la pista deja de ser una cinta que desborda: se vuelve rejilla dentro
+  // del contenedor, así las tarjetas se centran y bajan de fila si no caben.
+  const rejilla = gridCols
+    ? `lg:left-auto lg:mx-auto lg:w-full lg:max-w-6xl lg:translate-x-0 lg:grid ${gridCols} lg:overflow-visible lg:px-4 lg:pb-0`
+    : '';
+
   return (
     <>
       <div
         ref={scrollRef}
-        className={`relative left-1/2 flex w-screen -translate-x-1/2 snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-5 px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] scroll-px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] ${overflow ? '' : 'justify-center'}`}
+        className={`relative left-1/2 flex w-screen -translate-x-1/2 snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-5 px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] scroll-px-[max(1.25rem,calc((100vw-80rem)/2+1.25rem))] ${overflow ? '' : 'justify-center'} ${rejilla}`}
       >
         {items.map((c, i) => (
           <div
@@ -89,7 +99,7 @@ export default function SnapCarousel({
             ref={(el) => {
               itemsRef.current[i] = el;
             }}
-            className={`shrink-0 snap-start ${itemClass} ${mdItemClass} md:max-w-none`}
+            className={`shrink-0 snap-start ${itemClass} ${mdItemClass} md:max-w-none ${gridCols ? 'lg:w-auto' : ''}`}
           >
             {c}
           </div>

@@ -170,8 +170,8 @@ export default async function Home({
         <section id="carta" className="scroll-mt-20 py-10 sm:py-12">
           <div className="mx-auto max-w-6xl px-4">
             <SectionHead eyebrow={t('home.kitchenEyebrow')} title={t('home.kitchenTitle')} sub={t('home.kitchenSub')} bg="Sabores" />
-            <div className="-mx-4 md:mx-0 xl:-mx-20">
-            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08" controls={false}>
+            <div className="-mx-4 md:mx-0 xl:-mx-20 lg:mx-0">
+            <SnapCarousel itemClass="w-[80vw] max-w-[300px]" mdItemClass="md:w-[300px]" accent="#c98a4e" ink="#4c2f08" controls={false} gridCols="lg:grid-cols-4">
             {menus.map((m) => (
               <MenuCard key={m.id} menu={m} locale={locale} cta={t('common.seeMenu')} />
             ))}
@@ -186,8 +186,8 @@ export default async function Home({
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} sub={t('home.featuredSub')} bg="Platos" />
-            <div className="-mx-4 md:mx-0 xl:-mx-20">
-            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
+            <div className="-mx-4 md:mx-0 xl:-mx-20 lg:mx-0">
+            <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08" gridCols="lg:grid-cols-3 xl:grid-cols-4">
               {[
                 ...featured.map((p) => (
                 <Link
