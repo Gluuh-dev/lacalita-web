@@ -405,7 +405,7 @@ function SectionHead({eyebrow, title, sub, bg, dark = false}: {eyebrow: string; 
           style={{
             color: dark ? '#fff' : '#23374f',
             // Los títulos largos (frases) no pueden ir al tamaño de una palabra suelta.
-            fontSize: title.length > 14 ? 'clamp(2rem, 4.6vw, 3.4rem)' : 'clamp(3rem, 9vw, 7rem)'
+            fontSize: title.length > 14 ? 'clamp(2.3rem, 5.4vw, 4.1rem)' : 'clamp(3rem, 9vw, 7rem)'
           }}
         >
           {title}
