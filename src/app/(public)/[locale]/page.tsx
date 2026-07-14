@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import {setRequestLocale, getTranslations} from 'next-intl/server';
-import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Phone, Waves, Quote, Star} from 'lucide-react';
-import {IconBrandInstagram, IconBrandFacebook, IconCoffee, IconToolsKitchen2, IconGlassCocktail, IconBurger} from '@tabler/icons-react';
+import {Coffee, UtensilsCrossed, Sandwich, Martini, ArrowRight, Clock, AlertTriangle, MapPin, Navigation, Phone, Waves, Quote, Star} from 'lucide-react';
+import {IconBrandInstagram, IconBrandWhatsapp} from '@tabler/icons-react';
 import MapCard from '@/components/map-card';
+import SunsetBadge from '@/components/sunset-badge';
 import MenuCard, {FONDOS} from '@/components/menu-card';
 import {Link} from '@/i18n/navigation';
 import {getSettings, getUpcomingEvents, getMenus, getFeaturedProducts, DEFAULT_HERO_SLIDE, getGalleryAlbums, getReviews} from '@/lib/queries';
@@ -356,71 +357,124 @@ export default async function Home({
         </Reveal>
       )}
 
-      {/* Ubicación */}
+      {/* Dónde estamos: bloque oscuro con la tarjeta de datos y el plano al lado. */}
       <Reveal>
-        <section id="info" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-10 sm:py-12">
-          <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} />
-          <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-            {/* Horario */}
-            <div className="rounded-[20px] border border-line bg-surface p-6 shadow-sm">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="size-5 text-brand-deep" />
-                  <h3 className="font-serif text-xl">{t('info.hours')}</h3>
-                </div>
-                <OpenStatus hours={hours} />
+        <section
+          id="info"
+          className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden pb-16 text-white sm:pb-20"
+          style={{background: '#1a1512'}}
+        >
+          <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} bg="Ubicación" dark />
+
+          <div className="mx-auto grid max-w-6xl gap-6 px-4 lg:grid-cols-2 lg:items-stretch">
+            {/* Datos del local */}
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+              <div className="font-adam text-[0.66rem] uppercase tracking-[0.2em] text-[#e2a869]">La Calita Beach Club</div>
+              <h3 className="mt-2 font-serif text-2xl font-bold leading-tight sm:text-3xl">{settings?.address?.split(',')[0] ?? 'Paseo Marítimo'}, Salobreña</h3>
+              {settings?.address && <p className="mt-1 text-sm text-white/55">{settings.address}</p>}
+
+              <div className="mt-4">
+                <OpenStatus hours={hours} dark />
               </div>
+
               {hours.notice && (
-                <div className="mb-4 flex items-start gap-2 rounded-[14px] bg-amber-50 px-3 py-2.5 text-sm font-medium text-amber-700">
+                <div className="mt-4 flex items-start gap-2 rounded-[14px] bg-amber-400/10 px-3 py-2.5 text-sm font-medium text-amber-300">
                   <AlertTriangle className="mt-0.5 size-4 shrink-0" />
                   {hours.notice}
                 </div>
               )}
-              <ul className="flex flex-col">
-                {hours.rows.map((row, i) => (
-                  <li key={i} className="flex items-center justify-between gap-4 rounded-lg px-2 py-2 text-sm">
-                    <span className="font-medium text-ink">{row.label}</span>
-                    <span className="tabular-nums text-ink-2">{row.closed ? t('home.closed') : formatRanges(row)}</span>
-                  </li>
-                ))}
+
+              <div className="mt-6 font-adam text-[0.62rem] uppercase tracking-[0.16em] text-white/40">{t('info.hours')}</div>
+              <ul className="mt-2 flex flex-col gap-0.5">
+                {hours.rows.map((row, i) => {
+                  const hoy = isTodayRow(row.label);
+                  return (
+                    <li
+                      key={i}
+                      className={`flex items-center justify-between gap-4 rounded-[12px] px-3 py-2.5 text-sm ${hoy ? 'bg-[#e2a869]/10' : ''}`}
+                    >
+                      <span className="flex items-center gap-2 font-medium text-white/90">
+                        {row.label}
+                        {hoy && (
+                          <span className="rounded-full bg-[#e2a869] px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-[#2a1713]">
+                            {t('home.today')}
+                          </span>
+                        )}
+                      </span>
+                      <span className={`tabular-nums ${hoy ? 'font-semibold text-[#e2a869]' : 'text-white/55'}`}>
+                        {row.closed ? t('home.closed') : formatRanges(row)}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
-            </div>
 
-            {/* Mapa + contacto */}
-            <div className="flex flex-col gap-5">
-              <MapCard href={settings?.maps_url} label={t('info.directions')} className="min-h-[280px]" />
+              <SunsetBadge label={t('home.bestMoment')} className="mt-5" />
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {settings?.maps_url && (
+                <a
+                  href={settings.maps_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 flex items-center justify-center gap-2 rounded-full bg-[#e2a869] px-6 py-3.5 font-semibold text-[#2a1713] transition hover:brightness-105"
+                >
+                  <MapPin className="size-4" /> {t('info.location')}
+                </a>
+              )}
+
+              <div className="mt-3 grid grid-cols-3 gap-3">
                 {settings?.phone && (
-                  <a href={`tel:${settings.phone}`} className="flex min-w-0 items-center gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep">
-                      <Phone className="size-4" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('home.reservations')}</span>
-                      <span className="block truncate font-semibold">{settings.phone}</span>
-                    </span>
+                  <a
+                    href={`tel:${settings.phone}`}
+                    className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-3 text-sm font-medium text-white/90 transition hover:bg-white/10"
+                  >
+                    <Phone className="size-4" /> {t('home.call')}
                   </a>
                 )}
-                <div className="flex min-w-0 items-center gap-3 rounded-[14px] border border-line bg-surface px-4 py-3">
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-adam text-[0.7rem] uppercase tracking-[0.1em] text-ink-3">{t('info.follow')}</span>
-                    <span className="block truncate font-semibold">@lacalitabeach</span>
-                  </span>
-                  <span className="flex shrink-0 gap-2">
-                    {settings?.social?.instagram && (
-                      <a href={settings.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="flex size-10 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep transition hover:bg-brand hover:text-on-primary">
-                        <IconBrandInstagram className="size-5" />
-                      </a>
-                    )}
-                    {settings?.social?.facebook && (
-                      <a href={settings.social.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="flex size-10 items-center justify-center rounded-lg bg-surface-sunken text-brand-deep transition hover:bg-brand hover:text-on-primary">
-                        <IconBrandFacebook className="size-5" />
-                      </a>
-                    )}
-                  </span>
-                </div>
+                {settings?.phone && (
+                  <a
+                    href={`https://wa.me/${settings.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="WhatsApp"
+                    className="flex items-center justify-center rounded-full border border-white/15 py-3 text-white/90 transition hover:bg-white/10"
+                  >
+                    <IconBrandWhatsapp className="size-5" />
+                  </a>
+                )}
+                {settings?.social?.instagram && (
+                  <a
+                    href={settings.social.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Instagram"
+                    className="flex items-center justify-center rounded-full border border-white/15 py-3 text-white/90 transition hover:bg-white/10"
+                  >
+                    <IconBrandInstagram className="size-5" />
+                  </a>
+                )}
               </div>
+            </div>
+
+            {/* Mapa real de Google: aquí interesa el entorno (playa, calles, cómo llegar). */}
+            <div className="relative min-h-[320px] overflow-hidden rounded-[22px] border border-white/10 lg:min-h-full">
+              <iframe
+                title="La Calita Beach Club en el mapa"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(settings?.address || 'La Calita Beach Club, Salobreña')}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 h-full w-full border-0"
+              />
+              {settings?.maps_url && (
+                <a
+                  href={settings.maps_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-black/70 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-black/85"
+                >
+                  <Navigation className="size-4" /> {t('info.directions')}
+                </a>
+              )}
             </div>
           </div>
         </section>
@@ -429,6 +483,18 @@ export default async function Home({
   );
 }
 
+
+// ¿Esta fila del horario ("Lunes a Viernes", "Sábado"…) incluye el día de hoy?
+function isTodayRow(label: string): boolean {
+  const dias = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+  const s = label.toLowerCase().normalize('NFD').replace(new RegExp('[̀-ͯ]', 'g'), '');
+  const hoy = new Date().getDay();
+  const citados = dias.map((d, i) => (s.includes(d) ? i : -1)).filter((i) => i >= 0);
+  // 'Lunes a Viernes' es un rango; 'Sabado', un dia suelto.
+  const esRango = citados.length >= 2 && (s.includes(' a ') || s.includes('-') || s.includes('–') || s.includes('hasta'));
+  if (esRango) return hoy >= citados[0] && hoy <= citados[citados.length - 1];
+  return citados.includes(hoy);
+}
 
 // Cabecera de sección: papel crema en degradado, palabra grabada de fondo,
 // filigranas doradas en las esquinas, antesala espaciada y título con su punto.

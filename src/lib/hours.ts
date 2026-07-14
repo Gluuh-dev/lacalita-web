@@ -62,7 +62,7 @@ function labelDays(label: string): Set<number> {
 
 // ¿Está abierto ahora? Devuelve también a qué hora cierra. Maneja rangos que cruzan
 // medianoche (p. ej. 09:00 – 02:00).
-export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; closesAt: string | null} {
+export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; closesAt: string | null; opensAt: string | null} {
   const day = now.getDay();
   const mins = now.getHours() * 60 + now.getMinutes();
   for (const row of hours.rows) {
@@ -72,7 +72,7 @@ export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; close
       for (const r of row.ranges) {
         const from = toMin(r.from);
         const to = toMin(r.to);
-        if (to > from ? mins >= from && mins < to : mins >= from) return {open: true, closesAt: r.to};
+        if (to > from ? mins >= from && mins < to : mins >= from) return {open: true, closesAt: r.to, opensAt: null};
       }
     }
     // Cierre que viene del día anterior (rango nocturno que cruza medianoche).
@@ -80,9 +80,19 @@ export function isOpenNow(hours: Hours, now = new Date()): {open: boolean; close
       for (const r of row.ranges) {
         const from = toMin(r.from);
         const to = toMin(r.to);
-        if (to <= from && mins < to) return {open: true, closesAt: r.to};
+        if (to <= from && mins < to) return {open: true, closesAt: r.to, opensAt: null};
       }
     }
   }
-  return {open: false, closesAt: null};
+  // Cerrado: buscamos a qué hora abre — hoy si aún no ha abierto, si no el próximo día con horario.
+  for (let add = 0; add < 8; add++) {
+    const d = (day + add) % 7;
+    for (const row of hours.rows) {
+      if (row.closed || !labelDays(row.label).has(d)) continue;
+      for (const r of row.ranges) {
+        if (add > 0 || toMin(r.from) > mins) return {open: false, closesAt: null, opensAt: r.from};
+      }
+    }
+  }
+  return {open: false, closesAt: null, opensAt: null};
 }

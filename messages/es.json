@@ -57,7 +57,10 @@
     "bookEyebrow": "Reserva tu mesa",
     "bookTitle": "Vive el atardecer en primera línea",
     "bookText": "Las mejores mesas frente al mar vuelan. Asegura la tuya para cenar con la puesta de sol y música en directo.",
-    "bookPhone": "Reservar por teléfono"
+    "bookPhone": "Reservar por teléfono",
+    "today": "Hoy",
+    "bestMoment": "El mejor momento",
+    "call": "Llamar"
   },
   "menu": {
     "title": "Nuestra carta",

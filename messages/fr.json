@@ -57,7 +57,10 @@
     "bookEyebrow": "Réservez votre table",
     "bookTitle": "Vivez le coucher de soleil au premier rang",
     "bookText": "Les meilleures tables face à la mer partent vite. Réservez la vôtre pour dîner au coucher du soleil, en musique.",
-    "bookPhone": "Réserver par téléphone"
+    "bookPhone": "Réserver par téléphone",
+    "today": "Aujourd'hui",
+    "bestMoment": "Le meilleur moment",
+    "call": "Appeler"
   },
   "menu": {
     "title": "Notre carte",

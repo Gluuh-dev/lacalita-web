@@ -57,7 +57,10 @@
     "bookEyebrow": "Book your table",
     "bookTitle": "Watch the sunset from the front row",
     "bookText": "The best seafront tables go fast. Book yours for dinner with the sunset and live music.",
-    "bookPhone": "Book by phone"
+    "bookPhone": "Book by phone",
+    "today": "Today",
+    "bestMoment": "The best moment",
+    "call": "Call"
   },
   "menu": {
     "title": "Our menu",
