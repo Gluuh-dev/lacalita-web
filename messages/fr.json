@@ -43,7 +43,7 @@
     "galleryEyebrow": "Moments",
     "galleryTitle": "La Calita, ça se vit",
     "locationEyebrow": "Où nous sommes",
-    "locationTitle": "Localisation",
+    "locationTitle": "Au bord de la plage, à Salobreña",
     "closed": "Fermé",
     "reservations": "Réservations",
     "fullAgenda": "Tout l'agenda",
@@ -61,7 +61,8 @@
     "today": "Aujourd'hui",
     "bestMoment": "Le meilleur moment",
     "call": "Appeler",
-    "reviewsSub": "Sans retouches : telles quelles, depuis Google."
+    "reviewsSub": "Sans retouches : telles quelles, depuis Google.",
+    "locationSub": "Entre le Peñón et la mer, les pieds presque dans le sable : petits-déjeuners au soleil, déjeuners sans hâte et couchers de soleil qui retiennent."
   },
   "menu": {
     "title": "Notre carte",

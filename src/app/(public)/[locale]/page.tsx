@@ -364,7 +364,7 @@ export default async function Home({
           className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden pb-16 text-white sm:pb-20"
           style={{background: '#1a1512'}}
         >
-          <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} bg="Ubicación" dark />
+          <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} sub={t('home.locationSub')} bg="Ubicación" dark />
 
           <div className="mx-auto grid max-w-6xl gap-6 px-4 lg:grid-cols-2 lg:items-stretch">
             {/* Datos del local */}

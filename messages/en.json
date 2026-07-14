@@ -43,7 +43,7 @@
     "galleryEyebrow": "Moments",
     "galleryTitle": "This is La Calita",
     "locationEyebrow": "Where we are",
-    "locationTitle": "Location",
+    "locationTitle": "Right on the beach, in Salobreña",
     "closed": "Closed",
     "reservations": "Reservations",
     "fullAgenda": "Full agenda",
@@ -61,7 +61,8 @@
     "today": "Today",
     "bestMoment": "The best moment",
     "call": "Call",
-    "reviewsSub": "No edits: straight from Google."
+    "reviewsSub": "No edits: straight from Google.",
+    "locationSub": "Between the Peñón and the sea, feet almost in the sand: sunny breakfasts, unhurried lunches and sunsets worth staying for."
   },
   "menu": {
     "title": "Our menu",

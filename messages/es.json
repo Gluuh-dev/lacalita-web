@@ -43,7 +43,7 @@
     "galleryEyebrow": "Momentos",
     "galleryTitle": "Así se vive La Calita",
     "locationEyebrow": "Dónde estamos",
-    "locationTitle": "Ubicación",
+    "locationTitle": "A pie de playa, en Salobreña",
     "closed": "Cerrado",
     "reservations": "Reservas",
     "fullAgenda": "Agenda completa",
@@ -61,7 +61,8 @@
     "today": "Hoy",
     "bestMoment": "El mejor momento",
     "call": "Llamar",
-    "reviewsSub": "Sin retoques: tal cual las dejan en Google."
+    "reviewsSub": "Sin retoques: tal cual las dejan en Google.",
+    "locationSub": "Entre el Peñón y el mar, con los pies casi en la arena: desayunos al sol, comidas sin prisa y puestas de sol que hacen sobremesa."
   },
   "menu": {
     "title": "Nuestra carta",
