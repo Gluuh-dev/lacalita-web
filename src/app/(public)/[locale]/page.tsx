@@ -363,18 +363,23 @@ export default async function Home({
       <Reveal>
         <section
           id="info"
-          className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden bg-night-2 pb-16 text-white sm:pb-20"
+          // En móvil la sección se come el espaciador de la barra flotante (margen
+          // negativo + ese mismo alto de padding): así el azul llega hasta abajo y
+          // no queda la franja crema, sin perder el hueco bajo la barra.
+          className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-20 overflow-hidden bg-night-2 pb-[calc(env(safe-area-inset-bottom)+10.5rem)] text-white mb-[calc(-1*(env(safe-area-inset-bottom)+6.5rem))] xl:mb-0 xl:pb-20"
         >
           <SectionHead eyebrow={t('home.locationEyebrow')} title={t('home.locationTitle')} sub={t('home.locationSub')} bg="Ubicación" dark />
 
           <div className="mx-auto grid max-w-6xl gap-6 px-4 lg:grid-cols-2 lg:items-stretch">
             {/* Datos del local */}
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-              <div className="font-adam text-[0.66rem] uppercase tracking-[0.2em] text-[#e2a869]">La Calita Beach Club</div>
-              <h3 className="mt-2 font-serif text-2xl font-bold leading-tight sm:text-3xl">{settings?.address?.split(',')[0] ?? 'Paseo Marítimo'}, Salobreña</h3>
-              {settings?.address && <p className="mt-1 text-sm text-white/55">{settings.address}</p>}
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.03] p-6 text-center sm:p-7">
+              <div className="font-adam text-[0.6rem] uppercase tracking-[0.28em] text-[#e2a869]">La Calita Beach Club</div>
+              <h3 className="mt-2.5 font-serif text-[1.7rem] font-bold leading-[1.15] tracking-[-0.01em] sm:text-[2rem]">
+                {settings?.address?.split(',')[0] ?? 'Paseo Marítimo'}, Salobreña
+              </h3>
+              {settings?.address && <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-white/55">{settings.address}</p>}
 
-              <div className="mt-4">
+              <div className="mt-4 flex justify-center">
                 <OpenStatus hours={hours} dark />
               </div>
 
@@ -427,9 +432,10 @@ export default async function Home({
                 {settings?.phone && (
                   <a
                     href={`tel:${settings.phone}`}
-                    className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-3 text-sm font-medium text-white/90 transition hover:bg-white/10"
+                    aria-label={t('home.call')}
+                    className="flex items-center justify-center rounded-full border border-white/15 py-3 text-white/90 transition hover:bg-white/10"
                   >
-                    <Phone className="size-4" /> {t('home.call')}
+                    <Phone className="size-4" />
                   </a>
                 )}
                 {settings?.phone && (
