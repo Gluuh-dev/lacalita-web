@@ -217,9 +217,9 @@ export default async function Home({
             <div className="mt-8 flex justify-center">
               <Link
                 href="/carta"
-                className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 font-semibold text-ink transition hover:bg-surface-2"
+                className="inline-flex items-center rounded-full border border-line-strong px-6 py-3 font-semibold text-ink transition hover:bg-surface-2"
               >
-                {t('common.seeMenu')} <ArrowRight className="size-4" />
+                {t('common.seeMenu')}
               </Link>
             </div>
 
