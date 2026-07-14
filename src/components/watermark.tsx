@@ -10,7 +10,7 @@ export default function Watermark({word, className = '', dark = false}: {word: s
       aria-hidden
       className={`pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif font-bold leading-none tracking-[0.04em] ${className}`}
       style={{
-        fontSize: 'clamp(120px, 26vw, 340px)',
+        fontSize: 'clamp(96px, 22vw, 170px)',
         color: dark ? 'rgba(255,255,255,.05)' : '#f0eadd',
         textShadow: shadow
       }}
