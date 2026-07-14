@@ -37,7 +37,7 @@ export default async function Home({
     getSettings(),
     getUpcomingEvents(6),
     getMenus(),
-    getFeaturedProducts(8),
+    getFeaturedProducts(5),
     getGalleryAlbums()
   ]);
 
@@ -186,10 +186,10 @@ export default async function Home({
         <Reveal>
           <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
             <SectionHead eyebrow={t('home.featuredEyebrow')} title={t('home.featuredTitle')} />
-            <MoreLink href="/carta" label={t('menu.title')} />
             <div className="-mx-4 md:mx-0 xl:-mx-20">
             <SnapCarousel itemClass="w-[72vw] max-w-[270px]" mdItemClass="md:w-[270px]" accent="#c98a4e" ink="#4c2f08">
-              {featured.map((p) => (
+              {[
+                ...featured.map((p) => (
                 <Link
                   key={p.id}
                   href={`/carta/${p.categories?.menus?.slug ?? 'restaurante'}/${p.slug}`}
@@ -209,7 +209,19 @@ export default async function Home({
                     {p.price != null && <span className="mt-1 block font-bold tabular-nums text-white/95">{euro(Number(p.price), locale)}</span>}
                   </div>
                 </Link>
-              ))}
+                )),
+                // Última tarjeta: a la carta (antes era un enlace suelto arriba).
+                <Link
+                  key="all"
+                  href="/carta"
+                  className="group flex aspect-[3/4] flex-col items-center justify-center gap-3 rounded-[24px] border-2 border-dashed border-brand/50 p-6 text-center text-brand-deep transition hover:bg-surface"
+                >
+                  <span className="flex size-12 items-center justify-center rounded-full bg-brand text-on-primary transition group-hover:scale-110">
+                    <ArrowRight className="size-5" />
+                  </span>
+                  <span className="font-serif text-xl leading-tight">{t('common.seeMenu')}</span>
+                </Link>
+              ]}
             </SnapCarousel>
             </div>
           </section>
