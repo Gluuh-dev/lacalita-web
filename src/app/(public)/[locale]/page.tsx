@@ -270,10 +270,10 @@ export default async function Home({
               aria-hidden
               className="mx-auto mt-8 block w-full max-w-2xl"
               style={{
-                aspectRatio: '1880.99 / 1348.67',
+                aspectRatio: '1713.12 / 1348.67',
                 backgroundColor: '#E9AE74',
-                WebkitMaskImage: 'url(/brand/escena.svg)',
-                maskImage: 'url(/brand/escena.svg)',
+                WebkitMaskImage: 'url(/brand/escena-v2.svg)',
+                maskImage: 'url(/brand/escena-v2.svg)',
                 WebkitMaskRepeat: 'no-repeat',
                 maskRepeat: 'no-repeat',
                 WebkitMaskSize: 'contain',
