@@ -40,7 +40,7 @@
     "reviewsEyebrow": "Lo que dicen",
     "reviewsTitle": "Opiniones",
     "galleryEyebrow": "Momentos",
-    "galleryTitle": "Galería",
+    "galleryTitle": "Así se vive La Calita",
     "locationEyebrow": "Dónde estamos",
     "locationTitle": "Ubicación",
     "closed": "Cerrado",
@@ -51,7 +51,8 @@
     "kitchenSub": "Elige por dónde empezar el día — o por dónde terminarlo.",
     "featuredSub": "Producto de temporada, brasa y mucho mar.",
     "eventsTitle": "Música a pie de playa",
-    "eventsSub": "Djs, conciertos, monólogos y noches que se alargan."
+    "eventsSub": "Djs, conciertos, monólogos y noches que se alargan.",
+    "gallerySub": "Sobremesas que no acaban, brindis al atardecer y los pies en la arena."
   },
   "menu": {
     "title": "Nuestra carta",

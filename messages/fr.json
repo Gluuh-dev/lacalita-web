@@ -40,7 +40,7 @@
     "reviewsEyebrow": "Ils en parlent",
     "reviewsTitle": "Avis",
     "galleryEyebrow": "Moments",
-    "galleryTitle": "Galerie",
+    "galleryTitle": "La Calita, ça se vit",
     "locationEyebrow": "Où nous sommes",
     "locationTitle": "Localisation",
     "closed": "Fermé",
@@ -51,7 +51,8 @@
     "kitchenSub": "Choisissez par où commencer la journée — ou par où la finir.",
     "featuredSub": "Produit de saison, braise et beaucoup de mer.",
     "eventsTitle": "De la musique au bord de la plage",
-    "eventsSub": "DJs, concerts, one-man-shows et soirées qui s’étirent."
+    "eventsSub": "DJs, concerts, one-man-shows et soirées qui s’étirent.",
+    "gallerySub": "Des repas qui s’étirent, des toasts au coucher du soleil et les pieds dans le sable."
   },
   "menu": {
     "title": "Notre carte",
